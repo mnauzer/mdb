@@ -6,3 +6,7 @@ const pad = (number, length) => {
     }
     return str;
 };
+
+const remoteMessage = ((mes) => {
+    message("Remote script: " + mes);
+});
