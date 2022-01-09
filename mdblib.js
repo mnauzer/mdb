@@ -21,4 +21,3 @@ const remoteMessage = (
     (mes) => {
         message("Remote script: " + mes);
     });
-
