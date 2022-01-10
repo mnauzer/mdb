@@ -42,6 +42,7 @@ const calcZam = ((zamestnanec, libraries) => {
 
         // Dochádzka
         if ((libraries.find(library => library == "Dochádzka")) >= 0) {
+            var nick = zamestnanec.field("Nick");
             var odpracovaneCelkom = 0; // odpracované hodiny celkom => Dochádzka
             var zarobeneCelkom = 0; // zarobená suma, odpracované hodiny x hodinová mzda => Dochádzka
             var hodnotenieCelkom = 0; // počet hviezdičiek => Dochádzka
