@@ -1,3 +1,4 @@
+const version = "0.1";
 // padding number
 const pad = ((number, length) => {
     let str = '' + number;
@@ -24,7 +25,7 @@ const remoteMessage = (
 
 // Popis:                   prepočíta dáta zamestnanca
 const calcZam = ((zamestnanec, library) => {
-    message(library);
+    message("Verzia: " + version + " Output: " + library);
 
     var nick = zamestnanec.field("Nick");
     var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
