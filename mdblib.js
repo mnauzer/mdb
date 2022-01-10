@@ -24,7 +24,8 @@ const remoteMessage = (
 
 // Popis:                   prepočíta dáta zamestnanca
 const calcZam = ((zamestnanec, library) => {
-    message("Prepočítavam...");
+    message(library);
+
     var nick = zamestnanec.field("Nick");
     var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
     var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
