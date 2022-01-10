@@ -1,4 +1,4 @@
-const version = "0.1";
+const version = "0.02";
 // padding number
 const pad = ((number, length) => {
     let str = '' + number;
