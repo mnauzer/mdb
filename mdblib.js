@@ -103,9 +103,8 @@ const calcZam = ((zamestnanec, libraries) => {
 });
 
 const zamestnanecDochadzka = (zamestnanec => {
-    var nick = zamestnanec.field("Nick");
-    var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
-    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
+    //    var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
+    //    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
     var sz = zamestnanec.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var hodnotenieEvidenciaCelkom = 0; //počet hviezdičiek za zákazky => Evidencia prác
     // konvertuj sz na Array sezony
@@ -115,23 +114,21 @@ const zamestnanecDochadzka = (zamestnanec => {
     }
     nastaveneSezony.forEach((sezona) => {
         // Dochádzka
-        if ((libraries.find(library => library == "Dochádzka")) >= 0) {
-            var odpracovaneCelkom = 0; // odpracované hodiny celkom => Dochádzka
-            var zarobeneCelkom = 0; // zarobená suma, odpracované hodiny x hodinová mzda => Dochádzka
-            var hodnotenieCelkom = 0; // počet hviezdičiek => Dochádzka
-            lfDochadzka = zamestnanec.linksFrom("Dochádzka", "Zamestnanci");
-            if (lfDochadzka) {
-                for (var d in lfDochadzka) {
-                    var dSezona = lfDochadzka[d].field("Sezóna");
-                    if (dSezona == sezona) {
-                        odpracovaneCelkom += lfDochadzka[d].field("Odpracované");
-                        // prebehni pole zamestnanci
-                        var vPraci = lfDochadzka[d].field("Zamestnanci");
-                        for (var i in vPraci) {
-                            if (vPraci[i].field("Nick") == nick) {
-                                zarobeneCelkom += vPraci[i].attr("denná mzda");
-                                hodnotenieCelkom += vPraci[i].attr("hodnotenie");
-                            }
+        var odpracovaneCelkom = 0; // odpracované hodiny celkom => Dochádzka
+        var zarobeneCelkom = 0; // zarobená suma, odpracované hodiny x hodinová mzda => Dochádzka
+        var hodnotenieCelkom = 0; // počet hviezdičiek => Dochádzka
+        lfDochadzka = zamestnanec.linksFrom("Dochádzka", "Zamestnanci");
+        if (lfDochadzka) {
+            for (var d in lfDochadzka) {
+                var dSezona = lfDochadzka[d].field("Sezóna");
+                if (dSezona == sezona) {
+                    odpracovaneCelkom += lfDochadzka[d].field("Odpracované");
+                    // prebehni pole zamestnanci
+                    var vPraci = lfDochadzka[d].field("Zamestnanci");
+                    for (var i in vPraci) {
+                        if (vPraci[i].field("Nick") == nick) {
+                            zarobeneCelkom += vPraci[i].attr("denná mzda");
+                            hodnotenieCelkom += vPraci[i].attr("hodnotenie");
                         }
                     }
                 }
@@ -145,8 +142,7 @@ const zamestnanecDochadzka = (zamestnanec => {
 });
 
 const zamestnanecPlatby = (zamestnanec => {
-    var nick = zamestnanec.field("Nick");
-    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
+    //    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
     var sz = zamestnanec.field("Výber sezóny na prepočet"); //sezóny na prepočet
     // konvertuj sz na Array sezony
     var nastaveneSezony = [];
@@ -155,27 +151,24 @@ const zamestnanecPlatby = (zamestnanec => {
     }
     nastaveneSezony.forEach((sezona) => {
         // Mzdy
-        if ((libraries.find(library => library == "Platby")) >= 0) {
-            var vyplateneCelkom = 0; // vyplatené mzdy => Pokladňa
-            lfPlatby = zamestnanec.linksFrom("Pokladňa", "Zamestnanec");
-            if (lfPlatby) {
-                for (var d in lfPlatby) {
-                    var dSezona = lfPlatby[d].field("Sezóna");
-                    if (dSezona == sezona) {
-                        vyplateneCelkom += lfPlatby[d].field("Výdavok bez DPH");
-                    }
+        var vyplateneCelkom = 0; // vyplatené mzdy => Pokladňa
+        lfPlatby = zamestnanec.linksFrom("Pokladňa", "Zamestnanec");
+        if (lfPlatby) {
+            for (var d in lfPlatby) {
+                var dSezona = lfPlatby[d].field("Sezóna");
+                if (dSezona == sezona) {
+                    vyplateneCelkom += lfPlatby[d].field("Výdavok bez DPH");
                 }
             }
-            zamestnanec.set("Vyplatené", vyplateneCelkom);
-            zamestnanec.set("Preplatok/Nedoplatok", zamestnanec.field("Zarobené") - vyplateneCelkom);
         }
+        zamestnanec.set("Vyplatené", vyplateneCelkom);
+        zamestnanec.set("Preplatok/Nedoplatok", zamestnanec.field("Zarobené") - vyplateneCelkom);
     });
 });
 
 const zamestnanecPrace = (zamestnanec => {
-    var nick = zamestnanec.field("Nick");
-    var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
-    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
+    //   var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
+    //   var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
     var sz = zamestnanec.field("Výber sezóny na prepočet"); //sezóny na prepočet
     // konvertuj sz na Array sezony
     var nastaveneSezony = [];
@@ -184,20 +177,18 @@ const zamestnanecPrace = (zamestnanec => {
     }
     nastaveneSezony.forEach((sezona) => {
         // Evidencia prác
-        if ((libraries.find(library => library == "Práce")) >= 0) {
-            var evidenciaCelkom = 0; // hodiny odpracované na zákazkach => Evidencia prác
-            lfEvidencia = zamestnanec.linksFrom("Evidencia prác", "Zamestnanci");
-            if (lfEvidencia) {
-                for (var d in lfEvidencia) {
-                    var dSezona = lfEvidencia[d].field("Sezóna");
-                    if (dSezona == sezona) {
-                        evidenciaCelkom += lfEvidencia[d].field("Odpracované/os");
-                        // hodnotenieEvidenciaCelkom +=
-                    }
+        var evidenciaCelkom = 0; // hodiny odpracované na zákazkach => Evidencia prác
+        lfEvidencia = zamestnanec.linksFrom("Evidencia prác", "Zamestnanci");
+        if (lfEvidencia) {
+            for (var d in lfEvidencia) {
+                var dSezona = lfEvidencia[d].field("Sezóna");
+                if (dSezona == sezona) {
+                    evidenciaCelkom += lfEvidencia[d].field("Odpracované/os");
+                    // hodnotenieEvidenciaCelkom +=
                 }
             }
-            zamestnanec.set("Odpracované na zákazkach", evidenciaCelkom);
         }
+        zamestnanec.set("Odpracované na zákazkach", evidenciaCelkom);
     });
     //zamestnanec.set("Zákazky", hodnotenieEvidenciaCelkom);
 });
