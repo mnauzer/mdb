@@ -42,7 +42,7 @@ const calcZam = ((zamestnanec, libraries) => {
 
         // Dochádzka
         if ((libraries.find(library => library == "Dochádzka")) >= 0) {
-            var nick = zamestnanec.field("Nick");
+
             var odpracovaneCelkom = 0; // odpracované hodiny celkom => Dochádzka
             var zarobeneCelkom = 0; // zarobená suma, odpracované hodiny x hodinová mzda => Dochádzka
             var hodnotenieCelkom = 0; // počet hviezdičiek => Dochádzka
@@ -106,6 +106,7 @@ const calcZam = ((zamestnanec, libraries) => {
 const zamestnanecDochadzka = (zamestnanec => {
     //    var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
     //    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
+    var nick = zamestnanec.field("Nick");
     var sz = zamestnanec.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var hodnotenieEvidenciaCelkom = 0; //počet hviezdičiek za zákazky => Evidencia prác
     // konvertuj sz na Array sezony
