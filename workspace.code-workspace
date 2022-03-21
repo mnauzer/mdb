@@ -1,11 +1,8 @@
 {
-  "folders": [
-	{
-		"path": "..\\..\\mementodb krajinka"
-	},
-	{
-		"path": ".."
-	}
-],
-  "settings": {}
+    "folders": [
+        {
+            "name": "mdb-1",
+            "path": "..\\..\\mdb-1"
+        }
+    ]
 }
