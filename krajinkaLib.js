@@ -18,6 +18,11 @@ const setTlac = entry => {
     return;
 }
 
+const seDebug = entry => {
+    entry.set("Tlač", "Debug");
+    return;
+}
+
 const pad = ((number, length) => {
     let str = '' + number;
     while (str.length < length) {
@@ -138,7 +143,7 @@ const getNCTovaru = (pc, prirazka, sadzbaDPH) => {
     return pcBezDPH;
 };
 
-const sadzbaZamestnanca = (zamestnanec, datum) => {
+const sadzbaZamestnanca2 = (zamestnanec, datum) => {
     var sadzba = 0;
     //zatial len zo zaznnamu
     sadzba = zamestnanec.field("Hodinovka");
