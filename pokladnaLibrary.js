@@ -15,7 +15,8 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 }
 
 const calcUcet = (ucet) => {
+    var result = 0;
     // prepočíta zadaný účet
-
+    return result;
 }
 // End of file: 20.03.2022, 12:17
