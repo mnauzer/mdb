@@ -3,9 +3,19 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.02";
+    var verzia = "0.2.03";
     //message("cpLibrary v." + verzia);
     return verzia;
+}
+
+const setEdit = entry => {
+    entry.set("Tlač", "Editácia");
+    return;
+}
+
+const setTlac = entry => {
+    entry.set("Tlač", "Tlač");
+    return;
 }
 
 const pad = ((number, length) => {
