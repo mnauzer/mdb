@@ -3,7 +3,7 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.04";
+    var verzia = "0.2.05";
     //message("cpLibrary v." + verzia);
     return verzia;
 }
@@ -59,6 +59,33 @@ const isTest = ((sezona, db) => {
 
 // generuje nové číslo záznamu
 const noveCislo = ((sezona, db, withPrefix, sliceNum) => {
+    var prefix = 0;
+    var lastNum = 0;
+    var dbID = 0;
+    var cislo = 0;
+    var attr = "";
+    var entry = libByName("KRAJINKA APP").find(sezona)[0];
+    var databazy = entry.field("Databázy");
+
+    for (var d = 0; d < databazy.length; d++) {
+        if (databazy[d].field("Názov") === db) {
+            //  message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
+            var test = isTest(sezona, databazy[d]);
+            attr = test ? "číslo testu" : "posledné číslo";
+            lastNum = databazy[d].attr(attr);
+            databazy[d].setAttr(attr, lastNum + 1);
+            prefix = test ? "T!" + databazy[d].field("Prefix") : databazy[d].field("Prefix");
+            dbID = test ? "T!" + databazy[d].field("ID") : databazy[d].field("ID");
+            cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
+            // message("generujem prefix: " + withPrefix ? prefix : dbID);
+        }
+    }
+    return cislo;
+});
+// generuje nové číslo záznamu
+const noveCisloV2 = ((entry, withPrefix, sliceNum) => {
+    var db = entry.lib().title;
+    var sezona = entry.field("sezóna") ? entry.field("sezóna") : new Date().getFullYear();
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;
