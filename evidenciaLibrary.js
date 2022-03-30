@@ -24,6 +24,7 @@ const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
     var sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
     return sadzba;
 };
+
 const prepocetZaznamuEvidencie = evidencia => {
     var datum = evidencia.field("Dátum")
     // verzia
