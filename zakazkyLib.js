@@ -3,7 +3,7 @@
 // Dátum:                   09.03.2022
 // Popis:                   knižnica scriptov Zákazky
 function verziaKniznice() {
-    var verzia = "0.3.10";
+    var verzia = "0.3.11";
     return verzia;
 }
 
