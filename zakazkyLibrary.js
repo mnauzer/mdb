@@ -234,7 +234,8 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
                     zlava = limity[m].field("Zľava");
                 }
                 // výpočítať novú sadzbu so zľavou
-                sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
+                //sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
+                sadzba = sadzba - (sadzba * zlava / 100);
             }
         }
         // dosadiť výsledky do poľa "Práce" - pri výkazoch práce je len jedno
