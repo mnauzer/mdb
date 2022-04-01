@@ -3,10 +3,11 @@
 // Dátum:                   09.03.2022
 // Popis:                   knižnica scriptov Zákazky
 function verziaKniznice() {
-    var verzia = "0.3.11";
-    return verzia;
+    var nazov = "zakazkyLibrary";
+    var verzia = "0.3.12";
+    //message("cpLibrary v." + verzia);
+    return nazov + " " + verzia;
 }
-
 
 const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
     var jazd = zakazkaPocetJazd(zakazka);

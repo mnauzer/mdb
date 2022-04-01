@@ -4,10 +4,11 @@
 // Popis:
 
 function verziaKniznice() {
-    var verzia = "0.1.02";
+    var nazov = "evidenciaLibrary";
+    var verzia = "0.2.01";
     //message("cpLibrary v." + verzia);
-    return verzia;
-};
+    return nazov + " " + verzia;
+}
 
 const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
     var zakladnaSadzba = vykaz.field("Práce sadzby")[0].field("Cena bez DPH");

@@ -2,6 +2,12 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
+function verziaKniznice() {
+    var nazov = "pokladnaLibrary";
+    var verzia = "0.2.01";
+    //message("cpLibrary v." + verzia);
+    return nazov + " " + verzia;
+}
 const getSumaBezDPH = (sumaSDPH, sadzbaDPH) => {
     result = 0;
     result = sumaSDPH / (sadzbaDPH + 1);

@@ -6,9 +6,10 @@
 // vytvorenie nových výkazov prác z cenovej ponuky
 // vytvorí výkaz pre každý diel cenovej ponuky
 function verziaKniznice() {
-    var verzia = "0.2.02";
+    var nazov = "cpLibrary";
+    var verzia = "0.2.03";
     //message("cpLibrary v." + verzia);
-    return verzia;
+    return nazov + " " + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
 // vygeneruj nový záznam zákazky
