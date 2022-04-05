@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.25";
+    var verzia = "0.3.26";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -522,19 +522,19 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
         hodinCelkom += vykazPraceSadzby.attr("dodané množstvo");
         for (var e = 0; e < evidenciaLinks.length; e++) {
-            vyuctovanie.link("Rozpis" + popis, evidenciaLinks[e]);
-            vyuctovanie.field("Rozpis" + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
+            vyuctovanie.link("Rozpis " + popis, evidenciaLinks[e]);
+            vyuctovanie.field("Rozpis " + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
             cenaCelkom = hodinCelkom * uctovanaSadzba;
         }
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
-        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
-        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", vykazPraceSadzby.attr("účtovaná sadzba"));
+        vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
+        vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
         for (var e = 0; e < evidenciaLinks.length; e++) {
-            vyuctovanie.field("Rozpis")[e].setAttr("zzzľava", evidenciaLinks[e].attr("zľava"));
-            vyuctovanie.link("Rozpis", evidenciaLinks[e]);
-            vyuctovanie.field("Rozpis")[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
-            vyuctovanie.field("Rozpis")[e].setAttr("cena celkom", evidenciaLinks[e].attr("cena celkom"));
+            vyuctovanie.field("Rozpis " + popis)[e].setAttr("zľava", evidenciaLinks[e].attr("zľava"));
+            vyuctovanie.link("Rozpis " + popis, evidenciaLinks[e]);
+            vyuctovanie.field("Rozpis " + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
+            vyuctovanie.field("Rozpis " + popis)[e].setAttr("cena celkom", evidenciaLinks[e].attr("cena celkom"));
             vyuctovanie.field(popis)[0].setAttr("cena celkom", cenaCelkom);
             cenaCelkom = hodinCelkom * uctovanaSadzba;
         }
