@@ -4,9 +4,9 @@
 // Popis:                   knižnica scriptov Zákazky
 function verziaKniznice() {
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.12";
+    var verzia = "0.3.13";
     //message("cpLibrary v." + verzia);
-    return nazov + " " + verzia;
+    return (nazov + " " + verzia);
 }
 
 const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
