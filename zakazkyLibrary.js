@@ -516,7 +516,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
         vyuctovanie.field(popis)[0].setAttr("počet hodín", zhrnutie.attr("dodané množstvo"));
-        vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + zhrnutie.attr("zľava") + "%");
+        vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + zhrnutie.attr("zľava %") + "%");
         vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", zhrnutie.attr("účtovaná sadzba"));
         vyuctovanie.field(popis)[0].setAttr("cena celkom", zhrnutie.attr("cena celkom"));
         hodinCelkom += evidenciaLinks[e].attr("počet hodín");
