@@ -3,10 +3,12 @@
 // Dátum:                   09.03.2022
 // Popis:                   knižnica scriptov Zákazky
 function verziaKniznice() {
+    var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.13";
+    var verzia = "0.3.14";
+    result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
-    return (nazov + " " + verzia);
+    return result;
 }
 
 const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
