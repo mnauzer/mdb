@@ -515,10 +515,10 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vyuctovanie.link(popis, zhrnutie);
     var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
-        vyuctovanie.field(popis)[0].setAttr("počet hodín", evidenciaLinks[e].attr("dodané množstvo"));
-        vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + evidenciaLinks[e].attr("zľava") + "%");
-        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", evidenciaLinks[e].attr("účtovaná sadzba"));
-        vyuctovanie.field(popis)[0].setAttr("cena celkom", evidenciaLinks[e].attr("cena celkom"));
+        vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPrac.link("Práce sadzby")[0].attr("dodané množstvo"));
+        vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + vykazPrac.link("Práce sadzby")[0].attr("zľava") + "%");
+        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", vykazPrac.link("Práce sadzby")[0].attr("účtovaná sadzba"));
+        vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPrac.link("Práce sadzby")[0].attr("cena celkom"));
         hodinCelkom += evidenciaLinks[e].attr("počet hodín");
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis" + popis, evidenciaLinks[e]);
@@ -527,8 +527,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         }
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
-        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", evidenciaLinks[e].attr("dodané množstvo"));
-        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", evidenciaLinks[e].attr("účtovaná sadzba"));
+        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", vykazPrac.link("Práce sadzby")[0]].attr("dodané množstvo"));
+        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", vykazPrac.link("Práce sadzby")[0]].attr("účtovaná sadzba"));
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.field("Rozpis")[e].setAttr("zzzľava", evidenciaLinks[e].attr("zľava"));
             vyuctovanie.link("Rozpis", evidenciaLinks[e]);
