@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.14";
+    var verzia = "0.3.15";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -198,7 +198,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
             // rVykaz - remote link v evidencii na tento výkaz
             var rVykaz = evidenciaLinks[el].field("Výkaz prác")[index];
             // počet hodín z atribútu alebo celkový počet hodín zo záznamu
-            hodinyCelkom += rVykaz.attr("počet hodín") || evidenciaLinks[el].field("Rozpis");
+            hodinyCelkom += rVykaz.attr("počet hodín") || evidenciaLinks[el].field("Odpracované");
             // nalinkuj záznam do evidencie prác
             vykaz.link("Rozpis", evidenciaLinks[el]);
             //nastav atribúty nového linku
@@ -238,9 +238,9 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
                 }
                 // výpočítať novú sadzbu so zľavou
                 //sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
-                sadzba = sadzba - (sadzba * zlava / 100);
             }
         }
+        sadzba = sadzba - (sadzba * zlava / 100);
         // dosadiť výsledky do poľa "Práce" - pri výkazoch práce je len jedno
         sumaBezDPH = hodinyCelkom * sadzba;
         polozka.setAttr("dodané množstvo", hodinyCelkom);
