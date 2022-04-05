@@ -4,3 +4,8 @@ function verziaKniznice() {
     //message("cpLibrary v." + verzia);
     return nazov + " " + verzia;
 }
+
+// spočíta platby zamestnanca
+const zamestnanecPlatby = (zamestnanec, sezona) => {
+    var platby = zamestnanec.linksFrom("Pokladňa","Zamestnanec")
+}
