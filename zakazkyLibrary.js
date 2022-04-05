@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.23";
+    var verzia = "0.3.24";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -519,7 +519,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + vykazPraceSadzby.attr("zľava %") + "%");
         vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", vykazPraceSadzby.attr("účtovaná sadzba"));
         vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
-        hodinCelkom += vykazPraceSadzby.attr("počet hodín");
+        hodinCelkom += vykazPraceSadzby.attr("dodané množstvo");
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis" + popis, evidenciaLinks[e]);
             vyuctovanie.field("Rozpis" + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
