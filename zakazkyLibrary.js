@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.21";
+    var verzia = "0.3.22";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -508,18 +508,18 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     //     vyuctovanie.set(popis + " celkom", vykazPrac.field("Suma bez DPH"));
     // } else {
     //     // práce navyše
-    var zhrnutie = vykazPrac.field("Práce sadzby")[0];
-    var zhrnutieCelkom = 0;
+    var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
+    var vykazPraceSadzbyCelkom = 0;
     var hodinCelkom = 0;
     var cenaCelkom = 0;
-    vyuctovanie.link(popis, zhrnutie);
+    vyuctovanie.link(popis, vykazPraceSadzby);
     var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
-        vyuctovanie.field(popis)[0].setAttr("počet hodín", zhrnutie.attr("dodané množstvo"));
-        vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + zhrnutie.attr("zľava %") + "%");
-        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", zhrnutie.attr("účtovaná sadzba"));
-        vyuctovanie.field(popis)[0].setAttr("cena celkom", zhrnutie.attr("cena celkom"));
-        hodinCelkom += evidenciaLinks[e].attr("počet hodín");
+        vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
+        vyuctovanie.field(popis)[0].setAttr("zľava", "Zľava nad 12 hodín " + vykazPraceSadzby.attr("zľava %") + "%");
+        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", vykazPraceSadzby.attr("účtovaná sadzba"));
+        vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
+        hodinCelkom += vykazPraceSadzby.attr("počet hodín");
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis" + popis, evidenciaLinks[e]);
             vyuctovanie.field("Rozpis" + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
@@ -527,8 +527,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         }
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
-        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", zhrnutie.attr("dodané množstvo"));
-        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", zhrnutie.attr("účtovaná sadzba"));
+        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
+        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", vykazPraceSadzby.attr("účtovaná sadzba"));
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.field("Rozpis")[e].setAttr("zzzľava", evidenciaLinks[e].attr("zľava"));
             vyuctovanie.link("Rozpis", evidenciaLinks[e]);
