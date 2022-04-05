@@ -527,8 +527,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         }
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
-        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", zhrnutie].attr("dodané množstvo"));
-        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", zhrnutie].attr("účtovaná sadzba"));
+        vyuctovanie.field("Rozpis")[0].setAttr("počet hodín", zhrnutie.attr("dodané množstvo"));
+        vyuctovanie.field("Rozpis")[0].setAttr("účtovaná sadzba", zhrnutie.attr("účtovaná sadzba"));
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.field("Rozpis")[e].setAttr("zzzľava", evidenciaLinks[e].attr("zľava"));
             vyuctovanie.link("Rozpis", evidenciaLinks[e]);
