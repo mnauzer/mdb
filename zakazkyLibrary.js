@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.30";
+    var verzia = "0.3.31";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -538,7 +538,7 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
     var popis = vykazStrojov.field("Popis");
     vyuctovanie.set(popis, empty);
 
-    var polozkyVykaz = vydajka.field("Stroje");
+    var polozkyVykaz = vykazStrojov.field("Stroje");
     // nastav atribúty položiek vo vyúčtovaní
     var polozkyVyuctovanie = vyuctovanie.field(popis);
     for (var m = 0; m < polozkyVykaz.length; m++) {
@@ -549,9 +549,9 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
         vyuctovanie.field(popis)[m].setAttr("využitie mth", mnozstvo);
         vyuctovanie.field(popis)[m].setAttr("sadzba", cena);
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
-        vydajkaCelkom += cenaCelkom;
+        vykazStrojovCelkom += cenaCelkom;
     }
-    vyuctovanie.set(popis + " celkom", vydajkaCelkom);
+    vyuctovanie.set(popis + " celkom", vykazStrojovCelkom);
 
     return vykazStrojovCelkom;
 }
