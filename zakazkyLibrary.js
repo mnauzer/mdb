@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.34";
+    var verzia = "0.3.35";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -289,6 +289,8 @@ const zakazkaPraceVykazyPolozky = (vykaz, sadzbaDPH) => {
             polozky[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
             // message("množstvo:+ " + mnozstvo + ", cena: " + cena + ", cena celkom: " + cenaCelkom);
+            // nastav príznak Tlač
+            polozky[p].set("Tlač", "Tlač");
         }
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
@@ -322,6 +324,8 @@ const zakazkaStrojeVykazy = (vykaz, sadzbaDPH) => {
             polozky[p].setAttr("cena celkom", cenaCelkom);
             //var cenaCelkom = mnozstvo * cena;
             sumaBezDPH += cenaCelkom;
+            // nastav príznak Tlač
+            polozky[p].set("Tlač", "Tlač");
         }
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
@@ -436,6 +440,8 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
         vyuctovanie.field(popis)[m].setAttr("cena", cena);
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vydajkaCelkom += cenaCelkom;
+        // nastav príznak Tlač
+        polozkyVydajka[m].set("Tlač", "Tlač");
     }
     vyuctovanie.set(popis + " celkom", vydajkaCelkom);
     return vydajkaCelkom;
@@ -461,6 +467,8 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
             vyuctovanie.field(popis)[m].setAttr("cena", cena);
             vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
             vykazPracCelkom += cenaCelkom;
+            // nastav príznak Tlač
+            polozkyVykazPrac[m].set("Tlač", "Tlač");
         }
         vyuctovanie.set(popis + " celkom", vykazPrac.field("Suma bez DPH"));
     } else {
@@ -560,6 +568,8 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
         vyuctovanie.field(popis)[m].setAttr("sadzba", cena);
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vykazStrojovCelkom += cenaCelkom;
+        // nastav príznak Tlač
+        polozkyVykaz[m].set("Tlač", "Tlač");
     }
     vyuctovanie.set(popis + " celkom", vykazStrojovCelkom);
 
