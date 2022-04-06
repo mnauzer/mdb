@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.31";
+    var verzia = "0.3.32";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -499,10 +499,20 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vyuctovanie.link(popis, vykazPraceSadzby);
     var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
+        var zlava = vykazPraceSadzby.attr("zľava %");
+        var zakladnaSadzba = vykazPraceSadzby.attr("základná sadzba");
+        var uctovanaSadzba = vykazPraceSadzby.attr("účtovaná sadzba");
         vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
-        vyuctovanie.field(popis)[0].setAttr("základná sadzba", vykazPraceSadzby.attr("základná sadzba"));
-        vyuctovanie.field(popis)[0].setAttr("zľava", "zľava zo základnej ceny: " + vykazPraceSadzby.attr("zľava %") + "%");
-        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", vykazPraceSadzby.attr("účtovaná sadzba"));
+        if (!zlava) {
+            vyuctovanie.field(popis)[0].setAttr("základná sadzba", zakladnaSadzba);
+            uctovanaSadzba = zakladnaSadzba;
+            zakladnaSadzba = null;
+        } else {
+            zlava = "zľava " + zlava + "%";
+        }
+        vyuctovanie.field(popis)[0].setAttr("základná sadzba", zakladnaSadzba);
+        vyuctovanie.field(popis)[0].setAttr("zľava", zlava);
+        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", uctovanaSadzba);
         vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
         hodinCelkom += vykazPraceSadzby.attr("dodané množstvo");
         uctovanaSadzba = vykazPraceSadzby.attr("účtovaná sadzba");
