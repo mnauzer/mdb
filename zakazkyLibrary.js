@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.35";
+    var verzia = "0.3.36";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -524,10 +524,14 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
         hodinCelkom += vykazPraceSadzby.attr("dodané množstvo");
         uctovanaSadzba = vykazPraceSadzby.attr("účtovaná sadzba");
+        // nastav príznak Tlač
+        vyuctovanie.field(popis)[0].set("Tlač", "Tlač");
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis " + popis, evidenciaLinks[e]);
             vyuctovanie.field("Rozpis " + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
             cenaCelkom = hodinCelkom * uctovanaSadzba;
+            // nastav príznak Tlač
+            evidenciaLinks[e].set("Tlač", "Tlač");
         }
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
@@ -540,6 +544,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
             vyuctovanie.field("Rozpis " + popis)[e].setAttr("cena celkom", evidenciaLinks[e].attr("cena celkom"));
             vyuctovanie.field(popis)[0].setAttr("cena celkom", cenaCelkom);
             cenaCelkom = hodinCelkom * uctovanaSadzba;
+            // nastav príznak Tlač
+            evidenciaLinks[e].set("Tlač", "Tlač");
         }
     } else {
         message("Neviem určiť počítanie hodinových sadzieb")
