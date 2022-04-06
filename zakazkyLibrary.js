@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.28";
+    var verzia = "0.3.30";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -491,23 +491,6 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var empty = [];
     var popis = vykazPrac.field("Popis");
     vyuctovanie.set(popis, empty);
-    // práce navyše ošetriť inak
-    // if (popis != "Práce navyše") {
-    //     // položky z výdajky do array
-    //     var polozkyVykazPrac = vykazPrac.field("Práce");
-    //     for (var m = 0; m < polozkyVykazPrac.length; m++) {
-    //         var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
-    //         var cena = polozkyVykazPrac[m].attr("cena");
-    //         var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
-    //         vyuctovanie.link(popis, polozkyVykazPrac[m])
-    //         vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
-    //         vyuctovanie.field(popis)[m].setAttr("cena", cena);
-    //         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
-    //         vykazPracCelkom += cenaCelkom;
-    //     }
-    //     vyuctovanie.set(popis + " celkom", vykazPrac.field("Suma bez DPH"));
-    // } else {
-    //     // práce navyše
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
     var vykazPraceSadzbyCelkom = 0;
     var hodinCelkom = 0;
@@ -546,5 +529,30 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
 
     // }
     return vykazPracCelkom;
+}
+
+const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
+    var vykazStrojovCelkom = 0;
+    // najprv vymaž staré
+    var empty = [];
+    var popis = vykazStrojov.field("Popis");
+    vyuctovanie.set(popis, empty);
+
+    var polozkyVykaz = vydajka.field("Stroje");
+    // nastav atribúty položiek vo vyúčtovaní
+    var polozkyVyuctovanie = vyuctovanie.field(popis);
+    for (var m = 0; m < polozkyVykaz.length; m++) {
+        vyuctovanie.link(popis, polozkyVykaz[m]);
+        var mnozstvo = polozkyVykaz[m].attr("prevádzka mth");
+        var cena = polozkyVykaz[m].attr("účtovaná sadzba");
+        var cenaCelkom = polozkyVykaz[m].attr("cena celkom");
+        vyuctovanie.field(popis)[m].setAttr("využitie mth", mnozstvo);
+        vyuctovanie.field(popis)[m].setAttr("sadzba", cena);
+        vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
+        vydajkaCelkom += cenaCelkom;
+    }
+    vyuctovanie.set(popis + " celkom", vydajkaCelkom);
+
+    return vykazStrojovCelkom;
 }
 // End of file: 22.03.2022, 19:24
