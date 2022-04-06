@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.33";
+    var verzia = "0.3.34";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -240,7 +240,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
         var zlava = null;
         var zakladnaSadzba = null;
         if (limity) {
-            zakladnaSadzba = polozka.attr("základná sadzba");
+            zakladnaSadzba = sadzba;
             for (var m = 0; m < limity.length; m++) {
                 if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
                     zlava = limity[m].field("Zľava");
