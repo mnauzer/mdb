@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.32";
+    var verzia = "0.3.33";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -220,7 +220,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
             sumaBezDPH += rVykaz.attr("cena celkom")
         }
         polozka.setAttr("dodané množstvo", hodinyCelkom);
-        polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribúť
+        polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribút
         polozka.setAttr("cena celkom", sumaBezDPH);
     } else if (uctovanie == "Za celú zákazku") {
         for (var el = 0; el < evidenciaLinks.length; el++) {
@@ -240,7 +240,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
         var zlava = null;
         var zakladnaSadzba = null;
         if (limity) {
-            zakladnaSadzba = polozka.field("Cena bez DPH");
+            zakladnaSadzba = polozka.attr("základná sadzba");
             for (var m = 0; m < limity.length; m++) {
                 if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
                     zlava = limity[m].field("Zľava");
