@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.48";
+    var verzia = "0.3.49";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -553,7 +553,6 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         message("Neviem určiť počítanie hodinových sadzieb")
     }
 
-    // }
     vyuctovanie.set(popis + " celkom", vykazPracCelkom);
     return vykazPracCelkom;
 }
