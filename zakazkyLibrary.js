@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.49";
+    var verzia = "0.3.50";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -532,6 +532,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
             vyuctovanie.link("Rozpis " + popis, evidenciaLinks[e]);
             vyuctovanie.field("Rozpis " + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
             cenaCelkom = hodinCelkom * uctovanaSadzba;
+            vykazPracCelkom += cenaCelkom;
             // nastav príznak Tlač
             evidenciaLinks[e].set("Tlač", "Tlač");
         }
