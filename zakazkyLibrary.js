@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.41";
+    var verzia = "0.3.42";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -583,14 +583,14 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
 }
 
 const zakazkaNoveVyuctovanie = zakazka => {
-    var lib = libByName("Vyúčtovania");
+    var vyuctovania = libByName("Vyúčtovania");
     var noveVyuctovanie = new Object();
     // inicializácia
     var datum = new Date();
     var cp = zakazka.field("Cenová ponuka")[0];
     var sezona = cp.field("sezóna");
     var cp = zakazka.field("Cenová ponuka")[0];
-    var cislo = noveCislo(sezona, lib, 1, 2);
+    var cislo = noveCislo(sezona, vyuctovania, 1, 2);
     var klient = cp.field("Klient")[0]
     var miesto = cp.field("Miesto realizácie")[0];
     var typ = cp.field("Typ cenovej ponuky");
@@ -628,7 +628,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
     noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
     noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
     noveVyuctovanie["% zo zákazky"] = cp.field("% zo zákazky");
-    lib.create(noveVyuctovanie);
+    vyuctovania.create(noveVyuctovanie);
 
     var vyuctovanie = vyuctovania.find(cislo)[0];
     zakazka.set("Vyúčtovanie", empty);
