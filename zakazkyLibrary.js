@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.39";
+    var verzia = "0.3.40";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -587,7 +587,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
     var noveVyuctovanie = new Object();
     // inicializácia
     var datum = new Date();
-    var cp = zakazka.field("Cenová ponuka");
+    var cp = zakazka.field("Cenová ponuka")[0];
     var sezona = cp.field("sezóna");
     var cp = zakazka.field("Cenová ponuka")[0];
     var cislo = noveCislo(sezona, lib, 1, 2);
