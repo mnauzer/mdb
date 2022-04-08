@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.36";
+    var verzia = "0.3.37";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -593,16 +593,9 @@ const zakazkaNoveVyuctovanie = zakazka => {
     var klient = cp.field("Klient")[0]
     var miesto = cp.field("Miesto realizácie")[0];
     var typ = cp.field("Typ cenovej ponuky");
-    // vyber diely zákazky podľa typu cp
-    if (typ == "Hodinovka") {
-        var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
-    } else {
-        var dielyZakazky = cp.field("Diely cenovej ponuky");
-    }
     var uctovanieDPH = ["Práce", "Materiál", "Doprava"];
 
     // inicializácia
-    var stav = zakazka.field("Stav zákazky");
     var empty = []; // mazacie pole
 
     // vyber diely zákazky podľa typu cp
