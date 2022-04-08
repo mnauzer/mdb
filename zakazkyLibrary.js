@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.31";
+    var verzia = "0.3.36";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -220,7 +220,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
             sumaBezDPH += rVykaz.attr("cena celkom")
         }
         polozka.setAttr("dodané množstvo", hodinyCelkom);
-        polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribúť
+        polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribút
         polozka.setAttr("cena celkom", sumaBezDPH);
     } else if (uctovanie == "Za celú zákazku") {
         for (var el = 0; el < evidenciaLinks.length; el++) {
@@ -240,7 +240,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
         var zlava = null;
         var zakladnaSadzba = null;
         if (limity) {
-            zakladnaSadzba = polozka.field("Cena bez DPH");
+            zakladnaSadzba = sadzba;
             for (var m = 0; m < limity.length; m++) {
                 if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
                     zlava = limity[m].field("Zľava");
@@ -289,6 +289,8 @@ const zakazkaPraceVykazyPolozky = (vykaz, sadzbaDPH) => {
             polozky[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
             // message("množstvo:+ " + mnozstvo + ", cena: " + cena + ", cena celkom: " + cenaCelkom);
+            // nastav príznak Tlač
+            polozky[p].set("Tlač", "Tlač");
         }
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
@@ -322,6 +324,8 @@ const zakazkaStrojeVykazy = (vykaz, sadzbaDPH) => {
             polozky[p].setAttr("cena celkom", cenaCelkom);
             //var cenaCelkom = mnozstvo * cena;
             sumaBezDPH += cenaCelkom;
+            // nastav príznak Tlač
+            polozky[p].set("Tlač", "Tlač");
         }
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
@@ -436,6 +440,8 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
         vyuctovanie.field(popis)[m].setAttr("cena", cena);
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vydajkaCelkom += cenaCelkom;
+        // nastav príznak Tlač
+        polozkyVydajka[m].set("Tlač", "Tlač");
     }
     vyuctovanie.set(popis + " celkom", vydajkaCelkom);
     return vydajkaCelkom;
@@ -461,6 +467,8 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
             vyuctovanie.field(popis)[m].setAttr("cena", cena);
             vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
             vykazPracCelkom += cenaCelkom;
+            // nastav príznak Tlač
+            polozkyVykazPrac[m].set("Tlač", "Tlač");
         }
         vyuctovanie.set(popis + " celkom", vykazPrac.field("Suma bez DPH"));
     } else {
@@ -499,17 +507,31 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vyuctovanie.link(popis, vykazPraceSadzby);
     var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
+        var zlava = vykazPraceSadzby.attr("zľava %");
+        var zakladnaSadzba = vykazPraceSadzby.attr("základná sadzba");
+        var uctovanaSadzba = vykazPraceSadzby.attr("účtovaná sadzba");
         vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
-        vyuctovanie.field(popis)[0].setAttr("základná sadzba", vykazPraceSadzby.attr("základná sadzba"));
-        vyuctovanie.field(popis)[0].setAttr("zľava", "zľava zo základnej ceny: " + vykazPraceSadzby.attr("zľava %") + "%");
-        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", vykazPraceSadzby.attr("účtovaná sadzba"));
+        if (!zlava) {
+            vyuctovanie.field(popis)[0].setAttr("základná sadzba", zakladnaSadzba);
+            uctovanaSadzba = zakladnaSadzba;
+            zakladnaSadzba = null;
+        } else {
+            zlava = "zľava " + zlava + "%";
+        }
+        vyuctovanie.field(popis)[0].setAttr("základná sadzba", zakladnaSadzba);
+        vyuctovanie.field(popis)[0].setAttr("zľava", zlava);
+        vyuctovanie.field(popis)[0].setAttr("účtovaná sadzba", uctovanaSadzba);
         vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
         hodinCelkom += vykazPraceSadzby.attr("dodané množstvo");
         uctovanaSadzba = vykazPraceSadzby.attr("účtovaná sadzba");
+        // nastav príznak Tlač
+        vyuctovanie.field(popis)[0].set("Tlač", "Tlač");
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis " + popis, evidenciaLinks[e]);
             vyuctovanie.field("Rozpis " + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
             cenaCelkom = hodinCelkom * uctovanaSadzba;
+            // nastav príznak Tlač
+            evidenciaLinks[e].set("Tlač", "Tlač");
         }
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
@@ -522,6 +544,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
             vyuctovanie.field("Rozpis " + popis)[e].setAttr("cena celkom", evidenciaLinks[e].attr("cena celkom"));
             vyuctovanie.field(popis)[0].setAttr("cena celkom", cenaCelkom);
             cenaCelkom = hodinCelkom * uctovanaSadzba;
+            // nastav príznak Tlač
+            evidenciaLinks[e].set("Tlač", "Tlač");
         }
     } else {
         message("Neviem určiť počítanie hodinových sadzieb")
@@ -550,6 +574,8 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
         vyuctovanie.field(popis)[m].setAttr("sadzba", cena);
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vykazStrojovCelkom += cenaCelkom;
+        // nastav príznak Tlač
+        polozkyVykaz[m].set("Tlač", "Tlač");
     }
     vyuctovanie.set(popis + " celkom", vykazStrojovCelkom);
 
