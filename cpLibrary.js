@@ -45,6 +45,7 @@ const ponukaNovaZakazka = cp => {
     novaZakazka["Cenová ponuka"] = cp;
     novaZakazka["sezóna"] = sezona;
     novaZakazka["Účtovanie DPH"] = uctovanieDPH;
+    novaZakazka["Účtovanie zákazky"] = typ;
     lib.create(novaZakazka);
 
     var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka")[0];

@@ -555,4 +555,64 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
 
     return vykazStrojovCelkom;
 }
+
+const zakazkaNoveVyuctovanie = zakazka => {
+    var lib = libByName("Vyúčtovania");
+    var noveVyuctovanie = new Object();
+    // inicializácia
+    var datum = new Date();
+    var sezona = cp.field("sezóna");
+    var cp = zakazka.field("Cenová ponuka")[0];
+    var cislo = noveCislo(sezona, lib, 1, 2);
+    var klient = cp.field("Klient")[0]
+    var miesto = cp.field("Miesto realizácie")[0];
+    var typ = cp.field("Typ cenovej ponuky");
+    // vyber diely zákazky podľa typu cp
+    if (typ == "Hodinovka") {
+        var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
+    } else {
+        var dielyZakazky = cp.field("Diely cenovej ponuky");
+    }
+    var uctovanieDPH = ["Práce", "Materiál", "Doprava"];
+
+    // inicializácia
+    var stav = zakazka.field("Stav zákazky");
+    var empty = []; // mazacie pole
+
+    // vyber diely zákazky podľa typu cp
+    if (typ == "Hodinovka") {
+        var diely = cp.field("Diely cenovej ponuky hzs");
+    } else {
+        var diely = cp.field("Diely cenovej ponuky");
+    }
+    // popis vyúčtovania
+    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field("Číslo") + " (" + cp.field("Popis cenovej ponuky") + ")";
+
+    // Hlavička a základné nastavenia
+    noveVyuctovanie["Dátum"] = datum;
+    noveVyuctovanie["Číslo"] = cislo;
+    noveVyuctovanie["Miesto realizácie"] = miesto;
+    noveVyuctovanie["Stav vyúčtovania"] = "Prebieha";
+    noveVyuctovanie["Typ vyúčtovania"] = typ;
+    noveVyuctovanie["+Materiál"] = cp.field("+Materiál");
+    noveVyuctovanie["+Mechanizácia"] = cp.field("+Mechanizácia");
+    noveVyuctovanie["+Subdodávky"] = cp.field("+Subdodávky");
+    noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
+    noveVyuctovanie["Klient"] = klient;
+    noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
+    noveVyuctovanie["Cenová ponuka"] = cp;
+    noveVyuctovanie["Zákazka"] = zakazka;
+    noveVyuctovanie["sezóna"] = sezona;
+    noveVyuctovanie["Diely vyúčtovania"] = diely.join();
+    // doprava
+    noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
+    noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
+    noveVyuctovanie["% zo zákazky"] = cp.field("% zo zákazky");
+    vyuctovania.create(noveVyuctovanie);
+
+    var vyuctovanie = vyuctovania.find(cislo)[0];
+    zakazka.set("Vyúčtovanie", empty);
+    zakazka.link("Vyúčtovanie", vyuctovanie);
+    return vyuctovanie;
+}
 // End of file: 22.03.2022, 19:24
