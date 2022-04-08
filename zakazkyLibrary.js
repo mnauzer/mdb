@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.42";
+    var verzia = "0.3.43";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
