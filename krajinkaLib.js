@@ -3,7 +3,7 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.05";
+    var verzia = "0.2.06";
     //message("cpLibrary v." + verzia);
     return verzia;
 }
@@ -182,4 +182,18 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     sadzba = zamestnanec.field("Hodinovka");
     return sadzba;
 };
+
+const setTest = (status) => {
+    var lib = libByName("KRAJINKA APP DATABÁZY");
+    var databazy = lib.enties();
+    for (var d = 0; d < databazy.length; d++) {
+        databazy[d].set("Testovanie", status);
+    }
+    if (status) {
+
+        message("Databázy nastavené na Testovanie");
+    } else {
+        message("Databázy nastavené na Ostrý režim");
+    }
+}
 // End of file: 25.03.2022, 16:16
