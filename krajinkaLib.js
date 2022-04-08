@@ -185,7 +185,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 
 const setTest = (status) => {
     var lib = libByName("KRAJINKA APP DATABÁZY");
-    var databazy = lib.enties();
+    var databazy = lib.entries();
     for (var d = 0; d < databazy.length; d++) {
         databazy[d].set("Testovanie", status);
     }
