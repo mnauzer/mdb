@@ -651,14 +651,14 @@ const zakazkaToJson = zakazka => {
     var result = "";
     var f = file("/sdcard/" + zakazka.field("Číslo") + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
-    f.writeLine("{");
-    f.writeLine("'Odberateľ_nick'" + ":'" + odberatel.field("Nick") + "',");
-    f.writeLine("'Odberateľ_meno'" + ":'" + odberatel.field("Meno") + "',");
-    f.writeLine("'Odberateľ_priezvisko'" + ":'" + odberatel.field("Priezvisko") + "',");
-    f.writeLine("'Odberateľ_titul'" + ":'" + odberatel.field("Titul") + "',");
-    f.writeLine("'Odberateľ_ulica'" + ":'" + odberatel.field("Ulica") + "',");
-    f.writeLine("'Odberateľ_psc'" + ":'" + odberatel.field("PSČ") + "',");
-    f.writeLine("'Odberateľ_mesto'" + ":'" + odberatel.field("Mesto")) + "'";
+    f.writeLine("{'Odberateľ':{");
+    f.writeLine("'Nick'" + ":'" + odberatel.field("Nick") + "',");
+    f.writeLine("'Meno'" + ":'" + odberatel.field("Meno") + "',");
+    f.writeLine("'Priezvisko'" + ":'" + odberatel.field("Priezvisko") + "',");
+    f.writeLine("'Titul'" + ":'" + odberatel.field("Titul") + "',");
+    f.writeLine("'Ulica'" + ":'" + odberatel.field("Ulica") + "',");
+    f.writeLine("'PSČ'" + ":'" + odberatel.field("PSČ") + "',");
+    f.writeLine("'Mesto'" + ":'" + odberatel.field("Mesto") + "'}");
     f.writeLine("}");
     f.close();                      // Close & save. Until closed,
     //   the file is still empty
