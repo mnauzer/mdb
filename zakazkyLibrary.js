@@ -660,7 +660,7 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"PSČ"' + ':"' + odberatel.field("PSČ") + '",');
     f.writeLine('"Mesto"' + ':"' + odberatel.field("Mesto") + '"},');
     f.writeLine('{"Základné nastavenia":{');
-    f.writeLine('"Typ vyúčtovania"' + ':"' + zakazka.field("Typ vyúčtovania") + '",');
+    f.writeLine('"Typ vyúčtovania"' + ':"' + zakazka.field("Účtovanie zákazky") + '",');
     f.writeLine('"+Mechanizácia"' + ':"' + zakazka.field("+Mechanizácia") + '",');
     f.writeLine('"+Materiál"' + ':"' + zakazka.field("+Materiál") + '",');
     f.writeLine('"Počítanie hodinových sadzieb"' + ':"' + zakazka.field("Počítanie hodinových sadzieb") + '",');
