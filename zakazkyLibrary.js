@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.53";
+    var verzia = "0.3.54";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -178,6 +178,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
 
     // inicializácia
     // var sDPH = vykaz.field("s DPH");
+    if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var diel = vykaz.field("Popis");
@@ -277,6 +278,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
 const zakazkaPraceVykazyPolozky = (vykaz, sDPH, sadzbaDPH) => {
     // inicializácia
     //var sDPH = vykaz.field("s DPH");
+    if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vykaz.field("Práce");
@@ -312,6 +314,7 @@ const zakazkaStrojeVykazy = (vykaz, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
     //var sDPH = vykaz.field("s DPH");
+    if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vykaz.field("Stroje");
@@ -347,6 +350,7 @@ const zakazkaMaterialVydajky = (vydajka, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
     //var sDPH = vydajka.field("s DPH");
+    if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vydajka.field("Materiál");
