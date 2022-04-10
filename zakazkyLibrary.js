@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.64";
+    var verzia = "0.3.65";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -674,9 +674,9 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"Doprava' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Doprava") + '"},');
     f.writeLine('},');
     f.writeLine('{"Rekapitulácia vyúčtovania":{');
-    f.writeLine('"Celkom (bez DPH)"' + ':"' + zakazka.field("Celkom (bez DPH") + '",');
+    f.writeLine('"Celkom (bez DPH)"' + ':"' + zakazka.field("Celkom (bez DPH)") + '",');
     f.writeLine('"DPH 20%"' + ':"' + zakazka.field("DPH 20%") + '",');
-    f.writeLine('"Cena celkom (s DPH)"' + ':"' + zakazka.field("Cena celkom (s DPH") + '",');
+    f.writeLine('"Cena celkom (s DPH)"' + ':"' + zakazka.field("Cena celkom (s DPH)") + '",');
     f.writeLine('"Zaplatená záloha"' + ':"' + zakazka.field("Zaplatená záloha") + '",');
     f.writeLine('"Suma na úhradu"' + ':"' + zakazka.field("Suma na úhradu") + '"},');
     f.writeLine('{"Rozpis prác":{');
