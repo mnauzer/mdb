@@ -649,6 +649,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
 
 const zakazkaToJson = zakazka => {
     var result = "";
+    var cp = zakazka.field("Cenová ponuka")[0];
     var f = file("/sdcard/" + zakazka.field("Číslo") + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
     f.writeLine('{"Odberateľ":{');
@@ -661,14 +662,14 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"Mesto"' + ':"' + odberatel.field("Mesto") + '"},');
     f.writeLine('{"Základné nastavenia":{');
     f.writeLine('"Typ vyúčtovania"' + ':"' + zakazka.field("Účtovanie zákazky") + '",');
-    f.writeLine('"+Mechanizácia"' + ':"' + zakazka.field("+Mechanizácia") + '",');
-    f.writeLine('"+Materiál"' + ':"' + zakazka.field("+Materiál") + '",');
+    f.writeLine('"+Mechanizácia"' + ':"' + cp.field("+Mechanizácia") + '",');
+    f.writeLine('"+Materiál"' + ':"' + cp.field("+Materiál") + '",');
     f.writeLine('"Počítanie hodinových sadzieb"' + ':"' + zakazka.field("Počítanie hodinových sadzieb") + '",');
     f.writeLine('"Účtovanie dopravy"' + ':"' + zakazka.field("Účtovanie dopravy") + '",');
     f.writeLine('{"Účtovanie DPH":{');
     f.writeLine('"Práce' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Práce") + '",');
     f.writeLine('"Materiál' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Materiál") + '",');
-    f.writeLine('"Stroje' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Stroje") + '",');
+    f.writeLine('"Stroje' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Mechanizácia") + '",');
     f.writeLine('"Doprava' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Doprava") + '"},');
     f.writeLine('},');
     f.writeLine('{"Rekapitulácia vyúčtovania":{');
