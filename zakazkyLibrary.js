@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.52";
+    var verzia = "0.3.53";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -174,10 +174,10 @@ const zistiIndexLinku = (link, remoteLinks) => {
     return index;
 }
 
-const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
+const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
 
     // inicializácia
-    var sDPH = vykaz.field("s DPH");
+    // var sDPH = vykaz.field("s DPH");
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var diel = vykaz.field("Popis");
@@ -274,9 +274,9 @@ const zakazkaPraceVykazyHZS = (vykaz, sadzbaDPH) => {
     return sumaBezDPH;
 };
 
-const zakazkaPraceVykazyPolozky = (vykaz, sadzbaDPH) => {
+const zakazkaPraceVykazyPolozky = (vykaz, sDPH, sadzbaDPH) => {
     // inicializácia
-    var sDPH = vykaz.field("s DPH");
+    //var sDPH = vykaz.field("s DPH");
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vykaz.field("Práce");
@@ -308,10 +308,10 @@ const zakazkaPraceVykazyPolozky = (vykaz, sadzbaDPH) => {
     return sumaBezDPH;
 };
 
-const zakazkaStrojeVykazy = (vykaz, sadzbaDPH) => {
+const zakazkaStrojeVykazy = (vykaz, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
-    var sDPH = vykaz.field("s DPH");
+    //var sDPH = vykaz.field("s DPH");
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vykaz.field("Stroje");
@@ -343,10 +343,10 @@ const zakazkaStrojeVykazy = (vykaz, sadzbaDPH) => {
     return sumaBezDPH;
 };
 
-const zakazkaMaterialVydajky = (vydajka, sadzbaDPH) => {
+const zakazkaMaterialVydajky = (vydajka, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
-    var sDPH = vydajka.field("s DPH");
+    //var sDPH = vydajka.field("s DPH");
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vydajka.field("Materiál");
@@ -396,7 +396,7 @@ const zakazkaPraceEvidencia = zakazka => {
     }
 };
 
-const zakazkaPrijmy = zakazka => {
+const zakazkaPrijmy = (zakazka, sDPH) => {
     var links = zakazka.linksFrom("Pokladňa", "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
@@ -405,7 +405,7 @@ const zakazkaPrijmy = zakazka => {
     return result;
 };
 
-const zakazkaVydavky = zakazka => {
+const zakazkaVydavky = (zakazka, sDPH) => {
     var links = zakazka.linksFrom("Pokladňa", "Zákazka")
     var result = 0;
     for (var p = 0; p < links.length; p++) {
