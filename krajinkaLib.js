@@ -3,7 +3,7 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.06";
+    var verzia = "0.2.07";
     //message("cpLibrary v." + verzia);
     return verzia;
 }
@@ -83,8 +83,8 @@ const noveCislo = ((sezona, db, withPrefix, sliceNum) => {
     return cislo;
 });
 // generuje nové číslo záznamu
-const noveCisloV2 = ((entry, withPrefix, sliceNum) => {
-    var db = entry.lib().title;
+const noveCisloV2 = ((entry, lib, withPrefix, sliceNum) => {
+    var db = lib().title;
     var sezona = entry.field("sezóna") ? entry.field("sezóna") : new Date().getFullYear();
     var prefix = 0;
     var lastNum = 0;
