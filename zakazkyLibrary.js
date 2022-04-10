@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.54";
+    var verzia = "0.3.55";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -22,28 +22,32 @@ const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
     switch (uctovanieDopravy) {
         case "Paušál":
             var cpPausal = cp.field("Paušál")[0];
-            var vPausal = vyuctovanie.field("Paušál")[0];
-            //if
-            vPausal.setAttr("cena", cpPausal.attr("cena"));
-            var cena = vPausal.attr("cena");
-            vPausal.setAttr("počet jázd", jazd);
-            vPausal.setAttr("cena celkom", cena * jazd);
+            var cena = cpPausal.attr("cena");
+            if (vyuctovanie) { // prepočet ak je už vygenerované vyúčtovanie
+                var vPausal = vyuctovanie.field("Paušál")[0];
+                //if
+                vPausal.setAttr("cena", cena);
+                vPausal.setAttr("počet jázd", jazd);
+                vPausal.setAttr("cena celkom", cena * jazd);
+            }
             celkom += jazd * cena;
             break;
         case "Km":
             var cpKm = cp.field("Sadzba km")[0];
-            var vKm = vyuctovanie.field("Sadzba km")[0];
             var km = 0;
             var jazdy = zakazka.linksFrom("Kniha jázd", "Zákazka")
-            vKm.setAttr("cena", cpKm.attr("cena"));
-            var cena = vKm.attr("cena");
             // spočítať kilometre
             for (var k = 0; k < jazdy.length; k++) {
                 km += jazdy[k].field("Najazdené km");
             }
-            vKm.setAttr("počet km", km);
-            vKm.setAttr("cena", cena);
-            vKm.setAttr("cena celkom", cena * km);
+            var cena = cpKm.attr("cena");
+            if (vyuctovanie) {
+                var vKm = vyuctovanie.field("Sadzba km")[0];
+                vKm.setAttr("cena", cena);
+                vKm.setAttr("počet km", km);
+                vKm.setAttr("cena", cena);
+                vKm.setAttr("cena celkom", cena * km);
+            }
             celkom += km * cena;
             break;
         case "% zo zákazky":
