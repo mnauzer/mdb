@@ -3,7 +3,7 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.07";
+    var verzia = "0.2.08";
     //message("cpLibrary v." + verzia);
     return verzia;
 }
@@ -195,5 +195,15 @@ const setTest = (status) => {
     } else {
         message("Databázy nastavené na Ostrý režim");
     }
+}
+
+const mclChecked = (mcl, value) => {
+    result = false;
+    for (var m = 0; m < mcl.length; m++) {
+        if (value === mcl[m]) {
+            result = true;
+        }
+    }
+    return result;
 }
 // End of file: 25.03.2022, 16:16
