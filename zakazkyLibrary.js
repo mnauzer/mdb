@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.55";
+    var verzia = "0.3.56";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -354,7 +354,7 @@ const zakazkaMaterialVydajky = (vydajka, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
     //var sDPH = vydajka.field("s DPH");
-    if (sDPH) { vykaz.set("s DPH", true) }
+    if (sDPH) { vydajka.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
     var polozky = vydajka.field("Materiál");
