@@ -649,7 +649,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
 
 const zakazkaToJson = zakazka => {
     var result = "";
-    var f = file("/sdcard/myfile.json");
+    var f = file("/sdcard/" + zakazka.field("Číslo") + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
     f.writeLine("{");
     f.writeLine("'Odberateľ_nick'" + ":'" + odberatel.field("Nick") + "',");
@@ -657,7 +657,7 @@ const zakazkaToJson = zakazka => {
     f.writeLine("'Odberateľ_priezvisko'" + ":'" + odberatel.field("Priezvisko") + "',");
     f.writeLine("'Odberateľ_titul'" + ":'" + odberatel.field("Titul") + "',");
     f.writeLine("'Odberateľ_ulica'" + ":'" + odberatel.field("Ulica") + "',");
-    f.writeLine("'Odberateľ_psc'" + ":'" + odberatel.field("PSC") + "',");
+    f.writeLine("'Odberateľ_psc'" + ":'" + odberatel.field("PSČ") + "',");
     f.writeLine("'Odberateľ_mesto'" + ":'" + odberatel.field("Mesto")) + "'";
     f.writeLine("}");
     f.close();                      // Close & save. Until closed,
