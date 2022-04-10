@@ -84,7 +84,7 @@ const noveCislo = ((sezona, db, withPrefix, sliceNum) => {
 });
 // generuje nové číslo záznamu
 const noveCisloV2 = ((entry, lib, withPrefix, sliceNum) => {
-    var db = lib().title;
+    var db = lib.title;
     var sezona = entry.field("sezóna") ? entry.field("sezóna") : new Date().getFullYear();
     var prefix = 0;
     var lastNum = 0;
