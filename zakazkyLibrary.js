@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.51";
+    var verzia = "0.3.52";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -626,7 +626,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
     noveVyuctovanie["Zákazka"] = zakazka;
     noveVyuctovanie["sezóna"] = sezona;
     noveVyuctovanie["Diely vyúčtovania"] = diely.join();
-    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH;
+    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();
     // doprava
     noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
     noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
