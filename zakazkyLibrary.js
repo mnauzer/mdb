@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.60";
+    var verzia = "0.3.61";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -677,8 +677,13 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"Cena celkom (s DPH)"' + ':"' + zakazka.field("Cena celkom (s DPH") + '",');
     f.writeLine('"Zaplatená záloha"' + ':"' + zakazka.field("Zaplatená záloha") + '",');
     f.writeLine('"Suma na úhradu"' + ':"' + zakazka.field("Suma na úhradu") + '"},');
-
-
+    f.writeLine('{"Rozpis prác":{');
+    f.writeLine('"Práce"' + ':"' + zakazka.field("Záhradnícke práce")[0].title + '",');
+    f.writeLine('"počet hodín"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("počet hodín") + '",');
+    f.writeLine('"základná sadzba"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("základná sadzba") + '",');
+    f.writeLine('"zľava"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("zľava") + '",');
+    f.writeLine('"účtovaná sadzba"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("účtovaná sadzba") + '",');
+    f.writeLine('"cena celkom"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("cena celkom") + '"},');
     f.writeLine('}');
     f.close();                      // Close & save. Until closed,
     //   the file is still empty
