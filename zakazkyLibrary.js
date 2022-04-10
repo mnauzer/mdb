@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.50";
+    var verzia = "0.3.51";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -592,12 +592,11 @@ const zakazkaNoveVyuctovanie = zakazka => {
     var datum = new Date();
     var cp = zakazka.field("Cenová ponuka")[0];
     var sezona = cp.field("sezóna");
-    var cp = zakazka.field("Cenová ponuka")[0];
     var cislo = noveCislo(sezona, "Vyúčtovania", 1, 2);
     var klient = cp.field("Klient")[0]
     var miesto = cp.field("Miesto realizácie")[0];
     var typ = cp.field("Typ cenovej ponuky");
-    var uctovanieDPH = ["Práce", "Materiál", "Doprava"];
+    var uctovanieDPH = zakazka.field("Účtovanie DPH");
 
     // inicializácia
     var empty = []; // mazacie pole
@@ -627,6 +626,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
     noveVyuctovanie["Zákazka"] = zakazka;
     noveVyuctovanie["sezóna"] = sezona;
     noveVyuctovanie["Diely vyúčtovania"] = diely.join();
+    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH;
     // doprava
     noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
     noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
