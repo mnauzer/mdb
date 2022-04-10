@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.56";
+    var verzia = "0.3.57";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -646,4 +646,22 @@ const zakazkaNoveVyuctovanie = zakazka => {
     zakazka.link("Vyúčtovanie", vyuctovanie);
     return vyuctovanie;
 }
-// End of file: 22.03.2022, 19:24
+
+const zakazkaToJson = zakazka => {
+    var result = "";
+    var f = file("/sdcard/myfile.json");
+    var odberatel = zakazka.field("Klient")[0];
+    f.writeLine("{");
+    f.writeLine("'Odberateľ_nick'" + ":" + odberatel.field("Nick") + ",");
+    f.writeLine("'Odberateľ_meno'" + ":" + odberatel.field("Meno") + ",");
+    f.writeLine("'Odberateľ_priezvisko'" + ":" + odberatel.field("Priezvisko") + ",");
+    f.writeLine("'Odberateľ_titul'" + ":" + odberatel.field("Titul") + ",");
+    f.writeLine("'Odberateľ_ulica'" + ":" + odberatel.field("Ulica") + ",");
+    f.writeLine("'Odberateľ_psc'" + ":" + odberatel.field("PSC") + ",");
+    f.writeLine("'Odberateľ_mesto'" + ":" + odberatel.field("Mesto"));
+    f.writeLine("}");
+    f.close();                      // Close & save. Until closed,
+    //   the file is still empty
+    //var a = f.readLines();
+    return result;
+// End of file: 22.03.2022, 19:24 '{"result":true, "count":42}'
