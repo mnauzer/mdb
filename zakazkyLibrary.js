@@ -650,6 +650,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
 const zakazkaToJson = zakazka => {
     var result = "";
     var cp = zakazka.field("Cenová ponuka")[0];
+    var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     var f = file("/sdcard/" + zakazka.field("Číslo") + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
     f.writeLine('{"Odberateľ":{');
@@ -674,18 +675,18 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"Doprava' + ':"' + mclChecked(zakazka.field("Účtovanie DPH"), "Doprava") + '"},');
     f.writeLine('},');
     f.writeLine('{"Rekapitulácia vyúčtovania":{');
-    f.writeLine('"Celkom (bez DPH)"' + ':"' + zakazka.field("Celkom (bez DPH)") + '",');
-    f.writeLine('"DPH 20%"' + ':"' + zakazka.field("DPH 20%") + '",');
-    f.writeLine('"Cena celkom (s DPH)"' + ':"' + zakazka.field("Cena celkom (s DPH)") + '",');
-    f.writeLine('"Zaplatená záloha"' + ':"' + zakazka.field("Zaplatená záloha") + '",');
-    f.writeLine('"Suma na úhradu"' + ':"' + zakazka.field("Suma na úhradu") + '"},');
+    f.writeLine('"Celkom (bez DPH)"' + ':"' + vyuctovanie.field("Celkom (bez DPH)") + '",');
+    f.writeLine('"DPH 20%"' + ':"' + vyuctovanie.field("DPH 20%") + '",');
+    f.writeLine('"Cena celkom (s DPH)"' + ':"' + vyuctovanie.field("Cena celkom (s DPH)") + '",');
+    f.writeLine('"Zaplatená záloha"' + ':"' + vyuctovanie.field("Zaplatená záloha") + '",');
+    f.writeLine('"Suma na úhradu"' + ':"' + vyuctovanie.field("Suma na úhradu") + '"},');
     f.writeLine('{"Rozpis prác":{');
-    f.writeLine('"Práce"' + ':"' + zakazka.field("Záhradnícke práce")[0].title + '",');
-    f.writeLine('"počet hodín"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("počet hodín") + '",');
-    f.writeLine('"základná sadzba"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("základná sadzba") + '",');
-    f.writeLine('"zľava"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("zľava") + '",');
-    f.writeLine('"účtovaná sadzba"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("účtovaná sadzba") + '",');
-    f.writeLine('"cena celkom"' + ':"' + zakazka.field("Záhradnícke práce")[0].attr("cena celkom") + '"},');
+    f.writeLine('"Práce"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].title + '",');
+    f.writeLine('"počet hodín"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("počet hodín") + '",');
+    f.writeLine('"základná sadzba"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("základná sadzba") + '",');
+    f.writeLine('"zľava"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("zľava") + '",');
+    f.writeLine('"účtovaná sadzba"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("účtovaná sadzba") + '",');
+    f.writeLine('"cena celkom"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("cena celkom") + '"},');
     f.writeLine('}');
     f.close();                      // Close & save. Until closed,
     //   the file is still empty
