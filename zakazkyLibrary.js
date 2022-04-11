@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.74";
+    var verzia = "0.3.75";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -647,7 +647,7 @@ const zakazkaNoveVyuctovanie = zakazka => {
     return vyuctovanie;
 }
 
-const zakazkaToJson = zakazka => {
+const zakazkaToJsonHZS = zakazka => {
     var result = "";
     var cp = zakazka.field("Cenová ponuka")[0];
     var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
@@ -672,7 +672,7 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"Práce"' + ':' + mclChecked(zakazka.field("Účtovanie DPH"), "Práce") + ',');
     f.writeLine('"Materiál"' + ':' + mclChecked(zakazka.field("Účtovanie DPH"), "Materiál") + ',');
     f.writeLine('"Stroje"' + ':' + mclChecked(zakazka.field("Účtovanie DPH"), "Mechanizácia") + ',');
-    f.writeLine('"Doprava"' + ':' + mclChecked(zakazka.field("Účtovanie DPH"), "Doprava") + '},');
+    f.writeLine('"Doprava"' + ':' + mclChecked(zakazka.field("Účtovanie DPH"), "Doprava") + '}');
     f.writeLine('},');
     f.writeLine('"Rekapitulácia vyúčtovania":{');
     f.writeLine('"Celkom (bez DPH)"' + ':' + vyuctovanie.field("Celkom (bez DPH)") + ',');
@@ -686,8 +686,8 @@ const zakazkaToJson = zakazka => {
     f.writeLine('"základná sadzba"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("základná sadzba") + ',');
     f.writeLine('"zľava"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("zľava") + '",');
     f.writeLine('"účtovaná sadzba"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("účtovaná sadzba") + ',');
-    f.writeLine('"cena celkom"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("cena celkom") + '},');
-    f.writeLine('}');
+    f.writeLine('"cena celkom"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("cena celkom") + '}');
+    f.writeLine('}}');
     f.close();                      // Close & save. Until closed,
     //   the file is still empty
     //var a = f.readLines();
