@@ -246,7 +246,7 @@ const generujVyuctovanie = zakazka => {
     var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     // if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
-    var verzia = "0.3.02";
+    var verzia = "0.3.03";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("Generuj vyúčtovanie v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
