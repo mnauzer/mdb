@@ -274,6 +274,7 @@ const generujVyuctovanie = zakazka => {
                 praceCelkomBezDPH += zakazkaPraceVykazyPolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             }
             vykazyPrac[vp].link("Vyúčtovanie", noveVyuctovanie);
+            noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
             // zápis do vyúčtovania
 
             if (praceSDPH) {
@@ -284,7 +285,6 @@ const generujVyuctovanie = zakazka => {
                 txtPrace = " bez DPH";
             }
         }
-        noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
         vyuctovanieCelkomBezDph += praceCelkomBezDPH;
     } else {
         txtPrace = " žiadne práce";
