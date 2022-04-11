@@ -246,7 +246,7 @@ const generujVyuctovanie = zakazka => {
     var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     // if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
-    var verzia = "0.3.01";
+    var verzia = "0.3.02";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("Generuj vyúčtovanie v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
@@ -275,8 +275,6 @@ const generujVyuctovanie = zakazka => {
             }
             vykazyPrac[vp].link("Vyúčtovanie", noveVyuctovanie);
             // zápis do vyúčtovania
-            noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
-            vyuctovanieCelkomBezDph += praceCelkomBezDPH;
 
             if (praceSDPH) {
                 txtPrace = " s DPH";
@@ -286,6 +284,8 @@ const generujVyuctovanie = zakazka => {
                 txtPrace = " bez DPH";
             }
         }
+        noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
+        vyuctovanieCelkomBezDph += praceCelkomBezDPH;
     } else {
         txtPrace = " žiadne práce";
     }
