@@ -28,12 +28,10 @@ const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
 
 const prepocetZaznamuEvidencie = evidencia => {
     var datum = evidencia.field("Dátum")
-    // verzia
-    var verzia = "0.1.03";
-    var kniznica = verziaKniznice();
-    var krajinkaLib = verziaKrajinkaLib();
-    message("Evidenia prác v." + verzia + "\nevidenciaLibrary v." + kniznica + "\nkrajikaLib v." + krajinkaLib);
-
+    var verzia = "0.1.07";
+    var vKniznica = verziaKniznice();
+    var vKrajinkaLib = verziaKrajinkaLib();
+    message("Prepočítaj zákazku v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
     // nastaviť sezónu
     evidencia.set("sezóna", datum.getFullYear());
     var sezona = evidencia.field("sezóna");

@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.75";
+    var verzia = "0.3.76";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -22,7 +22,11 @@ const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
     switch (uctovanieDopravy) {
         case "Paušál":
             var cpPausal = cp.field("Paušál")[0];
-            var cena = cpPausal.attr("cena");
+            if (cpPausal) {
+                var cena = cpPausal.attr("cena");
+            } else {
+                message("nie je zadaná paušálna cena v CP")
+            }
             if (vyuctovanie) { // prepočet ak je už vygenerované vyúčtovanie
                 var vPausal = vyuctovanie.field("Paušál")[0];
                 //if
@@ -40,7 +44,11 @@ const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
             for (var k = 0; k < jazdy.length; k++) {
                 km += jazdy[k].field("Najazdené km");
             }
-            var cena = cpKm.attr("cena");
+            if (cpKm) {
+                var cena = cpKm.attr("cena");
+            } else {
+                message("nie ja zadaná cena za km v CP")
+            }
             if (vyuctovanie) {
                 var vKm = vyuctovanie.field("Sadzba km")[0];
                 vKm.setAttr("cena", cena);
