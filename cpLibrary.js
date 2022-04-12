@@ -13,6 +13,108 @@ function verziaKniznice() {
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
 
+// Library/Event/Script:    Projekty\Cenové ponuky\shared\prepocet_ponuky.js
+// JS Libraries:
+// Dátum:                   25.03.2022
+// Popis:                   just for my garden business. this code is muddy like me
+const prepocetPonuky = ponuka => {
+    // verzia
+    var verzia = "0.2.03";
+    message("Skript Cenová ponuka v." + verzia
+        + "\nVerzia: " + verziaKniznice()
+        + "\nVerzia krajinkaLib: " + verziaKrajinkaLib());
+
+    //
+    message("Prepočítavam...")
+    // inicializácia
+    var typ = ponuka.field("Typ cenovej ponuky");
+    var uctoDopravy = ponuka.field("Účtovanie dopravy");
+    //spôsob účtovania dopravy
+    var cislo = ponuka.field("Číslo");
+    var pracaCelkom = 0;
+    var strojeCelkom = 0;
+    var materialCelkom = 0;
+    var cenaCelkomBezDPH = 0;
+    var cenaSDPH = 0;
+    var dph = 0;
+
+    // nastaviť sezónu
+    ponuka.set("sezóna", ponuka.field("Dátum").getFullYear());
+    var sezona = ponuka.field("sezóna");
+    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
+
+    // nastaviť splatnosť
+    var datum = new Date(ponuka.field("Dátum"));
+    var platnost = new Date(ponuka.field("Platnosť do"));
+    var platnost30 = new Date(moment(datum).add(15, "Days"));
+    ponuka.set("Platnosť do", platnost > datum ? platnost : platnost30);
+
+    // doplň adresu klienta do Krycieho listu
+    var klient = ponuka.field("Klient")[0] ? ponuka.field("Klient")[0] : ponuka.field("Cenová ponuka")[0].field("Klient")[0];
+    if (klient) {
+        ponuka.set("Odberateľ", pullAddress(klient));
+    }
+
+    // generuj nové číslo
+    cislo = cislo ? cislo : noveCislo(sezona, "Cenové ponuky", 1, 2);
+    ponuka.set("Číslo", cislo);
+
+    // prepočet podľa typu cenovej ponuky
+    switch (typ) {
+        case "Položky":
+            var diely = ponuka.field("Diely cenovej ponuky");
+            // prejsť všetky diely a spočítať práce a materiál
+            if (diely) {
+                for (var d = 0; d < diely.length; d++) {
+                    cenaCelkomBezDPH += prepocetDielPolozky(ponuka, diely[d]);
+                }
+            }
+            break;
+        case "Hodinovka":
+            var diely = ponuka.field("Diely cenovej ponuky hzs");
+            if (diely) {
+                for (var d = 0; d < diely.length; d++) {
+                    pracaCelkom += prepocetDielHZS(ponuka, diely[d]);
+                }
+                if (ponuka.field("+Materiál")) {
+                    // spočítať  materiál
+                    var material = ponuka.field("Materiál");
+                    materialCelkom = polozkaMaterial(material);
+                    ponuka.set("Materiál hzs", materialCelkom);
+                    ponuka.set("Materiál celkom bez DPH", materialCelkom);
+                }
+                if (ponuka.field("+Mechanizácia")) {
+                    // spočítať mechanizácie
+                    var stroje = ponuka.field("Stroje");
+                    strojeCelkom = prepocetDielStroje(stroje);
+                    ponuka.set("Využitie mechanizácie", strojeCelkom);
+                    ponuka.set("Stroje celkom bez DPH", strojeCelkom);
+                }
+                cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
+
+            }
+            break;
+        case "Ad Hoc":
+            message("I'am thinking about it!");
+            break;
+    }
+
+    // Doprava každopádne
+    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy); // cenová ponuka + spôsob účtovania dopravy
+
+    // dph
+    cenaCelkomBezDPH += dopravaCelkom;
+    dph = cenaCelkomBezDPH * sadzbaDPH;
+    cenaSDPH += cenaCelkomBezDPH + dph;
+    ponuka.set("Práca celkom bez DPH", pracaCelkom);
+    ponuka.set("Práce hzs", pracaCelkom);
+    ponuka.set("Doprava", dopravaCelkom);
+    ponuka.set("Celkom (bez DPH)", cenaCelkomBezDPH);
+    ponuka.set("DPH 20%", dph);
+    ponuka.set("Cena celkom (s DPH)", cenaSDPH);
+    message("Hotovo...Cena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
+}
+
 const generujZakazku = cp => {
     // Library/Event/Script:    Projekty\Cenové ponuky\action entry\Generuj zákazku_w.js
     // JS Libraries:
