@@ -2,26 +2,162 @@
 // JS Libraries:
 // Dátum:                   07.03.2022
 // Popis:
-
-// vytvorenie nových výkazov prác z cenovej ponuky
-// vytvorí výkaz pre každý diel cenovej ponuky
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.03";
-    //message("cpLibrary v." + verzia);
-    return nazov + " " + verzia;
+    var verzia = "0.2.08";
+    return nazov + " v." + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
+
+const prepocetPonuky = ponuka => {
+    // verzia
+    var verzia = "0.2.03";
+    message("Skript Cenová ponuka v." + verzia
+        + "\n" + verziaKniznice()
+        + "\n" + verziaKrajinkaLib());
+    //
+    message("Prepočítavam...")
+    // inicializácia
+    var typ = ponuka.field("Typ cenovej ponuky");
+    var uctoDopravy = ponuka.field("Účtovanie dopravy");
+    //spôsob účtovania dopravy
+    var cislo = ponuka.field("Číslo");
+    var pracaCelkom = 0;
+    var strojeCelkom = 0;
+    var materialCelkom = 0;
+    var cenaCelkomBezDPH = 0;
+    var cenaSDPH = 0;
+    var dph = 0;
+
+    // nastaviť sezónu
+    ponuka.set("sezóna", ponuka.field("Dátum").getFullYear());
+    var sezona = ponuka.field("sezóna");
+    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
+
+    // nastaviť splatnosť
+    var datum = new Date(ponuka.field("Dátum"));
+    var platnost = new Date(ponuka.field("Platnosť do"));
+    var platnost30 = new Date(moment(datum).add(15, "Days"));
+    ponuka.set("Platnosť do", platnost > datum ? platnost : platnost30);
+
+    // doplň adresu klienta do Krycieho listu
+    var klient = ponuka.field("Klient")[0] ? ponuka.field("Klient")[0] : ponuka.field("Cenová ponuka")[0].field("Klient")[0];
+    if (klient) {
+        ponuka.set("Odberateľ", pullAddress(klient));
+    }
+
+    // generuj nové číslo
+    cislo = cislo ? cislo : noveCislo(sezona, "Cenové ponuky", 1, 2);
+    ponuka.set("Číslo", cislo);
+
+    // prepočet podľa typu cenovej ponuky
+    switch (typ) {
+        case "Položky":
+            var diely = ponuka.field("Diely cenovej ponuky");
+            // prejsť všetky diely a spočítať práce a materiál
+            if (diely) {
+                for (var d = 0; d < diely.length; d++) {
+                    cenaCelkomBezDPH += prepocetDielPolozky(ponuka, diely[d]);
+                }
+            }
+            break;
+        case "Hodinovka":
+            var diely = ponuka.field("Diely cenovej ponuky hzs");
+            if (diely) {
+                for (var d = 0; d < diely.length; d++) {
+                    pracaCelkom += prepocetDielHZS(ponuka, diely[d]);
+                }
+                if (ponuka.field("+Materiál")) {
+                    // spočítať  materiál
+                    var material = ponuka.field("Materiál");
+                    materialCelkom = polozkaMaterial(material);
+                    ponuka.set("Materiál hzs", materialCelkom);
+                    ponuka.set("Materiál celkom bez DPH", materialCelkom);
+                }
+                if (ponuka.field("+Mechanizácia")) {
+                    // spočítať mechanizácie
+                    var stroje = ponuka.field("Stroje");
+                    strojeCelkom = prepocetDielStroje(stroje);
+                    ponuka.set("Využitie mechanizácie", strojeCelkom);
+                    ponuka.set("Stroje celkom bez DPH", strojeCelkom);
+                }
+                cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
+
+            }
+            break;
+        case "Ad Hoc":
+            message("I'am thinking about it!");
+            break;
+    }
+
+    // Doprava každopádne
+    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy); // cenová ponuka + spôsob účtovania dopravy
+
+    // dph
+    cenaCelkomBezDPH += dopravaCelkom;
+    dph = cenaCelkomBezDPH * sadzbaDPH;
+    cenaSDPH += cenaCelkomBezDPH + dph;
+    ponuka.set("Práca celkom bez DPH", pracaCelkom);
+    ponuka.set("Práce hzs", pracaCelkom);
+    ponuka.set("Doprava", dopravaCelkom);
+    ponuka.set("Celkom (bez DPH)", cenaCelkomBezDPH);
+    ponuka.set("DPH 20%", dph);
+    ponuka.set("Cena celkom (s DPH)", cenaSDPH);
+    message("Hotovo...Cena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
+}
+
+const generujZakazku = cp => {
+    var verzia = "0.2.03";
+    var vKniznica = verziaKniznice();
+    var vKrajinkaLib = verziaKrajinkaLib();
+    message("Script Generuj zákazku v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
+
+    var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
+
+    if (cp.field("Stav cenovej ponuky") == "Schválená") {
+
+        var stav = cp.field("Stav cenovej ponuky");
+        var typ = cp.field("Typ cenovej ponuky");
+
+        // vygenerovať novú zákazku
+        zakazka = ponukaNovaZakazka(cp);
+
+        if (typ == "Hodinovka") {
+            generujVykazyPrac(zakazka);
+            if (cp.field("+Materiál")) {
+                generujVydajkyMaterialu(zakazka);
+            }
+            if (cp.field("+Mechanizácia")) {
+                generujVykazStrojov(zakazka);
+            }
+        } else if (typ == "Položky") {
+            generujVykazyPrac(zakazka);
+            generujVydajkyMaterialu(zakazka);
+        } else {
+        }
+
+        cp.set("Stav cenovej ponuky", "Uzavretá");
+        message("Zákazka č." + zakazka.field("Číslo") + " bola vygenerovaná");
+    } else if (!zakazka) {
+        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field("Číslo"));
+    } else {
+        message("Cenová ponuka musí byť schválená");
+    }
+
+    // End of file: 08.03.2022, 08:01
+}
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
-    var lib = libByName("Zákazky");
-    var novaZakazka = new Object();
-    // inicializácia
-    var datum = new Date();
+    // nastaviť sezónu
+    cp.set("sezóna", cp.field("Dátum").getFullYear());
     var sezona = cp.field("sezóna");
+    var lib = libByName("Zákazky");
+    // inicializácia
+    var novaZakazka = new Object();
+    var datum = new Date();
     var typZakazky = "Realizácia" //harcoded
     var cislo = noveCislo(sezona, "Zákazky", 1, 2);
-    var klient = cp.field("Klient")[0]
+    var klient = cp.field("Klient")[0];
     var miesto = cp.field("Miesto realizácie")[0];
     var nazovZakazky = cp.field("Popis cenovej ponuky");
     var typ = cp.field("Typ cenovej ponuky");
@@ -31,7 +167,7 @@ const ponukaNovaZakazka = cp => {
     } else {
         var dielyZakazky = cp.field("Diely cenovej ponuky");
     }
-    var uctovanieDPH = ["Práce", "Materiál", "Doprava"];
+    var uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
 
     // hlavička a základné nastavenia
     novaZakazka["Dátum"] = datum;
@@ -45,6 +181,7 @@ const ponukaNovaZakazka = cp => {
     novaZakazka["Cenová ponuka"] = cp;
     novaZakazka["sezóna"] = sezona;
     novaZakazka["Účtovanie DPH"] = uctovanieDPH;
+    novaZakazka["Účtovanie zákazky"] = typ;
     lib.create(novaZakazka);
 
     var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka")[0];

@@ -4,10 +4,12 @@
 // Popis:
 
 function verziaKniznice() {
+    var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.01";
+    var verzia = "0.2.03";
+    result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
-    return nazov + " " + verzia;
+    return result;
 }
 
 const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
@@ -28,12 +30,10 @@ const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
 
 const prepocetZaznamuEvidencie = evidencia => {
     var datum = evidencia.field("Dátum")
-    // verzia
-    var verzia = "0.1.03";
-    var kniznica = verziaKniznice();
-    var krajinkaLib = verziaKrajinkaLib();
-    message("Evidenia prác v." + verzia + "\nevidenciaLibrary v." + kniznica + "\nkrajikaLib v." + krajinkaLib);
-
+    var verzia = "0.1.07";
+    var vKniznica = verziaKniznice();
+    var vKrajinkaLib = verziaKrajinkaLib();
+    message("Prepočítaj zákazku v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
     // nastaviť sezónu
     evidencia.set("sezóna", datum.getFullYear());
     var sezona = evidencia.field("sezóna");
@@ -55,7 +55,6 @@ const prepocetZaznamuEvidencie = evidencia => {
     // zaokrúhli na 1/4 hod
     var casOd = roundTimeQ(evidencia.field("Od"));
     var casDo = roundTimeQ(evidencia.field("Do"));
-
 
     // spočítaj hodiny, mzdy a náklady
     odpracovaneOsoba = (casDo - casOd) / 3600000;

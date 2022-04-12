@@ -3,9 +3,15 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
+<<<<<<< HEAD
     var verzia = "0.2.06";
     //message("cpLibrary v." + verzia);
     return verzia;
+=======
+    var nazov = "krajinkaLlib";
+    var verzia = "0.2.09";
+    return nazov + " v." + verzia;
+>>>>>>> fc7384bc89384f1fc68e789853de8924856ee60e
 }
 
 const setEdit = entry => {
@@ -83,8 +89,13 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
     return cislo;
 };
 // generuje nové číslo záznamu
+<<<<<<< HEAD
 const noveCisloV2 = (entry, withPrefix, sliceNum) => {
     var db = entry.lib().title;
+=======
+const noveCisloV2 = ((entry, lib, withPrefix, sliceNum) => {
+    var db = lib.title;
+>>>>>>> fc7384bc89384f1fc68e789853de8924856ee60e
     var sezona = entry.field("sezóna") ? entry.field("sezóna") : new Date().getFullYear();
     var prefix = 0;
     var lastNum = 0;
@@ -183,4 +194,30 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 
+<<<<<<< HEAD
+=======
+const setTest = (status) => {
+    var lib = libByName("KRAJINKA APP DATABÁZY");
+    var databazy = lib.entries();
+    for (var d = 0; d < databazy.length; d++) {
+        databazy[d].set("Testovanie", status);
+    }
+    if (status) {
+
+        message("Databázy nastavené na Testovanie");
+    } else {
+        message("Databázy nastavené na Ostrý režim");
+    }
+}
+
+const mclChecked = (mcl, value) => {
+    result = false;
+    for (var m = 0; m < mcl.length; m++) {
+        if (value === mcl[m]) {
+            result = true;
+        }
+    }
+    return result;
+}
+>>>>>>> fc7384bc89384f1fc68e789853de8924856ee60e
 // End of file: 25.03.2022, 16:16
