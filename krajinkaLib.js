@@ -3,7 +3,7 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.05";
+    var verzia = "0.2.06";
     //message("cpLibrary v." + verzia);
     return verzia;
 }
@@ -18,30 +18,30 @@ const setTlac = entry => {
     return;
 }
 
-const seDebug = entry => {
+const setDebug = entry => {
     entry.set("Tlač", "Debug");
     return;
 }
 
-const pad = ((number, length) => {
+const pad = (number, length) => {
     let str = '' + number;
     while (str.length < length) {
         str = '0' + str;
     }
     return str;
-});
+};
 
 // zaokrúhľovanie času na 1/4 hodiny
-const roundTimeQ = (time => {
+const roundTimeQ = time => {
     var timeToReturn = new Date(time);
     timeToReturn.setMilliseconds(Math.round(timeToReturn.getMilliseconds() / 1000) * 1000);
     timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
     timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
     return timeToReturn;
-});
+};
 
 // kontrola či je databáza v móde testovania
-const isTest = ((sezona, db) => {
+const isTest = (sezona, db) => {
     //message("zisťujem stav app a databázy...");
     var entry = libByName("KRAJINKA APP").find(sezona)[0];
     var appStatus = entry.field("Prevádzka appky");
@@ -55,10 +55,10 @@ const isTest = ((sezona, db) => {
         var test = false;
     }
     return test;
-});
+};
 
 // generuje nové číslo záznamu
-const noveCislo = ((sezona, db, withPrefix, sliceNum) => {
+const noveCislo = (sezona, db, withPrefix, sliceNum) => {
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;
@@ -81,9 +81,9 @@ const noveCislo = ((sezona, db, withPrefix, sliceNum) => {
         }
     }
     return cislo;
-});
+};
 // generuje nové číslo záznamu
-const noveCisloV2 = ((entry, withPrefix, sliceNum) => {
+const noveCisloV2 = (entry, withPrefix, sliceNum) => {
     var db = entry.lib().title;
     var sezona = entry.field("sezóna") ? entry.field("sezóna") : new Date().getFullYear();
     var prefix = 0;
@@ -108,15 +108,15 @@ const noveCisloV2 = ((entry, withPrefix, sliceNum) => {
         }
     }
     return cislo;
-});
+};
 
-const pullAddress = ((klient) => {
+const pullAddress = klient => {
     var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim();
     var ulica = klient.field("Ulica");
     var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
     var adresa = meno + "\n" + ulica + "\n" + mesto + "\n";
     return adresa;
-});
+};
 
 const marzaPercento = (pc, nc) => {
     var result = (((pc - nc) / pc) * 100).toFixed(2);
@@ -182,4 +182,5 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     sadzba = zamestnanec.field("Hodinovka");
     return sadzba;
 };
+
 // End of file: 25.03.2022, 16:16
