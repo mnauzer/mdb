@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.79";
+    var verzia = "0.3.80";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -624,7 +624,7 @@ const zistiIndexLinku = (link, remoteLinks) => {
         indexy.push(remoteLinks[r].id);
     }
     var index = indexy.indexOf(link.id);
-
+    message(index);
     return index;
 }
 
