@@ -522,7 +522,7 @@ const zakazkaPocetJazd = zakazka => {
     for (var p = 0; p < zastavky.length; p++) {
         var remoteLinks = zastavky[p].field("Zastávka na zákazke");
         rlIndex = zistiIndexLinku(zastavky[p], remoteLinks)
-        if (remoteLinks[rlIndex].attr("účtovať jazdu") == true) {
+        if (remoteLinks[0].attr("účtovať jazdu") == true) {
             jazd += 1;
         }
     };
