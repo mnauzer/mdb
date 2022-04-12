@@ -64,8 +64,9 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
     var dbID = 0;
     var cislo = 0;
     var attr = "";
-    var entry = libByName("KRAJINKA APP").find(sezona)[0];
-    var databazy = entry.field("Databázy");
+    var rok = libByName("KRAJINKA APP").find(sezona)[0];
+    message(rok.length);
+    var databazy = rok.field("Databázy");
 
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
