@@ -148,6 +148,9 @@ const generujZakazku = cp => {
 }
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
+    // nastaviť sezónu
+    cp.set("sezóna", cp.field("Dátum").getFullYear());
+    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
     var sezona = cp.field("sezóna");
     var lib = libByName("Zákazky");
     // inicializácia
