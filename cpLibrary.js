@@ -13,16 +13,12 @@ function verziaKniznice() {
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
 
-// Library/Event/Script:    Projekty\Cenové ponuky\shared\prepocet_ponuky.js
-// JS Libraries:
-// Dátum:                   25.03.2022
-// Popis:                   just for my garden business. this code is muddy like me
 const prepocetPonuky = ponuka => {
     // verzia
     var verzia = "0.2.03";
     message("Skript Cenová ponuka v." + verzia
-        + "\nVerzia: " + verziaKniznice()
-        + "\nVerzia krajinkaLib: " + verziaKrajinkaLib());
+        + "\nv." + verziaKniznice()
+        + "\nv." + verziaKrajinkaLib());
 
     //
     message("Prepočítavam...")
@@ -116,14 +112,10 @@ const prepocetPonuky = ponuka => {
 }
 
 const generujZakazku = cp => {
-    // Library/Event/Script:    Projekty\Cenové ponuky\action entry\Generuj zákazku_w.js
-    // JS Libraries:
-    // Dátum:                   08.03.2022
-    // Popis:                   vygeneruje novú Zákazku
     var verzia = "0.2.01";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("Generuj zákazku v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
+    message("Script Generuj zákazku v." + verzia + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
 
     var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
 
@@ -161,14 +153,14 @@ const generujZakazku = cp => {
 }
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
-    var lib = libByName("Zákazky");
-    var novaZakazka = new Object();
-    // inicializácia
-    var datum = new Date();
     var sezona = cp.field("sezóna");
+    var lib = libByName("Zákazky");
+    // inicializácia
+    var novaZakazka = new Object();
+    var datum = new Date();
     var typZakazky = "Realizácia" //harcoded
     var cislo = noveCislo(sezona, "Zákazky", 1, 2);
-    var klient = cp.field("Klient")[0]
+    var klient = cp.field("Klient")[0];
     var miesto = cp.field("Miesto realizácie")[0];
     var nazovZakazky = cp.field("Popis cenovej ponuky");
     var typ = cp.field("Typ cenovej ponuky");
