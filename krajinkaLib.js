@@ -176,6 +176,7 @@ const sadzbaZamestnanca2 = (zamestnanec, datum) => {
     sadzba = zamestnanec.field("Hodinovka");
     return sadzba;
 };
+
 const sadzbaZamestnanca = (zamestnanec, datum) => {
     var sadzba = 0;
     //zatial len zo zaznnamu
