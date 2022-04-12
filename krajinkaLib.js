@@ -3,9 +3,9 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
-    var verzia = "0.2.08";
-    //message("cpLibrary v." + verzia);
-    return verzia;
+    var nazov = "krajinkaLlib";
+    var verzia = "0.2.09";
+    return nazov + " v." + verzia;
 }
 
 const setEdit = entry => {

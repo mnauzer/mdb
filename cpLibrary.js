@@ -2,14 +2,10 @@
 // JS Libraries:
 // Dátum:                   07.03.2022
 // Popis:
-
-// vytvorenie nových výkazov prác z cenovej ponuky
-// vytvorí výkaz pre každý diel cenovej ponuky
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.04";
-    //message("cpLibrary v." + verzia);
-    return nazov + "v. " + verzia;
+    var verzia = "0.2.05";
+    return nazov + " v." + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
 
@@ -19,7 +15,6 @@ const prepocetPonuky = ponuka => {
     message("Skript Cenová ponuka v." + verzia
         + "\n" + verziaKniznice()
         + "\n" + verziaKrajinkaLib());
-
     //
     message("Prepočítavam...")
     // inicializácia
