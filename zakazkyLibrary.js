@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.78";
+    var verzia = "0.3.79";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -512,9 +512,17 @@ const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
 const zakazkaPocetJazd = zakazka => {
     // počíta len cesty na miesto realizácie
     var links = zakazka.linksFrom("Kniha jázd", "Zákazka")
+    var zastavky = zakazka.linksFrom("Kniha jázd", "Zastávka na zákazke")
     var jazd = 0;
     for (var p = 0; p < links.length; p++) {
         if (links[p].field("Účel jazdy") == "Výjazd") {
+            jazd += 1;
+        }
+    };
+    for (var p = 0; p < zastavky.length; p++) {
+        var remoteLinks = zastavky[p].field("Zastávka na zákazke");
+        rlIndex = zistiIndexLinku(zastavky[p], remoteLinks)
+        if (remoteLinks[rlIndex].attr("účtovať jazdu") == true) {
             jazd += 1;
         }
     };
