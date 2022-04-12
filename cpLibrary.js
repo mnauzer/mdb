@@ -7,9 +7,9 @@
 // vytvorí výkaz pre každý diel cenovej ponuky
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.03";
+    var verzia = "0.2.04";
     //message("cpLibrary v." + verzia);
-    return nazov + " " + verzia;
+    return nazov + "v. " + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
 
@@ -17,8 +17,8 @@ const prepocetPonuky = ponuka => {
     // verzia
     var verzia = "0.2.03";
     message("Skript Cenová ponuka v." + verzia
-        + "\nv." + verziaKniznice()
-        + "\nv." + verziaKrajinkaLib());
+        + "\n" + verziaKniznice()
+        + "\n" + verziaKrajinkaLib());
 
     //
     message("Prepočítavam...")
@@ -115,7 +115,7 @@ const generujZakazku = cp => {
     var verzia = "0.2.01";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("Script Generuj zákazku v." + verzia + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
+    message("Script Generuj zákazku v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
     var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
 
@@ -170,7 +170,7 @@ const ponukaNovaZakazka = cp => {
     } else {
         var dielyZakazky = cp.field("Diely cenovej ponuky");
     }
-    var uctovanieDPH = ["Práce", "Materiál", "Doprava"];
+    var uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
 
     // hlavička a základné nastavenia
     novaZakazka["Dátum"] = datum;
