@@ -12,6 +12,51 @@ function verziaKniznice() {
     return nazov + " " + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
+
+const generujZakazku = cp => {
+    // Library/Event/Script:    Projekty\Cenové ponuky\action entry\Generuj zákazku_w.js
+    // JS Libraries:
+    // Dátum:                   08.03.2022
+    // Popis:                   vygeneruje novú Zákazku
+    var verzia = "0.2.01";
+    var vKniznica = verziaKniznice();
+    var vKrajinkaLib = verziaKrajinkaLib();
+    message("Generuj zákazku v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
+
+    var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
+
+    if (cp.field("Stav cenovej ponuky") == "Schválená") {
+
+        var stav = cp.field("Stav cenovej ponuky");
+        var typ = cp.field("Typ cenovej ponuky");
+
+        // vygenerovať novú zákazku
+        zakazka = ponukaNovaZakazka(cp);
+
+        if (typ == "Hodinovka") {
+            generujVykazyPrac(zakazka);
+            if (cp.field("+Materiál")) {
+                generujVydajkyMaterialu(zakazka);
+            }
+            if (cp.field("+Mechanizácia")) {
+                generujVykazStrojov(zakazka);
+            }
+        } else if (typ == "Položky") {
+            generujVykazyPrac(zakazka);
+            generujVydajkyMaterialu(zakazka);
+        } else {
+        }
+
+        cp.set("Stav cenovej ponuky", "Uzavretá");
+        message("Zákazka č." + zakazka.field("Číslo") + " bola vygenerovaná");
+    } else if (!zakazka) {
+        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field("Číslo"));
+    } else {
+        message("Cenová ponuka musí byť schválená");
+    }
+
+    // End of file: 08.03.2022, 08:01
+}
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
     var lib = libByName("Zákazky");
