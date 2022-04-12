@@ -156,6 +156,7 @@ const ponukaNovaZakazka = cp => {
     var novaZakazka = new Object();
     var datum = new Date();
     var typZakazky = "Realizácia" //harcoded
+    message(sezona);
     var cislo = noveCislo(sezona, "Zákazky", 1, 2);
     var klient = cp.field("Klient")[0];
     var miesto = cp.field("Miesto realizácie")[0];
