@@ -12,7 +12,7 @@ function verziaKniznice() {
 const prepocetPonuky = ponuka => {
     // verzia
     var verzia = "0.2.03";
-    message("Skript Cenová ponuka v." + verzia
+    message("CENOVÁ PONUKA v." + verzia
         + "\n" + verziaKniznice()
         + "\n" + verziaKrajinkaLib());
     //
@@ -107,10 +107,10 @@ const prepocetPonuky = ponuka => {
 }
 
 const generujZakazku = cp => {
-    var verzia = "0.2.03";
+    var verzia = "0.2.04";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("Script Generuj zákazku v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
+    message("GENERUJ ZÁKAZKU v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
     var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
 
