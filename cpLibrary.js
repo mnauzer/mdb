@@ -4,7 +4,7 @@
 // Popis:
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.05";
+    var verzia = "0.2.06";
     return nazov + " v." + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
@@ -107,7 +107,7 @@ const prepocetPonuky = ponuka => {
 }
 
 const generujZakazku = cp => {
-    var verzia = "0.2.02";
+    var verzia = "0.2.03";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("Script Generuj zákazku v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
@@ -150,7 +150,6 @@ const generujZakazku = cp => {
 const ponukaNovaZakazka = cp => {
     // nastaviť sezónu
     cp.set("sezóna", cp.field("Dátum").getFullYear());
-    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
     var sezona = cp.field("sezóna");
     var lib = libByName("Zákazky");
     // inicializácia
