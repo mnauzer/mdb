@@ -107,7 +107,7 @@ const prepocetPonuky = ponuka => {
 }
 
 const generujZakazku = cp => {
-    var verzia = "0.2.06";
+    var verzia = "0.2.07";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ ZÁKAZKU v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
