@@ -671,7 +671,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
             vykaz.field("Rozpis")[el].setAttr(attrMJ, rVykaz.attr("sadzba"));
             vykaz.field("Rozpis")[el].setAttr("cena celkom", rVykaz.attr("cena celkom"));
             // nastav príznak výkazu na tlač
-            vykaz.field("Rozpis")[el].set("Tlač", "Tlač");
+            setTlac(vykaz.field("Rozpis")[el])
             sumaBezDPH += rVykaz.attr("cena celkom")
         }
         polozka.setAttr("dodané množstvo", hodinyCelkom);
@@ -725,7 +725,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
         vykaz.set("Suma s DPH", null);
     }
     // message("Suma bez DPH: " + sumaBezDPH);
-    vykaz.set("Tlač", "Tlač");
+    setTlac(vykaz);
     return sumaBezDPH;
 };
 
@@ -961,8 +961,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vyuctovanie.set(popis + " celkom", empty);
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
     var vykazPraceSadzbyCelkom = 0;
-    var hodinCelkom = 0;
     var cenaCelkom = 0;
+    var hodinCelkom = 0;
     var uctovanaSadzba = 0;
     vyuctovanie.link(popis, vykazPraceSadzby);
     var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
@@ -985,15 +985,15 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         hodinCelkom += vykazPraceSadzby.attr("dodané množstvo");
         uctovanaSadzba = vykazPraceSadzby.attr("účtovaná sadzba");
         // nastav príznak Tlač
-        vyuctovanie.field(popis)[0].set("Tlač", "Tlač");
+        setTlac(vyuctovanie);
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis " + popis, evidenciaLinks[e]);
             vyuctovanie.field("Rozpis " + popis)[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
             cenaCelkom = hodinCelkom * uctovanaSadzba;
-            vykazPracCelkom += cenaCelkom;
             // nastav príznak Tlač
-            evidenciaLinks[e].set("Tlač", "Tlač");
+            setTlac(evidenciaLinks[e])
         }
+        vykazPracCelkom += cenaCelkom;
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
 
         vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
@@ -1006,7 +1006,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
             vyuctovanie.field(popis)[0].setAttr("cena celkom", cenaCelkom);
             cenaCelkom = hodinCelkom * uctovanaSadzba;
             // nastav príznak Tlač
-            evidenciaLinks[e].set("Tlač", "Tlač");
+            setTlac(evidenciaLinks[e]);
         }
     } else {
         message("Neviem určiť počítanie hodinových sadzieb")
