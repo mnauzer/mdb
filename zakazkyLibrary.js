@@ -77,7 +77,7 @@ const prepocetZakazky = zakazka => {
     if (vydajkyMaterialu.length > 0) {
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
             //  message("Počet výdajok materiálu: " + vydajkyMaterialu.length);
-            material += zakazkaMaterialVydajky(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
+            material += spocitatVydajkyMaterialu(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
             if (materialSDPH) {
                 txtMaterial = " s DPH";
                 materialDPH += vydajkyMaterialu[vm].field("DPH");
@@ -300,7 +300,7 @@ const generujVyuctovanie = zakazka => {
         var materialDPH = 0;
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
             //  message("Počet výdajok materiálu: " + vydajkyMaterialu.length);
-            materialCelkomBezDPH += zakazkaMaterialVydajky(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
+            materialCelkomBezDPH += spocitatVydajkyMaterialu(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
             vydajkyMaterialu[vm].link("Vyúčtovanie", noveVyuctovanie);
             // zápis do vyúčtovania
             noveVyuctovanie.set(vydajkyMaterialu[vm].field("Popis") + " celkom", materialCelkomBezDPH);
@@ -782,7 +782,7 @@ const spocitatVykazStrojov = (vykaz, sDPH, sadzbaDPH) => {
             //var cenaCelkom = mnozstvo * cena;
             sumaBezDPH += cenaCelkom;
             // nastav príznak Tlač
-            polozky[p].set("Tlač", "Tlač");
+            setTlac(polozky[p]);
         }
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
@@ -796,11 +796,11 @@ const spocitatVykazStrojov = (vykaz, sDPH, sadzbaDPH) => {
 
     }
     // message("Suma bez DPH: " + sumaBezDPH);
-    vykaz.set("Tlač", "Tlač");
+    setTlac(vykaz);
     return sumaBezDPH;
 };
 
-const zakazkaMaterialVydajky = (vydajka, sDPH, sadzbaDPH) => {
+const spocitatVydajkyMaterialu = (vydajka, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
     //var sDPH = vydajka.field("s DPH");
