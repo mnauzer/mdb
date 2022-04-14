@@ -461,6 +461,7 @@ const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
             } else {
                 message("nie je zadaná paušálna cena v CP")
             }
+            message(vyuctovanie.length);
             if (vyuctovanie.length > 0) { // prepočet ak je už vygenerované vyúčtovanie
                 var vPausal = vyuctovanie.field("Paušál")[0];
                 //if
