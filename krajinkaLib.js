@@ -4,7 +4,7 @@
 // Popis:                   knižnica krajinka app
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.13";
+    var verzia = "0.2.14";
     return nazov + " v." + verzia;
 }
 
@@ -207,5 +207,13 @@ const mclChecked = (mcl, value) => {
         }
     }
     return result;
+}
+
+const setBackgroudColor = (entry, color) => {
+    entry.set("entry background", color)
+}
+
+const setColor = (entry, color) => {
+    entry.set("entry color", color)
 }
 // End of file: 25.03.2022, 16:16
