@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.81";
+    var verzia = "0.3.8";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -15,7 +15,7 @@ const prepocetZakazky = zakazka => {
     var verzia = "0.3.01";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("Prepočítaj zákazku v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
+    message("PREPOČÍTAJ ZÁKAZKU v." + verzia + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
 
     var cp = zakazka.field("Cenová ponuka")[0];
     var typ = cp.field("Typ cenovej ponuky");
@@ -246,10 +246,10 @@ const generujVyuctovanie = zakazka => {
     var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     // if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
-    var verzia = "0.3.03";
+    var verzia = "0.3.0";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("Generuj vyúčtovanie v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
+    message("GENERUJ VYÚČTOVANIE v." + verzia + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
     var cp = zakazka.field("Cenová ponuka")[0];
     var typ = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
