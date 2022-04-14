@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.12";
+    var verzia = "0.3.13";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -98,7 +98,7 @@ const prepocetZakazky = zakazka => {
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             //  message("Počet výkazov strojov: " + vykazyStrojov.length);
-            stroje += zakazkaStrojeVykazy(vykazyStrojov[vs], strojeSDPH, sadzbaDPH);
+            stroje += spocitatVykazStrojov(vykazyStrojov[vs], strojeSDPH, sadzbaDPH);
             if (strojeSDPH) {
                 txtStroje = " s DPH";
                 strojeDPH += vykazyStrojov[vs].field("DPH");
@@ -115,7 +115,7 @@ const prepocetZakazky = zakazka => {
 
     // DOPRAVA
     // prepočítať dopravu
-    var dopravaCelkom = zakazkaDoprava(zakazka, vyuctovanieCelkomBezDph);
+    var dopravaCelkom = spocitatDopravu(zakazka, vyuctovanieCelkomBezDph);
     var dopravaDPH = 0;
     if (dopravaCelkom >= 0) {
         if (dopravaSDPH) {
@@ -327,7 +327,7 @@ const generujVyuctovanie = zakazka => {
         var strojeDPH = 0;
         for (var vs = 0; vs < vykazStrojov.length; vs++) {
             //  message("Počet výdajok materiálu: " + vykazStrojov.length);
-            strojeCelkomBezDPH += zakazkaStrojeVykazy(vykazStrojov[vs], strojeSDPH, sadzbaDPH);
+            strojeCelkomBezDPH += spocitatVykazStrojov(vykazStrojov[vs], strojeSDPH, sadzbaDPH);
             vykazStrojov[vs].link("Vyúčtovanie", noveVyuctovanie);
             // zápis do vyúčtovania
             noveVyuctovanie.set(vykazStrojov[vs].field("Popis") + " celkom", strojeCelkomBezDPH);
@@ -348,7 +348,7 @@ const generujVyuctovanie = zakazka => {
     // DOPRAVA
     // prepočítať dopravu
     var dopravaSDPH = mclChecked(uctovanieDPH, "Doprava");;
-    var dopravaCelkomBezDPH = zakazkaDoprava(zakazka, vyuctovanieCelkomBezDph);
+    var dopravaCelkomBezDPH = spocitatDopravu(zakazka, vyuctovanieCelkomBezDph);
     var dopravaDPH = 0;
     if (dopravaCelkomBezDPH >= 0) {
         if (dopravaSDPH) {
@@ -445,7 +445,7 @@ const generujVyuctovanie = zakazka => {
     // End of file: 11.03.2022, 11:27
 }
 
-const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
+const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
     var jazd = zakazkaPocetJazd(zakazka);
     var cp = zakazka.field("Cenová ponuka")[0];
     var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
@@ -764,7 +764,7 @@ const zakazkaPraceVykazyPolozky = (vykaz, sDPH, sadzbaDPH) => {
     return sumaBezDPH;
 };
 
-const zakazkaStrojeVykazy = (vykaz, sDPH, sadzbaDPH) => {
+const spocitatVykazStrojov = (vykaz, sDPH, sadzbaDPH) => {
     //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
     //var sDPH = vykaz.field("s DPH");
