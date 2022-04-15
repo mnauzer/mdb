@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.23";
+    var verzia = "0.3.24";
     result = nazov + " " + verzia;
     return result;
 }
@@ -414,7 +414,11 @@ const generujVyuctovanie = zakazka => {
         }
         // nalinkuj výkazy prác
         for (var v = 0; v < vykazyPrac.length; v++) {
-            nalinkujPraceHZS(noveVyuctovanie, vykazyPrac[v]);
+            if (typ == "Položky") {
+                nalinkujPrace(noveVyuctovanie, vykazyPrac[v]);
+            } else {
+                nalinkujPraceHZS(noveVyuctovanie, vykazyPrac[v]);
+            }
         }
         // nalinkuj výkazy strojov
         for (var v = 0; v < vykazStrojov.length; v++) {
