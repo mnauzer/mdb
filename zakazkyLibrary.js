@@ -7,7 +7,6 @@ function verziaKniznice() {
     var nazov = "zakazkyLibrary";
     var verzia = "0.3.17";
     result = nazov + " " + verzia;
-    //message("cpLibrary v." + verzia);
     return result;
 }
 
@@ -20,13 +19,6 @@ const prepocetZakazky = zakazka => {
     var typ = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     var sezona = zakazka.field("sezóna");
-
-    // vyber diely zákazky podľa typu cp
-    // if (typ == "Hodinovka") {
-    //     var diely = cp.field("Diely cenovej ponuky hzs");
-    // } else {
-    //     var diely = cp.field("Diely cenovej ponuky");
-    // }
 
     // nalinkovať a spočítať výkazy
     var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
@@ -75,7 +67,6 @@ const prepocetZakazky = zakazka => {
     var materialDPH = 0;
     if (vydajkyMaterialu.length > 0) {
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
-            //  message("Počet výdajok materiálu: " + vydajkyMaterialu.length);
             material += spocitatVydajkyMaterialu(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
             if (materialSDPH) {
                 txtMaterial = " s DPH";
