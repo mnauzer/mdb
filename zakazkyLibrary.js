@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.24";
+    var verzia = "0.3.25";
     result = nazov + " " + verzia;
     return result;
 }
@@ -430,7 +430,7 @@ const generujVyuctovanie = zakazka => {
 
     // doplň adresu klienta do Krycieho listu
     noveVyuctovanie.set("Odberateľ", pullAddress(noveVyuctovanie.field("Klient")[0]));
-    zakazkaToJsonHZS(zakazka);
+    //zakazkaToJsonHZS(zakazka);
     message("Hotovo...!");
     message("Bolo vygenerované vyúčtovane č.: " + noveVyuctovanie.field("Číslo"));
     // } else {
