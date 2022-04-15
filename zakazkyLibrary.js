@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.18";
+    var verzia = "0.3.19";
     result = nazov + " " + verzia;
     return result;
 }
@@ -16,7 +16,6 @@ const prepocetZakazky = zakazka => {
     message("PREPOČÍTAJ ZÁKAZKU" + "\nv. " + vKniznica + "\nv. " + vKrajinkaLib);
 
     var cp = zakazka.field("Cenová ponuka")[0];
-    var typ = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     var sezona = zakazka.field("sezóna");
 
@@ -43,6 +42,7 @@ const prepocetZakazky = zakazka => {
     var praceDPH = 0;
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
+            var typ = vykazyPrac[vp].field("Typ výkazu");
             if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
                 prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
