@@ -5,17 +5,16 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.14";
+    var verzia = "0.3.15";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
 }
 
 const prepocetZakazky = zakazka => {
-    var verzia = "0.3.02";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("PREPOČÍTAJ ZÁKAZKU v. " + verzia + "\nv. " + vKniznica + "\nv. " + vKrajinkaLib);
+    message("PREPOČÍTAJ ZÁKAZKU" + "\nv. " + vKniznica + "\nv. " + vKrajinkaLib);
 
     var cp = zakazka.field("Cenová ponuka")[0];
     var typ = cp.field("Typ cenovej ponuky");
@@ -635,16 +634,15 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
     if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
+    var typ = vykaz.field("Typ výkazu");
     var diel = vykaz.field("Popis");
-    var cp = vykaz.field("Cenová ponuka")[0];
-    var typ = cp.field("Typ cenovej ponuky");
     var evidenciaLinks = vykaz.linksFrom("Evidencia prác", "Výkaz prác");
     // vymazať predošlé nalinkované evidencie
     var empty = [];
     vykaz.set("Rozpis", empty);
 
     var hodinyCelkom = 0;
-    if (typ = "Hodinovka") {
+    if (typ == "Hodinovka") {
         var polozka = vykaz.field("Práce sadzby")[0];
         var limity = polozka.field("Limity");
         var attrMJ = "účtovaná sadzba";
