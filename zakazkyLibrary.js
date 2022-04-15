@@ -244,7 +244,7 @@ const generujVyuctovanie = zakazka => {
     var vyuctovanieCelkomBezDph = 0;
 
     if (typCP == "Hodinovka") {
-        var diely = cp.field("Diely cenovej ponuky hsz")
+        var diely = cp.field("Diely cenovej ponuky hzs")
     } else if (typCP == "Položky") {
         var diely = cp.field("Diely cenovej ponuky")
     } else {
