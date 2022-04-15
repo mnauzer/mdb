@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.20";
+    var verzia = "0.3.22";
     result = nazov + " " + verzia;
     return result;
 }
@@ -233,6 +233,8 @@ const generujVyuctovanie = zakazka => {
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ VYÚČTOVANIE" + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
+    var cp = zakazka.field("Cenová ponuka")[0];
+    var typCP = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     // inicializácia
     var sezona = noveVyuctovanie.field("sezóna");
@@ -241,6 +243,13 @@ const generujVyuctovanie = zakazka => {
     var vyuctovanieCelkom = 0;
     var vyuctovanieCelkomBezDph = 0;
 
+    if (typCP == "Hodinovka") {
+        var diely = cp.field("Diely cenovej ponuky hsz")
+    } else if (typCP == "Položky") {
+        var diely = cp.field("Diely cenovej ponuky")
+    } else {
+
+    }
     // PRÁCE
     // prepočet výkazov prác
     var vykazyPrac = zakazka.linksFrom("Výkaz prác", "Zákazka");
@@ -378,7 +387,7 @@ const generujVyuctovanie = zakazka => {
 
     // iba ak typ je Položky
     // nalinkuje jednotlivé položky z výkazov do vyúčtovania
-    if (typ == "Položky") {
+    if (typCP == "Položky") {
         // nalinkuj výdajky materiálu
         for (var v = 0; v < vydajkyMaterialu.length; v++) {
             nalinkujMaterial(noveVyuctovanie, vydajkyMaterialu[v]);
@@ -398,7 +407,7 @@ const generujVyuctovanie = zakazka => {
             }
             noveVyuctovanie.set(diely[d] + " celkom", sucetDielov);
         }
-    } else if (typ == "Hodinovka") {
+    } else if (typCP == "Hodinovka") {
         // ak je typ hodinovka nalinkuje práce, materiál a a stroje do vyúčtovania
         for (var v = 0; v < vydajkyMaterialu.length; v++) {
             nalinkujMaterial(noveVyuctovanie, vydajkyMaterialu[v]);
