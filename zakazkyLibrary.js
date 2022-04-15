@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.25";
+    var verzia = "0.3.26";
     result = nazov + " " + verzia;
     return result;
 }
