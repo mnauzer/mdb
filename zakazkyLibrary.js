@@ -249,8 +249,7 @@ const generujVyuctovanie = zakazka => {
         var praceDPH = 0;
         var praceSDPH = mclChecked(uctovanieDPH, "Práce");
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            var typ = vykazStrojov[vp].field("Typ výkazu");
-            var typ = vykayPrac[vp].field("Typ vkazu");
+            var typ = vykayPrac[vp].field("Typ výkazu");
             if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
                 praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
@@ -258,8 +257,8 @@ const generujVyuctovanie = zakazka => {
             }
             vykazyPrac[vp].link("Vyúčtovanie", noveVyuctovanie);
             noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
-            // zápis do vyúčtovania
 
+            // zápis do vyúčtovania
             if (praceSDPH) {
                 txtPrace = " s DPH";
                 praceDPH += vykazyPrac[vp].field("DPH");
