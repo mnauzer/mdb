@@ -53,9 +53,9 @@ const prepocetZakazky = zakazka => {
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
-                prace += zakazkaPraceVykazyHZS(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
-                prace += zakazkaPraceVykazyPolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                prace += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             }
             if (praceSDPH) {
                 txtPrace = " s DPH";
@@ -269,9 +269,9 @@ const generujVyuctovanie = zakazka => {
         var praceSDPH = mclChecked(uctovanieDPH, "Práce");
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
-                praceCelkomBezDPH += zakazkaPraceVykazyHZS(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
-                praceCelkomBezDPH += zakazkaPraceVykazyPolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                praceCelkomBezDPH += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             }
             vykazyPrac[vp].link("Vyúčtovanie", noveVyuctovanie);
             noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
@@ -628,7 +628,7 @@ const zistiIndexLinku = (link, remoteLinks) => {
     return index;
 }
 
-const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
+const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
 
     // inicializácia
     // var sDPH = vykaz.field("s DPH");
@@ -729,7 +729,7 @@ const zakazkaPraceVykazyHZS = (vykaz, sDPH, sadzbaDPH) => {
     return sumaBezDPH;
 };
 
-const zakazkaPraceVykazyPolozky = (vykaz, sDPH, sadzbaDPH) => {
+const prepocitatVykazPracePolozky = (vykaz, sDPH, sadzbaDPH) => {
     // inicializácia
     //var sDPH = vykaz.field("s DPH");
     if (sDPH) { vykaz.set("s DPH", true) }
