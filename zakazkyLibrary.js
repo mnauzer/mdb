@@ -612,7 +612,6 @@ const zistiIndexLinku = (link, remoteLinks) => {
 const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
 
     // inicializácia
-    // var sDPH = vykaz.field("s DPH");
     if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
@@ -745,9 +744,7 @@ const prepocitatVykazPracePolozky = (vykaz, sDPH, sadzbaDPH) => {
 };
 
 const spocitatVykazStrojov = (vykaz, sDPH, sadzbaDPH) => {
-    //message("Výdajka: " + vydajka.field("Popis"))
     // inicializácia
-    //var sDPH = vykaz.field("s DPH");
     if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
