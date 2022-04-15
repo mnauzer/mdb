@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.17";
+    var verzia = "0.3.18";
     result = nazov + " " + verzia;
     return result;
 }
@@ -281,7 +281,6 @@ const generujVyuctovanie = zakazka => {
         var materialCelkomBezDPH = 0;
         var materialDPH = 0;
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
-            //  message("Počet výdajok materiálu: " + vydajkyMaterialu.length);
             materialCelkomBezDPH += spocitatVydajkyMaterialu(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
             vydajkyMaterialu[vm].link("Vyúčtovanie", noveVyuctovanie);
             // zápis do vyúčtovania
@@ -308,7 +307,7 @@ const generujVyuctovanie = zakazka => {
         var strojeCelkomBezDPH = 0;
         var strojeDPH = 0;
         for (var vs = 0; vs < vykazStrojov.length; vs++) {
-            //  message("Počet výdajok materiálu: " + vykazStrojov.length);
+
             strojeCelkomBezDPH += spocitatVykazStrojov(vykazStrojov[vs], strojeSDPH, sadzbaDPH);
             vykazStrojov[vs].link("Vyúčtovanie", noveVyuctovanie);
             // zápis do vyúčtovania
