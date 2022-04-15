@@ -249,7 +249,7 @@ const generujVyuctovanie = zakazka => {
         var praceDPH = 0;
         var praceSDPH = mclChecked(uctovanieDPH, "Práce");
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            var typ = vykazPrac[vp].field("Typ výkazu");
+            var typ = vykazyPrac[vp].field("Typ výkazu");
             if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
                 praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
@@ -692,7 +692,7 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
         polozka.setAttr(attrMJ, sadzba);
         polozka.setAttr("cena celkom", sumaBezDPH);
     } else {
-        message("Chyba!...nie je zadaný typ účtovania hodinvých sadzieb");
+        message("Chyba!...nie je zadaný typ účtovania hodinových sadzieb");
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
     if (sDPH) {
