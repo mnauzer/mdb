@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.19";
+    var verzia = "0.3.20";
     result = nazov + " " + verzia;
     return result;
 }
@@ -719,7 +719,7 @@ const prepocitatVykazPracePolozky = (vykaz, sDPH, sadzbaDPH) => {
     if (polozky) {
         for (var p = 0; p < polozky.length; p++) {
             var mnozstvo = polozky[p].attr("dodané množstvo");
-            var cena = polozky[p].attr("cena");
+            var cena = polozky[p].attr("cena") || polozky[p].field("Cena bez DPH");
             cenaCelkom = mnozstvo * cena;
             polozky[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
