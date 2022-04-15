@@ -227,8 +227,8 @@ const prepocetZakazky = zakazka => {
 
 const generujVyuctovanie = zakazka => {
     // verzia
-    var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
-    // if (!vyuctovanie.length>0) {
+    //var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
+    //if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
