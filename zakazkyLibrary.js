@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.15";
+    var verzia = "0.3.16";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -235,21 +235,13 @@ const prepocetZakazky = zakazka => {
 }
 
 const generujVyuctovanie = zakazka => {
-    // Library/Event/Script:    Projekty\Zákazky\action entry\Generuj vyúčtovanie_w.js
-    // JS Libraries:
-    // Dátum:                   09.03.2022
-    // Popis:                   vygeneruje vyúčtovanie zákazky
-
-    var zakazka = entry();
     // verzia
     var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     // if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
-    var verzia = "0.3.0";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("GENERUJ VYÚČTOVANIE v." + verzia + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
-    var typ = cp.field("Typ cenovej ponuky");
+    message("GENERUJ VYÚČTOVANIE" + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     // inicializácia
     var sezona = noveVyuctovanie.field("sezóna");
@@ -266,6 +258,7 @@ const generujVyuctovanie = zakazka => {
         var praceDPH = 0;
         var praceSDPH = mclChecked(uctovanieDPH, "Práce");
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
+            var typ = vykazStrojov[vp].field("Typ výkazu");
             var typ = vykayPrac[vp].field("Typ vkazu");
             if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
                 praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
