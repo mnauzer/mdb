@@ -1,15 +1,21 @@
 // Library/Event/Script:    Projekty\Cenové ponuky\shared\krajinkaLib_w.js
 // JS Libraries:
 // Dátum:                   06.03.2022
-// Popis:                   knižnica dbAssistent
+// Popis:                   knižnica DB_ASSISTENT
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.16";
+    var verzia = "0.2.17";
     return nazov + " v." + verzia;
 }
 
-const dbAssistent = "KRAJINKA APP";
-const dbAssistentDatabazy = "KRAJINKA APP DATABÁZY";
+const DB_ASSISTENT = "KRAJINKA APP";
+const DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
+const DB_CENOVE_PONUKY = "Cenové ponuky";
+const DB_ZAKAZKY = "Zákazky";
+const DB_VYUCTOVANIA = "Vyúčtovania";
+const DB_VYKAZY_PRAC = "Výkaz prác";
+const DB_VYDAJKY_MATERIALU = "Výdajky";
+const DB_VYKAZY_STROJOV = "Výkaz strojov";
 
 const setEdit = entry => {
     entry.set("Tlač", "Editácia");
@@ -47,7 +53,7 @@ const roundTimeQ = time => {
 // kontrola či je databáza v móde testovania
 const isTest = (sezona, db) => {
     //message("zisťujem stav app a databázy...");
-    var entry = libByName(dbAssistent).find(sezona)[0];
+    var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var appStatus = entry.field("Prevádzka appky");
     if (db && db.field("Testovanie")) {
         var test = true;
@@ -68,7 +74,7 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
     var dbID = 0;
     var cislo = 0;
     var attr = "";
-    var rok = libByName(dbAssistent).find(sezona)[0];
+    var rok = libByName(DB_ASSISTENT).find(sezona)[0];
     //message(rok.length);
     var databazy = rok.field("Databázy");
 
@@ -96,7 +102,7 @@ const noveCisloV2 = (entry, lib, withPrefix, sliceNum) => {
     var dbID = 0;
     var cislo = 0;
     var attr = "";
-    var entry = libByName(dbAssistent).find(sezona)[0];
+    var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
 
     for (var d = 0; d < databazy.length; d++) {
@@ -190,7 +196,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 };
 
 const setTest = (status) => {
-    var lib = libByName(dbAssistentDatabazy);
+    var lib = libByName(DB_ASSISTENT_DATABAZY);
     var databazy = lib.entries();
     for (var d = 0; d < databazy.length; d++) {
         databazy[d].set("Testovanie", status);

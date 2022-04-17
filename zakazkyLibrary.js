@@ -24,9 +24,9 @@ const prepocetZakazky = zakazka => {
     var vyuctovanieCelkomBezDph = 0;
     var vyuctovanieCelkom = 0;
     var dphSuma = 0;
-    var vykazyPrac = zakazka.linksFrom("Výkaz prác", "Zákazka")
-    var vykazyStrojov = zakazka.linksFrom("Výkaz strojov", "Zákazka");
-    var vydajkyMaterialu = zakazka.linksFrom("Výdajky", "Zákazka");
+    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka")
+    var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
+    var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var praceSDPH = mclChecked(uctovanieDPH, "Práce");
     var strojeSDPH = mclChecked(uctovanieDPH, "Mechanizácia");
     var materialSDPH = mclChecked(uctovanieDPH, "Materiál");
@@ -284,7 +284,7 @@ const generujVyuctovanie = zakazka => {
 
     // MATERIÁL
     // prepočet výdajok materiálu
-    var vydajkyMaterialu = zakazka.linksFrom("Výdajky", "Zákazka");
+    var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     if (vydajkyMaterialu.length > 0) {
         var materialSDPH = mclChecked(uctovanieDPH, "Materiál");
         var materialCelkomBezDPH = 0;
@@ -310,7 +310,7 @@ const generujVyuctovanie = zakazka => {
 
     // STROJE
     // prepočet výkazu strojov
-    var vykazStrojov = zakazka.linksFrom("Výkaz strojov", "Zákazka");
+    var vykazStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
     if (vykazStrojov.length > 0) {
         var strojeSDPH = mclChecked(uctovanieDPH, "Mechanizácia");
         var strojeCelkomBezDPH = 0;
@@ -560,7 +560,7 @@ const zakazkaMzdy = zakazka => {
 };
 
 const zakazkaNakupMaterialu = zakazka => {
-    var links = zakazka.linksFrom("Výdajky", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Suma v NC bez DPH"));
@@ -569,7 +569,7 @@ const zakazkaNakupMaterialu = zakazka => {
 };
 
 const zakazkaMaterialDPH = zakazka => {
-    var links = zakazka.linksFrom("Výdajky", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += links[p].field("DPH");
@@ -578,7 +578,7 @@ const zakazkaMaterialDPH = zakazka => {
 };
 
 const zakazkaMaterialRozdielDPH = zakazka => {
-    var links = zakazka.linksFrom("Výdajky", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
     var dphNC = 0;
     var dph = 0;
