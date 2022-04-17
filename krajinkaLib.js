@@ -1,17 +1,21 @@
 // Library/Event/Script:    Projekty\Cenové ponuky\shared\krajinkaLib_w.js
 // JS Libraries:
 // Dátum:                   06.03.2022
-// Popis:                   knižnica krajinka app
+// Popis:                   knižnica dbAssistent
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
     var verzia = "0.2.15";
     return nazov + " v." + verzia;
 }
 
+const dbAssistent = "KRAJINKA APP";
+const dbAssistentDatabazy = "KRAJINKA APP DATABÁZY";
+
 const setEdit = entry => {
     entry.set("Tlač", "Editácia");
     return;
 }
+
 
 const setTlac = entry => {
     entry.set("Tlač", "Tlač");
@@ -43,7 +47,7 @@ const roundTimeQ = time => {
 // kontrola či je databáza v móde testovania
 const isTest = (sezona, db) => {
     //message("zisťujem stav app a databázy...");
-    var entry = libByName("KRAJINKA APP").find(sezona)[0];
+    var entry = libByName(dbAssistent).find(sezona)[0];
     var appStatus = entry.field("Prevádzka appky");
     if (db && db.field("Testovanie")) {
         var test = true;
@@ -64,7 +68,7 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
     var dbID = 0;
     var cislo = 0;
     var attr = "";
-    var rok = libByName("KRAJINKA APP").find(sezona)[0];
+    var rok = libByName(dbAssistent).find(sezona)[0];
     //message(rok.length);
     var databazy = rok.field("Databázy");
 
@@ -92,7 +96,7 @@ const noveCisloV2 = (entry, lib, withPrefix, sliceNum) => {
     var dbID = 0;
     var cislo = 0;
     var attr = "";
-    var entry = libByName("KRAJINKA APP").find(sezona)[0];
+    var entry = libByName(dbAssistent).find(sezona)[0];
     var databazy = entry.field("Databázy");
 
     for (var d = 0; d < databazy.length; d++) {
@@ -186,7 +190,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 };
 
 const setTest = (status) => {
-    var lib = libByName("KRAJINKA APP DATABÁZY");
+    var lib = libByName(dbAssistentDatabazy);
     var databazy = lib.entries();
     for (var d = 0; d < databazy.length; d++) {
         databazy[d].set("Testovanie", status);
