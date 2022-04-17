@@ -1,13 +1,14 @@
-// Library/Event/Script:    Projekty\Cenové ponuky\shared\krajinkaLib_w.js
+// Library/Event/Script:    Projekty\Cenové ponuky\shared\krajinkaLib.js
 // JS Libraries:
 // Dátum:                   06.03.2022
-// Popis:                   knižnica DB_ASSISTENT
+// Popis:                   knižnica krajinkaLib
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.18";
+    var verzia = "0.2.19";
     return nazov + " v." + verzia;
 }
 
+// libraries
 const DB_ASSISTENT = "KRAJINKA APP";
 const DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
 const DB_CENOVE_PONUKY = "Cenové ponuky";
@@ -17,11 +18,25 @@ const DB_VYKAZY_PRAC = "Výkaz prác";
 const DB_VYDAJKY_MATERIALU = "Výdajky";
 const DB_VYKAZY_STROJOV = "Výkaz strojov";
 
+// fields
+const FIELD_CENOVA_PONUKA = "Cenová ponuka";
+const FIELD_ZAKAZKA = "Zákazka";
+const FIELD_VYUCTOVANIE = "Vyúčtovanie";
+const FIELD_TYP_VYKAZU = "Typ výkazu";
+const FIELD_POPIS = "Popis";
+
+// common words
+const W_ZAKAZKA = "Zákazka";
+const W_DOPRAVA = "Doprava";
+const W_MATERIAL = "Materiál";
+const W_PRACE = "Práce";
+const W_HODINOVKA = "Hodinovka";
+
+
 const setEdit = entry => {
     entry.set("Tlač", "Editácia");
     return;
 }
-
 
 const setTlac = entry => {
     entry.set("Tlač", "Tlač");
@@ -93,6 +108,7 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
     }
     return cislo;
 };
+
 // generuje nové číslo záznamu
 const noveCisloV2 = (entry, lib, withPrefix, sliceNum) => {
     var db = lib.title;

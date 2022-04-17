@@ -15,7 +15,7 @@ const prepocetZakazky = zakazka => {
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČÍTAJ ZÁKAZKU" + "\nv. " + vKniznica + "\nv. " + vKrajinkaLib);
 
-    var cp = zakazka.field("Cenová ponuka")[0];
+    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     var sezona = zakazka.field("sezóna");
 
@@ -42,8 +42,8 @@ const prepocetZakazky = zakazka => {
     var praceDPH = 0;
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            var typ = vykazyPrac[vp].field("Typ výkazu");
-            if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
+            var typ = vykazyPrac[vp].field(FIELD_TYP_VYKAZU);
+            if (typ == "Hodinovka" || vykazyPrac[vp].field(FIELD_POPIS) == "Práce navyše") {
                 prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
                 prace += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
