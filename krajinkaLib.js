@@ -4,7 +4,7 @@
 // Popis:                   knižnica dbAssistent
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.15";
+    var verzia = "0.2.16";
     return nazov + " v." + verzia;
 }
 

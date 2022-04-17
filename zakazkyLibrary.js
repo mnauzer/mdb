@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.26";
+    var verzia = "0.3.27";
     result = nazov + " " + verzia;
     return result;
 }
@@ -20,7 +20,7 @@ const prepocetZakazky = zakazka => {
     var sezona = zakazka.field("sezóna");
 
     // nalinkovať a spočítať výkazy
-    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var sadzbaDPH = libByName(dbAssistent).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var vyuctovanieCelkomBezDph = 0;
     var vyuctovanieCelkom = 0;
     var dphSuma = 0;
@@ -238,7 +238,7 @@ const generujVyuctovanie = zakazka => {
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     // inicializácia
     var sezona = noveVyuctovanie.field("sezóna");
-    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var sadzbaDPH = libByName(dbAssistent).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var dphSuma = 0;
     var vyuctovanieCelkom = 0;
     var vyuctovanieCelkomBezDph = 0;
