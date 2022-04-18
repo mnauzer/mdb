@@ -11,7 +11,7 @@ function verziaKniznice() {
 
 const prepocetPonuky = ponuka => {
     // verzia
-    var verzia = "0.2.05";
+    var verzia = "0.2.06";
     message("CENOVÁ PONUKA v." + verzia
         + "\n" + verziaKniznice()
         + "\n" + verziaKrajinkaLib());
@@ -41,7 +41,7 @@ const prepocetPonuky = ponuka => {
     ponuka.set("Platnosť do", platnost > datum ? platnost : platnost30);
 
     // doplň adresu klienta do Krycieho listu
-    var klient = ponuka.field("Miesto")[0].field("Klient");
+    var klient = ponuka.field("Miesto realizácie")[0].field("Klient");
     if (klient) {
         ponuka.set("Odberateľ", pullAddress(klient));
     }
