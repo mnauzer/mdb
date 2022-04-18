@@ -32,20 +32,20 @@ const prepocetPlatby = pokladna => {
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČET PLATBY" + "\n" + vKniznica + "\n" + vKrajinkaLib);
-    var datum = pokladna.field("Dátum")
+    var datum = pokladna.field(FIELD_DATUM)
     var db = lib();
     // nastaviť sezónu
-    pokladna.set("sezóna", datum.getFullYear());
-    var sezona = pokladna.field("sezóna");
+    pokladna.set(FIELD_SEZONA, datum.getFullYear());
+    var sezona = pokladna.field(FIELD_SEZONA);
 
     // vygenerovať nové číslo
     // var cislo = pokladna.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = noveCisloV2(pokladna, db, 0, 3);
+    var cislo = noveCisloV2(pokladna, DB_POKLADNA, 0, 3);
     pokladna.set("Číslo", cislo);
 
     // zistiť aktuálnu sadzbu dph v databáze
-    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100
+    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
     pokladna.set("sadzba DPH", sadzbaDPH * 100);
 
     // inicializácia
@@ -101,5 +101,6 @@ const prepocetPlatby = pokladna => {
         pokladna.set("Stroj", null);
         pokladna.set("Vozidlo", null);
     }
+    message("Hotovo...");
 }
 // End of file: 20.03.2022, 12:17
