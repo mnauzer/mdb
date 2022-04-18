@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.2.02";
+    var verzia = "0.2.03";
     result = nazov + " " + verzia;
     return result;
 }
