@@ -4,7 +4,7 @@
 // Popis:
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.09";
+    var verzia = "0.2.10";
     return nazov + " v." + verzia;
 }
 // GENEROVANIE NOVEJ ZÁKAZKY
