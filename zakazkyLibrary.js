@@ -17,20 +17,20 @@ const prepocetZakazky = zakazka => {
 
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
-    var sezona = zakazka.field("sezóna");
+    var sezona = zakazka.field(FIELD_SEZONA);
 
     // nalinkovať a spočítať výkazy
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var vyuctovanieCelkomBezDph = 0;
     var vyuctovanieCelkom = 0;
     var dphSuma = 0;
-    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka")
-    var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
-    var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
+    var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
+    var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var praceSDPH = mclChecked(uctovanieDPH, W_PRACE);
     var strojeSDPH = mclChecked(uctovanieDPH, "Mechanizácia");
-    var materialSDPH = mclChecked(uctovanieDPH, "Materiál");
-    var dopravaSDPH = mclChecked(uctovanieDPH, "Doprava");
+    var materialSDPH = mclChecked(uctovanieDPH, W_MATERIAL);
+    var dopravaSDPH = mclChecked(uctovanieDPH, W_DOPRAVA);
     var txtPrace = "";
     var txtMaterial = "";
     var txtStroje = "";
@@ -43,7 +43,7 @@ const prepocetZakazky = zakazka => {
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var typ = vykazyPrac[vp].field(FIELD_TYP_VYKAZU);
-            if (typ == "Hodinovka" || vykazyPrac[vp].field(FIELD_POPIS) == "Práce navyše") {
+            if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
                 prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
                 prace += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
@@ -123,16 +123,16 @@ const prepocetZakazky = zakazka => {
 
     // Message
     message(
-        "Práce: " + txtPrace + "\n" +
-        "Materiál: " + txtMaterial + "\n" +
-        "Stroje: " + txtStroje + "\n" +
-        "Doprava: " + txtDoprava + "\n"
+        W_PRACE + txtPrace + "\n" +
+        W_MATERIAL + txtMaterial + "\n" +
+        W_STROJE + txtStroje + "\n" +
+        W_DOPRAVA + txtDoprava + "\n"
     );
 
     // CELKOM
     vyuctovanieCelkom = vyuctovanieCelkomBezDph + dphSuma;
 
-    var rozpocetSDPH = zakazka.field("Cenová ponuka")[0].field("Cena celkom (s DPH)");
+    var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
     var mzdy = zakazkaMzdy(zakazka);                                // mzdy z evidencie
     var odpracovanychHodin = zakazkaHodiny(zakazka);                // hodiny z evidencie
     var najazdenyCas = zakazkaCasJazdy(zakazka);
@@ -196,10 +196,10 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Zaplatené", zaplatene);
     zakazka.set("Suma na úhradu", sumaNaUhradu);
     zakazka.set("Vyúčtovanie celkom", vyuctovanieCelkom);
-    zakazka.set("Práce", prace + praceDPH);
-    zakazka.set("Materiál", material + materialDPH);
-    zakazka.set("Stroje", stroje + strojeDPH);
-    zakazka.set("Doprava", doprava); // doprava bez dph + dph z dopravy
+    zakazka.set(FIELD_PRACE, prace + praceDPH);
+    zakazka.set(FIELD_MATERIAL, material + materialDPH);
+    zakazka.set(FIELD_STROJE, stroje + strojeDPH);
+    zakazka.set(FIELD_DOPRAVA, doprava); // doprava bez dph + dph z dopravy
     zakazka.set("Iné výdavky", ineVydavky);
     zakazka.set("efektivita", efektivita(marzaPoZaplateni));
 
@@ -233,17 +233,17 @@ const generujVyuctovanie = zakazka => {
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ VYÚČTOVANIE" + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
-    var cp = zakazka.field("Cenová ponuka")[0];
+    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
     var typCP = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     // inicializácia
-    var sezona = noveVyuctovanie.field("sezóna");
+    var sezona = noveVyuctovanie.field(FIELD_SEZONA);
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var dphSuma = 0;
     var vyuctovanieCelkom = 0;
     var vyuctovanieCelkomBezDph = 0;
 
-    if (typCP == "Hodinovka") {
+    if (typCP == W_HODINOVKA) {
         var diely = cp.field("Diely cenovej ponuky hzs")
     } else if (typCP == "Položky") {
         var diely = cp.field("Diely cenovej ponuky")
@@ -252,20 +252,20 @@ const generujVyuctovanie = zakazka => {
     }
     // PRÁCE
     // prepočet výkazov prác
-    var vykazyPrac = zakazka.linksFrom("Výkaz prác", "Zákazka");
+    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA);
     if (vykazyPrac.length > 0) {
         var praceCelkomBezDPH = 0;
         var praceDPH = 0;
-        var praceSDPH = mclChecked(uctovanieDPH, "Práce");
+        var praceSDPH = mclChecked(uctovanieDPH, W_PRACE);
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var typ = vykazyPrac[vp].field("Typ výkazu");
-            if (typ == "Hodinovka" || vykazyPrac[vp].field("Popis") == "Práce navyše") {
+            if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
                 praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             } else {
                 praceCelkomBezDPH += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
             }
-            vykazyPrac[vp].link("Vyúčtovanie", noveVyuctovanie);
-            noveVyuctovanie.set(vykazyPrac[vp].field("Popis") + " celkom", praceCelkomBezDPH);
+            vykazyPrac[vp].link(FIELD_VYUCTOVANIE, noveVyuctovanie);
+            noveVyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
 
             // zápis do vyúčtovania
             if (praceSDPH) {
@@ -291,9 +291,9 @@ const generujVyuctovanie = zakazka => {
         var materialDPH = 0;
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
             materialCelkomBezDPH += spocitatVydajkyMaterialu(vydajkyMaterialu[vm], materialSDPH, sadzbaDPH);
-            vydajkyMaterialu[vm].link("Vyúčtovanie", noveVyuctovanie);
+            vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, noveVyuctovanie);
             // zápis do vyúčtovania
-            noveVyuctovanie.set(vydajkyMaterialu[vm].field("Popis") + " celkom", materialCelkomBezDPH);
+            noveVyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
             if (materialSDPH) {
                 txtMaterial = " s DPH";
                 materialDPH += vydajkyMaterialu[vm].field("DPH");
@@ -318,9 +318,9 @@ const generujVyuctovanie = zakazka => {
         for (var vs = 0; vs < vykazStrojov.length; vs++) {
 
             strojeCelkomBezDPH += spocitatVykazStrojov(vykazStrojov[vs], strojeSDPH, sadzbaDPH);
-            vykazStrojov[vs].link("Vyúčtovanie", noveVyuctovanie);
+            vykazStrojov[vs].link(FIELD_VYUCTOVANIE, noveVyuctovanie);
             // zápis do vyúčtovania
-            noveVyuctovanie.set(vykazStrojov[vs].field("Popis") + " celkom", strojeCelkomBezDPH);
+            noveVyuctovanie.set(vykazStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
             if (strojeSDPH) {
                 txtStroje = " s DPH";
                 strojeDPH += vykazStrojov[vs].field("DPH");
@@ -387,7 +387,7 @@ const generujVyuctovanie = zakazka => {
 
     // iba ak typ je Položky
     // nalinkuje jednotlivé položky z výkazov do vyúčtovania
-    if (typCP == "Položky") {
+    if (typCP == W_POLOZKY) {
         // nalinkuj výdajky materiálu
         for (var v = 0; v < vydajkyMaterialu.length; v++) {
             nalinkujMaterial(noveVyuctovanie, vydajkyMaterialu[v]);
@@ -414,7 +414,7 @@ const generujVyuctovanie = zakazka => {
         }
         // nalinkuj výkazy prác
         for (var v = 0; v < vykazyPrac.length; v++) {
-            if (typ == "Položky") {
+            if (typ == W_POLOZKY) {
                 nalinkujPrace(noveVyuctovanie, vykazyPrac[v]);
             } else {
                 nalinkujPraceHZS(noveVyuctovanie, vykazyPrac[v]);
@@ -441,8 +441,8 @@ const generujVyuctovanie = zakazka => {
 
 const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
     var jazd = zakazkaPocetJazd(zakazka);
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
+    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
     var uctovanieDopravy = cp.field("Účtovanie dopravy");
     // doprava
     //message("Debug DOPRAVA " + uctovanie);
@@ -505,8 +505,8 @@ const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
 
 const zakazkaPocetJazd = zakazka => {
     // počíta len cesty na miesto realizácie
-    var links = zakazka.linksFrom("Kniha jázd", "Zákazka")
-    var zastavky = zakazka.linksFrom("Kniha jázd", "Zastávka na zákazke")
+    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
+    var zastavky = zakazka.linksFrom(DB_KNIHA_JAZD, "Zastávka na zákazke")
     var jazd = 0;
     for (var p = 0; p < links.length; p++) {
         if (links[p].field("Účel jazdy") == "Výjazd") {
@@ -524,7 +524,7 @@ const zakazkaPocetJazd = zakazka => {
 };
 
 const zakazkaKm = zakazka => {
-    var links = zakazka.linksFrom("Kniha jázd", "Zákazka")
+    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Najazdené km"));
@@ -533,7 +533,7 @@ const zakazkaKm = zakazka => {
 };
 
 const zakazkaCasJazdy = zakazka => {
-    var links = zakazka.linksFrom("Kniha jázd", "Zákazka")
+    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += links[p].field("Trvanie") * links[p].field("Posádka").length;
@@ -542,7 +542,7 @@ const zakazkaCasJazdy = zakazka => {
 };
 
 const zakazkaHodiny = zakazka => {
-    var links = zakazka.linksFrom("Evidencia prác", "Zákazka")
+    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Odpracované"));
@@ -551,7 +551,7 @@ const zakazkaHodiny = zakazka => {
 };
 
 const zakazkaMzdy = zakazka => {
-    var links = zakazka.linksFrom("Evidencia prác", "Zákazka")
+    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Mzdové náklady"));
@@ -594,7 +594,7 @@ const zakazkaMaterialRozdielDPH = zakazka => {
 };
 
 const zakazkaPraceDPH = zakazka => {
-    var links = zakazka.linksFrom("Výkaz prác", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("DPH"));
@@ -603,7 +603,7 @@ const zakazkaPraceDPH = zakazka => {
 };
 
 const zakazkaStrojeDPH = zakazka => {
-    var links = zakazka.linksFrom("Výkaz prác", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("DPH"));
@@ -630,7 +630,7 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
     var sumaBezDPH = 0;
     var typ = vykaz.field("Typ výkazu");
     var diel = vykaz.field("Popis");
-    var evidenciaLinks = vykaz.linksFrom("Evidencia prác", "Výkaz prác");
+    var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
     // vymazať predošlé nalinkované evidencie
     var empty = [];
     vykaz.set("Rozpis", empty);
@@ -645,7 +645,7 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
         var attrMJ = "cena";
     }
     // vypočítať aktuálnu sadzbu práce za počet hodín
-    var uctovanie = vykaz.field("Zákazka")[0].field("Cenová ponuka")[0].field("Počítanie hodinových sadzieb");
+    var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
     if (uctovanie == "Individuálne za každý výjazd") {
         for (var el = 0; el < evidenciaLinks.length; el++) {
             var rVykazy = evidenciaLinks[el].field("Výkaz prác");
@@ -683,7 +683,7 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
             vykaz.field("Rozpis")[el].set("Tlač", "Tlač")
         }
         // zistiť zľavu podľa počtu odpracovaných hodín
-        var sadzba = vykaz.field("Cenová ponuka")[0].field(diel)[0].attr("sadzba");
+        var sadzba = vykaz.field(FIELD_CENOVA_PONUKA)[0].field(diel)[0].attr("sadzba");
         var zlava = null;
         var zakladnaSadzba = null;
         if (limity) {
@@ -727,7 +727,7 @@ const prepocitatVykazPracePolozky = (vykaz, sDPH, sadzbaDPH) => {
     if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
-    var polozky = vykaz.field("Práce");
+    var polozky = vykaz.field(FIELD_PRACE);
 
     if (polozky) {
         for (var p = 0; p < polozky.length; p++) {
@@ -761,7 +761,7 @@ const spocitatVykazStrojov = (vykaz, sDPH, sadzbaDPH) => {
     if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
-    var polozky = vykaz.field("Stroje");
+    var polozky = vykaz.field(FIELD_STROJE);
     if (polozky) {
         // presť všetky položky na výdajke a spočitať sumy
         for (var p = 0; p < polozky.length; p++) {
@@ -797,7 +797,7 @@ const spocitatVydajkyMaterialu = (vydajka, sDPH, sadzbaDPH) => {
     if (sDPH) { vydajka.set("s DPH", true) }
     var sumaDPH = 0;
     var sumaBezDPH = 0;
-    var polozky = vydajka.field("Materiál");
+    var polozky = vydajka.field(FIELD_MATERIAL);
     if (polozky) {
         // presť všetky položky na výdajke a spočitať sumy
         for (var p = 0; p < polozky.length; p++) {
@@ -820,7 +820,7 @@ const spocitatVydajkyMaterialu = (vydajka, sDPH, sadzbaDPH) => {
 
     }
     // message("Suma bez DPH: " + sumaBezDPH);
-    vydajka.set("Tlač", "Tlač");
+    setTlac(vydajka);
     return sumaBezDPH;
 };
 
@@ -829,14 +829,14 @@ const zakazkaPraceEvidencia = zakazka => {
     if (typ == "Položky") {
         message("spočítavám položky");
         // prejde výkazy práce
-        var vykazy = zakazka.linksFrom("Výkazy práce", "Zákazka");
+        var vykazy = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
         for (var v = 0; v < vykazy.length; v++) {
         }
 
     } else if (typ == "Hodinovka") {
         message("spočítavám hodiny");
         // prejde výkazy práce
-        var vykazy = zakazka.linksFrom("Výkazy práce", "Zákazka");
+        var vykazy = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
         for (var v = 0; v < vykazy.length; v++) {
         }
     } else {
@@ -845,7 +845,7 @@ const zakazkaPraceEvidencia = zakazka => {
 };
 
 const zakazkaPrijmy = (zakazka, sDPH) => {
-    var links = zakazka.linksFrom("Pokladňa", "Zákazka");
+    var links = zakazka.linksFrom(DB_POKLADNA, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Príjem bez DPH") + links[p].field("DPH+"));
@@ -854,7 +854,7 @@ const zakazkaPrijmy = (zakazka, sDPH) => {
 };
 
 const zakazkaVydavky = (zakazka, sDPH) => {
-    var links = zakazka.linksFrom("Pokladňa", "Zákazka")
+    var links = zakazka.linksFrom(DB_POKLADNA, "Zákazka")
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Výdavok bez DPH") + links[p].field("DPH-"));
@@ -873,10 +873,10 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
     var vydajkaCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vydajka.field("Popis");
+    var popis = vydajka.field(FIELD_POPIS);
     vyuctovanie.set(popis, empty);
     // položky z výdajky do array
-    var polozkyVydajka = vydajka.field("Materiál");
+    var polozkyVydajka = vydajka.field(FIELD_MATERIAL);
     // nastav atribúty položiek vo vyúčtovaní
     var polozkyVyuctovanie = vyuctovanie.field(popis);
     for (var m = 0; m < polozkyVydajka.length; m++) {
@@ -889,7 +889,7 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vydajkaCelkom += cenaCelkom;
         // nastav príznak Tlač
-        polozkyVydajka[m].set("Tlač", "Tlač");
+        setTlac(polozkyVydajka[m]);
     }
     vyuctovanie.set(popis + " celkom", vydajkaCelkom);
     return vydajkaCelkom;
@@ -900,13 +900,13 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vykazPrac.field("Popis");
+    var popis = vykazPrac.field(FIELD_POPIS);
     vyuctovanie.set(popis, empty);
     vyuctovanie.set(popis + " celkom", empty);
     // práce navyše ošetriť inak
     if (popis != "Práce navyše") {
         // položky z výdajky do array
-        var polozkyVykazPrac = vykazPrac.field("Práce");
+        var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
         for (var m = 0; m < polozkyVykazPrac.length; m++) {
             var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
             var cena = polozkyVykazPrac[m].attr("cena");
@@ -917,16 +917,16 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
             vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
             vykazPracCelkom += cenaCelkom;
             // nastav príznak Tlač
-            polozkyVykazPrac[m].set("Tlač", "Tlač");
+            setTlac(polozkyVykazPrac[m]);
         }
     } else {
         // práce navyše
         var praceNavyse = vykazPrac.field("Práce sadzby")[0];
         var hodinCelkom = 0;
-        var uctovanaSadzba = vykazPrac.field("Cenová ponuka")[0].field(popis)[0].attr("sadzba");
+        var uctovanaSadzba = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field(popis)[0].attr("sadzba");
         var cenaCelkom = 0;
         vyuctovanie.link(popis, praceNavyse);
-        var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
+        var evidenciaLinks = vykazPrac.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         for (var e = 0; e < evidenciaLinks.length; e++) {
             vyuctovanie.link("Rozpis", evidenciaLinks[e]);
             vyuctovanie.field("Rozpis")[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
@@ -944,9 +944,9 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
 const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
-    var pocitanieHodinovychSadzieb = vykazPrac.field("Cenová ponuka")[0].field("Počítanie hodinových sadzieb");
+    var pocitanieHodinovychSadzieb = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
     var empty = [];
-    var popis = vykazPrac.field("Popis");
+    var popis = vykazPrac.field(FIELD_POPIS);
     vyuctovanie.set(popis, empty);
     vyuctovanie.set(popis + " celkom", empty);
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
@@ -955,7 +955,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var hodinCelkom = 0;
     var uctovanaSadzba = 0;
     vyuctovanie.link(popis, vykazPraceSadzby);
-    var evidenciaLinks = vykazPrac.linksFrom("Evidencia prác", "Výkaz prác");
+    var evidenciaLinks = vykazPrac.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
         var zlava = vykazPraceSadzby.attr("zľava %");
         var zakladnaSadzba = vykazPraceSadzby.attr("základná sadzba");
@@ -1010,10 +1010,10 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
     var vykazStrojovCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vykazStrojov.field("Popis");
+    var popis = vykazStrojov.field(FIELD_POPIS);
     vyuctovanie.set(popis, empty);
 
-    var polozkyVykaz = vykazStrojov.field("Stroje");
+    var polozkyVykaz = vykazStrojov.field(FIELD_STROJE);
     // nastav atribúty položiek vo vyúčtovaní
     var polozkyVyuctovanie = vyuctovanie.field(popis);
     for (var m = 0; m < polozkyVykaz.length; m++) {
@@ -1026,7 +1026,7 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vykazStrojovCelkom += cenaCelkom;
         // nastav príznak Tlač
-        polozkyVykaz[m].set("Tlač", "Tlač");
+        setTlac(polozkyVykaz[m]);
     }
     vyuctovanie.set(popis + " celkom", vykazStrojovCelkom);
 
@@ -1034,13 +1034,13 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
 }
 
 const zakazkaNoveVyuctovanie = zakazka => {
-    var vyuctovania = libByName("Vyúčtovania");
+    var vyuctovania = libByName(DB_VYUCTOVANIA);
     var noveVyuctovanie = new Object();
     // inicializácia
     var datum = new Date();
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var sezona = cp.field("sezóna");
-    var cislo = noveCislo(sezona, "Vyúčtovania", 1, 2);
+    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+    var sezona = cp.field(FIELD_SEZONA);
+    var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
     var klient = cp.field("Klient")[0]
     var miesto = cp.field("Miesto realizácie")[0];
     var typ = cp.field("Typ cenovej ponuky");
@@ -1056,11 +1056,11 @@ const zakazkaNoveVyuctovanie = zakazka => {
         var diely = cp.field("Diely cenovej ponuky");
     }
     // popis vyúčtovania
-    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field("Číslo") + " (" + cp.field("Popis cenovej ponuky") + ")";
+    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field(FIELD_CISLO) + " (" + cp.field("Popis cenovej ponuky") + ")";
 
     // Hlavička a základné nastavenia
     noveVyuctovanie["Dátum"] = datum;
-    noveVyuctovanie["Číslo"] = cislo;
+    noveVyuctovanie[FIELD_CISLO] = cislo;
     noveVyuctovanie["Miesto realizácie"] = miesto;
     noveVyuctovanie["Stav vyúčtovania"] = "Prebieha";
     noveVyuctovanie["Typ vyúčtovania"] = typ;
@@ -1070,9 +1070,9 @@ const zakazkaNoveVyuctovanie = zakazka => {
     noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
     noveVyuctovanie["Klient"] = klient;
     noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
-    noveVyuctovanie["Cenová ponuka"] = cp;
-    noveVyuctovanie["Zákazka"] = zakazka;
-    noveVyuctovanie["sezóna"] = sezona;
+    noveVyuctovanie[FIELD_CENOVA_PONUKA] = cp;
+    noveVyuctovanie[FIELD_ZAKAZKA] = zakazka;
+    noveVyuctovanie[FIELD_SEZONA] = sezona;
     noveVyuctovanie["Diely vyúčtovania"] = diely.join();
     noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();
     // doprava
@@ -1082,16 +1082,16 @@ const zakazkaNoveVyuctovanie = zakazka => {
     vyuctovania.create(noveVyuctovanie);
 
     var vyuctovanie = vyuctovania.find(cislo)[0];
-    zakazka.set("Vyúčtovanie", empty);
-    zakazka.link("Vyúčtovanie", vyuctovanie);
+    zakazka.set(FIELD_VYUCTOVANIE, empty);
+    zakazka.link(FIELD_VYUCTOVANIE, vyuctovanie);
     return vyuctovanie;
 }
 
 const zakazkaToJsonHZS = zakazka => {
     var result = "";
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
-    var f = file("/sdcard/" + zakazka.field("Číslo") + "_file.json");
+    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
+    var f = file("/sdcard/" + zakazka.field(FIELD_CISLO) + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
     f.writeLine('{"Odberateľ":{');
     f.writeLine('"Nick"' + ':"' + odberatel.field("Nick") + '",');

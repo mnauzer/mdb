@@ -61,6 +61,7 @@ const FIELD_VIEW = "Tlač";
 const FIELD_PRACE = "Práce";
 const FIELD_MATERIAL = "Materiál";
 const FIELD_STROJE = "Stroje";
+const FIELD_DOPRAVA = "Doprava";
 // diely polozky
 const FIELD_TRAVNIK = "Trávnik";
 const FIELD_VYSADBY = "Výsadby";
@@ -82,8 +83,10 @@ const FIELD_HODINOVKA = "Hodinovka";
 // words
 const W_ZAKAZKA = "Zákazka";
 const W_PRACE = "Práce";
+const W_PRACE_NAVYSE = "Práce navyše";
 const W_DOPRAVA = "Doprava";
 const W_MATERIAL = "Materiál";
+const W_STROJE = "Stroje";
 const W_HODINOVKA = "Hodinovka";
 const W_POLOZKY = "Položky";
 
