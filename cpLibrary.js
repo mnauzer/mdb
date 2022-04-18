@@ -11,7 +11,7 @@ function verziaKniznice() {
 
 const prepocetPonuky = ponuka => {
     // verzia
-    var verzia = "0.2.07";
+    var verzia = "0.2.08";
     message("CENOVÁ PONUKA v." + verzia
         + "\n" + verziaKniznice()
         + "\n" + verziaKrajinkaLib());
