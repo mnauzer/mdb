@@ -50,7 +50,6 @@ const prepocetPlatby = pokladna => {
 
     // inicializácia
     var zaklad = 0;
-    var dph = 0;
     var total = 0;
     var dph = 0;
 
