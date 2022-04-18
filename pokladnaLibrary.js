@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.2.01";
+    var verzia = "0.2.02";
     result = nazov + " " + verzia;
     return result;
 }
@@ -41,7 +41,7 @@ const prepocetPlatby = pokladna => {
     // vygenerovať nové číslo
     // var cislo = pokladna.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = noveCisloV2(pokladna, db, 0, 3);
+    var cislo = pokladna.field(FIELD_CISLO) || noveCisloV2(pokladna, db, 0, 3);
     pokladna.set(FIELD_CISLO, cislo);
 
     // zistiť aktuálnu sadzbu dph v databáze
