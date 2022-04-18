@@ -11,7 +11,7 @@ function verziaKniznice() {
 
 const prepocetPonuky = ponuka => {
     // verzia
-    var verzia = "0.2.03";
+    var verzia = "0.2.05";
     message("CENOVÁ PONUKA v." + verzia
         + "\n" + verziaKniznice()
         + "\n" + verziaKrajinkaLib());
@@ -32,22 +32,22 @@ const prepocetPonuky = ponuka => {
     // nastaviť sezónu
     ponuka.set(FIELD_SEZONA, ponuka.field("Dátum").getFullYear());
     var sezona = ponuka.field(FIELD_SEZONA);
-    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
 
     // nastaviť splatnosť
     var datum = new Date(ponuka.field("Dátum"));
     var platnost = new Date(ponuka.field("Platnosť do"));
-    var platnost30 = new Date(moment(datum).add(15, "Days"));
+    var platnost30 = new Date(moment(datum).add(ponuka.field("Platnosť ponuky"), "Days"));
     ponuka.set("Platnosť do", platnost > datum ? platnost : platnost30);
 
     // doplň adresu klienta do Krycieho listu
-    var klient = ponuka.field("Klient")[0] ? ponuka.field("Klient")[0] : ponuka.field("Cenová ponuka")[0].field("Klient")[0];
+    var klient = ponuka.field("Miesto")[0].field("Klient");
     if (klient) {
         ponuka.set("Odberateľ", pullAddress(klient));
     }
 
     // generuj nové číslo
-    cislo = cislo ? cislo : noveCislo(sezona, "Cenové ponuky", 1, 2);
+    cislo = cislo ? cislo : noveCislo(sezona, DB_CENOVE_PONUKY, 1, 2);
     ponuka.set(FIELD_CISLO, cislo);
 
     // prepočet podľa typu cenovej ponuky
@@ -151,13 +151,13 @@ const ponukaNovaZakazka = cp => {
     // nastaviť sezónu
     cp.set(FIELD_SEZONA, cp.field("Dátum").getFullYear());
     var sezona = cp.field(FIELD_SEZONA);
-    var lib = libByName("Zákazky");
+    var lib = libByName(DB_ZAKAZKY);
     // inicializácia
     var novaZakazka = new Object();
     var datum = new Date();
     var typZakazky = "Realizácia" //harcoded
-    message(sezona);
-    var cislo = noveCislo(sezona, "Zákazky", 1, 2);
+
+    var cislo = noveCislo(sezona, DB_ZAKAZKY, 1, 2);
     var klient = cp.field("Klient")[0];
     var miesto = cp.field("Miesto realizácie")[0];
     var nazovZakazky = cp.field("Popis cenovej ponuky");
