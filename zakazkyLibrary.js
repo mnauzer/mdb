@@ -27,7 +27,7 @@ const prepocetZakazky = zakazka => {
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka")
     var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
-    var praceSDPH = mclChecked(uctovanieDPH, "Práce");
+    var praceSDPH = mclChecked(uctovanieDPH, W_PRACE);
     var strojeSDPH = mclChecked(uctovanieDPH, "Mechanizácia");
     var materialSDPH = mclChecked(uctovanieDPH, "Materiál");
     var dopravaSDPH = mclChecked(uctovanieDPH, "Doprava");

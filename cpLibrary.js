@@ -21,7 +21,7 @@ const prepocetPonuky = ponuka => {
     var typ = ponuka.field("Typ cenovej ponuky");
     var uctoDopravy = ponuka.field("Účtovanie dopravy");
     //spôsob účtovania dopravy
-    var cislo = ponuka.field("Číslo");
+    var cislo = ponuka.field(FIELD_CISLO);
     var pracaCelkom = 0;
     var strojeCelkom = 0;
     var materialCelkom = 0;
@@ -30,8 +30,8 @@ const prepocetPonuky = ponuka => {
     var dph = 0;
 
     // nastaviť sezónu
-    ponuka.set("sezóna", ponuka.field("Dátum").getFullYear());
-    var sezona = ponuka.field("sezóna");
+    ponuka.set(FIELD_SEZONA, ponuka.field("Dátum").getFullYear());
+    var sezona = ponuka.field(FIELD_SEZONA);
     var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
 
     // nastaviť splatnosť
@@ -48,7 +48,7 @@ const prepocetPonuky = ponuka => {
 
     // generuj nové číslo
     cislo = cislo ? cislo : noveCislo(sezona, "Cenové ponuky", 1, 2);
-    ponuka.set("Číslo", cislo);
+    ponuka.set(FIELD_CISLO, cislo);
 
     // prepočet podľa typu cenovej ponuky
     switch (typ) {
@@ -76,7 +76,7 @@ const prepocetPonuky = ponuka => {
                 }
                 if (ponuka.field("+Mechanizácia")) {
                     // spočítať mechanizácie
-                    var stroje = ponuka.field("Stroje");
+                    var stroje = ponuka.field(FIELD_STROJE);
                     strojeCelkom = prepocetDielStroje(stroje);
                     ponuka.set("Využitie mechanizácie", strojeCelkom);
                     ponuka.set("Stroje celkom bez DPH", strojeCelkom);
@@ -137,9 +137,9 @@ const generujZakazku = cp => {
         }
 
         cp.set("Stav cenovej ponuky", "Uzavretá");
-        message("Zákazka č." + zakazka.field("Číslo") + " bola vygenerovaná");
+        message("Zákazka č." + zakazka.field(FIELD_CISLO) + " bola vygenerovaná");
     } else if (!zakazka) {
-        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field("Číslo"));
+        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(FIELD_CISLO));
     } else {
         message("Cenová ponuka musí byť schválená");
     }
@@ -149,8 +149,8 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
     // nastaviť sezónu
-    cp.set("sezóna", cp.field("Dátum").getFullYear());
-    var sezona = cp.field("sezóna");
+    cp.set(FIELD_SEZONA, cp.field("Dátum").getFullYear());
+    var sezona = cp.field(FIELD_SEZONA);
     var lib = libByName("Zákazky");
     // inicializácia
     var novaZakazka = new Object();
@@ -173,14 +173,14 @@ const ponukaNovaZakazka = cp => {
     // hlavička a základné nastavenia
     novaZakazka["Dátum"] = datum;
     novaZakazka["Typ zákazky"] = typZakazky;
-    novaZakazka["Číslo"] = cislo;
+    novaZakazka[FIELD_CISLO] = cislo;
     novaZakazka["Klient"] = klient;
     novaZakazka["Miesto"] = miesto;
     novaZakazka["Stav zákazky"] = "Čakajúca";
     novaZakazka["Názov zákazky"] = nazovZakazky;
     novaZakazka["Diely zákazky"] = dielyZakazky.join();
     novaZakazka["Cenová ponuka"] = cp;
-    novaZakazka["sezóna"] = sezona;
+    novaZakazka[FIELD_SEZONA] = sezona;
     novaZakazka["Účtovanie DPH"] = uctovanieDPH;
     novaZakazka["Účtovanie zákazky"] = typ;
     lib.create(novaZakazka);
@@ -230,11 +230,11 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
     var lib = libByName("Výdajky");
     var cp = zakazka.field("Cenová ponuka")[0];
     var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field("sezóna");
+    var sezona = zakazka.field(FIELD_SEZONA);
     var cislo = noveCislo(sezona, "Výdajky", 0, 3);
     // vytvoriť novú výdajku
     var novaVydajka = new Object();
-    novaVydajka["Číslo"] = cislo;
+    novaVydajka[FIELD_CISLO] = cislo;
     novaVydajka["Dátum"] = datum;
     novaVydajka["Popis"] = popis;
     novaVydajka["s DPH"] = true; // hardcoded
@@ -242,7 +242,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
     novaVydajka["Vydané"] = "Zákazka";
     novaVydajka["Zákazka"] = zakazka;
     novaVydajka["Cenová ponuka"] = cp;
-    novaVydajka["sezóna"] = sezona;
+    novaVydajka[FIELD_SEZONA] = sezona;
     lib.create(novaVydajka);
     var vydajkaMaterialu = lib.find(cislo)[0];
 
@@ -265,11 +265,11 @@ const novyVykazPrac = (zakazka, popis) => {
     var cp = zakazka.field("Cenová ponuka")[0];
     var typVykazu = cp.field("Typ cenovej ponuky");
     var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field("sezóna");
+    var sezona = zakazka.field(FIELD_SEZONA);
     var cislo = noveCislo(sezona, "Výkaz prác", 0, 3);
     // vytvoriť novú výdajku
     var novyVykaz = new Object();
-    novyVykaz["Číslo"] = cislo;
+    novyVykaz[FIELD_CISLO] = cislo;
     novyVykaz["Dátum"] = datum;
     novyVykaz["Popis"] = popis;
     novyVykaz["Typ výkazu"] = typVykazu;
@@ -279,7 +279,7 @@ const novyVykazPrac = (zakazka, popis) => {
     novyVykaz["Zákazka"] = zakazka;
     novyVykaz["Cenová ponuka"] = cp;
 
-    novyVykaz["sezóna"] = sezona;
+    novyVykaz[FIELD_SEZONA] = sezona;
     lib.create(novyVykaz);
     var vykazPrac = lib.find(cislo)[0];
 
@@ -348,20 +348,20 @@ const novyVykazStrojov = (zakazka) => {
     var lib = libByName("Výkaz strojov");
     var cp = zakazka.field("Cenová ponuka")[0];
     var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field("sezóna");
+    var sezona = zakazka.field(FIELD_SEZONA);
     var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
     // vytvoriť novú výdajku
     var novyVykaz = new Object();
-    novyVykaz["Číslo"] = cislo;
+    novyVykaz[FIELD_CISLO] = cislo;
     novyVykaz["Dátum"] = datum;
-    novyVykaz["Popis"] = "Stroje";          // Jediný typ výkazu v knižnici
+    novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
     novyVykaz["Typ výkazu"] = "Hodinovka";  // výkaz strojov je len pri hodinovej sadzbe
     novyVykaz["s DPH"] = true; //harcoded
     novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
     novyVykaz["Vydané"] = "Zákazka";
     novyVykaz["Zákazka"] = zakazka;
     novyVykaz["Cenová ponuka"] = cp;
-    novyVykaz["sezóna"] = sezona;
+    novyVykaz[FIELD_SEZONA] = sezona;
     lib.create(novyVykaz);
     var vykazStrojov = lib.find(cislo)[0];
 
@@ -369,27 +369,27 @@ const novyVykazStrojov = (zakazka) => {
 }
 const generujVykazStrojov = zakazka => {
     var cp = zakazka.field("Cenová ponuka")[0];
-    var strojePolozky = cp.field("Stroje");
+    var strojePolozky = cp.field(FIELD_STROJE);
     // vytvoriť nový výkaz
     var vykazStrojov = novyVykazStrojov(zakazka);
     nalinkujPolozkyStrojov(vykazStrojov, strojePolozky);          // nalinkuje atribúty na položky
-    spocitajVykaz(vykazStrojov, "Stroje");                      // výkaz , názov poľa položiek
+    spocitajVykaz(vykazStrojov, FIELD_STROJE);                      // výkaz , názov poľa položiek
 
     return vykazStrojov;
 }
 const nalinkujPolozkyStrojov = (vykaz, polozky) => {
-    vykaz.set("Stroje", null);
+    vykaz.set(FIELD_STROJE, null);
     for (var m = 0; m < polozky.length; m++) {
-        vykaz.link("Stroje", polozky[m]);
-        vykaz.field("Stroje")[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
-        vykaz.field("Stroje")[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+        vykaz.link(FIELD_STROJE, polozky[m]);
+        vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
+        vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
     }
 }
 
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
     // inicializácia
-    var sezona = doklad.field("sezóna");
+    var sezona = doklad.field(FIELD_SEZONA);
     var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
     var sumaBezDPH = 0;
     var sumaDPH = 0;
@@ -397,7 +397,7 @@ const spocitajVykaz = (doklad, field) => {
     var polozky = doklad.field(field);
     for (var p = 0; p < polozky.length; p++) {
         var mnozstvo = polozky[p].attr("množstvo z cp");
-        if (field == "Práce sadzby" || field == "Stroje") {
+        if (field == "Práce sadzby" || field == FIELD_STROJE) {
             var cena = polozky[p].attr("základná sadzba");
         } else if (field == "Práce" || field == "Materiál")
             var cena = polozky[p].attr("cena");

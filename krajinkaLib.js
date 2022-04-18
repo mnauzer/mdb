@@ -4,47 +4,97 @@
 // Popis:                   knižnica krajinkaLib
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.19";
+    var verzia = "0.2.20";
     return nazov + " v." + verzia;
 }
 
 // libraries
+// app
 const DB_ASSISTENT = "KRAJINKA APP";
 const DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
+// projekty
 const DB_CENOVE_PONUKY = "Cenové ponuky";
 const DB_ZAKAZKY = "Zákazky";
 const DB_VYUCTOVANIA = "Vyúčtovania";
+const DB_CENNIK_PRAC = "Cenník prác";
+const DB_SKLAD = "Sklad Krajinka";
+const DB_PLAN_PRAC = "Plán prác";
+// administratíva
 const DB_VYKAZY_PRAC = "Výkaz prác";
 const DB_VYDAJKY_MATERIALU = "Výdajky";
 const DB_VYKAZY_STROJOV = "Výkaz strojov";
+const DB_INVENTURY = "Invenúry";
+const DB_PRIJEMKY = "Príjemky";
+const DB_REZERVACIE = "Rezervácie";
+const DB_OBJEDNAVKY = "Objednávky";
+// evidencia
+const DB_POKLADNA = "Pokladňa";
+const DB_EVIDENCIA_PRAC = "Evidencia prác";
+const DB_DOCHADZKA = "Dochádzka";
+const DB_KNIHA_JAZD = "Kniha jázd";
+const DB_ZASTAVKY = "Zastávky";
+// databázy
+const DB_ZAMESTNANCI = "Zamestnanci";
+const DB_KLIENTI = "Klienti";
+const DB_DODAVATELIA = "Dodávatelia";
+const DB_PARTNERI = "Partneri";
+const DB_MIESTA = "Miesta";
+const DB_UCTY = "Účty";
+const DB_STROJE = "Stroje";
+const DB_VOZIDLA = "Vozidlá";
+const DB_RASTLINY = "Databáza rastlín";
 
 // fields
-const FIELD_CENOVA_PONUKA = "Cenová ponuka";
+const FIELD_CENOVA_PONUKA = "Cenová ponuka"; // link to entry
 const FIELD_ZAKAZKA = "Zákazka";
 const FIELD_VYUCTOVANIE = "Vyúčtovanie";
 const FIELD_TYP_VYKAZU = "Typ výkazu";
 const FIELD_POPIS = "Popis";
+const FIELD_CISLO = "Číslo";
+// nastavenia
+const FIELD_SEZONA = "sezóna";
+const FIELD_DEBUG = "debug";
+const FIELD_BACKROUND_COLOR = "background color";
+const FIELD_ENTRY_COLOR = "entry color";
+const FIELD_VIEW = "Tlač";
+//
+const FIELD_PRACE = "Práce";
+const FIELD_MATERIAL = "Materiál";
+const FIELD_STROJE = "Stroje";
+// diely polozky
+const FIELD_TRAVNIK = "Trávnik";
+const FIELD_VYSADBY = "Výsadby";
+const FIELD_RASTLINY = "Rastliny";
+const FIELD_ZAVLAZOVANIE = "Zavlažovanie";
+const FIELD_JAZIERKO = "Jazierko";
+const FIELD_KAMEN = "Kameň";
+const FIELD_NESTANDARDNE = "Neštandardné";
+const FIELD_SUBDODAVKY = "Subdodávky";
+// diely hzs
+const FIELD_ZAHRADNICKE_PRACE = "Záhradnícke práce";
+const FIELD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania";
+const FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
+const FIELD_PRACE_NAVYSE = "Práce navyše";
+// zamestnanci
+const FIELD_HODINOVKA = "Hodinovka";
 
-// common words
+
+// words
 const W_ZAKAZKA = "Zákazka";
+const W_PRACE = "Práce";
 const W_DOPRAVA = "Doprava";
 const W_MATERIAL = "Materiál";
-const W_PRACE = "Práce";
 const W_HODINOVKA = "Hodinovka";
+const W_POLOZKY = "Položky";
 
 
 const setEdit = entry => {
-    entry.set("Tlač", "Editácia");
+    entry.set(FIELD_VIEW, "Editácia");
     return;
 }
 
 const setTlac = entry => {
-    entry.set("Tlač", "Tlač");
-    return;
-}
-
-const setDebug = entry => {
-    entry.set("Tlač", "Debug");
+    entry.set(FIELD_VIEW, "Tlač");
     return;
 }
 
@@ -112,7 +162,7 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
 // generuje nové číslo záznamu
 const noveCisloV2 = (entry, lib, withPrefix, sliceNum) => {
     var db = lib.title;
-    var sezona = entry.field("sezóna") ? entry.field("sezóna") : new Date().getFullYear();
+    var sezona = entry.field(FIELD_SEZONA) ? entry.field(FIELD_SEZONA) : new Date().getFullYear();
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;
@@ -200,14 +250,14 @@ const getNCTovaru = (pc, prirazka, sadzbaDPH) => {
 const sadzbaZamestnanca2 = (zamestnanec, datum) => {
     var sadzba = 0;
     //zatial len zo zaznnamu
-    sadzba = zamestnanec.field("Hodinovka");
+    sadzba = zamestnanec.field(FIELD_HODINOVKA);
     return sadzba;
 };
 
 const sadzbaZamestnanca = (zamestnanec, datum) => {
     var sadzba = 0;
     //zatial len zo zaznnamu
-    sadzba = zamestnanec.field("Hodinovka");
+    sadzba = zamestnanec.field(FIELD_HODINOVKA);
     return sadzba;
 };
 
@@ -218,7 +268,6 @@ const setTest = (status) => {
         databazy[d].set("Testovanie", status);
     }
     if (status) {
-
         message("Databázy nastavené na Testovanie");
     } else {
         message("Databázy nastavené na Ostrý režim");
@@ -236,10 +285,10 @@ const mclChecked = (mcl, value) => {
 }
 
 const setBackgroudColor = (entry, color) => {
-    entry.set("entry background", color)
+    entry.set(FIELD_BACKROUND_COLOR, color)
 }
 
 const setColor = (entry, color) => {
-    entry.set("entry color", color)
+    entry.set(FIELD_ENTRY_COLOR, color)
 }
 // End of file: 25.03.2022, 16:16
