@@ -41,8 +41,8 @@ const prepocetPlatby = pokladna => {
     // vygenerovať nové číslo
     // var cislo = pokladna.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = noveCisloV2(pokladna, DB_POKLADNA, 0, 3);
-    pokladna.set("Číslo", cislo);
+    var cislo = noveCislo(pokladna, DB_POKLADNA, 0, 3);
+    pokladna.set(FIELD_CISLO, cislo);
 
     // zistiť aktuálnu sadzbu dph v databáze
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
