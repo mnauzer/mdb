@@ -79,6 +79,7 @@ const FIELD_PRACE_NAVYSE = "Práce navyše";
 const FIELD_DATUM = "Dátum";
 // zamestnanci
 const FIELD_HODINOVKA = "Hodinovka";
+const FLD_HODINOVKA = 'field("Hodinovka")';
 
 
 // words
