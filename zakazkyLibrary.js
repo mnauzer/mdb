@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.30";
+    var verzia = "0.3.31";
     result = nazov + " " + verzia;
     return result;
 }
@@ -552,7 +552,6 @@ const zakazkaHodiny = zakazka => {
 
 const zakazkaMzdy = zakazka => {
     try {
-
         var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
         var result = 0;
         for (var p = 0; p < links.length; p++) {
@@ -560,17 +559,21 @@ const zakazkaMzdy = zakazka => {
         };
         return result;
     } catch (error) {
-        message("Chyba funkcie 'zakazkaMzdy' /" + error);
+        message("Chyba funkcie: zakazkaMzdy\nknižnica: zakazkaLibrary\n" + error);
     }
 };
 
 const zakazkaNakupMaterialu = zakazka => {
-    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
-    var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += (links[p].field("Suma v NC bez DPH"));
-    };
-    return result;
+    try {
+        var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+        var result = 0;
+        for (var p = 0; p < links.length; p++) {
+            result += (links[p].field("Suma v NC bez DPH"));
+        };
+        return result;
+    } catch (error) {
+        message("Chyba funkcie: zakazkaNakupMaterialu\nknižnica: zakazkaLibrary\n" + error);
+    }
 };
 
 const zakazkaMaterialDPH = zakazka => {
