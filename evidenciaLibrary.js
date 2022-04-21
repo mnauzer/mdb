@@ -30,7 +30,7 @@ const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
 
 const prepocetZaznamuEvidencie = evidencia => {
     var datum = evidencia.field("Dátum")
-    var verzia = "0.1.07";
+    var verzia = "0.1.08";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČET EVIDENCIA PRÁC" + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
