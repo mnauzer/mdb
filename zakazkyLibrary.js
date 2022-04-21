@@ -551,12 +551,17 @@ const zakazkaHodiny = zakazka => {
 };
 
 const zakazkaMzdy = zakazka => {
-    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
-    var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += (links[p].field("Mzdové náklady"));
-    };
-    return result;
+    try {
+
+        var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
+        var result = 0;
+        for (var p = 0; p < links.length; p++) {
+            result += (links[p].field("Mzdové náklady"));
+        };
+        return result;
+    } catch (error) {
+        message("Chyba funkcie 'zakazkaMzdy' /" + error);
+    }
 };
 
 const zakazkaNakupMaterialu = zakazka => {
