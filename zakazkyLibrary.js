@@ -555,7 +555,7 @@ const zakazkaHodiny = zakazka => {
 };
 
 const zakazkaMzdy = zakazka => {
-    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
+    var links = zakazka.linksFrom("Evidencia prác", "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
