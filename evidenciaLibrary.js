@@ -53,7 +53,7 @@ const prepocetZaznamuEvidencie = evidencia => {
     } else if (typ == "Položky") {
         //message("Práce na zákazke " + evidencia.field("Zákazka")[0].field("Názov"));
     }
-    var zamestnanci = evidencia.FLD_ZAMESTNANCI;
+    var zamestnanci = evidencia.field(FIELD_ZAMESTNANCI);
     var odpracovane = 0;
     var mzdoveNakladyCelkom = 0;
     var nakladyZamestnatec = 0;
