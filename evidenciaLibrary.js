@@ -43,15 +43,12 @@ const prepocetZaznamuEvidencie = evidencia => {
     cislo = cislo ? cislo : noveCislo(sezona, DB_EVIDENCIA_PRAC, 0, 3);
 
     // inicializácia
+    var typ = evidencia.field("Typ zákazky");
     evidencia.set(FIELD_ZAKAZKA, evidencia.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
-    var typ = evidencia.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
-    evidencia.set("Typ zákazky", typ);
     var zamestnanci = evidencia.field("Zamestnanci");
     var odpracovane = 0;
     var mzdoveNakladyCelkom = 0;
     var nakladyZamestnatec = 0;
-    var datum = evidencia.field("Dátum");
-    var sezona = evidencia.field("sezóna") ? evidencia.field("sezóna") : datum.getFullYear();
     // zaokrúhli na 1/4 hod
     var casOd = roundTimeQ(evidencia.field("Od"));
     var casDo = roundTimeQ(evidencia.field("Do"));
