@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.32";
+    var verzia = "0.3.33";
     result = nazov + " " + verzia;
     return result;
 }
@@ -544,7 +544,6 @@ const zakazkaCasJazdy = zakazka => {
 const zakazkaHodiny = zakazka => {
     var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
-
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
             result += (links[p].field("Odpracované"));
@@ -556,46 +555,42 @@ const zakazkaHodiny = zakazka => {
 };
 
 const zakazkaMzdy = zakazka => {
-    try {
-        var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
-        var result = 0;
-        if (links.length > 0) {
-            for (var p = 0; p < links.length; p++) {
-                result += (links[p].field("Mzdové náklady"));
+    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
+    var result = 0;
+    if (links.length > 0) {
+        for (var p = 0; p < links.length; p++) {
+            result += (links[p].field("Mzdové náklady"));
 
-            };
-        } else {
-            message("Zákazka nemá záznamy v Evidencii prác");
-        }
-        return result;
-    } catch (error) {
-        message("Chyba funkcie: zakazkaMzdy\nKnižnica: zakazkaLibrary\nRiadok: 553\n" + error);
+        };
+    } else {
+        message("Zákazka nemá záznamy v Evidencii prác");
     }
+    return result;
 };
 
 const zakazkaNakupMaterialu = zakazka => {
-    try {
-        var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
-        var result = 0;
-        if (links.length > 0) {
-            for (var p = 0; p < links.length; p++) {
-                result += (links[p].field("Suma v NC bez DPH"));
-            };
-        } else {
-            message("Zákazka nemá záznamy v Evidencii prác");
-        }
-        return result;
-    } catch (error) {
-        message("Chyba funkcie: zakazkaNakupMaterialu\nKnižnica: zakazkaLibrary\nRiadok: 566" + error);
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var result = 0;
+    if (links.length > 0) {
+        for (var p = 0; p < links.length; p++) {
+            result += (links[p].field("Suma v NC bez DPH"));
+        };
+    } else {
+        message("Zákazka nemá záznamy v Evidencii prác");
     }
+    return result;
 };
 
 const zakazkaMaterialDPH = zakazka => {
     var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += links[p].field("DPH");
-    };
+    if (links.length > 0) {
+        for (var p = 0; p < links.length; p++) {
+            result += links[p].field("DPH");
+        };
+    } else {
+        message("Zákazka nemá záznamy v Evidencii prác");
+    }
     return result;
 };
 
