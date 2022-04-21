@@ -51,7 +51,7 @@ const prepocetZaznamuEvidencie = evidencia => {
     if (typ == "Hodinovka") {
         evidencia.set(FIELD_ZAKAZKA, evidencia.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
     } else if (typ == "Položky") {
-        message("Práce na zákazke " + evidencia.field("Zákazka")[0].field("Názov"));
+        //message("Práce na zákazke " + evidencia.field("Zákazka")[0].field("Názov"));
     }
     var zamestnanci = evidencia.field("Zamestnanci");
     var odpracovane = 0;
