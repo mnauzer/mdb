@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.03";
+    var verzia = "0.2.04";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -30,10 +30,9 @@ const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
 
 const prepocetZaznamuEvidencie = evidencia => {
     var datum = evidencia.field("Dátum")
-    var verzia = "0.1.08";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("PREPOČET EVIDENCIA PRÁC" + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
+    message("PREPOČET EVIDENCIA PRÁC\n" + vKniznica + "\n" + vKrajinkaLib);
     // nastaviť sezónu
     evidencia.set("sezóna", datum.getFullYear());
     var sezona = evidencia.field("sezóna");
