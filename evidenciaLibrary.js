@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.04";
+    var verzia = "0.2.5";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -43,7 +43,11 @@ const prepocetZaznamuEvidencie = evidencia => {
 
     // inicializácia
     var typ = evidencia.field("Typ zákazky");
-    evidencia.set(FIELD_ZAKAZKA, evidencia.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
+    if (typ == "Hodinovka") {
+        evidencia.set(FIELD_ZAKAZKA, evidencia.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
+    } else of(typ == "Položky"){
+
+    }
     var zamestnanci = evidencia.field("Zamestnanci");
     var odpracovane = 0;
     var mzdoveNakladyCelkom = 0;
