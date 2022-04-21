@@ -568,7 +568,7 @@ const zakazkaMzdy = zakazka => {
 };
 
 const zakazkaNakupMaterialu = zakazka => {
-    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var links = zakazka.linksFrom("Výdajky", "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
