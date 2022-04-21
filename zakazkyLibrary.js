@@ -594,7 +594,7 @@ const zakazkaMaterialDPH = zakazka => {
 };
 
 const zakazkaMaterialRozdielDPH = zakazka => {
-    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var links = zakazka.linksFrom("Výdajky", "Zákazka");
     var result = 0;
     var dphNC = 0;
     var dph = 0;
