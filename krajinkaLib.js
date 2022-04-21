@@ -4,7 +4,7 @@
 // Popis:                   knižnica krajinkaLib
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.22";
+    var verzia = "0.2.23";
     return nazov + " v." + verzia;
 }
 
@@ -97,13 +97,13 @@ const W_POLOZKY = "Položky";
 
 const setEdit = entry => {
     entry.set(FIELD_VIEW, "Editácia");
-    entry.set("debug", false);
+    entry.set(FIELD_DEBUG, false);
     return;
 }
 
 const setTlac = entry => {
     entry.set(FIELD_VIEW, "Tlač");
-    entry.set("debug", false);
+    entry.set(FIELD_DEBUG, false);
     return;
 }
 
