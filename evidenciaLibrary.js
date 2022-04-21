@@ -33,18 +33,18 @@ const prepocetZaznamuEvidencie = evidencia => {
     var verzia = "0.1.07";
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("Prepočítaj zákazku v." + verzia + "\ncpLibrary v." + vKniznica + "\nkrajikaLib v." + vKrajinkaLib);
+    message("PREPOČET EVIDENCIA PRÁC" + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
     // nastaviť sezónu
     evidencia.set("sezóna", datum.getFullYear());
     var sezona = evidencia.field("sezóna");
 
     // vygenerovať nové číslo
     var cislo = evidencia.field("Číslo");
-    cislo = cislo ? cislo : noveCislo(sezona, "Evidencia prác", 0, 3);
+    cislo = cislo ? cislo : noveCislo(sezona, DB_EVIDENCIA_PRAC, 0, 3);
 
     // inicializácia
-    evidencia.set("Zákazka", evidencia.field("Výkaz prác")[0].field("Zákazka")[0] || null);
-    var typ = evidencia.field("Zákazka")[0].field("Cenová ponuka")[0].field("Typ cenovej ponuky");
+    evidencia.set(FIELD_ZAKAZKA, evidencia.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
+    var typ = evidencia.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
     evidencia.set("Typ zákazky", typ);
     var zamestnanci = evidencia.field("Zamestnanci");
     var odpracovane = 0;
