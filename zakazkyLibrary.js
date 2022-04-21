@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.31";
+    var verzia = "0.3.32";
     result = nazov + " " + verzia;
     return result;
 }
@@ -544,9 +544,14 @@ const zakazkaCasJazdy = zakazka => {
 const zakazkaHodiny = zakazka => {
     var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += (links[p].field("Odpracované"));
-    };
+
+    if (links.length > 0) {
+        for (var p = 0; p < links.length; p++) {
+            result += (links[p].field("Odpracované"));
+        };
+    } else {
+        message("Zákazka nemá záznamy v Evidencii prác");
+    }
     return result;
 };
 
@@ -554,9 +559,14 @@ const zakazkaMzdy = zakazka => {
     try {
         var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
         var result = 0;
-        for (var p = 0; p < links.length; p++) {
-            result += (links[p].field("Mzdové náklady"));
-        };
+        if (links.length > 0) {
+            for (var p = 0; p < links.length; p++) {
+                result += (links[p].field("Mzdové náklady"));
+
+            };
+        } else {
+            message("Zákazka nemá záznamy v Evidencii prác");
+        }
         return result;
     } catch (error) {
         message("Chyba funkcie: zakazkaMzdy\nKnižnica: zakazkaLibrary\nRiadok: 553\n" + error);
@@ -567,9 +577,13 @@ const zakazkaNakupMaterialu = zakazka => {
     try {
         var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
         var result = 0;
-        for (var p = 0; p < links.length; p++) {
-            result += (links[p].field("Suma v NC bez DPH"));
-        };
+        if (links.length > 0) {
+            for (var p = 0; p < links.length; p++) {
+                result += (links[p].field("Suma v NC bez DPH"));
+            };
+        } else {
+            message("Zákazka nemá záznamy v Evidencii prác");
+        }
         return result;
     } catch (error) {
         message("Chyba funkcie: zakazkaNakupMaterialu\nKnižnica: zakazkaLibrary\nRiadok: 566" + error);
