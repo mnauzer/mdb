@@ -559,7 +559,7 @@ const zakazkaMzdy = zakazka => {
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
-            result += (links[p].field("Mzdové náklady"));
+            //  result += links[p].field("Mzdové náklady");
         };
     } else {
         message("Zákazka nemá záznamy v Evidencii prác");
