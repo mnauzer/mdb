@@ -4,7 +4,7 @@
 // Popis:                   knižnica krajinkaLib
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.21";
+    var verzia = "0.2.22";
     return nazov + " v." + verzia;
 }
 
