@@ -6,26 +6,31 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.06";
+    var verzia = "0.2.07";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
 }
 
 const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
-    var zakladnaSadzba = vykaz.field("Práce sadzby")[0].field("Cena bez DPH");
+    try {
 
-    // zistiť zľavu podľa počtu odpracovaných hodín
-    var zlava = 0;
-    var limity = vykaz.field("Práce sadzby")[0].field("Limity");
+        var zakladnaSadzba = vykaz.field("Práce sadzby")[0].field("Cena bez DPH");
 
-    for (var m = 0; m < limity.length; m++) {
-        if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
-            zlava = limity[m].field("Zľava");
+        // zistiť zľavu podľa počtu odpracovaných hodín
+        var zlava = 0;
+        var limity = vykaz.field("Práce sadzby")[0].field("Limity");
+
+        for (var m = 0; m < limity.length; m++) {
+            if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
+                zlava = limity[m].field("Zľava");
+            }
         }
+        var sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
+        return sadzba;
+    } catch (error) {
+        message("Chyba funkcie 'evidenciaSadzbaPrace' \n" + error);
     }
-    var sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
-    return sadzba;
 };
 
 const prepocetZaznamuEvidencie = evidencia => {
