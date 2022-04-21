@@ -131,7 +131,7 @@ const prepocetZakazky = zakazka => {
 
     // CELKOM
     vyuctovanieCelkom = vyuctovanieCelkomBezDph + dphSuma;
-
+    message(zakazka.title);
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
     var mzdy = zakazkaMzdy(zakazka);                                // mzdy z evidencie
     var odpracovanychHodin = zakazkaHodiny(zakazka);                // hodiny z evidencie
@@ -560,7 +560,6 @@ const zakazkaMzdy = zakazka => {
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
             result += (links[p].field("Mzdové náklady"));
-
         };
     } else {
         message("Zákazka nemá záznamy v Evidencii prác");
