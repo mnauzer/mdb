@@ -559,7 +559,7 @@ const zakazkaMzdy = zakazka => {
         };
         return result;
     } catch (error) {
-        message("Chyba funkcie: zakazkaMzdy\nknižnica: zakazkaLibrary\n" + error);
+        message("Chyba funkcie: zakazkaMzdy\nKnižnica: zakazkaLibrary\nRiadok: 553\n" + error);
     }
 };
 
@@ -572,7 +572,7 @@ const zakazkaNakupMaterialu = zakazka => {
         };
         return result;
     } catch (error) {
-        message("Chyba funkcie: zakazkaNakupMaterialu\nknižnica: zakazkaLibrary\n" + error);
+        message("Chyba funkcie: zakazkaNakupMaterialu\nKnižnica: zakazkaLibrary\nRiadok: 566" + error);
     }
 };
 

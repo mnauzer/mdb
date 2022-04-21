@@ -78,6 +78,8 @@ const FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
 const FIELD_PRACE_NAVYSE = "Práce navyše";
 const FIELD_DATUM = "Dátum";
 // zamestnanci
+const FIELD_ZAMESTNANCI = "Zamestnanci";
+const FLD_ZAMESTNANCI = 'field("Zamestnanci")';
 const FIELD_HODINOVKA = "Hodinovka";
 const FLD_HODINOVKA = 'field("Hodinovka")';
 
