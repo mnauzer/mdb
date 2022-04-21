@@ -575,13 +575,13 @@ const zakazkaNakupMaterialu = zakazka => {
             result += (links[p].field("Suma v NC bez DPH"));
         };
     } else {
-        message("Zákazka nemá záznamy v Evidencii prác");
+        message("Zákazka nemá záznamy vo Výdajkách materiálu");
     }
     return result;
 };
 
 const zakazkaMaterialDPH = zakazka => {
-    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var links = zakazka.linksFrom("Výdajky", "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
