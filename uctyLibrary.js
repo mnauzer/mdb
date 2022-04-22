@@ -1,6 +1,6 @@
 function verziaKniznice() {
     var nazov = "uctyLibrary";
-    var verzia = "0.2.08";
+    var verzia = "0.2.09";
     //message("cpLibrary v." + verzia);
     return nazov + " " + verzia;
 }
@@ -26,7 +26,7 @@ const ucetPrijmy = ucet => {
             ucet.set("Príjmy", prijmyCelkom);
             ucet.set("Stav", prijmyCelkom - ucet.field("Výdavky"));
         } else {
-            message("Nie sú žiadne záznamy príjmov pre účet " + ucet.title + " v sezóne " + sezona);
+            message("Nie sú žiadne záznamy príjmov pre účet " + ucet.title);
         }
     }
     else {
