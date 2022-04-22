@@ -134,9 +134,10 @@ const prepocetZakazky = zakazka => {
     message(zakazka.title);
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
     var mzdy = zakazkaMzdy(zakazka);                                // mzdy z evidencie
-    var odpracovanychHodin = zakazkaHodiny(zakazka);                // hodiny z evidencie
+    var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);                // hodiny z evidencie
     var najazdenyCas = zakazkaCasJazdy(zakazka);
     var najazdeneKm = zakazkaKm(zakazka);
+    message("Záznamov: " + links.length);
     var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
     var nakladyDoprava = najazdeneKm * 0.5;                         // náklady 0,50€/km
     var nakladyStroje = stroje * 0.75;                         // náklady 75%
@@ -407,7 +408,7 @@ const generujVyuctovanie = zakazka => {
             }
             noveVyuctovanie.set(diely[d] + " celkom", sucetDielov);
         }
-    } else if (typCP == "Hodinovka") {
+    } else if (typCP == W_HODINOVKA) {
         // ak je typ hodinovka nalinkuje práce, materiál a a stroje do vyúčtovania
         for (var v = 0; v < vydajkyMaterialu.length; v++) {
             nalinkujMaterial(noveVyuctovanie, vydajkyMaterialu[v]);
@@ -541,9 +542,10 @@ const zakazkaCasJazdy = zakazka => {
     return result;
 };
 
-const zakazkaHodiny = zakazka => {
+const spocitatHodinyZevidencie = zakazka => {
     var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
+    message("Záznamov: " + links.length);
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
             result += (links[p].field("Odpracované"));
