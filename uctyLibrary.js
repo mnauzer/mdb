@@ -43,7 +43,7 @@ const ucetVydavky = ucet => {
             for (var s = 0; s < sezony.length; s++) {
                 for (var v = 0; v < zaznamy.length; v++) {
 
-                    if (sezony[s] == zaznamy[p].field(FIELD_SEZONA)) {
+                    if (sezony[s] == zaznamy[v].field(FIELD_SEZONA)) {
                         vydavkyCelkom += zaznamy[v].field("Priebežná položka");
                         vydavkyCelkom += zaznamy[v].field("Výdavok bez DPH");
                         vydavkyCelkom += zaznamy[v].field("DPH-");
