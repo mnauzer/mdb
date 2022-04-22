@@ -11,10 +11,10 @@ const ucetPrijmy = ucet => {
     if (sezony.length > 0) {
         // Príjmy
         for (var z = 0; z < sezony.length; z++) {
-            var zaznamy = ucet.linksFrom("Pokladňa", "Do pokladne");
+            var zaznamy = ucet.linksFrom(DB_POKLADNA, "Do pokladne");
             if (zaznamy.length > 0) {
                 for (var p = 0; p < zaznamy.length; p++) {
-                    var lfSezona = zaznamy[p].field("sezóna");
+                    var lfSezona = zaznamy[p].field(FIELD_SEZONA);
                     if (lfSezona == sezony[z]) {
                         prijmyCelkom += zaznamy[p].field("Priebežná položka");
                         prijmyCelkom += zaznamy[p].field("Príjem bez DPH");
@@ -35,10 +35,10 @@ const ucetVydavky = ucet => {
     var vydavkyCelkom = 0;
     if (sezony.length > 0) {
         for (var s = 0; s < sezony.length; s++) {
-            var zaznamy = ucet.linksFrom("Pokladňa", "Z pokladne");
+            var zaznamy = ucet.linksFrom(DB_POKLADNA, "Z pokladne");
             if (zaznamy.length > 0) {
                 for (var v = 0; v < zaznamy.length; v++) {
-                    var lfSezona = zaznamy[v].field("sezóna");
+                    var lfSezona = zaznamy[v].field(FIELD_SEZONA);
                     if (lfSezona == sezony[s]) {
                         vydavkyCelkom += zaznamy[v].field("Priebežná položka");
                         vydavkyCelkom += zaznamy[v].field("Výdavok bez DPH");
