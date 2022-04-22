@@ -13,9 +13,9 @@ const ucetPrijmy = ucet => {
         var zaznamy = ucet.linksFrom(DB_POKLADNA, "Do pokladne");
         if (zaznamy.length > 0) {
             //          var zaznamyPrepocet = [];
-            for (var z = 0; z < sezony.length; z++) {
+            for (var s = 0; s < sezony.length; s++) {
                 for (var p = 0; p < zaznamy.length; p++) {
-                    if (sezony[z] == zaznamy[p].field(FIELD_SEZONA)) {
+                    if (sezony[s] == zaznamy[p].field(FIELD_SEZONA)) {
                         //                        zaznamyPrepocet.push(zaznamy[p]);
                         prijmyCelkom += zaznamy[p].field("Priebežná položka");
                         prijmyCelkom += zaznamy[p].field("Príjem bez DPH");
@@ -38,21 +38,23 @@ const ucetVydavky = ucet => {
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var vydavkyCelkom = 0;
     if (sezony.length > 0) {
-        for (var s = 0; s < sezony.length; s++) {
-            var zaznamy = ucet.linksFrom(DB_POKLADNA, "Z pokladne");
-            if (zaznamy.length > 0) {
+        var zaznamy = ucet.linksFrom(DB_POKLADNA, "Z pokladne");
+        if (zaznamy.length > 0) {
+            for (var s = 0; s < sezony.length; s++) {
                 for (var v = 0; v < zaznamy.length; v++) {
-                    var lfSezona = zaznamy[v].field(FIELD_SEZONA);
-                    if (lfSezona == sezony[s]) {
+
+                    if (sezony[s] == zaznamy[p].field(FIELD_SEZONA)) {
                         vydavkyCelkom += zaznamy[v].field("Priebežná položka");
                         vydavkyCelkom += zaznamy[v].field("Výdavok bez DPH");
                         vydavkyCelkom += zaznamy[v].field("DPH-");
                     }
                 }
             }
+            ucet.set("Výdavky", vydavkyCelkom);
+            ucet.set("Stav", ucet.field("Príjmy") - vydavkyCelkom);
+        } else {
+            message("Nie sú žiadne záznamy príjmov pre účet " + ucet.title);
         }
-        ucet.set("Výdavky", vydavkyCelkom);
-        ucet.set("Stav", ucet.field("Príjmy") - vydavkyCelkom);
     } else {
         message("Nie sú vybraté sezóny na prepočet");
     }
