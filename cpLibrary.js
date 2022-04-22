@@ -4,7 +4,7 @@
 // Popis:
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.10";
+    var verzia = "0.2.11";
     return nazov + " v." + verzia;
 }
 
