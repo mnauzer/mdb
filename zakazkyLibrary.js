@@ -641,7 +641,6 @@ const zistiIndexLinku = (link, remoteLinks) => {
 }
 
 const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
-
     // inicializácia
     if (sDPH) { vykaz.set("s DPH", true) }
     var sumaDPH = 0;
@@ -687,7 +686,7 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
         polozka.setAttr("dodané množstvo", hodinyCelkom);
         polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribút
         polozka.setAttr("cena celkom", sumaBezDPH);
-    } else if (uctovanie == "Za celú zákazku") {
+    } else {
         for (var el = 0; el < evidenciaLinks.length; el++) {
             var rVykazy = evidenciaLinks[el].field("Výkaz prác");
             var index = zistiIndexLinku(vykaz, rVykazy);
