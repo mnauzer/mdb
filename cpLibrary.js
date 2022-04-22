@@ -134,6 +134,7 @@ const generujZakazku = cp => {
             generujVykazyPrac(zakazka);
             generujVydajkyMaterialu(zakazka);
         } else {
+            message("Nie je jasný typ zákazky");
         }
 
         cp.set("Stav cenovej ponuky", "Uzavretá");
