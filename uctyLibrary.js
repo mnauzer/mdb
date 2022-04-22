@@ -6,6 +6,7 @@ function verziaKniznice() {
 }
 
 const ucetPrijmy = ucet => {
+    message("Prepočítavám príjmy");
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var prijmyCelkom = 0;
     if (sezony.length > 0) {
@@ -31,6 +32,7 @@ const ucetPrijmy = ucet => {
 };
 
 const ucetVydavky = ucet => {
+    message("Prepočítavám výdavky");
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var vydavkyCelkom = 0;
     if (sezony.length > 0) {
