@@ -321,7 +321,9 @@ const generujVykazyPrac = zakazka => {
             nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
             spocitajVykaz(vykazPrac, "Práce sadzby");
         }
-    } else { }
+    } else {
+        message("Nie je jasný typ účtovania zákazky")
+    }
     return vykazPrac; //suma
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
