@@ -4,10 +4,9 @@
 // Popis:
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.10";
+    var verzia = "0.2.11";
     return nazov + " v." + verzia;
 }
-// GENEROVANIE NOVEJ ZÁKAZKY
 
 const prepocetPonuky = ponuka => {
     // verzia
@@ -92,7 +91,7 @@ const prepocetPonuky = ponuka => {
     }
 
     // Doprava každopádne
-    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy); // cenová ponuka + spôsob účtovania dopravy
+    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
 
     // dph
     cenaCelkomBezDPH += dopravaCelkom;
@@ -113,7 +112,7 @@ const generujZakazku = cp => {
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ ZÁKAZKU v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
-    var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
+    var zakazka = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
 
     if (cp.field("Stav cenovej ponuky") == "Schválená") {
 
@@ -135,6 +134,7 @@ const generujZakazku = cp => {
             generujVykazyPrac(zakazka);
             generujVydajkyMaterialu(zakazka);
         } else {
+            message("Nie je jasný typ zákazky");
         }
 
         cp.set("Stav cenovej ponuky", "Uzavretá");
@@ -322,7 +322,9 @@ const generujVykazyPrac = zakazka => {
             nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
             spocitajVykaz(vykazPrac, "Práce sadzby");
         }
-    } else { }
+    } else {
+        message("Nie je jasný typ účtovania zákazky")
+    }
     return vykazPrac; //suma
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
@@ -468,7 +470,7 @@ const prepocetDielStroje = stroje => {
 };
 
 // prepočet dopravy cenovej ponuky
-const ponukaDoprava = (cp, uctovanie) => {
+const ponukaDoprava = (cp, uctovanie, cenaCelkomBezDPH) => {
     var celkom = 0;
     switch (uctovanie) {
         case "Paušál":
