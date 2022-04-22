@@ -1,38 +1,40 @@
 function verziaKniznice() {
     var nazov = "uctyLibrary";
-    var verzia = "0.2.05";
+    var verzia = "0.2.08";
     //message("cpLibrary v." + verzia);
     return nazov + " " + verzia;
 }
 
 const ucetPrijmy = ucet => {
-    message("Prepočítavám príjmy");
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var prijmyCelkom = 0;
     if (sezony.length > 0) {
         // Príjmy
-        for (var z = 0; z < sezony.length; z++) {
-            var zaznamy = ucet.linksFrom(DB_POKLADNA, "Do pokladne");
-            if (zaznamy.length > 0) {
+        var zaznamy = ucet.linksFrom(DB_POKLADNA, "Do pokladne");
+        if (zaznamy.length > 0) {
+            //          var zaznamyPrepocet = [];
+            for (var z = 0; z < sezony.length; z++) {
                 for (var p = 0; p < zaznamy.length; p++) {
-                    var lfSezona = zaznamy[p].field(FIELD_SEZONA);
-                    if (lfSezona == sezony[z]) {
+                    if (sezony[z] == zaznamy[p].field(FIELD_SEZONA)) {
+                        //                        zaznamyPrepocet.push(zaznamy[p]);
                         prijmyCelkom += zaznamy[p].field("Priebežná položka");
                         prijmyCelkom += zaznamy[p].field("Príjem bez DPH");
                         prijmyCelkom += zaznamy[p].field("DPH+");
                     }
                 }
             }
+            ucet.set("Príjmy", prijmyCelkom);
+            ucet.set("Stav", prijmyCelkom - ucet.field("Výdavky"));
+        } else {
+            message("Nie sú žiadne záznamy príjmov pre účet " + ucet.title + " v sezóne " + sezona);
         }
-        ucet.set("Príjmy", prijmyCelkom);
-        ucet.set("Stav", prijmyCelkom - ucet.field("Výdavky"));
-    } else {
+    }
+    else {
         message("Nie sú vybraté sezóny na prepočet");
     }
 };
 
 const ucetVydavky = ucet => {
-    message("Prepočítavám výdavky");
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var vydavkyCelkom = 0;
     if (sezony.length > 0) {
