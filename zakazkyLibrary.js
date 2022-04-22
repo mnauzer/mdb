@@ -261,8 +261,10 @@ const generujVyuctovanie = zakazka => {
             var typ = vykazyPrac[vp].field("Typ výkazu");
             if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
                 praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
-            } else {
+            } else if (typ == W_POLOZKY) {
                 praceCelkomBezDPH += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+            } else {
+                message("Zle zadaný typ výkazu prác");
             }
             vykazyPrac[vp].link(FIELD_VYUCTOVANIE, noveVyuctovanie);
             noveVyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
@@ -542,9 +544,7 @@ const zakazkaCasJazdy = zakazka => {
 };
 
 const spocitatHodinyZevidencie = zakazka => {
-    var links = zakazka.linksFrom("Evidencia prác", "Zákazka")
-    message(zakazka.title);
-    message("Záznamov: " + links.length);
+    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -557,7 +557,7 @@ const spocitatHodinyZevidencie = zakazka => {
 };
 
 const zakazkaMzdy = zakazka => {
-    var links = zakazka.linksFrom("Evidencia prác", "Zákazka")
+    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -570,7 +570,7 @@ const zakazkaMzdy = zakazka => {
 };
 
 const zakazkaNakupMaterialu = zakazka => {
-    var links = zakazka.linksFrom("Výdajky", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -583,7 +583,7 @@ const zakazkaNakupMaterialu = zakazka => {
 };
 
 const zakazkaMaterialDPH = zakazka => {
-    var links = zakazka.linksFrom("Výdajky", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -596,7 +596,7 @@ const zakazkaMaterialDPH = zakazka => {
 };
 
 const zakazkaMaterialRozdielDPH = zakazka => {
-    var links = zakazka.linksFrom("Výdajky", "Zákazka");
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
     var result = 0;
     var dphNC = 0;
     var dph = 0;
@@ -654,17 +654,17 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
     vykaz.set("Rozpis", empty);
 
     var hodinyCelkom = 0;
-    if (typ == "Hodinovka") {
+    if (typ == W_HODINOVKA) {
         var polozka = vykaz.field("Práce sadzby")[0];
         var limity = polozka.field("Limity");
         var attrMJ = "účtovaná sadzba";
-    } else {
+    } else if (typ == W_POLOZKY) {
         var polozka = vykaz.field("Práce")[0];
         var attrMJ = "cena";
     }
     // vypočítať aktuálnu sadzbu práce za počet hodín
     var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-    if (uctovanie == "Individuálne za každý výjazd") {
+    if (uctovanie == "Individuálne za každý výjazd" || diel == "Práce navyše") {
         for (var el = 0; el < evidenciaLinks.length; el++) {
             var rVykazy = evidenciaLinks[el].field("Výkaz prác");
             // nájde index výkazu v linkToEntry evidencie prác
