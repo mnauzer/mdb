@@ -12,7 +12,7 @@ const ucetPrijmy = ucet => {
         // Príjmy
         for (var z = 0; z < sezony.length; z++) {
             var zaznamy = ucet.linksFrom("Pokladňa", "Do pokladne");
-            if (zaznamy) {
+            if (zaznamy.length > 0) {
                 for (var p = 0; p < zaznamy.length; p++) {
                     var lfSezona = zaznamy[p].field("Sezóna");
                     if (lfSezona == sezony[z]) {
@@ -36,7 +36,7 @@ const ucetVydavky = ucet => {
     if (sezony.length > 0) {
         for (var s = 0; s < sezony.length; s++) {
             var zaznamy = ucet.linksFrom("Pokladňa", "Z pokladne");
-            if (zaznamy) {
+            if (zaznamy.length > 0) {
                 for (var v = 0; v < zaznamy.length; v++) {
                     var lfSezona = zaznamy[v].field("Sezóna");
                     if (lfSezona == sezony[s]) {
