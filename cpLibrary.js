@@ -7,7 +7,6 @@ function verziaKniznice() {
     var verzia = "0.2.10";
     return nazov + " v." + verzia;
 }
-// GENEROVANIE NOVEJ ZÁKAZKY
 
 const prepocetPonuky = ponuka => {
     // verzia
@@ -92,7 +91,7 @@ const prepocetPonuky = ponuka => {
     }
 
     // Doprava každopádne
-    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy); // cenová ponuka + spôsob účtovania dopravy
+    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
 
     // dph
     cenaCelkomBezDPH += dopravaCelkom;
@@ -468,7 +467,7 @@ const prepocetDielStroje = stroje => {
 };
 
 // prepočet dopravy cenovej ponuky
-const ponukaDoprava = (cp, uctovanie) => {
+const ponukaDoprava = (cp, uctovanie, cenaCelkomBezDPH) => {
     var celkom = 0;
     switch (uctovanie) {
         case "Paušál":
