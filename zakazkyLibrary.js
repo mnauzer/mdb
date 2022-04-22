@@ -131,7 +131,7 @@ const prepocetZakazky = zakazka => {
 
     // CELKOM
     vyuctovanieCelkom = vyuctovanieCelkomBezDph + dphSuma;
-    message(zakazka.title);
+
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
     var mzdy = zakazkaMzdy(zakazka);                                // mzdy z evidencie
     var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);                // hodiny z evidencie
@@ -542,7 +542,8 @@ const zakazkaCasJazdy = zakazka => {
 };
 
 const spocitatHodinyZevidencie = zakazka => {
-    var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
+    var links = zakazka.linksFrom("Evidencia prác", "Zákazka")
+    message(zakazka.title);
     message("Záznamov: " + links.length);
     var result = 0;
     if (links.length > 0) {
