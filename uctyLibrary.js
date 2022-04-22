@@ -1,6 +1,6 @@
 function verziaKniznice() {
     var nazov = "uctyLibrary";
-    var verzia = "0.2.10";
+    var verzia = "0.2.11";
     //message("cpLibrary v." + verzia);
     return nazov + " " + verzia;
 }
