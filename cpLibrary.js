@@ -112,7 +112,7 @@ const generujZakazku = cp => {
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ ZÁKAZKU v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
-    var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka");
+    var zakazka = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
 
     if (cp.field("Stav cenovej ponuky") == "Schválená") {
 
