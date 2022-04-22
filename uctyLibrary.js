@@ -1,6 +1,6 @@
 function verziaKniznice() {
     var nazov = "uctyLibrary";
-    var verzia = "0.2.04";
+    var verzia = "0.2.05";
     //message("cpLibrary v." + verzia);
     return nazov + " " + verzia;
 }
@@ -14,7 +14,7 @@ const ucetPrijmy = ucet => {
             var zaznamy = ucet.linksFrom("Pokladňa", "Do pokladne");
             if (zaznamy.length > 0) {
                 for (var p = 0; p < zaznamy.length; p++) {
-                    var lfSezona = zaznamy[p].field("Sezóna");
+                    var lfSezona = zaznamy[p].field("sezóna");
                     if (lfSezona == sezony[z]) {
                         prijmyCelkom += zaznamy[p].field("Priebežná položka");
                         prijmyCelkom += zaznamy[p].field("Príjem bez DPH");
@@ -38,7 +38,7 @@ const ucetVydavky = ucet => {
             var zaznamy = ucet.linksFrom("Pokladňa", "Z pokladne");
             if (zaznamy.length > 0) {
                 for (var v = 0; v < zaznamy.length; v++) {
-                    var lfSezona = zaznamy[v].field("Sezóna");
+                    var lfSezona = zaznamy[v].field("sezóna");
                     if (lfSezona == sezony[s]) {
                         vydavkyCelkom += zaznamy[v].field("Priebežná položka");
                         vydavkyCelkom += zaznamy[v].field("Výdavok bez DPH");
