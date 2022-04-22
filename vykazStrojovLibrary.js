@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.02";
+    var verzia = "0.2.03";
     result = nazov + " " + verzia;
     return result;
 }
@@ -13,6 +13,10 @@ const prepocitatZaznam = zaznam => {
     var sumaBezDPHzCP = 0;
     var dphCP = 0;
     var sezona = zaznam.field("sezóna");
+    if (!sezona) {
+        sezona = zaznam.field(FIELD_DATUM).getFullYear();
+        zaznam.set(FIELD_SEZONA, sezona);
+    }
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
     if (stroje) {
         for (var p = 0; p < stroje.length; p++) {
