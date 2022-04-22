@@ -657,10 +657,11 @@ const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
         var polozka = vykaz.field("Práce sadzby")[0];
         var limity = polozka.field("Limity");
         var attrMJ = "účtovaná sadzba";
-    } else if (typ == W_POLOZKY) {
-        var polozka = vykaz.field("Práce")[0];
-        var attrMJ = "cena";
     }
+    // else if (typ == W_POLOZKY) {
+    //     var polozka = vykaz.field("Práce")[0];
+    //     var attrMJ = "cena";
+    // }
     // vypočítať aktuálnu sadzbu práce za počet hodín
     var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
     if (uctovanie == "Individuálne za každý výjazd" || diel == "Práce navyše") {
