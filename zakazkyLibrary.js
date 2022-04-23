@@ -36,38 +36,41 @@ const prepocetZakazky = zakazka => {
 
     // PRÁCE
     // prepočet výkazov prác
-    var praceSDPH = mclCheck(uctovanieDPH, W_PRACE);
+    var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
     var txtPrace = "";
-    var praceHZS = [];
-    var pracePolozky = [];
+    var prace = [];
+    var praceSpoluBezDPH = 0;
     var odvodDPHPrace = 0;
-    var mzdy = 0;
-    //var odvodDPHPrace = praceDPH;
+    var mzdy = 0; // náklady
     // var mzdy = zakazkaMzdy(zakazka);
-    var prace = 0;
-    var praceDPH = 0;
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var typ = vykazyPrac[vp].field(FIELD_TYP_VYKAZU);
             if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
-                prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                //prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
+                prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
             } else {
-                prace += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                prace += prepocitatVykazPracePolozky(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
             }
-            if (praceSDPH) {
+            praceSpoluBezDPH += prace[0];
+            if (praceUctovatDPH) {
                 txtPrace = " s DPH";
-                praceDPH += vykazyPrac[vp].field("DPH");
-                dphSuma += praceDPH;
+                dphSuma += prace[1];
+                odvodDPHDoprava += prace[1];
             } else {
                 txtPrace = " bez DPH";
             }
         }
-        vyuctovanieCelkomBezDph += prace;
+        vyuctovanieCelkomBezDph += praceSpoluBezDPH;
     } else {
         txtPrace = " žiadne práce";
     }
     zakazka.set("txt práce", txtPrace);
+    zakazka.set("Mzdy", mzdy);
+    zakazka.set("Odvod DPH Práce", odvodDPHPrace);
+
+
     // MATERIÁL
     // prepočet výdajok materiálu
     var material = 0;
@@ -89,6 +92,7 @@ const prepocetZakazky = zakazka => {
     }
     zakazka.set("txt materiál", txtMaterial);
 
+
     // STROJE
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
@@ -96,7 +100,7 @@ const prepocetZakazky = zakazka => {
     var stroje = [];
     var strojeSpoluBezDPH = 0;
     var odvodDPHStroje = 0;
-    var nakladyStroje = 0;
+    var nakladyStroje = 0; // náklady
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             //  message("Počet výkazov strojov: " + vykazyStrojov.length);
@@ -226,9 +230,8 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Najazdený čas", najazdenyCas);
     zakazka.set("Nákup materiálu", nakupMaterialu);
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
-    zakazka.set("Mzdy", mzdy);
+
     zakazka.set("Mzdy v aute", mzdyDoprava);
-    zakazka.set("Odvod DPH Práce", odvodDPHPrace);
     zakazka.set("Náklady vozidlá", nakladyDoprava);
     zakazka.set("Odvod DPH Doprava", odvodDPHDoprava);
 
@@ -269,13 +272,13 @@ const generujVyuctovanie = zakazka => {
     if (vykazyPrac.length > 0) {
         var praceCelkomBezDPH = 0;
         var praceDPH = 0;
-        var praceSDPH = mclCheck(uctovanieDPH, W_PRACE);
+        var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var typ = vykazyPrac[vp].field("Typ výkazu");
             if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
-                praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
             } else if (typ == W_POLOZKY) {
-                praceCelkomBezDPH += prepocitatVykazPracePolozky(vykazyPrac[vp], praceSDPH, sadzbaDPH);
+                praceCelkomBezDPH += prepocitatVykazPracePolozky(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
             } else {
                 message("Zle zadaný typ výkazu prác");
             }
