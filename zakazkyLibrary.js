@@ -103,7 +103,7 @@ const prepocetZakazky = zakazka => {
         txtMaterial = "...žiadny materiál";
     }
 
-    message("Materiál celkom:" + materialCelkom);
+    //message("Materiál celkom:" + materialCelkom);
     zakazka.set(FIELD_MATERIAL, materialCelkom);
     zakazka.set("txt materiál", txtMaterial);
     // náklady
@@ -142,7 +142,7 @@ const prepocetZakazky = zakazka => {
     } else {
         txtStroje = "...žiadne stroje";
     }
-    message("Stroje celkom:" + strojeCelkom);
+    //message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
     zakazka.set("txt stroje", txtStroje);
     // náklady
@@ -177,7 +177,7 @@ const prepocetZakazky = zakazka => {
     zakazkaDPH += dopravaDPH;
     zakazkaCelkom += dopravaCelkom;
 
-    message("Doprava celkom:" + dopravaCelkom);
+    //message("Doprava celkom:" + dopravaCelkom);
     zakazka.set(FIELD_DOPRAVA, dopravaCelkom);
     zakazka.set("txt doprava", txtDoprava);
     // náklady
