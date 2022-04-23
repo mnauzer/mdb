@@ -1,6 +1,6 @@
 function verziaKniznice() {
     var result = "";
-    var nazov = "vykazStrojovLibrary";
+    var nazov = "vykazPracLibrary";
     var verzia = "0.2.03";
     result = nazov + " " + verzia;
     return result;
