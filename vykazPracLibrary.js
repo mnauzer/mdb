@@ -5,7 +5,7 @@ function verziaKniznice() {
     result = nazov + " " + verzia;
     return result;
 }
-
+// upload to github
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var typ = vykaz.field("Typ výkazu");
     var sumaBezDPH = 0;
@@ -33,7 +33,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         var empty = [];
         vykaz.set("Rozpis", empty);
         if (prace) {
-
             if (evidenciaLinks.length > 0) {
                 if (uctovanie == "Individuálne za každý výjazd" || popis == "Práce navyše") {
                     for (var el = 0; el < evidenciaLinks.length; el++) {
