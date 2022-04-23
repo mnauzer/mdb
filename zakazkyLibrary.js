@@ -164,7 +164,7 @@ const prepocetZakazky = zakazka => {
         } else {
             txtDoprava = " bez DPH";
         }
-        dopravaCelkom += dopravaCelkomBezDPH;
+        dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
         var najazdenyCas = zakazkaCasJazdy(zakazka);
         var najazdeneKm = zakazkaKm(zakazka);
         var pocetJazd = zakazkaPocetJazd(zakazka);
@@ -253,7 +253,7 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Zaplatené", zaplatene);
     zakazka.set("Suma na úhradu", sumaNaUhradu);
     zakazka.set("Vyúčtovanie celkom", zakazkaCelkom);
-    zakazka.set(FIELD_DOPRAVA, doprava); // doprava bez dph + dph z dopravy
+
     zakazka.set("Iné výdavky", ineVydavky);
     zakazka.set("efektivita", efektivita(marzaPoZaplateni));
     // Náklady
