@@ -32,7 +32,7 @@ const prepocetZakazky = zakazka => {
     var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var praceSDPH = mclCheck(uctovanieDPH, W_PRACE);
-    var strojeUctovatDPH = mclCheck(uctovanieDPH, W_STROJE);
+    var strojeUctovatDPH = mclCheck(uctovanieDPH, "+Mechanizácia");
     var materialSDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     var dopravaSDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
     var txtPrace = "";
