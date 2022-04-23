@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.47";
+    var verzia = "0.3.48";
     result = nazov + " " + verzia;
     return result;
 }
@@ -25,9 +25,9 @@ const prepocetZakazky = zakazka => {
 
     // nalinkovať a spočítať výkazy
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-    var vyuctovanieCelkomBezDph = 0;
-    var vyuctovanieCelkom = 0;
-    var dphCelkomZaZakazku = 0;
+    var zakazkaCelkomBezDPH = 0;
+    var zakazkaCelkom = 0;
+    var zakazkaDPHCelkom = 0;
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var materialSDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     var dopravaSDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
@@ -40,41 +40,43 @@ const prepocetZakazky = zakazka => {
 
     // PRÁCE
     // prepočet výkazov prác
+    var praceCelkomBezDPH = 0;
+    var praceOdvodDPH = 0;
     var praceCelkom = 0;
-    var odvodDPHPrace = 0;
     var txtPrace = "";
+    var mzdy = 0; // náklady
+
+    // prepočet práce
     var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
     var prace = [];
-    var praceSpoluBezDPH = 0;
-    var mzdy = 0; // náklady
 
     // TODO: refaktoring prepočtu miezd (nákladov na práce)
     var mzdy = zakazkaMzdy(zakazka);
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            var typ = vykazyPrac[vp].field(FIELD_TYP_VYKAZU);
             prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
-            praceSpoluBezDPH += prace[0];
             if (praceUctovatDPH) {
-                odvodDPHPrace += prace[1];
-                dphCelkomZaZakazku += odvodDPHPrace;
+                praceOdvodDPH += prace[1];
+                zakazkaDPHCelkom += praceOdvodDPH;
                 txtPrace = " s DPH";
             } else {
                 txtPrace = " bez DPH";
             }
-            praceCelkom += praceSpoluBezDPH + odvodDPHPrace;
+            praceCelkomBezDPH += prace[0];
+            praceCelkom += praceCelkomBezDPH + praceOdvodDPH;
         }
-        vyuctovanieCelkomBezDph += praceSpoluBezDPH;
-        vyuctovanieCelkom += praceCelkom;
+        // globálny súčet
+        zakazkaCelkomBezDPH += praceCelkomBezDPH;
+        zakazkaCelkom += praceCelkom;
     } else {
         txtPrace = " žiadne práce";
     }
 
     zakazka.set(FIELD_PRACE, praceCelkom);
+    zakazka.set("Odvod DPH Práce", praceOdvodDPH);
     zakazka.set("txt práce", txtPrace);
     zakazka.set("Mzdy", mzdy);
-    zakazka.set("Odvod DPH Práce", odvodDPHPrace);
 
 
     // MATERIÁL
@@ -87,11 +89,11 @@ const prepocetZakazky = zakazka => {
             if (materialSDPH) {
                 txtMaterial = " s DPH";
                 materialDPH += vydajkyMaterialu[vm].field("DPH");
-                dphCelkomZaZakazku += materialDPH;
+                zakazkaDPHCelkom += materialDPH;
             } else {
                 txtMaterial = " bez DPH";
             }
-            vyuctovanieCelkomBezDph += material;
+            zakazkaCelkomBezDPH += material;
         }
     } else {
         txtMaterial = " žiadny materiál";
@@ -115,15 +117,15 @@ const prepocetZakazky = zakazka => {
             strojeSpoluBezDPH += stroje[0];
             if (strojeUctovatDPH) {
                 odvodDPHStroje += stroje[1];
-                dphCelkomZaZakazku += odvodDPHStroje;
+                zakazkaDPHCelkom += odvodDPHStroje;
                 txtStroje = " s DPH";
             } else {
                 txtStroje = " bez DPH";
             }
             strojeCelkom += strojeSpoluBezDPH + odvodDPHStroje;
         }
-        vyuctovanieCelkomBezDph += strojeSpoluBezDPH;
-        vyuctovanieCelkom += strojeCelkom;
+        zakazkaCelkomBezDPH += strojeSpoluBezDPH;
+        zakazkaCelkom += strojeCelkom;
         nakladyStroje = stroje[0] * 0.75;                         // náklady 75%
     } else {
         txtStroje = " žiadne stroje";
@@ -135,13 +137,13 @@ const prepocetZakazky = zakazka => {
 
     // DOPRAVA
     // prepočítať dopravu
-    var dopravaCelkom = spocitatDopravu(zakazka, vyuctovanieCelkomBezDph);
+    var dopravaCelkom = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var dopravaDPH = 0;
     if (dopravaCelkom >= 0) {
         if (dopravaSDPH) {
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkom * sadzbaDPH;
-            dphCelkomZaZakazku += dopravaDPH;
+            zakazkaDPHCelkom += dopravaDPH;
         } else {
             txtDoprava = " bez DPH";
         }
@@ -149,7 +151,7 @@ const prepocetZakazky = zakazka => {
         txtDoprava = " žiadna doprava";
     }
     zakazka.set("txt doprava", txtDoprava);
-    vyuctovanieCelkomBezDph += dopravaCelkom;
+    zakazkaCelkomBezDPH += dopravaCelkom;
 
     // Message
     message(
@@ -160,7 +162,7 @@ const prepocetZakazky = zakazka => {
     );
 
     // CELKOM
-    vyuctovanieCelkom = vyuctovanieCelkomBezDph + dphCelkomZaZakazku;
+    zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPHCelkom;
 
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
     // mzdy z evidencie
@@ -178,7 +180,7 @@ const prepocetZakazky = zakazka => {
     var zaplatene = zakazkaPrijmy(zakazka);
 
     var naklady = mzdy
-        + odvodDPHPrace
+        + praceOdvodDPH
         + mzdyDoprava
         + nakupMaterialu
         + odvodDPHMaterial
@@ -187,13 +189,13 @@ const prepocetZakazky = zakazka => {
         + nakladyStroje
         + odvodDPHStroje;
 
-    var sumaNaUhradu = vyuctovanieCelkomBezDph + dphCelkomZaZakazku - zaplatene;
-    var marza = marzaPercento(vyuctovanieCelkom, naklady);
+    var sumaNaUhradu = zakazkaCelkomBezDPH + zakazkaDPHCelkom - zaplatene;
+    var marza = marzaPercento(zakazkaCelkom, naklady);
     var marzaPoZaplateni = zaplatene > 1 ? marzaPercento(zaplatene, naklady) : 0;
     var doprava = dopravaCelkom + odvodDPHDoprava;
-    var zisk = vyuctovanieCelkom - naklady;
+    var zisk = zakazkaCelkom - naklady;
     var ziskPoZaplateni = zaplatene - naklady;
-    var zostatok = rozpocetSDPH - vyuctovanieCelkom;
+    var zostatok = rozpocetSDPH - zakazkaCelkom;
 
 
     if (zisk <= 0) {
@@ -223,7 +225,7 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Rozpočet", rozpocetSDPH);
     zakazka.set("Zaplatené", zaplatene);
     zakazka.set("Suma na úhradu", sumaNaUhradu);
-    zakazka.set("Vyúčtovanie celkom", vyuctovanieCelkom);
+    zakazka.set("Vyúčtovanie celkom", zakazkaCelkom);
 
     zakazka.set(FIELD_MATERIAL, material + materialDPH);
 
@@ -265,9 +267,9 @@ const generujVyuctovanie = zakazka => {
     // inicializácia
     var sezona = noveVyuctovanie.field(FIELD_SEZONA);
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-    var dphCelkomZaZakazku = 0;
-    var vyuctovanieCelkom = 0;
-    var vyuctovanieCelkomBezDph = 0;
+    var zakazkaDPHCelkom = 0;
+    var zakazkaCelkom = 0;
+    var zakazkaCelkomBezDPH = 0;
 
     if (typCP == W_HODINOVKA) {
         var diely = cp.field("Diely cenovej ponuky hzs")
@@ -299,12 +301,12 @@ const generujVyuctovanie = zakazka => {
             if (praceSDPH) {
                 txtPrace = " s DPH";
                 praceDPH += vykazyPrac[vp].field("DPH");
-                dphCelkomZaZakazku += praceDPH;
+                zakazkaDPHCelkom += praceDPH;
             } else {
                 txtPrace = " bez DPH";
             }
         }
-        vyuctovanieCelkomBezDph += praceCelkomBezDPH;
+        zakazkaCelkomBezDPH += praceCelkomBezDPH;
     } else {
         txtPrace = " žiadne práce";
     }
@@ -325,11 +327,11 @@ const generujVyuctovanie = zakazka => {
             if (materialSDPH) {
                 txtMaterial = " s DPH";
                 materialDPH += vydajkyMaterialu[vm].field("DPH");
-                dphCelkomZaZakazku += materialDPH;
+                zakazkaDPHCelkom += materialDPH;
             } else {
                 txtMaterial = " bez DPH";
             }
-            vyuctovanieCelkomBezDph += materialCelkomBezDPH;
+            zakazkaCelkomBezDPH += materialCelkomBezDPH;
         }
     } else {
         txtMaterial = " žiadny materiál";
@@ -354,12 +356,12 @@ const generujVyuctovanie = zakazka => {
             if (strojeUctovatDPH) {
                 txtStroje = " s DPH";
                 strojeDPH += vykazStrojov[vs].field("DPH");
-                dphCelkomZaZakazku += strojeDPH;
+                zakazkaDPHCelkom += strojeDPH;
             } else {
                 txtStroje = " bez DPH";
             }
         }
-        vyuctovanieCelkomBezDph += strojeCelkomBezDPH;
+        zakazkaCelkomBezDPH += strojeCelkomBezDPH;
     } else {
         txtStroje = " žiadne stroje";
     }
@@ -368,13 +370,13 @@ const generujVyuctovanie = zakazka => {
     // DOPRAVA
     // prepočítať dopravu
     var dopravaSDPH = mclCheck(uctovanieDPH, "Doprava");;
-    var dopravaCelkomBezDPH = spocitatDopravu(zakazka, vyuctovanieCelkomBezDph);
+    var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var dopravaDPH = 0;
     if (dopravaCelkomBezDPH >= 0) {
         if (dopravaSDPH) {
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
-            dphCelkomZaZakazku += dopravaDPH;
+            zakazkaDPHCelkom += dopravaDPH;
         } else {
             txtDoprava = " bez DPH";
         }
@@ -382,7 +384,7 @@ const generujVyuctovanie = zakazka => {
         txtDoprava = " žiadna doprava";
     }
     zakazka.set("txt doprava", txtDoprava);
-    vyuctovanieCelkomBezDph += dopravaCelkomBezDPH;
+    zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
 
     // Message
     message(
@@ -398,17 +400,17 @@ const generujVyuctovanie = zakazka => {
     var vydavkyCelkom = zakazkaVydavky(zakazka, vydavkySDPH);
 
     // súčet vyúčtovania
-    vyuctovanieCelkom = vyuctovanieCelkomBezDph + dphCelkomZaZakazku;
+    zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPHCelkom;
 
     // NASTAVENIE POLÍ
     // časti vyúčtovania
     noveVyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
     // vyúčtovanie
-    noveVyuctovanie.set("Celkom (bez DPH)", vyuctovanieCelkomBezDph);
-    noveVyuctovanie.set("DPH 20%", dphCelkomZaZakazku);
-    noveVyuctovanie.set("Cena celkom (s DPH)", vyuctovanieCelkom);
+    noveVyuctovanie.set("Celkom (bez DPH)", zakazkaCelkomBezDPH);
+    noveVyuctovanie.set("DPH 20%", zakazkaDPHCelkom);
+    noveVyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
     noveVyuctovanie.set("Zaplatená záloha", prijmyCelkom);
-    noveVyuctovanie.set("Suma na úhradu", vyuctovanieCelkomBezDph + dphCelkomZaZakazku - prijmyCelkom);
+    noveVyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPHCelkom - prijmyCelkom);
 
     // texty
 
@@ -469,107 +471,7 @@ const generujVyuctovanie = zakazka => {
     // End of file: 11.03.2022, 11:27
 }
 
-const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
-    var jazd = zakazkaPocetJazd(zakazka);
-    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
-    var uctovanieDopravy = cp.field("Účtovanie dopravy");
-    // doprava
-    //message("Debug DOPRAVA " + uctovanie);
-    var celkom = 0;
-    switch (uctovanieDopravy) {
-        case "Paušál":
-            var cpPausal = cp.field("Paušál")[0];
-            if (cpPausal) {
-                var cena = cpPausal.attr("cena");
-            } else {
-                message("nie je zadaná paušálna cena v CP")
-            }
-            if (vyuctovanie) { // prepočet ak je už vygenerované vyúčtovanie
-                var vPausal = vyuctovanie.field("Paušál")[0];
-                //if
-                vPausal.setAttr("cena", cena);
-                vPausal.setAttr("počet jázd", jazd);
-                vPausal.setAttr("cena celkom", cena * jazd);
-            }
-            celkom += jazd * cena;
-            break;
-        case "Km":
-            var cpKm = cp.field("Sadzba km")[0];
-            var km = 0;
-            var jazdy = zakazka.linksFrom("Kniha jázd", "Zákazka")
-            // spočítať kilometre
-            for (var k = 0; k < jazdy.length; k++) {
-                km += jazdy[k].field("Najazdené km");
-            }
-            if (cpKm) {
-                var cena = cpKm.attr("cena");
-            } else {
-                message("nie ja zadaná cena za km v CP")
-            }
-            if (vyuctovanie) {
-                var vKm = vyuctovanie.field("Sadzba km")[0];
-                vKm.setAttr("cena", cena);
-                vKm.setAttr("počet km", km);
-                vKm.setAttr("cena", cena);
-                vKm.setAttr("cena celkom", cena * km);
-            }
-            celkom += km * cena;
-            break;
-        case "% zo zákazky":
-            var percento = cp.field("% zo zákazky") || 5;
-            if (percento) {
-                celkom = cenaCelkomBezDPH * (percento / 100);
-            }
-            break;
-        case "Pevná cena":
-            var pevnaCena = cp.field("Pevná cena");
-            if (pevnaCena) {
-                celkom = pevnaCena;
-            }
-    }
-    cp.set("Doprava celkom bez DPH", celkom);
-    return celkom;
 
-};
-
-const zakazkaPocetJazd = zakazka => {
-    // počíta len cesty na miesto realizácie
-    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
-    var zastavky = zakazka.linksFrom(DB_KNIHA_JAZD, "Zastávka na zákazke")
-    var jazd = 0;
-    for (var p = 0; p < links.length; p++) {
-        if (links[p].field("Účel jazdy") == "Výjazd") {
-            jazd += 1;
-        }
-    };
-    for (var p = 0; p < zastavky.length; p++) {
-        var remoteLinks = zastavky[p].field("Zastávka na zákazke");
-        rlIndex = zistiIndexLinku(zakazka, remoteLinks)
-        if (remoteLinks[rlIndex].attr("účtovať jazdu") == true) {
-            jazd += 1;
-        }
-    };
-    return jazd;
-};
-
-const zakazkaKm = zakazka => {
-    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
-    var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += (links[p].field("Najazdené km"));
-    };
-    return result;
-};
-
-const zakazkaCasJazdy = zakazka => {
-    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
-    var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += links[p].field("Trvanie") * links[p].field("Posádka").length;
-    };
-    return result;
-};
 
 const spocitatHodinyZevidencie = zakazka => {
     var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
