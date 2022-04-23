@@ -20,13 +20,11 @@ const prepocetZakazky = zakazka => {
     }
 
     // nalinkovať a spočítať výkazy
-    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
     var zakazkaCelkom = 0;
 
-    var dopravaSDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
-    var dopravaCelkom = 0;
 
 
     // PRÁCE
@@ -45,7 +43,8 @@ const prepocetZakazky = zakazka => {
     var mzdy = zakazkaMzdy(zakazka);
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            var prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
+            var prace = [];
+            prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
             if (praceUctovatDPH) {
                 praceDPH += prace[1];
                 zakazkaDPH += praceDPH;
@@ -59,6 +58,7 @@ const prepocetZakazky = zakazka => {
         }
         // globálny súčet
         zakazkaCelkomBezDPH += praceCelkomBezDPH;
+        zakazkaDPH += praceDPH;
         zakazkaCelkom += praceCelkom;
     } else {
         txtPrace = "...žiadne práce";
@@ -97,6 +97,7 @@ const prepocetZakazky = zakazka => {
         }
         // globálny súčet
         zakazkaCelkomBezDPH += materialCelkomBezDPH;
+        zakazkaDPH += materialDPH;
         zakazkaCelkom += materialCelkom;
     } else {
         txtMaterial = "...žiadny materiál";
@@ -133,6 +134,7 @@ const prepocetZakazky = zakazka => {
             strojeCelkom += strojeCelkomBezDPH + strojeDPH;
         }
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
+        zakazkaDPH += strojeDPH;
         zakazkaCelkom += strojeCelkom;
         nakladyStroje = stroje[0] * 0.75;                         // náklady 75%
     } else {
@@ -146,21 +148,28 @@ const prepocetZakazky = zakazka => {
 
     // DOPRAVA
     // prepočítať dopravu
-    var dopravaCelkom = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
+    var dopravaCelkomBezDPH = 0;
     var dopravaDPH = 0;
-    if (dopravaCelkom >= 0) {
-        if (dopravaSDPH) {
+    var dopravaCelkom = 0;
+
+    var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
+    var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
+
+    if (dopravaCelkomBezDPH >= 0) {
+        if (dopravaUctovatDPH) {
+            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
             txtDoprava = " s DPH";
-            dopravaDPH = dopravaCelkom * sadzbaDPH;
-            zakazkaDPH += dopravaDPH;
+            dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
         } else {
             txtDoprava = " bez DPH";
         }
     } else {
-        txtDoprava = " žiadna doprava";
+        txtDoprava = "...žiadna doprava";
     }
     zakazka.set("txt doprava", txtDoprava);
-    zakazkaCelkomBezDPH += dopravaCelkom;
+    zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
+    zakazkaDPH += dopravaDPH;
+    zakazkaCelkom += dopravaCelkom;
 
     // Message
     message(
@@ -706,11 +715,11 @@ const generujVyuctovanie = zakazka => {
 
     // DOPRAVA
     // prepočítať dopravu
-    var dopravaSDPH = mclCheck(uctovanieDPH, "Doprava");;
+    var dopravaUctovatDPH = mclCheck(uctovanieDPH, "Doprava");;
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var dopravaDPH = 0;
     if (dopravaCelkomBezDPH >= 0) {
-        if (dopravaSDPH) {
+        if (dopravaUctovatDPH) {
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
             zakazkaDPH += dopravaDPH;
