@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.08";
+    var verzia = "0.2.09";
     result = nazov + " " + verzia;
     return result;
 }
@@ -92,30 +92,42 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             } else {
                 message("Pre tento výkaz nie sú žiadne záznamy v Evidencii práce");
             }
-            vykaz.set("Suma bez DPH", sumaBezDPH);
-            if (sDPH) {
-                var sezona = vykaz.field(FIELD_SEZONA);
-                if (!sezona || sezona == 0) {
-                    sezona = vykaz.field(FIELD_DATUM).getFullYear();
-                    vykaz.set(FIELD_SEZONA, sezona);
-                }
-                var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-                sumaDPH = (sumaBezDPH * sadzbaDPH).toFixed(2);
-                sumaCelkom = sumaBezDPH + dph;
-                CPdph = CPsumaBezDPH * sadzbaDPH;
-                CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
-            }
-            vykaz.set("DPH", sumaDPH);
-            vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
+
             // message("Suma bez DPH: " + sumaBezDPH);
         }
     } else if (typ == W_POLOZKY) {
         var prace = vykaz.field("Práce");
         //var polozka = vykaz.field("Práce")[0];
+        for (var p = 0; p < prace.length; p++) {
+            var mnozstvo = prace[p].attr("dodané množstvo");
+            var cena = prace[p].attr("cena") || prace[p].field("Cena bez DPH");
+            cenaCelkom = mnozstvo * cena;
+            prace[p].setAttr("cena celkom", cenaCelkom);
+            sumaBezDPH += cenaCelkom;
+
+            // message("množstvo:+ " + mnozstvo + ", cena: " + cena + ", cena celkom: " + cenaCelkom);
+            // nastav príznak Tlač
+            setTlac(prace[p]);
+        }
         var attrMJ = "cena";
     } else {
         message("Neurčený typ výkazu (Hodinovka/Položky");
     }
+    if (sDPH) {
+        var sezona = vykaz.field(FIELD_SEZONA);
+        if (!sezona || sezona == 0) {
+            sezona = vykaz.field(FIELD_DATUM).getFullYear();
+            vykaz.set(FIELD_SEZONA, sezona);
+        }
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+        sumaDPH = (sumaBezDPH * sadzbaDPH).toFixed(2);
+        sumaCelkom = sumaBezDPH + dph;
+        CPdph = CPsumaBezDPH * sadzbaDPH;
+        CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
+    }
+    vykaz.set("Suma bez DPH", sumaBezDPH);
+    vykaz.set("DPH", sumaDPH);
+    vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
     setTlac(vykaz);
     return [sumaBezDPH, sumaDPH];
 }
