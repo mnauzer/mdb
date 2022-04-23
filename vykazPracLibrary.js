@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.17";
+    var verzia = "0.2.18";
     result = nazov + " " + verzia;
     return result;
 }
@@ -25,7 +25,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         var prace = vykaz.field("Práce sadzby")[0];
         var hodinyCelkom = 0;
 
-        //var polozka = vykaz.field("Práce sadzby")[0];
+        //var vykaz = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         var limity = prace.field("Limity");
         var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
@@ -55,9 +55,9 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                         setTlac(vykaz.field("Rozpis")[el])
                         sumaBezDPH += rVykaz.attr("cena celkom")
                     }
-                    polozka.setAttr("dodané množstvo", hodinyCelkom);
-                    polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribút
-                    polozka.setAttr("cena celkom", sumaBezDPH);
+                    vykaz.setAttr("dodané množstvo", hodinyCelkom);
+                    vykaz.setAttr("účtovaná sadzba", null); // len vynuluje attribút
+                    vykaz.setAttr("cena celkom", sumaBezDPH);
                 } else {
                     for (var el = 0; el < evidenciaLinks.length; el++) {
                         var rVykazy = evidenciaLinks[el].field("Výkaz prác");
@@ -88,11 +88,11 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                     sadzba = sadzba - (sadzba * zlava / 100);
                     // dosadiť výsledky do poľa "Práce" - pri výkazoch práce je len jedno
                     sumaBezDPH = hodinyCelkom * sadzba;
-                    polozka.setAttr("dodané množstvo", hodinyCelkom);
-                    polozka.setAttr("základná sadzba", zakladnaSadzba);
-                    polozka.setAttr("zľava %", zlava);
-                    polozka.setAttr("účtovaná sadzba", sadzba);
-                    polozka.setAttr("cena celkom", sumaBezDPH);
+                    vykaz.setAttr("dodané množstvo", hodinyCelkom);
+                    vykaz.setAttr("základná sadzba", zakladnaSadzba);
+                    vykaz.setAttr("zľava %", zlava);
+                    vykaz.setAttr("účtovaná sadzba", sadzba);
+                    vykaz.setAttr("cena celkom", sumaBezDPH);
                 }
             } else {
                 message("Pre tento výkaz nie sú žiadne záznamy v Evidencii práce");
@@ -103,7 +103,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
 
     } else if (typ == "Položky") {
         var prace = vykaz.field("Práce");
-        //var polozka = vykaz.field("Práce")[0];
+        //var vykaz = vykaz.field("Práce")[0];
         for (var p = 0; p < prace.length; p++) {
             var mnozstvo = prace[p].attr("dodané množstvo");
             var cena = prace[p].attr("cena") || prace[p].field("Cena bez DPH");
