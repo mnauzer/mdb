@@ -50,8 +50,8 @@ const prepocetZakazky = zakazka => {
             message("Práce celkom bez dph: " + praceCelkomBezDPH);
             message("Práce bez dph: " + prace[0]);
             praceCelkomBezDPH += prace[0];
-            praceCelkom += praceCelkomBezDPH + praceDPH;
         }
+        praceCelkom += praceCelkomBezDPH + praceDPH;
         // globálny súčet
         zakazkaCelkomBezDPH += praceCelkomBezDPH;
         zakazkaDPH += praceDPH;
@@ -61,8 +61,9 @@ const prepocetZakazky = zakazka => {
     }
     message("Práce celkom:" + praceCelkom);
     zakazka.set(FIELD_PRACE, praceCelkom);
-    zakazka.set("Odvod DPH Práce", praceDPH);
     zakazka.set("txt práce", txtPrace);
+    // náklady
+    zakazka.set("Odvod DPH Práce", praceDPH);
     zakazka.set("Mzdy", mzdy);
 
 
@@ -90,8 +91,8 @@ const prepocetZakazky = zakazka => {
                 txtMaterial = " bez DPH";
             }
             materialCelkomBezDPH += material[0];
-            materialCelkom += materialCelkomBezDPH + materialDPH;
         }
+        materialCelkom += materialCelkomBezDPH + materialDPH;
         // globálny súčet
         zakazkaCelkomBezDPH += materialCelkomBezDPH;
         zakazkaDPH += materialDPH;
@@ -101,8 +102,9 @@ const prepocetZakazky = zakazka => {
     }
 
     message("Materiál celkom:" + materialCelkom);
-    zakazka.set("txt materiál", txtMaterial);
     zakazka.set(FIELD_MATERIAL, materialCelkom);
+    zakazka.set("txt materiál", txtMaterial);
+    // náklady
     zakazka.set("Nákup materiálu", nakupMaterialu);
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
 
@@ -129,8 +131,8 @@ const prepocetZakazky = zakazka => {
                 txtStroje = " bez DPH";
             }
             strojeCelkomBezDPH += stroje[0];
-            strojeCelkom += strojeCelkomBezDPH + strojeDPH;
         }
+        strojeCelkom += strojeCelkomBezDPH + strojeDPH;
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
         zakazkaDPH += strojeDPH;
         zakazkaCelkom += strojeCelkom;
@@ -140,8 +142,9 @@ const prepocetZakazky = zakazka => {
     }
     message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
-    zakazka.set("Odvod DPH Stroje", strojeDPH);
     zakazka.set("txt stroje", txtStroje);
+    // náklady
+    zakazka.set("Odvod DPH Stroje", strojeDPH);
     zakazka.set("Náklady stroje", nakladyStroje);
 
     // DOPRAVA
@@ -158,6 +161,7 @@ const prepocetZakazky = zakazka => {
         } else {
             txtDoprava = " bez DPH";
         }
+        dopravaCelkom += dopravaCelkomBezDPH;
     } else {
         txtDoprava = "...žiadna doprava";
     }
@@ -170,7 +174,10 @@ const prepocetZakazky = zakazka => {
     var najazdeneKm = zakazkaKm(zakazka);
     var pocetJazd = zakazkaPocetJazd(zakazka);
 
+    message("Doprava celkom:" + dopravaCelkom);
     zakazka.set(FIELD_DOPRAVA, dopravaCelkom);
+    zakazka.set("txt doprava", txtDoprava);
+    // náklady
     zakazka.set("Počet jázd", pocetJazd);
     zakazka.set("Najazdené km", najazdeneKm);
     zakazka.set("Najazdený čas", najazdenyCas);
