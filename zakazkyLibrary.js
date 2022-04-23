@@ -1,4 +1,4 @@
-const zakazky = "0.3.52";
+const zakazky = "0.3.53";
 
 const verziaZakazky = () => {
     var result = "";
@@ -50,10 +50,11 @@ const prepocetZakazky = zakazka => {
             if (praceUctovatDPH) {
                 praceDPH += prace[1];
                 zakazkaDPH += praceDPH;
-                txtPrace = "s DPH";
+                txtPrace = " s DPH";
             } else {
-                txtPrace = "bez DPH";
+                txtPrace = " bez DPH";
             }
+            message("Práce bez dph: " + prace[0]);
             praceCelkomBezDPH += prace[0];
             praceCelkom += praceCelkomBezDPH + praceDPH;
         }
@@ -89,9 +90,9 @@ const prepocetZakazky = zakazka => {
             if (materialUctovatDPH) {
                 materialDPH += material[1];
                 zakazkaDPH += materialDPH;
-                txtMaterial = "s DPH";
+                txtMaterial = " s DPH";
             } else {
-                txtMaterial = "bez DPH";
+                txtMaterial = " bez DPH";
             }
             materialCelkomBezDPH += material[0];
             materialCelkom += materialCelkomBezDPH + materialDPH;
@@ -127,9 +128,9 @@ const prepocetZakazky = zakazka => {
             if (strojeUctovatDPH) {
                 strojeDPH += stroje[1];
                 zakazkaDPH += strojeDPH;
-                txtStroje = "s DPH";
+                txtStroje = " s DPH";
             } else {
-                txtStroje = "bez DPH";
+                txtStroje = " bez DPH";
             }
             strojeCelkomBezDPH += stroje[0];
             strojeCelkom += strojeCelkomBezDPH + strojeDPH;
