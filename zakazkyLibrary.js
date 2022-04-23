@@ -633,16 +633,7 @@ const zakazkaPraceDPH = zakazka => {
     return result;
 };
 
-const zistiIndexLinku = (link, remoteLinks) => {
-    var indexy = [];
-    //var remoteLinks = evidenciaLinks[el].field("Výkaz prác");
-    for (var r = 0; r < remoteLinks.length; r++) {
-        indexy.push(remoteLinks[r].id);
-    }
-    var index = indexy.indexOf(link.id);
-    // message(index);
-    return index;
-}
+
 
 const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
     // inicializácia

@@ -302,4 +302,14 @@ const setBackgroudColor = (entry, color) => {
 const setColor = (entry, color) => {
     entry.set(FIELD_ENTRY_COLOR, color)
 }
+
+const zistiIndexLinku = (link, remoteLinks) => {
+    var indexy = [];
+    for (var r = 0; r < remoteLinks.length; r++) {
+        indexy.push(remoteLinks[r].id);
+    }
+    var index = indexy.indexOf(link.id);
+    // message(index);
+    return index;
+}
 // End of file: 25.03.2022, 16:16
