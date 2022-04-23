@@ -74,7 +74,7 @@ const prepocetZakazky = zakazka => {
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     // prepočet nákladov materiálu
     var nakupMaterialu = zakazkaNakupMaterialu(zakazka);            // nákup materiálu bez DPH
-    var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
+    var odvodDPHMaterial = 0;
 
     if (vydajkyMaterialu.length > 0) {
         var materialCelkomBezDPH = 0;
@@ -84,6 +84,7 @@ const prepocetZakazky = zakazka => {
             var material = 0;
             material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
             if (materialUctovatDPH) {
+                odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
                 materialDPH += material[1];
                 zakazkaDPH += materialDPH;
                 txtMaterial = " s DPH";
@@ -335,8 +336,8 @@ const zakazkaMaterialRozdielDPH = zakazka => {
     var dphNC = 0;
     var dph = 0;
     for (var p = 0; p < links.length; p++) {
-        dphNC += links[p].field("DPH NC");
-        dph += links[p].field("DPH");
+        dphNC += ()   links[p].field("NC s DPH") - links[p].field("NC bez DPH"));
+        dph += (links[p].field("PC s DPH") - links[p].field("PC bez DPH");
     };
     result = dph - dphNC;
     if (result < 0) {
