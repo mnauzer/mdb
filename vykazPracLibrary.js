@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.02";
+    var verzia = "0.2.03";
     result = nazov + " " + verzia;
     return result;
 }
@@ -17,7 +17,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
 
-    if (typ == W_HODINOVKA || vykaz.field(FIELD_POPIS) == W_PRACE_NAVYSE) {
+    if (typ == W_HODINOVKA) {
         var prace = vykaz.field("Práce sadzby")[0];
         //var polozka = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
