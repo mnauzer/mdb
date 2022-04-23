@@ -71,9 +71,6 @@ const prepocetZakazky = zakazka => {
 
 
     // MATERIÁL
-    var materialCelkomBezDPH = 0;
-    var materialDPH = 0;
-    var materialCelkom = 0;
     var txtMaterial = "";
     // prepočet výdajok materiálu
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
@@ -83,8 +80,12 @@ const prepocetZakazky = zakazka => {
     var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
 
     if (vydajkyMaterialu.length > 0) {
+        var materialCelkomBezDPH = 0;
+        var materialDPH = 0;
+        var materialCelkom = 0;
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
-            var material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
+            var material = 0;
+            material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
             if (materialUctovatDPH) {
                 materialDPH += material[1];
                 zakazkaDPH += materialDPH;
@@ -110,10 +111,6 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
 
     // STROJE
-    var strojeCelkomBezDPH = 0;
-    var strojeDPH = 0;
-    var strojeCelkom = 0;
-    var txtStroje = "";
     // prepočet výkazov strojov
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
@@ -121,8 +118,13 @@ const prepocetZakazky = zakazka => {
     var nakladyStroje = 0; // náklady
 
     if (vykazyStrojov.length > 0) {
+        var strojeCelkomBezDPH = 0;
+        var strojeDPH = 0;
+        var strojeCelkom = 0;
+        var txtStroje = "";
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
-            var stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
+            var stroje = 0;
+            stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
             if (strojeUctovatDPH) {
                 strojeDPH += stroje[1];
                 zakazkaDPH += strojeDPH;
