@@ -1,12 +1,12 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.10";
+    var verzia = "0.2.11";
     result = nazov + " " + verzia;
     return result;
 }
 
-const prepocitatVykazStrojov = (zaznam, uctovatDPH = true) => {
+const prepocitatVykazStrojov = (zaznam, uctovatDPH) => {
     var stroje = zaznam.field(FIELD_STROJE);
     var sumaBezDPH = 0;
     var dph = 0;
@@ -14,7 +14,8 @@ const prepocitatVykazStrojov = (zaznam, uctovatDPH = true) => {
     var CPsumaBezDPH = 0;
     var CPdph = 0;
     var CPsumaCelkomSDPH = 0;
-    zaznam.set("s DPH", uctovatDPH);
+    if (uctovatDPH) { zaznam.set("s DPH", uctovatDPH) };
+    var sDPH = zaznam.field("s DPH");
     if (stroje.length > 0) {
         for (var p = 0; p < stroje.length; p++) {
             // výpočet ceny
@@ -27,7 +28,7 @@ const prepocitatVykazStrojov = (zaznam, uctovatDPH = true) => {
             //výpočet ceny z cp
             CPsumaBezDPH += (mnozstvoCP * cena);
         }
-        if (uctovatDPH) {
+        if (sDPH) {
             var sezona = zaznam.field(FIELD_SEZONA);
             if (!sezona || sezona == 0) {
                 sezona = zaznam.field(FIELD_DATUM).getFullYear();
