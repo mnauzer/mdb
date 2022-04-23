@@ -16,7 +16,13 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var CPsumaCelkomSDPH = null;
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
-    message("Výkaz typ: " + typ);
+    message(
+        "Výkaz typ: " + typ
+        + "\n"
+        + "s DPH: " + uctovatDPH
+        + "\n"
+
+    );
     if (typ == W_HODINOVKA) {
         var prace = vykaz.field("Práce sadzby")[0];
         //var polozka = vykaz.field("Práce sadzby")[0];
