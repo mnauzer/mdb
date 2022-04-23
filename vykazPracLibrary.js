@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.19";
+    var verzia = "0.2.20";
     result = nazov + " " + verzia;
     return result;
 }
@@ -87,11 +87,11 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                     sadzba = sadzba - (sadzba * zlava / 100);
                     // dosadiť výsledky do poľa "Práce" - pri výkazoch práce je len jedno
                     sumaBezDPH = hodinyCelkom * sadzba;
-                    vykaz.setAttr("dodané množstvo", hodinyCelkom);
-                    vykaz.setAttr("základná sadzba", zakladnaSadzba);
-                    vykaz.setAttr("zľava %", zlava);
-                    vykaz.setAttr("účtovaná sadzba", sadzba);
-                    vykaz.setAttr("cena celkom", sumaBezDPH);
+                    prace.setAttr("základná sadzba", zakladnaSadzba);
+                    prace.setAttr("dodané množstvo", hodinyCelkom);
+                    prace.setAttr("zľava %", zlava);
+                    prace.setAttr("účtovaná sadzba", sadzba);
+                    prace.setAttr("cena celkom", sumaBezDPH);
                 }
             } else {
                 message("Pre tento výkaz nie sú žiadne záznamy v Evidencii práce");
