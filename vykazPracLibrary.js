@@ -9,11 +9,11 @@ function verziaKniznice() {
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var typ = vykaz.field("Typ výkazu");
     var sumaBezDPH = 0;
-    var dph = 0;
-    var sumaCelkom = 0;
+    var dph = null;
+    var sumaCelkom = null;
     var CPsumaBezDPH = 0;
-    var CPdph = 0;
-    var CPsumaCelkomSDPH = 0;
+    var CPdph = null;
+    var CPsumaCelkomSDPH = null;
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
 
@@ -99,13 +99,13 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                     vykaz.set(FIELD_SEZONA, sezona);
                 }
                 var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-                sumaDPH += sumaBezDPH * sadzbaDPH;
-                vykaz.set("DPH", sumaDPH);
-                vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
-            } else {
-                vykaz.set("DPH", null);
-                vykaz.set("Suma s DPH", null);
+                sumaDPH = (sumaBezDPH * sadzbaDPH).toFixed(2);
+                sumaCelkom = sumaBezDPH + dph;
+                CPdph = CPsumaBezDPH * sadzbaDPH;
+                CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
             }
+            vykaz.set("DPH", sumaDPH);
+            vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
             // message("Suma bez DPH: " + sumaBezDPH);
         }
     } else if (typ == W_POLOZKY) {

@@ -9,11 +9,11 @@ function verziaKniznice() {
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     var stroje = vykaz.field(FIELD_STROJE);
     var sumaBezDPH = 0;
-    var dph = 0;
-    var sumaCelkom = 0;
+    var dph = null;
+    var sumaCelkom = null;
     var CPsumaBezDPH = 0;
-    var CPdph = 0;
-    var CPsumaCelkomSDPH = 0;
+    var CPdph = null;
+    var CPsumaCelkomSDPH = null;
     var typ = vykaz.field("Typ výkazu");
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
