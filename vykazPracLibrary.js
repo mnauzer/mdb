@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.07";
+    var verzia = "0.2.08";
     result = nazov + " " + verzia;
     return result;
 }
@@ -117,5 +117,5 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         message("Neurčený typ výkazu (Hodinovka/Položky");
     }
     setTlac(vykaz);
-    return [sumaBezDPH, dph];
+    return [sumaBezDPH, sumaDPH];
 }
