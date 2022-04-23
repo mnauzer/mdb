@@ -18,14 +18,9 @@ const prepocetZakazky = zakazka => {
         sezona = zakazka.field(FIELD_DATUM).getFullYear();
         zakazka.set(FIELD_SEZONA, sezona);
     }
-
-    // nalinkovať a spočítať výkazy
-
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
     var zakazkaCelkom = 0;
-
-
 
     // PRÁCE
     // prepočet výkazov prác
@@ -150,14 +145,11 @@ const prepocetZakazky = zakazka => {
 
     // DOPRAVA
     // prepočítať dopravu
-    var dopravaCelkomBezDPH = 0;
-    var dopravaDPH = 0;
-    var dopravaCelkom = 0;
-
-    var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
-
     if (dopravaCelkomBezDPH >= 0) {
+        var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
+        var dopravaDPH = 0;
+        var dopravaCelkom = 0;
         if (dopravaUctovatDPH) {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
             txtDoprava = " s DPH";
