@@ -1,4 +1,4 @@
-const zakazky = "0.3.60";
+const zakazky = "0.3.61";
 
 const verziaZakazky = () => {
     var result = "";
@@ -56,6 +56,7 @@ const prepocetZakazky = zakazka => {
         zakazkaCelkomBezDPH += praceCelkomBezDPH;
         zakazkaDPH += praceDPH;
         zakazkaCelkom += praceCelkom;
+        var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);
     } else {
         txtPrace = "...žiadne práce";
     }
@@ -167,6 +168,7 @@ const prepocetZakazky = zakazka => {
         var najazdenyCas = zakazkaCasJazdy(zakazka);
         var najazdeneKm = zakazkaKm(zakazka);
         var pocetJazd = zakazkaPocetJazd(zakazka);
+
         var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
         var nakladyDoprava = najazdeneKm * 0.5;
     } else {
@@ -184,9 +186,9 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Počet jázd", pocetJazd);
     zakazka.set("Najazdené km", najazdeneKm);
     zakazka.set("Najazdený čas", najazdenyCas);
-    zakazka.set("txt doprava", txtDoprava);
+    zakazka.set("Mzdy v aute", mzdyDoprava);
     zakazka.set("Náklady vozidlá", nakladyDoprava);
-    zakazka.set("Odvod DPH Doprava", odvodDPHDoprava);
+    zakazka.set("Odvod DPH Doprava", dopravaDPH);
 
     // Message
     message(
@@ -200,13 +202,8 @@ const prepocetZakazky = zakazka => {
     zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPH;
 
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
-    // mzdy z evidencie
-    var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);                // hodiny z evidencie
-
-    // náklady 0,50€/km
 
 
-    var odvodDPHDoprava = dopravaDPH;
     var ineVydavky = zakazkaVydavky(zakazka);
     var zaplatene = zakazkaPrijmy(zakazka);
 
@@ -264,7 +261,6 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Marža", marza);       // TODO zakalkulovať DPH
     zakazka.set("Marža po zaplatení", marzaPoZaplateni);
     zakazka.set("Odpracovaných hodín", odpracovanychHodin);
-    zakazka.set("Mzdy v aute", mzdyDoprava);
 
     zakazka.set("Náklady celkom", naklady);
     message("Zákazka prepočítaná...");
