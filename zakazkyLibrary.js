@@ -56,9 +56,9 @@ const prepocetZakazky = zakazka => {
             if (praceUctovatDPH) {
                 praceOdvodDPH += prace[1];
                 zakazkaDPHCelkom += praceOdvodDPH;
-                txtPrace = "práce s DPH";
+                txtPrace = "s DPH";
             } else {
-                txtPrace = "práce bez DPH";
+                txtPrace = "bez DPH";
             }
             praceCelkomBezDPH += prace[0];
             praceCelkom += praceCelkomBezDPH + praceOdvodDPH;
