@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.38";
+    var verzia = "0.3.39";
     result = nazov + " " + verzia;
     return result;
 }
@@ -202,7 +202,7 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Vyúčtovanie celkom", vyuctovanieCelkom);
     zakazka.set(FIELD_PRACE, prace + praceDPH);
     zakazka.set(FIELD_MATERIAL, material + materialDPH);
-    zakazka.set(FIELD_STROJE, stroje + strojeDPH);
+    zakazka.set(FIELD_STROJE, stroje[0] + stroje[1]);
     zakazka.set(FIELD_DOPRAVA, doprava); // doprava bez dph + dph z dopravy
     zakazka.set("Iné výdavky", ineVydavky);
     zakazka.set("efektivita", efektivita(marzaPoZaplateni));
