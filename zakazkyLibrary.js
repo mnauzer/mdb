@@ -67,9 +67,9 @@ const prepocetZakazky = zakazka => {
         zakazkaCelkomBezDPH += praceCelkomBezDPH;
         zakazkaCelkom += praceCelkom;
     } else {
-        txtPrace = " žiadne práce";
+        txtPrace = "...žiadne práce";
     }
-    message(praceCelkom);
+    message("Práce celkom:" + praceCelkom);
     zakazka.set(FIELD_PRACE, praceCelkom);
     zakazka.set("Odvod DPH Práce", praceOdvodDPH);
     zakazka.set("txt práce", txtPrace);
@@ -109,28 +109,28 @@ const prepocetZakazky = zakazka => {
     var nakladyStroje = 0; // náklady
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
-            //  message("Počet výkazov strojov: " + vykazyStrojov.length);
             stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
-            strojeSpoluBezDPH += stroje[0];
             if (strojeUctovatDPH) {
                 odvodDPHStroje += stroje[1];
                 zakazkaDPHCelkom += odvodDPHStroje;
-                txtStroje = " s DPH";
+                txtStroje = "s DPH";
             } else {
-                txtStroje = " bez DPH";
+                txtStroje = "bez DPH";
             }
+            strojeSpoluBezDPH += stroje[0];
             strojeCelkom += strojeSpoluBezDPH + odvodDPHStroje;
         }
         zakazkaCelkomBezDPH += strojeSpoluBezDPH;
         zakazkaCelkom += strojeCelkom;
         nakladyStroje = stroje[0] * 0.75;                         // náklady 75%
     } else {
-        txtStroje = " žiadne stroje";
+        txtStroje = "...žiadne stroje";
     }
+    message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
+    zakazka.set("Odvod DPH Stroje", odvodDPHDoprava);
     zakazka.set("txt stroje", txtStroje);
     zakazka.set("Náklady stroje", nakladyStroje);
-    zakazka.set("Odvod DPH Stroje", odvodDPHDoprava);
 
     // DOPRAVA
     // prepočítať dopravu

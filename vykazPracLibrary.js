@@ -1,7 +1,7 @@
 const verziaVykazPrac = () => {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.21";
+    var verzia = "0.2.22";
     result = nazov + " " + verzia;
     return result;
 }
@@ -125,9 +125,10 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             vykaz.set(FIELD_SEZONA, sezona);
         }
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-        sumaDPH = (sumaBezDPH * sadzbaDPH);
-        sumaCelkom = sumaBezDPH + sumaDPH;
+        sumaDPH = sumaBezDPH * sadzbaDPH;
     }
+    sumaCelkom = sumaBezDPH + sumaDPH;
+
     vykaz.set("Suma bez DPH", sumaBezDPH);
     vykaz.set("DPH", sumaDPH);
     vykaz.set("Suma s DPH", sumaCelkom);
