@@ -294,31 +294,31 @@ const zakazkaMzdy = zakazka => {
     return result;
 };
 
-// const zakazkaNakupMaterialu = zakazka => {
-//     var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
-//     var result = 0;
-//     if (links.length > 0) {
-//         for (var p = 0; p < links.length; p++) {
-//             result += (links[p].field("Suma v NC bez DPH"));
-//         };
-//     } else {
-//         message("Zákazka nemá záznamy vo Výdajkách materiálu");
-//     }
-//     return result;
-// };
+const zakazkaNakupMaterialu = zakazka => {
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var result = 0;
+    if (links.length > 0) {
+        for (var p = 0; p < links.length; p++) {
+            result += (links[p].field("Suma v NC bez DPH"));
+        };
+    } else {
+        message("Zákazka nemá záznamy vo Výdajkách materiálu");
+    }
+    return result;
+};
 
-// const zakazkaMaterialDPH = zakazka => {
-//     var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
-//     var result = 0;
-//     if (links.length > 0) {
-//         for (var p = 0; p < links.length; p++) {
-//             result += links[p].field("DPH");
-//         };
-//     } else {
-//         message("Zákazka nemá záznamy v Evidencii prác");
-//     }
-//     return result;
-// };
+const zakazkaMaterialDPH = zakazka => {
+    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var result = 0;
+    if (links.length > 0) {
+        for (var p = 0; p < links.length; p++) {
+            result += links[p].field("DPH");
+        };
+    } else {
+        message("Zákazka nemá záznamy v Evidencii prác");
+    }
+    return result;
+};
 
 const zakazkaMaterialRozdielDPH = vykaz => {
     var links = vykaz.field(FIELD_MATERIAL);
