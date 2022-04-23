@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinkaLib
-function verziaKrajinkaLib() {
+const verziaKrajinkaLib = () => {
     var nazov = "krajinkaLlib";
     var verzia = "0.2.27";
     return nazov + " " + verzia;

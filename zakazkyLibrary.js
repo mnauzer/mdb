@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   09.03.2022
 // Popis:                   knižnica scriptov Zákazky
-function verziaKniznice() {
+const verziaZakazky = () => {
     var result = "";
     var nazov = "zakazkyLibrary";
     var verzia = "0.3.48";
@@ -11,7 +11,7 @@ function verziaKniznice() {
 }
 
 const prepocetZakazky = zakazka => {
-    var vKniznica = verziaKniznice();
+    var vKniznica = verziaZakazky();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČÍTAJ ZÁKAZKU" + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
@@ -258,7 +258,7 @@ const generujVyuctovanie = zakazka => {
     //var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     //if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
-    var vKniznica = verziaKniznice();
+    var vKniznica = verziaZakazky();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ VYÚČTOVANIE" + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];

@@ -2,17 +2,17 @@
 // JS Libraries:
 // Dátum:                   07.03.2022
 // Popis:
-function verziaKniznice() {
+const verziaCenovePonuky = () => {
     var nazov = "cpLibrary";
     var verzia = "0.2.12";
-    return nazov + " v." + verzia;
+    return nazov + " " + verzia;
 }
 
 const prepocetPonuky = ponuka => {
     // verzia
     var verzia = "0.2.09";
     message("CENOVÁ PONUKA v." + verzia
-        + "\n" + verziaKniznice()
+        + "\n" + verziaCenovePonuky()
         + "\n" + verziaKrajinkaLib());
     //
     message("Prepočítavam...")
@@ -108,7 +108,7 @@ const prepocetPonuky = ponuka => {
 
 const generujZakazku = cp => {
     var verzia = "0.2.07";
-    var vKniznica = verziaKniznice();
+    var vKniznica = verziaCenovePonuky();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("GENERUJ ZÁKAZKU v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
 

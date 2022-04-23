@@ -1,4 +1,4 @@
-const verziaKniznice = () => {
+const verziaDoprava = () => {
     var result = "";
     var nazov = "dopravaLibrary";
     var verzia = "0.1.01";
