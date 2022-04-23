@@ -11,9 +11,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     var sumaBezDPH = 0;
     var dph = null;
     var sumaCelkom = null;
-    var CPsumaBezDPH = 0;
-    var CPdph = null;
-    var CPsumaCelkomSDPH = null;
+
     var typ = vykaz.field("Typ výkazu");
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
@@ -38,16 +36,10 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
             dph = (sumaBezDPH * sadzbaDPH).toFixed(2);
             sumaCelkom = sumaBezDPH + dph;
-            CPdph = CPsumaBezDPH * sadzbaDPH;
-            CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
         }
         vykaz.set("Suma bez DPH", sumaBezDPH);
         vykaz.set("DPH", dph);
         vykaz.set("Suma s DPH", sumaCelkom);
-
-        vykaz.set("CP Suma bez DPH", CPsumaBezDPH);
-        vykaz.set("CP DPH", CPdph);
-        vykaz.set("CP Suma s DPH", CPsumaCelkomSDPH);
     }
     setTlac(vykaz);
     return [sumaBezDPH, dph];

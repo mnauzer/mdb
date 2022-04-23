@@ -11,9 +11,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var sumaBezDPH = 0;
     var sumaDPH = null;
     var sumaCelkom = null;
-    var CPsumaBezDPH = 0;
-    var CPdph = null;
-    var CPsumaCelkomSDPH = null;
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
     message(
@@ -125,8 +122,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
         sumaDPH = (sumaBezDPH * sadzbaDPH).toFixed(2);
         sumaCelkom = sumaBezDPH + sumaDPH;
-        CPdph = CPsumaBezDPH * sadzbaDPH;
-        CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
     vykaz.set("DPH", sumaDPH);
