@@ -12,6 +12,7 @@ const FIELD_DEBUG = "debug";
 const FIELD_BACKROUND_COLOR = "background color";
 const FIELD_ENTRY_COLOR = "entry color";
 const FIELD_VIEW = "Tlač";
+const FIELD_STAV = "Stav";
 //
 const FIELD_PRACE = "Práce";
 const FIELD_MATERIAL = "Materiál";
