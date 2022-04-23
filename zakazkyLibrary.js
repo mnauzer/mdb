@@ -336,8 +336,8 @@ const zakazkaMaterialRozdielDPH = zakazka => {
     var dphNC = 0;
     var dph = 0;
     for (var p = 0; p < links.length; p++) {
-        dphNC += ()   links[p].field("NC s DPH") - links[p].field("NC bez DPH"));
-        dph += (links[p].field("PC s DPH") - links[p].field("PC bez DPH");
+        dphNC += (links[p].field("NC s DPH") - links[p].field("NC bez DPH"));
+        dph += (links[p].field("PC s DPH") - links[p].field("PC bez DPH"));
     };
     result = dph - dphNC;
     if (result < 0) {
