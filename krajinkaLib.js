@@ -4,8 +4,8 @@
 // Popis:                   knižnica krajinkaLib
 function verziaKrajinkaLib() {
     var nazov = "krajinkaLlib";
-    var verzia = "0.2.23";
-    return nazov + " v." + verzia;
+    var verzia = "0.2.24";
+    return nazov + " " + verzia;
 }
 
 // libraries
@@ -45,6 +45,7 @@ const DB_VOZIDLA = "Vozidlá";
 const DB_RASTLINY = "Databáza rastlín";
 
 // fields
+// spolocne
 const FIELD_CENOVA_PONUKA = "Cenová ponuka"; // link to entry
 const FIELD_ZAKAZKA = "Zákazka";
 const FIELD_VYUCTOVANIE = "Vyúčtovanie";
@@ -82,7 +83,8 @@ const FIELD_ZAMESTNANCI = "Zamestnanci";
 const FLD_ZAMESTNANCI = 'field("Zamestnanci")';
 const FIELD_HODINOVKA = "Hodinovka";
 const FLD_HODINOVKA = 'field("Hodinovka")';
-
+// zakazky
+const FIELD_UCTOVANIE_DPH = "Účtovanie DPH";
 
 // words
 const W_ZAKAZKA = "Zákazka";
@@ -283,7 +285,7 @@ const setTest = (status) => {
     }
 }
 
-const mclChecked = (mcl, value) => {
+const mclCheck = (mcl, value) => {
     result = false;
     for (var m = 0; m < mcl.length; m++) {
         if (value === mcl[m]) {

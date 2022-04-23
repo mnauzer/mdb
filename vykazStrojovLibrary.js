@@ -1,23 +1,25 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.03";
+    var verzia = "0.2.05";
     result = nazov + " " + verzia;
     return result;
 }
 
-const prepocitatZaznam = zaznam => {
-    var stroje = zaznam.field("Stroje");
+const prepocitatVykazStrojov = (zaznam, sDPH = true) => {
+    var stroje = zaznam.field(FIELD_STROJE);
     var sumaBezDPH = 0;
     var dph = 0;
-    var sumaBezDPHzCP = 0;
-    var dphCP = 0;
-    var sezona = zaznam.field("sezóna");
-    if (!sezona) {
+    var sumaCelkom = 0;
+    var CPsumaBezDPH = 0;
+    var CPdph = 0;
+    var CPsumaCelkomSDPH = 0;
+    var sezona = zaznam.field(FIELD_SEZONA);
+    if (!sezona || sezona == 0) {
         sezona = zaznam.field(FIELD_DATUM).getFullYear();
         zaznam.set(FIELD_SEZONA, sezona);
     }
-    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+
     if (stroje) {
         for (var p = 0; p < stroje.length; p++) {
             // výpočet ceny
@@ -28,16 +30,21 @@ const prepocitatZaznam = zaznam => {
             stroje[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
             //výpočet ceny z cp
-            sumaBezDPHzCP += (mnozstvoCP * cena);
+            CPsumaCelkomSDPH += (mnozstvoCP * cena);
         }
-        dph = sumaBezDPH * sadzbaDPH;
-        dphCP = sumaBezDPHzCP * sadzbaDPH;
-
+        if (sDPH) {
+            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+            dph = sumaBezDPH * sadzbaDPH;
+            sumaCelkom = sumaBezDPH + dph;
+            CPdph = CPsumaBezDPH * sadzbaDPH;
+            CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
+        }
         zaznam.set("Suma bez DPH", sumaBezDPH);
         zaznam.set("DPH", dph);
-        zaznam.set("Suma s DPH", sumaBezDPH + dph);
-        zaznam.set("CP Suma bez DPH", sumaBezDPHzCP);
-        zaznam.set("CP DPH", dphCP);
-        zaznam.set("CP Suma s DPH", sumaBezDPHzCP + dphCP);
+        zaznam.set("Suma s DPH", sumaCelkom);
+
+        zaznam.set("CP Suma bez DPH", CPsumaBezDPH);
+        zaznam.set("CP DPH", CPdph);
+        zaznam.set("CP Suma s DPH", CPsumaCelkomSDPH);
     }
 }
