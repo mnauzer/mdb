@@ -1,4 +1,4 @@
-const zakazky = "0.3.53";
+const zakazky = "0.3.54";
 
 const verziaZakazky = () => {
     var result = "";
@@ -38,7 +38,6 @@ const prepocetZakazky = zakazka => {
     // prepočet práce
     var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
-    var prace = [];
     // prepočet nákladov práce
     var mzdy = 0; // náklady
 
@@ -46,7 +45,7 @@ const prepocetZakazky = zakazka => {
     var mzdy = zakazkaMzdy(zakazka);
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
+            var prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
             if (praceUctovatDPH) {
                 praceDPH += prace[1];
                 zakazkaDPH += praceDPH;
@@ -79,14 +78,13 @@ const prepocetZakazky = zakazka => {
     // prepočet výdajok materiálu
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
-    var material = [];
     // prepočet nákladov materiálu
     var nakupMaterialu = zakazkaNakupMaterialu(zakazka);            // nákup materiálu bez DPH
     var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
 
     if (vydajkyMaterialu.length > 0) {
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
-            material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
+            var material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
             if (materialUctovatDPH) {
                 materialDPH += material[1];
                 zakazkaDPH += materialDPH;
@@ -118,13 +116,12 @@ const prepocetZakazky = zakazka => {
     // prepočet výkazov strojov
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
-    var stroje = [];
     // prepočet nákladov strojov
     var nakladyStroje = 0; // náklady
 
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
-            stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
+            var stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
             if (strojeUctovatDPH) {
                 strojeDPH += stroje[1];
                 zakazkaDPH += strojeDPH;
