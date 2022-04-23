@@ -14,13 +14,12 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var popis = vykaz.field(FIELD_POPIS);
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
-    message(
-        "Výkaz typ: " + typ
-        + "\n"
-        + (uctovatDPH ? "Účtovanie s DPH" : "Účtovanie bez DPH")
-        + "\n"
-
-    );
+    // message(
+    //     "Výkaz typ: " + typ
+    //     + "\n"
+    //     + (uctovatDPH ? "Účtovanie s DPH" : "Účtovanie bez DPH")
+    //     + "\n"
+    // );
     if (typ == "Hodinovka") {
         var prace = vykaz.field("Práce sadzby")[0];
         var hodinyCelkom = 0;
@@ -125,7 +124,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             vykaz.set(FIELD_SEZONA, sezona);
         }
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-        sumaDPH = (sumaBezDPH * sadzbaDPH).toFixed(2);
+        sumaDPH = (sumaBezDPH * sadzbaDPH);
         sumaCelkom = sumaBezDPH + sumaDPH;
     }
     vykaz.set("Suma bez DPH", sumaBezDPH);
