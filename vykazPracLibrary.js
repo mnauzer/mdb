@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.05";
+    var verzia = "0.2.06";
     result = nazov + " " + verzia;
     return result;
 }
@@ -16,7 +16,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var CPsumaCelkomSDPH = null;
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
-
+    message("Výkaz typ: " + typ);
     if (typ == W_HODINOVKA) {
         var prace = vykaz.field("Práce sadzby")[0];
         //var polozka = vykaz.field("Práce sadzby")[0];
