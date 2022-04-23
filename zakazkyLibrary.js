@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.45";
+    var verzia = "0.3.46";
     result = nazov + " " + verzia;
     return result;
 }
@@ -49,7 +49,7 @@ const prepocetZakazky = zakazka => {
     var praceSpoluBezDPH = 0;
     var mzdy = 0; // náklady
 
-    // TODO: refaktoring
+    // TODO: refaktoring prepočtu miezd (nákladov na práce)
     var mzdy = zakazkaMzdy(zakazka);
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
@@ -60,9 +60,9 @@ const prepocetZakazky = zakazka => {
                 odvodDPHPrace += prace[1];
                 dphCelkomZaZakazku += odvodDPHPrace;
                 txtPrace = " s DPH";
-                praceCelkom = prace[0] + prace[1];
+                praceCelkom += prace[0] + prace[1];
             } else {
-                praceCelkom = prace[0];
+                praceCelkom += prace[0];
                 txtPrace = " bez DPH";
             }
         }
@@ -116,10 +116,10 @@ const prepocetZakazky = zakazka => {
             if (strojeUctovatDPH) {
                 odvodDPHStroje += stroje[1];
                 dphCelkomZaZakazku += odvodDPHStroje;
-                strojeCelkom = stroje[0] + stroje[1];
+                strojeCelkom += stroje[0] + stroje[1];
                 txtStroje = " s DPH";
             } else {
-                strojeCelkom = stroje[0];
+                strojeCelkom += stroje[0];
                 txtStroje = " bez DPH";
             }
         }
