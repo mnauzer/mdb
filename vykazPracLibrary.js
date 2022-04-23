@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.09";
+    var verzia = "0.2.10";
     result = nazov + " " + verzia;
     return result;
 }
@@ -121,7 +121,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         }
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
         sumaDPH = (sumaBezDPH * sadzbaDPH).toFixed(2);
-        sumaCelkom = sumaBezDPH + dph;
+        sumaCelkom = sumaBezDPH + sumaDPH;
         CPdph = CPsumaBezDPH * sadzbaDPH;
         CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
     }
