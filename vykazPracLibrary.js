@@ -23,7 +23,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         + "\n"
 
     );
-    if (typ == W_HODINOVKA) {
+    if (typ == "Hodinovka") {
         var prace = vykaz.field("Práce sadzby")[0];
         //var polozka = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
@@ -98,7 +98,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             message("Pre tento výkaz nie sú žiadne záznamy v Evidencii práce");
         }
 
-    } else if (typ == W_POLOZKY) {
+    } else if (typ == "Položky") {
         var prace = vykaz.field("Práce");
         //var polozka = vykaz.field("Práce")[0];
         for (var p = 0; p < prace.length; p++) {
