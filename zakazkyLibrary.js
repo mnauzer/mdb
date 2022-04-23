@@ -1,4 +1,4 @@
-const zakazky = "0.3.63";
+const zakazky = "0.3.64";
 
 const verziaZakazky = () => {
     var result = "";
@@ -170,7 +170,7 @@ const prepocetZakazky = zakazka => {
         var pocetJazd = zakazkaPocetJazd(zakazka);
 
         var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
-        var nakladyDoprava = najazdeneKm * 0.5;
+        var nakladyDoprava = dopravaCelkomBezDPH * 0.75;
     } else {
         txtDoprava = "...žiadna doprava";
     }
