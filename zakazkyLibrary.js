@@ -208,19 +208,18 @@ const prepocetZakazky = zakazka => {
     var zaplatene = zakazkaPrijmy(zakazka);
 
     var naklady = mzdy
-        + praceDPH
         + mzdyDoprava
         + nakupMaterialu
-        + odvodDPHMaterial
-        + nakladyDoprava
-        + odvodDPHDoprava
         + nakladyStroje
+        + nakladyDoprava
+        + praceDPH
+        + odvodDPHMaterial
         + strojeDPH;
+    + dopravaDPH
 
     var sumaNaUhradu = zakazkaCelkomBezDPH + zakazkaDPH - zaplatene;
     var marza = marzaPercento(zakazkaCelkom, naklady);
     var marzaPoZaplateni = zaplatene > 1 ? marzaPercento(zaplatene, naklady) : 0;
-    var doprava = dopravaCelkom + odvodDPHDoprava;
     var zisk = zakazkaCelkom - naklady;
     var ziskPoZaplateni = zaplatene - naklady;
     var zostatok = rozpocetSDPH - zakazkaCelkom;
