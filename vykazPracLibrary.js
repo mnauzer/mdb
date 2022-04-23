@@ -23,12 +23,13 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         var limity = prace.field("Limity");
         var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-        var attrMJ = "účtovaná sadzba";
         // vynulovať rozpis prác
         var empty = [];
         vykaz.set("Rozpis", empty);
         if (prace.length > 0) {
+            message("prace.length: " + prace.length);
             if (evidenciaLinks.length > 0) {
+                message("evidenciaLinks.length: " + evidenciaLinks.length);
                 if (uctovanie == "Individuálne za každý výjazd" || diel == "Práce navyše") {
                     for (var el = 0; el < evidenciaLinks.length; el++) {
                         var rVykazy = evidenciaLinks[el].field("Výkaz prác");
@@ -61,7 +62,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                         vykaz.link("Rozpis", evidenciaLinks[el]);
                         vykaz.field("Rozpis")[el].setAttr("vykonané práce", rVykaz.attr("popis prác"));
                         vykaz.field("Rozpis")[el].setAttr("počet hodín", null);
-                        vykaz.field("Rozpis")[el].setAttr(attrMJ, null);
+                        vykaz.field("Rozpis")[el].setAttr("účtovaná sadzba", null);
                         vykaz.field("Rozpis")[el].setAttr("cena celkom", null);
                         setTlac(vykaz.field("Rozpis")[el]);
                     }
@@ -85,7 +86,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                     polozka.setAttr("dodané množstvo", hodinyCelkom);
                     polozka.setAttr("základná sadzba", zakladnaSadzba);
                     polozka.setAttr("zľava %", zlava);
-                    polozka.setAttr(attrMJ, sadzba);
+                    polozka.setAttr("účtovaná sadzba", sadzba);
                     polozka.setAttr("cena celkom", sumaBezDPH);
                 }
             } else {
