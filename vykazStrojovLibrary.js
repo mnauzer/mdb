@@ -1,4 +1,4 @@
-function verziaKniznice() {
+const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
     var verzia = "0.2.12";

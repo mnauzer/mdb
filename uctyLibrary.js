@@ -1,4 +1,4 @@
-function verziaKniznice() {
+const varziaUcty = () => {
     var nazov = "uctyLibrary";
     var verzia = "0.2.11";
     //message("cpLibrary v." + verzia);

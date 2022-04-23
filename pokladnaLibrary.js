@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-function verziaKniznice() {
+const varziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
     var verzia = "0.2.03";
