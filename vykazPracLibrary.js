@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.14";
+    var verzia = "0.2.15";
     result = nazov + " " + verzia;
     return result;
 }
