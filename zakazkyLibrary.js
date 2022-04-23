@@ -1,4 +1,4 @@
-const zakazky = "0.3.57";
+const zakazky = "0.3.58";
 
 const verziaZakazky = () => {
     var result = "";
@@ -254,29 +254,19 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Zaplatené", zaplatene);
     zakazka.set("Suma na úhradu", sumaNaUhradu);
     zakazka.set("Vyúčtovanie celkom", zakazkaCelkom);
-
-
-
     zakazka.set(FIELD_DOPRAVA, doprava); // doprava bez dph + dph z dopravy
     zakazka.set("Iné výdavky", ineVydavky);
     zakazka.set("efektivita", efektivita(marzaPoZaplateni));
-
     // Náklady
     zakazka.set("Marža", marza);       // TODO zakalkulovať DPH
     zakazka.set("Marža po zaplatení", marzaPoZaplateni);
     zakazka.set("Odpracovaných hodín", odpracovanychHodin);
-
-
     zakazka.set("Mzdy v aute", mzdyDoprava);
     zakazka.set("Náklady vozidlá", nakladyDoprava);
     zakazka.set("Odvod DPH Doprava", odvodDPHDoprava);
-
     zakazka.set("Náklady celkom", naklady);
-
     message("Zákazka prepočítaná...");
-
 }
-
 
 const spocitatHodinyZevidencie = zakazka => {
     var links = zakazka.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
@@ -330,18 +320,22 @@ const zakazkaMzdy = zakazka => {
 //     return result;
 // };
 
-const zakazkaMaterialRozdielDPH = vydajka => {
-    var links = vydajka.field(FIELD_MATERIAL);
+const zakazkaMaterialRozdielDPH = vykaz => {
+    var links = vykaz.field(FIELD_MATERIAL);
+    message("Materiál položiek: " + links.length);
     var result = 0;
     if (links.length > 0) {
+        var mnozstvo = 0;
         var dphNC = 0;
-        var dph = 0;
+        var dphPC = 0;
         for (var p = 0; p < links.length; p++) {
-            dphNC += (links[p].field("NC s DPH") - links[p].field("NC bez DPH"));
-            dph += (links[p].field("PC s DPH") - links[p].field("PC bez DPH"));
+            mnozstvo = links[p].attr("množstvo");
+            dphNC += ((links[p].field("NC s DPH") - links[p].field("NC bez DPH"))) * mnozstvo;
+            dphPC += ((links[p].field("PC s DPH") - links[p].field("PC bez DPH"))) * mnozstvo;
         };
-        result = dph - dphNC;
+        result = dphPC - dphNC;
         if (result < 0) {
+            message("chyba v záznamoch materiálu\nskontrolovať NC a PC v skladových položkách");
             result = 0;
         }
     }
