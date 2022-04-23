@@ -36,7 +36,7 @@ const prepocitatVykazStrojov = (zaznam, uctovatDPH) => {
                 zaznam.set(FIELD_SEZONA, sezona);
             }
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-            dph = sumaBezDPH * sadzbaDPH;
+            dph = (sumaBezDPH * sadzbaDPH).toFixed(2);
             sumaCelkom = sumaBezDPH + dph;
             CPdph = CPsumaBezDPH * sadzbaDPH;
             CPsumaCelkomSDPH = CPsumaBezDPH + CPdph;
