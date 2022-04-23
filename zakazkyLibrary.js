@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.36";
+    var verzia = "0.3.37";
     result = nazov + " " + verzia;
     return result;
 }
@@ -13,7 +13,7 @@ function verziaKniznice() {
 const prepocetZakazky = zakazka => {
     var vKniznica = verziaKniznice();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("PREPOČÍTAJ ZÁKAZKU" + "\nv. " + vKniznica + "\nv. " + vKrajinkaLib);
+    message("PREPOČÍTAJ ZÁKAZKU" + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
     var uctovanieDPH = zakazka.field(FIELD_UCTOVANIE_DPH);
