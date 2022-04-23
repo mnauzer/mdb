@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.43";
+    var verzia = "0.3.44";
     result = nazov + " " + verzia;
     return result;
 }
@@ -47,12 +47,7 @@ const prepocetZakazky = zakazka => {
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var typ = vykazyPrac[vp].field(FIELD_TYP_VYKAZU);
-            if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
-                //prace += prepocitatVykazPraceHzs(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
-                prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
-            } else {
-                prace += prepocitatVykazPracePolozky(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
-            }
+            prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
             praceSpoluBezDPH += prace[0];
             if (praceUctovatDPH) {
                 txtPrace = " s DPH";
