@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.16";
+    var verzia = "0.2.17";
     result = nazov + " " + verzia;
     return result;
 }
@@ -11,6 +11,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var sumaBezDPH = 0;
     var sumaDPH = null;
     var sumaCelkom = null;
+    var popis = vykaz.field(FIELD_POPIS);
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
     message(
@@ -23,6 +24,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     if (typ == "Hodinovka") {
         var prace = vykaz.field("Práce sadzby")[0];
         var hodinyCelkom = 0;
+
         //var polozka = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         var limity = prace.field("Limity");
@@ -33,7 +35,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         if (prace) {
 
             if (evidenciaLinks.length > 0) {
-                if (uctovanie == "Individuálne za každý výjazd" || vykaz.field(FIELD_POPIS) == "Práce navyše") {
+                if (uctovanie == "Individuálne za každý výjazd" || popis == "Práce navyše") {
                     for (var el = 0; el < evidenciaLinks.length; el++) {
                         var rVykazy = evidenciaLinks[el].field("Výkaz prác");
                         // nájde index výkazu v linkToEntry evidencie prác
@@ -70,7 +72,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                         setTlac(vykaz.field("Rozpis")[el]);
                     }
                     // zistiť zľavu podľa počtu odpracovaných hodín
-                    var sadzba = vykaz.field(FIELD_CENOVA_PONUKA)[0].field(diel)[0].attr("sadzba");
+                    var sadzba = vykaz.field(FIELD_CENOVA_PONUKA)[0].field(popis)[0].attr("sadzba");
                     var zlava = null;
                     var zakladnaSadzba = null;
                     if (limity) {
