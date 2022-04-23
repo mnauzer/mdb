@@ -1,4 +1,4 @@
-const zakazky = "0.3.54";
+const zakazky = "0.3.56";
 
 const verziaZakazky = () => {
     var result = "";
@@ -47,6 +47,7 @@ const prepocetZakazky = zakazka => {
             } else {
                 txtPrace = " bez DPH";
             }
+            message("Práce celkom bez dph: " + praceCelkomBezDPH);
             message("Práce bez dph: " + prace[0]);
             praceCelkomBezDPH += prace[0];
             praceCelkom += praceCelkomBezDPH + praceDPH;
@@ -146,7 +147,7 @@ const prepocetZakazky = zakazka => {
     // DOPRAVA
     // prepočítať dopravu
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
-    if (dopravaCelkomBezDPH >= 0) {
+    if (dopravaCelkomBezDPH > 0) {
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
         var dopravaDPH = 0;
         var dopravaCelkom = 0;
@@ -160,10 +161,20 @@ const prepocetZakazky = zakazka => {
     } else {
         txtDoprava = "...žiadna doprava";
     }
-    zakazka.set("txt doprava", txtDoprava);
+    // globálny súčet
     zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
     zakazkaDPH += dopravaDPH;
     zakazkaCelkom += dopravaCelkom;
+
+    var najazdenyCas = zakazkaCasJazdy(zakazka);
+    var najazdeneKm = zakazkaKm(zakazka);
+    var pocetJazd = zakazkaPocetJazd(zakazka);
+
+    zakazka.set(FIELD_DOPRAVA, dopravaCelkom);
+    zakazka.set("Počet jázd", pocetJazd);
+    zakazka.set("Najazdené km", najazdeneKm);
+    zakazka.set("Najazdený čas", najazdenyCas);
+    zakazka.set("txt doprava", txtDoprava);
 
     // Message
     message(
@@ -179,15 +190,13 @@ const prepocetZakazky = zakazka => {
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
     // mzdy z evidencie
     var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);                // hodiny z evidencie
-    var najazdenyCas = zakazkaCasJazdy(zakazka);
-    var najazdeneKm = zakazkaKm(zakazka);
+
     var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
     var nakladyDoprava = najazdeneKm * 0.5;                         // náklady 0,50€/km
 
 
     var odvodDPHDoprava = dopravaDPH;
     var ineVydavky = zakazkaVydavky(zakazka);
-    var pocetJazd = zakazkaPocetJazd(zakazka);
     var zaplatene = zakazkaPrijmy(zakazka);
 
     var naklady = mzdy
@@ -248,9 +257,7 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Marža", marza);       // TODO zakalkulovať DPH
     zakazka.set("Marža po zaplatení", marzaPoZaplateni);
     zakazka.set("Odpracovaných hodín", odpracovanychHodin);
-    zakazka.set("Počet jázd", pocetJazd);
-    zakazka.set("Najazdené km", najazdeneKm);
-    zakazka.set("Najazdený čas", najazdenyCas);
+
 
     zakazka.set("Mzdy v aute", mzdyDoprava);
     zakazka.set("Náklady vozidlá", nakladyDoprava);
