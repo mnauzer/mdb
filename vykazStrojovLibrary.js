@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.08";
+    var verzia = "0.2.09";
     result = nazov + " " + verzia;
     return result;
 }
