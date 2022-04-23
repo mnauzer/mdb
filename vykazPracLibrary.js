@@ -9,7 +9,7 @@ function verziaKniznice() {
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var typ = vykaz.field("Typ výkazu");
     var sumaBezDPH = 0;
-    var dph = null;
+    var sumaDPH = null;
     var sumaCelkom = null;
     var CPsumaBezDPH = 0;
     var CPdph = null;
