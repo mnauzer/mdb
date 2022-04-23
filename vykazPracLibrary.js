@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.15";
+    var verzia = "0.2.16";
     result = nazov + " " + verzia;
     return result;
 }
@@ -22,6 +22,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     );
     if (typ == "Hodinovka") {
         var prace = vykaz.field("Práce sadzby")[0];
+        var hodinCelkom = 0;
         //var polozka = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         var limity = prace.field("Limity");
