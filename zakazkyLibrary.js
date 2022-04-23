@@ -87,15 +87,17 @@ const prepocetZakazky = zakazka => {
     zakazka.set("txt materiál", txtMaterial);
 
     // STROJE
-    var stroje = 0;
+    var stroje = [];
+    var strojeSpoluBezDPH = 0;
     var strojeDPH = 0;
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             //  message("Počet výkazov strojov: " + vykazyStrojov.length);
-            stroje += spocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH, sadzbaDPH);
+            stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
+            strojeSpoluBezDPH += stroje[0];
+            strojeDPH += stroje[1];
             if (strojeUctovatDPH) {
                 txtStroje = " s DPH";
-                strojeDPH += vykazyStrojov[vs].field("DPH");
                 dphSuma += strojeDPH;
             } else {
                 txtStroje = " bez DPH";

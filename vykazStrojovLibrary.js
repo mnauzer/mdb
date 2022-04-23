@@ -47,5 +47,5 @@ const prepocitatVykazStrojov = (zaznam, uctovatDPH) => {
         zaznam.set("CP DPH", CPdph);
         zaznam.set("CP Suma s DPH", CPsumaCelkomSDPH);
     }
-    return [sumaBezDPH, dph, sumaCelkom];
+    return [sumaBezDPH, dph];
 }
