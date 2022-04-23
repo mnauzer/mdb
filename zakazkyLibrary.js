@@ -1,4 +1,4 @@
-const zakazky = "0.3.64";
+const zakazky = "0.3.65";
 
 const verziaZakazky = () => {
     var result = "";
@@ -32,11 +32,11 @@ const prepocetZakazky = zakazka => {
 
     // TODO: refaktoring prepočtu miezd (nákladov na práce)
     var mzdy = zakazkaMzdy(zakazka);
+    var praceCelkomBezDPH = 0;
+    var praceDPH = 0;
+    var praceCelkom = 0;
+    var txtPrace = "";
     if (vykazyPrac.length > 0) {
-        var praceCelkomBezDPH = 0;
-        var praceDPH = 0;
-        var praceCelkom = 0;
-        var txtPrace = "";
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var prace = [];
             prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
@@ -77,10 +77,10 @@ const prepocetZakazky = zakazka => {
     var nakupMaterialu = 0;
     var odvodDPHMaterial = 0;
 
+    var materialCelkomBezDPH = 0;
+    var materialDPH = 0;
+    var materialCelkom = 0;
     if (vydajkyMaterialu.length > 0) {
-        var materialCelkomBezDPH = 0;
-        var materialDPH = 0;
-        var materialCelkom = 0;
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
             var material = 0;
             material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
@@ -118,11 +118,11 @@ const prepocetZakazky = zakazka => {
     // prepočet nákladov strojov
     var nakladyStroje = 0; // náklady
 
+    var strojeCelkomBezDPH = 0;
+    var strojeDPH = 0;
+    var strojeCelkom = 0;
+    var txtStroje = "";
     if (vykazyStrojov.length > 0) {
-        var strojeCelkomBezDPH = 0;
-        var strojeDPH = 0;
-        var strojeCelkom = 0;
-        var txtStroje = "";
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             var stroje = 0;
             stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
