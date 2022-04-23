@@ -22,7 +22,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     );
     if (typ == "Hodinovka") {
         var prace = vykaz.field("Práce sadzby")[0];
-        var hodinCelkom = 0;
+        var hodinyCelkom = 0;
         //var polozka = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         var limity = prace.field("Limity");
