@@ -73,7 +73,7 @@ const prepocetZakazky = zakazka => {
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     // prepočet nákladov materiálu
-    var nakupMaterialu = zakazkaNakupMaterialu(zakazka);            // nákup materiálu bez DPH
+    var nakupMaterialu = 0;
     var odvodDPHMaterial = 0;
 
     if (vydajkyMaterialu.length > 0) {
@@ -83,8 +83,9 @@ const prepocetZakazky = zakazka => {
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
             var material = 0;
             material = prepocitatVydajkuMaterialu(vydajkyMaterialu[vm], materialUctovatDPH);
+            nakupMaterialu += vydajkyMaterialu[vm].field("Suma v NC bez DPH")
             if (materialUctovatDPH) {
-                odvodDPHMaterial = zakazkaMaterialRozdielDPH(vydajkyMaterialu[vm]);
+                odvodDPHMaterial += zakazkaMaterialRozdielDPH(vydajkyMaterialu[vm]);
                 materialDPH += material[1];
                 zakazkaDPH += materialDPH;
                 txtMaterial = " s DPH";
@@ -294,18 +295,6 @@ const zakazkaMzdy = zakazka => {
     return result;
 };
 
-const zakazkaNakupMaterialu = zakazka => {
-    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
-    var result = 0;
-    if (links.length > 0) {
-        for (var p = 0; p < links.length; p++) {
-            result += (links[p].field("Suma v NC bez DPH"));
-        };
-    } else {
-        message("Zákazka nemá záznamy vo Výdajkách materiálu");
-    }
-    return result;
-};
 
 const zakazkaMaterialDPH = zakazka => {
     var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
@@ -321,23 +310,13 @@ const zakazkaMaterialDPH = zakazka => {
 };
 
 const zakazkaMaterialRozdielDPH = vykaz => {
-    var links = vykaz.field(FIELD_MATERIAL);
-    message("Materiál položiek: " + links.length);
     var result = 0;
-    if (links.length > 0) {
-        var mnozstvo = 0;
-        var dphNC = 0;
-        var dphPC = 0;
-        for (var p = 0; p < links.length; p++) {
-            mnozstvo = links[p].attr("množstvo");
-            dphNC += ((links[p].field("NC s DPH") - links[p].field("NC bez DPH"))) * mnozstvo;
-            dphPC += ((links[p].field("PC s DPH") - links[p].field("PC bez DPH"))) * mnozstvo;
-        };
-        result = dphPC - dphNC;
-        if (result < 0) {
-            message("chyba v záznamoch materiálu\nskontrolovať NC a PC v skladových položkách");
-            result = 0;
-        }
+    var dphNC = vykaz.field("DPH NC");
+    var dphPC = vykaz.field("DPH");
+    result = dphPC - dphNC;
+    if (result < 0) {
+        message("chyba v položkách materiálu\nskontrolovať NC a PC v skladových položkách");
+        result = 0;
     }
     return result;
 };
