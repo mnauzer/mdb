@@ -39,7 +39,7 @@ const prepocetZakazky = zakazka => {
     var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
     // prepočet nákladov práce
-    var mzdy = 0; // náklady
+    var mzdy = 0;
 
     // TODO: refaktoring prepočtu miezd (nákladov na práce)
     var mzdy = zakazkaMzdy(zakazka);
