@@ -14,7 +14,7 @@ const prepocitatVykazStrojov = (zaznam, uctovatDPH) => {
     var CPsumaBezDPH = 0;
     var CPdph = 0;
     var CPsumaCelkomSDPH = 0;
-    var typ = zaznam.field("Typ účtovania");
+    var typ = zaznam.field("Typ výkazu");
     if (uctovatDPH) { zaznam.set("s DPH", uctovatDPH) };
     var sDPH = zaznam.field("s DPH");
     if (stroje.length > 0) {
