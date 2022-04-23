@@ -89,21 +89,19 @@ const prepocetZakazky = zakazka => {
     // STROJE
     var stroje = [];
     var strojeSpoluBezDPH = 0;
-    var strojeDPH = 0;
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             //  message("Počet výkazov strojov: " + vykazyStrojov.length);
             stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
             strojeSpoluBezDPH += stroje[0];
-            strojeDPH += stroje[1];
             if (strojeUctovatDPH) {
                 txtStroje = " s DPH";
-                dphSuma += strojeDPH;
+                dphSuma += stroje[1];
             } else {
                 txtStroje = " bez DPH";
             }
         }
-        vyuctovanieCelkomBezDph += stroje;
+        vyuctovanieCelkomBezDph += strojeSpoluBezDPH;
     } else {
         txtStroje = " žiadne stroje";
     }
