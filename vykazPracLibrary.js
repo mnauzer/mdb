@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.01";
+    var verzia = "0.2.02";
     result = nazov + " " + verzia;
     return result;
 }
@@ -21,7 +21,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         var prace = vykaz.field("Práce sadzby")[0];
         //var polozka = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
-        var limity = polozka.field("Limity");
+        var limity = prace.field("Limity");
         var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
         var attrMJ = "účtovaná sadzba";
         // vynulovať rozpis prác
