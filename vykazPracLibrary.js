@@ -5,7 +5,7 @@ function verziaKniznice() {
     result = nazov + " " + verzia;
     return result;
 }
-// upload to github
+// upload to github 111
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var typ = vykaz.field("Typ výkazu");
     var sumaBezDPH = 0;
