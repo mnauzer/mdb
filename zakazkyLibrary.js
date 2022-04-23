@@ -47,8 +47,8 @@ const prepocetZakazky = zakazka => {
             } else {
                 txtPrace = " bez DPH";
             }
-            message("Práce celkom bez dph: " + praceCelkomBezDPH);
-            message("Práce bez dph: " + prace[0]);
+            // message("Práce celkom bez dph: " + praceCelkomBezDPH);
+            //message("Práce bez dph: " + prace[0]);
             praceCelkomBezDPH += prace[0];
         }
         praceCelkom += praceCelkomBezDPH + praceDPH;
