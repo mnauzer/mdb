@@ -1,4 +1,4 @@
-const zakazky = "0.3.62";
+const zakazky = "0.3.63";
 
 const verziaZakazky = () => {
     var result = "";
@@ -199,7 +199,7 @@ const prepocetZakazky = zakazka => {
     );
 
     // CELKOM
-    zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPH;
+    //zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPH;
 
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
 
@@ -217,7 +217,7 @@ const prepocetZakazky = zakazka => {
         + strojeDPH;
     + dopravaDPH
 
-    var sumaNaUhradu = zakazkaCelkomBezDPH + zakazkaDPH - zaplatene;
+    var sumaNaUhradu = zakazkaCelkom - zaplatene;
     var marza = marzaPercento(zakazkaCelkom, naklady);
     var marzaPoZaplateni = zaplatene > 1 ? marzaPercento(zaplatene, naklady) : 0;
     var zisk = zakazkaCelkom - naklady;
