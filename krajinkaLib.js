@@ -3,13 +3,10 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinkaLib
 const verziaKrajinkaLib = () => {
-    var nazov = "krajinkaLlib";
-    var verzia = "0.2.27";
+    var nazov = "krajinkalib";
+    var verzia = "0.2.28";
     return nazov + " " + verzia;
 }
-
-
-
 
 const setEdit = entry => {
     entry.set(FIELD_VIEW, "Editácia");
