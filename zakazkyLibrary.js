@@ -20,7 +20,7 @@ const prepocetZakazky = zakazka => {
     }
 
     // nalinkovať a spočítať výkazy
-    //    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
     var zakazkaCelkom = 0;
