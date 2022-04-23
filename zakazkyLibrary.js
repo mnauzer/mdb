@@ -59,7 +59,7 @@ const prepocetZakazky = zakazka => {
     } else {
         txtPrace = "...žiadne práce";
     }
-    message("Práce celkom:" + praceCelkom);
+    // message("Práce celkom:" + praceCelkom);
     zakazka.set(FIELD_PRACE, praceCelkom);
     zakazka.set("txt práce", txtPrace);
     // náklady
