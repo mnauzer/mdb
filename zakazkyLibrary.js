@@ -29,10 +29,6 @@ const prepocetZakazky = zakazka => {
 
     // PRÁCE
     // prepočet výkazov prác
-    var praceCelkomBezDPH = 0;
-    var praceDPH = 0;
-    var praceCelkom = 0;
-    var txtPrace = "";
     // prepočet práce
     var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
@@ -42,6 +38,10 @@ const prepocetZakazky = zakazka => {
     // TODO: refaktoring prepočtu miezd (nákladov na práce)
     var mzdy = zakazkaMzdy(zakazka);
     if (vykazyPrac.length > 0) {
+        var praceCelkomBezDPH = 0;
+        var praceDPH = 0;
+        var praceCelkom = 0;
+        var txtPrace = "";
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var prace = [];
             prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
