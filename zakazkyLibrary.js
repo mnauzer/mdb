@@ -1,4 +1,4 @@
-const verzia = "0.3.49";
+const verzia = "0.3.50";
 
 const verziaZakazky = () => {
     var result = "";
@@ -56,9 +56,9 @@ const prepocetZakazky = zakazka => {
             if (praceUctovatDPH) {
                 praceOdvodDPH += prace[1];
                 zakazkaDPHCelkom += praceOdvodDPH;
-                txtPrace = " s DPH";
+                txtPrace = "práce s DPH";
             } else {
-                txtPrace = " bez DPH";
+                txtPrace = "práce bez DPH";
             }
             praceCelkomBezDPH += prace[0];
             praceCelkom += praceCelkomBezDPH + praceOdvodDPH;
@@ -69,7 +69,7 @@ const prepocetZakazky = zakazka => {
     } else {
         txtPrace = " žiadne práce";
     }
-
+    message(praceCelkom);
     zakazka.set(FIELD_PRACE, praceCelkom);
     zakazka.set("Odvod DPH Práce", praceOdvodDPH);
     zakazka.set("txt práce", txtPrace);
