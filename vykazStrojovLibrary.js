@@ -25,7 +25,6 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
             stroje[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
             //výpočet ceny z cp
-            CPsumaBezDPH += (mnozstvoCP * cena);
         }
         if (sDPH) {
             var sezona = vykaz.field(FIELD_SEZONA);
