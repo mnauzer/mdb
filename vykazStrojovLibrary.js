@@ -1,12 +1,12 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.09";
+    var verzia = "0.2.10";
     result = nazov + " " + verzia;
     return result;
 }
 
-const prepocitatVykazStrojov = (zaznam, uctovatDPH) => {
+const prepocitatVykazStrojov = (zaznam, uctovatDPH = true) => {
     var stroje = zaznam.field(FIELD_STROJE);
     var sumaBezDPH = 0;
     var dph = 0;
