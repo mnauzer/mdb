@@ -28,19 +28,23 @@ const prepocetZakazky = zakazka => {
     var vyuctovanieCelkomBezDph = 0;
     var vyuctovanieCelkom = 0;
     var dphSuma = 0;
-    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
-    var praceSDPH = mclCheck(uctovanieDPH, W_PRACE);
-    var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var materialSDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     var dopravaSDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
-    var txtPrace = "";
     var txtMaterial = "";
-    var txtStroje = "";
     var txtDoprava = "";
 
     // PRÁCE
     // prepočet výkazov prác
+    var praceSDPH = mclCheck(uctovanieDPH, W_PRACE);
+    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
+    var txtPrace = "";
+    var praceHZS = [];
+    var pracePolozky = [];
+    var odvodDPHPrace = 0;
+    var mzdy = 0;
+    //var odvodDPHPrace = praceDPH;
+    // var mzdy = zakazkaMzdy(zakazka);
     var prace = 0;
     var praceDPH = 0;
     if (vykazyPrac.length > 0) {
@@ -86,11 +90,13 @@ const prepocetZakazky = zakazka => {
     zakazka.set("txt materiál", txtMaterial);
 
     // STROJE
+    var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
+    var txtStroje = "";
     var stroje = [];
     var strojeSpoluBezDPH = 0;
-    var odvodDPHStroje = 0; //stroje DPH
-    var nakladyStroje = 0;                         // náklady 75%
+    var odvodDPHStroje = 0;
+    var nakladyStroje = 0;
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             //  message("Počet výkazov strojov: " + vykazyStrojov.length);
@@ -143,7 +149,7 @@ const prepocetZakazky = zakazka => {
     vyuctovanieCelkom = vyuctovanieCelkomBezDph + dphSuma;
 
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
-    var mzdy = zakazkaMzdy(zakazka);                                // mzdy z evidencie
+    // mzdy z evidencie
     var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);                // hodiny z evidencie
     var najazdenyCas = zakazkaCasJazdy(zakazka);
     var najazdeneKm = zakazkaKm(zakazka);
@@ -151,7 +157,7 @@ const prepocetZakazky = zakazka => {
     var nakladyDoprava = najazdeneKm * 0.5;                         // náklady 0,50€/km
     var nakupMaterialu = zakazkaNakupMaterialu(zakazka);            // nákup materiálu bez DPH
     var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
-    var odvodDPHPrace = praceDPH;
+
     var odvodDPHDoprava = dopravaDPH;
     var ineVydavky = zakazkaVydavky(zakazka);
     var pocetJazd = zakazkaPocetJazd(zakazka);
