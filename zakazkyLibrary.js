@@ -1,4 +1,4 @@
-const zakazky = "0.3.51";
+const zakazky = "0.3.52";
 
 const verziaZakazky = () => {
     var result = "";
@@ -81,6 +81,7 @@ const prepocetZakazky = zakazka => {
     var material = [];
     // prepočet nákladov materiálu
     var nakupMaterialu = zakazkaNakupMaterialu(zakazka);            // nákup materiálu bez DPH
+    var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
 
     if (vydajkyMaterialu.length > 0) {
         for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
@@ -104,10 +105,9 @@ const prepocetZakazky = zakazka => {
 
     message("Materiál celkom:" + materialCelkom);
     zakazka.set("txt materiál", txtMaterial);
-    zakazka.set(FIELD_MATERIAL, material + materialDPH);
+    zakazka.set(FIELD_MATERIAL, materialCelkom);
     zakazka.set("Nákup materiálu", nakupMaterialu);
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
-    var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
 
     // STROJE
     var strojeCelkomBezDPH = 0;
@@ -142,7 +142,7 @@ const prepocetZakazky = zakazka => {
     }
     message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
-    zakazka.set("Odvod DPH Stroje", odvodDPHDoprava);
+    zakazka.set("Odvod DPH Stroje", strojeDPH);
     zakazka.set("txt stroje", txtStroje);
     zakazka.set("Náklady stroje", nakladyStroje);
 
