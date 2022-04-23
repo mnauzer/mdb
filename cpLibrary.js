@@ -4,7 +4,7 @@
 // Popis:
 function verziaKniznice() {
     var nazov = "cpLibrary";
-    var verzia = "0.2.11";
+    var verzia = "0.2.12";
     return nazov + " v." + verzia;
 }
 
@@ -156,7 +156,7 @@ const ponukaNovaZakazka = cp => {
     // inicializácia
     var novaZakazka = new Object();
     var datum = new Date();
-    var typZakazky = "Realizácia" //harcoded
+    var typZakazky = ""; //harcoded
 
     var cislo = noveCislo(sezona, DB_ZAKAZKY, 1, 2);
     var klient = cp.field("Klient")[0];
@@ -166,10 +166,17 @@ const ponukaNovaZakazka = cp => {
     // vyber diely zákazky podľa typu cp
     if (typ == "Hodinovka") {
         var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
+        if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
+            typZakazky = "Servis AZS";
+        } else {
+            typZakazky = "Údržba";
+        }
     } else {
         var dielyZakazky = cp.field("Diely cenovej ponuky");
+        typZakazky = "Realizácia";
     }
     var uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
+
 
     // hlavička a základné nastavenia
     novaZakazka["Dátum"] = datum;
@@ -350,6 +357,7 @@ const novyVykazStrojov = (zakazka) => {
     // inicializácia
     var lib = libByName("Výkaz strojov");
     var cp = zakazka.field("Cenová ponuka")[0];
+    var typVykazu = cp.field("Typ cenovej ponuky");
     var datum = zakazka.field("Dátum");
     var sezona = zakazka.field(FIELD_SEZONA);
     var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
@@ -358,7 +366,7 @@ const novyVykazStrojov = (zakazka) => {
     novyVykaz[FIELD_CISLO] = cislo;
     novyVykaz["Dátum"] = datum;
     novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
-    novyVykaz["Typ výkazu"] = "Hodinovka";  // výkaz strojov je len pri hodinovej sadzbe
+    novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
     novyVykaz["s DPH"] = true; //harcoded
     novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
     novyVykaz["Vydané"] = "Zákazka";
@@ -393,7 +401,7 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
 const spocitajVykaz = (doklad, field) => {
     // inicializácia
     var sezona = doklad.field(FIELD_SEZONA);
-    var sadzbaDPH = libByName("KRAJINKA APP").find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var sumaBezDPH = 0;
     var sumaDPH = 0;
     var sumaCelkomSDPH = 0
