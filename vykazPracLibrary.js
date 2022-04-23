@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.20";
+    var verzia = "0.2.21";
     result = nazov + " " + verzia;
     return result;
 }
@@ -106,6 +106,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             var mnozstvo = prace[p].attr("dodané množstvo");
             var cena = prace[p].attr("cena") || prace[p].field("Cena bez DPH");
             cenaCelkom = mnozstvo * cena;
+            prace[p].setAttr("cena", cena);
             prace[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
 
