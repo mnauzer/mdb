@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.39";
+    var verzia = "0.3.40";
     result = nazov + " " + verzia;
     return result;
 }
@@ -89,6 +89,8 @@ const prepocetZakazky = zakazka => {
     // STROJE
     var stroje = [];
     var strojeSpoluBezDPH = 0;
+    var odvodDPHStroje = 0; //stroje DPH
+    var nakladyStroje = 0;                         // náklady 75%
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             //  message("Počet výkazov strojov: " + vykazyStrojov.length);
@@ -97,15 +99,19 @@ const prepocetZakazky = zakazka => {
             if (strojeUctovatDPH) {
                 txtStroje = " s DPH";
                 dphSuma += stroje[1];
+                odvodDPHStroje += stroje[1];
             } else {
                 txtStroje = " bez DPH";
             }
         }
         vyuctovanieCelkomBezDph += strojeSpoluBezDPH;
+        nakladyStroje = stroje[01] * 0.75;                         // náklady 75%
     } else {
         txtStroje = " žiadne stroje";
     }
     zakazka.set("txt stroje", txtStroje);
+    zakazka.set("Náklady stroje", nakladyStroje);
+    zakazka.set("Odvod DPH Stroje", odvodDPHDoprava);
 
     // DOPRAVA
     // prepočítať dopravu
@@ -143,12 +149,10 @@ const prepocetZakazky = zakazka => {
     var najazdeneKm = zakazkaKm(zakazka);
     var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
     var nakladyDoprava = najazdeneKm * 0.5;                         // náklady 0,50€/km
-    var nakladyStroje = stroje * 0.75;                         // náklady 75%
     var nakupMaterialu = zakazkaNakupMaterialu(zakazka);            // nákup materiálu bez DPH
     var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
     var odvodDPHPrace = praceDPH;
     var odvodDPHDoprava = dopravaDPH;
-    var odvodDPHStroje = stroje[1]; //stroje DPH
     var ineVydavky = zakazkaVydavky(zakazka);
     var pocetJazd = zakazkaPocetJazd(zakazka);
     var zaplatene = zakazkaPrijmy(zakazka);
@@ -221,8 +225,7 @@ const prepocetZakazky = zakazka => {
     zakazka.set("Odvod DPH Práce", odvodDPHPrace);
     zakazka.set("Náklady vozidlá", nakladyDoprava);
     zakazka.set("Odvod DPH Doprava", odvodDPHDoprava);
-    zakazka.set("Náklady stroje", nakladyStroje);
-    zakazka.set("Odvod DPH Stroje", odvodDPHDoprava);
+
     zakazka.set("Náklady celkom", naklady);
 
     message("Zákazka prepočítaná...");
@@ -619,15 +622,6 @@ const zakazkaMaterialRozdielDPH = zakazka => {
 
 const zakazkaPraceDPH = zakazka => {
     var links = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
-    var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += (links[p].field("DPH"));
-    };
-    return result;
-};
-
-const zakazkaStrojeDPH = zakazka => {
-    var links = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("DPH"));
