@@ -1,7 +1,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "vykazPracLibrary";
-    var verzia = "0.2.11";
+    var verzia = "0.2.12";
     result = nazov + " " + verzia;
     return result;
 }
@@ -19,7 +19,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     message(
         "Výkaz typ: " + typ
         + "\n"
-        + (uctovatDPH ? "Účtovanie s DPH" : "Účtpvanie bez DPH");
+        + (uctovatDPH ? "Účtovanie s DPH" : "Účtovanie bez DPH");
     + "\n"
 
     );
