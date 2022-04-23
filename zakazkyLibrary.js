@@ -5,7 +5,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "zakazkyLibrary";
-    var verzia = "0.3.37";
+    var verzia = "0.3.38";
     result = nazov + " " + verzia;
     return result;
 }
@@ -148,7 +148,7 @@ const prepocetZakazky = zakazka => {
     var odvodDPHMaterial = zakazkaMaterialRozdielDPH(zakazka);
     var odvodDPHPrace = praceDPH;
     var odvodDPHDoprava = dopravaDPH;
-    var odvodDPHStroje = strojeDPH;
+    var odvodDPHStroje = stroje[1]; //stroje DPH
     var ineVydavky = zakazkaVydavky(zakazka);
     var pocetJazd = zakazkaPocetJazd(zakazka);
     var zaplatene = zakazkaPrijmy(zakazka);
