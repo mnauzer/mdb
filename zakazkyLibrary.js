@@ -1,4 +1,4 @@
-const zakazky = "0.3.67";
+const zakazky = "0.3.68";
 
 const verziaZakazky = () => {
     var result = "";
