@@ -1,7 +1,7 @@
 const verziaDoprava = () => {
     var result = "";
     var nazov = "dopravaLibrary";
-    var verzia = "0.1.03";
+    var verzia = "0.1.04";
     result = nazov + " " + verzia;
     return result;
 }
@@ -67,7 +67,6 @@ const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
     }
     cp.set("Doprava celkom bez DPH", celkom);
     return celkom;
-
 };
 
 const zakazkaPocetJazd = zakazka => {
@@ -99,8 +98,8 @@ const zakazkaKm = zakazka => {
         for (var p = 0; p < links.length; p++) {
             result += (links[p].field("Najazdené km"));
         };
-        return result;
     }
+    return result;
 };
 
 const zakazkaCasJazdy = zakazka => {
