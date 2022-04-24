@@ -98,7 +98,7 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("Mzdy", mzdy);
 
     // MATERIÁL
-    var txtMaterial = "";
+    var txtMaterial = "...žiadny materiál";
     // prepočet výdajok materiálu
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
@@ -203,6 +203,7 @@ const prepocetZakazky = (zakazka) => {
 
     // DOPRAVA
     // prepočítať dopravu
+    var txtDoprava = "...žiadna doprava";
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var dopravaDPH = 0;
     var dopravaCelkom = 0;
@@ -218,12 +219,9 @@ const prepocetZakazky = (zakazka) => {
             txtDoprava = " bez DPH";
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
-
-        var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
-        var nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
-    } else {
-        txtDoprava = "...žiadna doprava";
     }
+    var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
+    var nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
     var najazdenyCas = zakazkaCasJazdy(zakazka);
     var najazdeneKm = zakazkaKm(zakazka);
     var pocetJazd = zakazkaPocetJazd(zakazka);
