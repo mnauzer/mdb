@@ -586,8 +586,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var empty = [];
     var popis = vykazPrac.field(FIELD_POPIS);
     if (vyuctovanie.field(popis) > 0) {
-        vyuctovanie.set(popis, empty);
-        vyuctovanie.set(popis + " celkom", empty);
+        vyuctovanie.set(popis, null);
+        vyuctovanie.set(popis + " celkom", null);
     }
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
     var vykazPraceSadzbyCelkom = 0;
