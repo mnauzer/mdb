@@ -1,4 +1,4 @@
-const zakazky = "0.3.88";
+const zakazky = "0.3.89";
 
 const verziaZakazky = () => {
     var result = "";
@@ -147,10 +147,14 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Nákup materiálu", nakupMaterialu);
     if (nakupMaterialu > 0) {
-        txtNakupMaterialu = "✓...matriál v nákupných cenách bez DPH";
+        txtNakupMaterialu = "✓...materiál v nákupných cenách bez DPH";
     }
     zakazka.set("txt nákup materiálu", txtNakupMaterialu);
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
+    if (odvodDPHMaterial > 0) {
+        txtOdvodDPHMaterial = "✓...odvod DPH za nakúpený materiál (rozdiel)";
+    }
+    zakazka.set("txt odvod dph materiál", txtOdvodDPHMaterial);
 
     // STROJE
     // prepočet výkazov strojov
@@ -215,6 +219,7 @@ const prepocetZakazky = (zakazka) => {
     var txtNakladyVozidla = "...žiadne náklady na vozidlá";
     var txtOdvodDPHDoprava = "...žiadna DPH za dopravu";
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
+    var mzdyDoprava = 0;
     var dopravaDPH = 0;
     var dopravaCelkom = 0;
     if (dopravaCelkomBezDPH > 0) {
@@ -228,9 +233,9 @@ const prepocetZakazky = (zakazka) => {
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
     }
-    var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
-    var nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
     var najazdenyCas = zakazkaCasJazdy(zakazka);
+    mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
+    var nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
     var najazdeneKm = zakazkaKm(zakazka);
     var pocetJazd = zakazkaPocetJazd(zakazka);
     // globálny súčet
