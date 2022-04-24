@@ -539,6 +539,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
     var popis = vykazPrac.field(FIELD_POPIS);
+    // vynuluj staré položky
     var polozky = vyuctovanie.field(popis);
     if (polozky.length > 0) {
         for (var p in polozky) {
@@ -590,13 +591,20 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var pocitanieHodinovychSadzieb = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
     var popis = vykazPrac.field(FIELD_POPIS);
     var polozky = vyuctovanie.field(popis);
+    // vynuluj staré položky
     if (polozky.length > 0) {
         for (var p in polozky) {
             vyuctovanie.unlink(popis, polozky[p]);
         }
         vyuctovanie.set(popis + " celkom", null);
     }
-
+    // vynuluj staré položky rozpisu prác
+    var polozkyRozpis = vyuctovanie.field("Rozpis " + popis);
+    if (polozkyRozpis.length > 0) {
+        for (var p in polozkyRozpis) {
+            vyuctovanie.unlink(popis, polozkyRozpis[p]);
+        }
+    }
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
     var vykazPraceSadzbyCelkom = 0;
     var cenaCelkom = 0;
