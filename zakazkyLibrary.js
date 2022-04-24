@@ -1,4 +1,4 @@
-const zakazky = "0.3.69";
+const zakazky = "0.3.70";
 
 const verziaZakazky = () => {
     var result = "";
@@ -7,7 +7,12 @@ const verziaZakazky = () => {
     return result;
 }
 
-const prepocetZakazky = (zakazka, vyuctovanie) => {
+const prepocetZakazky = (zakazka) => {
+    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
+    if (!vyuctovanie) {
+        message("Zákazka ešte nemá záznam vyúčtovania...\nGenerujem nové vyúčtovanie...");
+        vyuctovanie = noveVyuctovanie(zakazka);
+    }
     var vKniznica = verziaZakazky();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČÍTAJ ZÁKAZKU" + "\n" + vKniznica + "\n" + vKrajinkaLib);
