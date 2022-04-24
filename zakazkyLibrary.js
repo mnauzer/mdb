@@ -7,7 +7,7 @@ const verziaZakazky = () => {
     return result;
 }
 
-const prepocetZakazky = zakazka => {
+const prepocetZakazky = (zakazka, vyuctovanie) => {
     var vKniznica = verziaZakazky();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČÍTAJ ZÁKAZKU" + "\n" + vKniznica + "\n" + vKrajinkaLib);
@@ -50,6 +50,13 @@ const prepocetZakazky = zakazka => {
             // message("Práce celkom bez dph: " + praceCelkomBezDPH);
             //message("Práce bez dph: " + prace[0]);
             praceCelkomBezDPH += prace[0];
+            if (vyuctovanie) {
+                // nastaviť status výkazov práce na Vyúčtované
+                vykazyPrac[vp].link(FIELD_VYUCTOVANIE, vyuctovanie);
+                vykazyPrac[vp].set(FIELD_STAV, "Vyúčtované");
+                // záapis do vyúčtovania
+                vyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
+            }
         }
         praceCelkom += praceCelkomBezDPH + praceDPH;
         // globálny súčet
@@ -66,7 +73,6 @@ const prepocetZakazky = zakazka => {
     // náklady
     zakazka.set("Odvod DPH Práce", praceDPH);
     zakazka.set("Mzdy", mzdy);
-
 
     // MATERIÁL
     var txtMaterial = "";
@@ -94,6 +100,13 @@ const prepocetZakazky = zakazka => {
                 txtMaterial = " bez DPH";
             }
             materialCelkomBezDPH += material[0];
+            if (vyuctovanie) {
+                // nastaviť príznak výdajok materiálu na vyúčtované
+                vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
+                vydajkyMaterialu[vm].set(FIELD_STAV, "Vyúčtované");
+                // zápis do vyúčtovania
+                vyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
+            }
         }
         materialCelkom += materialCelkomBezDPH + materialDPH;
         // globálny súčet
@@ -134,6 +147,13 @@ const prepocetZakazky = zakazka => {
                 txtStroje = " bez DPH";
             }
             strojeCelkomBezDPH += stroje[0];
+            if (vyuctovanie) {
+                // nastavenie statusu výkazu na Vyúčtované
+                vykazyStrojov[vs].link(FIELD_VYUCTOVANIE, vyuctovanie);
+                vykazyStrojov[vs].set(FIELD_STAV, "Vyúčtované");
+                // zápis do vyúčtovania
+                vyuctovanie.set(vykazyStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+            }
         }
         strojeCelkom += strojeCelkomBezDPH + strojeDPH;
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
@@ -263,6 +283,19 @@ const prepocetZakazky = zakazka => {
 
     zakazka.set("Náklady celkom", naklady);
     message("Zákazka prepočítaná...");
+    if (vyuctovanie) {
+        
+    // NASTAVENIE POLÍ
+    // časti vyúčtovania
+    noveVyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
+    // vyúčtovanie
+    noveVyuctovanie.set("Celkom (bez DPH)", zakazkaCelkomBezDPH);
+    noveVyuctovanie.set("DPH 20%", zakazkaDPH);
+    noveVyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
+    noveVyuctovanie.set("Zaplatená záloha", prijmyCelkom);
+    noveVyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - prijmyCelkom);
+    message("Vyúčtovanie vygenerované...");
+    }
 }
 
 const spocitatHodinyZevidencie = zakazka => {
@@ -317,235 +350,38 @@ const zakazkaMaterialRozdielDPH = vykaz => {
     return result;
 };
 
-// const zakazkaPraceDPH = zakazka => {
-//     var links = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
-//     var result = 0;
-//     for (var p = 0; p < links.length; p++) {
-//         result += (links[p].field("DPH"));
-//     };
-//     return result;
-// };
-
-
-
-// const prepocitatVykazPraceHzs = (vykaz, sDPH, sadzbaDPH) => {
+// const spocitatVydajkyMaterialu = (vydajka, sDPH, sadzbaDPH) => {
+//     //message("Výdajka: " + vydajka.field("Popis"))
 //     // inicializácia
-//     if (sDPH) { vykaz.set("s DPH", true) }
+//     //var sDPH = vydajka.field("s DPH");
+//     if (sDPH) { vydajka.set("s DPH", true) }
 //     var sumaDPH = 0;
 //     var sumaBezDPH = 0;
-//     var typ = vykaz.field("Typ výkazu");
-//     var diel = vykaz.field("Popis");
-//     var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
-//     // vymazať predošlé nalinkované evidencie
-//     var empty = [];
-//     vykaz.set("Rozpis", empty);
-
-//     var hodinyCelkom = 0;
-//     if (typ == W_HODINOVKA) {
-//         var polozka = vykaz.field("Práce sadzby")[0];
-//         var limity = polozka.field("Limity");
-//         var attrMJ = "účtovaná sadzba";
-//     }
-//     else if (typ == W_POLOZKY) {
-//         var polozka = vykaz.field("Práce")[0];
-//         var attrMJ = "cena";
-//     }
-//     // vypočítať aktuálnu sadzbu práce za počet hodín
-//     var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-//     if (uctovanie == "Individuálne za každý výjazd" || diel == "Práce navyše") {
-//         for (var el = 0; el < evidenciaLinks.length; el++) {
-//             var rVykazy = evidenciaLinks[el].field("Výkaz prác");
-//             // nájde index výkazu v linkToEntry evidencie prác
-//             var index = zistiIndexLinku(vykaz, rVykazy);
-//             // rVykaz - remote link v evidencii na tento výkaz
-//             var rVykaz = evidenciaLinks[el].field("Výkaz prác")[index];
-//             // počet hodín z atribútu alebo celkový počet hodín zo záznamu
-//             hodinyCelkom += rVykaz.attr("počet hodín") || evidenciaLinks[el].field("Odpracované");
-//             // nalinkuj záznam do evidencie prác
-//             vykaz.link("Rozpis", evidenciaLinks[el]);
-//             //nastav atribúty nového linku
-//             vykaz.field("Rozpis")[el].setAttr("vykonané práce", rVykaz.attr("popis prác"));
-//             vykaz.field("Rozpis")[el].setAttr("počet hodín", rVykaz.attr("počet hodín"));
-//             vykaz.field("Rozpis")[el].setAttr(attrMJ, rVykaz.attr("sadzba"));
-//             vykaz.field("Rozpis")[el].setAttr("cena celkom", rVykaz.attr("cena celkom"));
-//             // nastav príznak výkazu na tlač
-//             setTlac(vykaz.field("Rozpis")[el])
-//             sumaBezDPH += rVykaz.attr("cena celkom")
-//         }
-//         polozka.setAttr("dodané množstvo", hodinyCelkom);
-//         polozka.setAttr("účtovaná sadzba", null); // len vynuluje attribút
-//         polozka.setAttr("cena celkom", sumaBezDPH);
-//     } else {
-//         for (var el = 0; el < evidenciaLinks.length; el++) {
-//             var rVykazy = evidenciaLinks[el].field("Výkaz prác");
-//             var index = zistiIndexLinku(vykaz, rVykazy);
-//             var rVykaz = evidenciaLinks[el].field("Výkaz prác")[index];
-//             hodinyCelkom += rVykaz.attr("počet hodín") || evidenciaLinks[el].field("Odpracované");
-//             vykaz.link("Rozpis", evidenciaLinks[el]);
-//             vykaz.field("Rozpis")[el].setAttr("vykonané práce", rVykaz.attr("popis prác"));
-//             vykaz.field("Rozpis")[el].setAttr("počet hodín", null);
-//             vykaz.field("Rozpis")[el].setAttr(attrMJ, null);
-//             vykaz.field("Rozpis")[el].setAttr("cena celkom", null);
-//             vykaz.field("Rozpis")[el].set("Tlač", "Tlač")
-//         }
-//         // zistiť zľavu podľa počtu odpracovaných hodín
-//         var sadzba = vykaz.field(FIELD_CENOVA_PONUKA)[0].field(diel)[0].attr("sadzba");
-//         var zlava = null;
-//         var zakladnaSadzba = null;
-//         if (limity) {
-//             zakladnaSadzba = sadzba;
-//             for (var m = 0; m < limity.length; m++) {
-//                 if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
-//                     zlava = limity[m].field("Zľava");
-//                 }
-//                 // výpočítať novú sadzbu so zľavou
-//                 //sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
-//             }
-//         }
-//         sadzba = sadzba - (sadzba * zlava / 100);
-//         // dosadiť výsledky do poľa "Práce" - pri výkazoch práce je len jedno
-//         sumaBezDPH = hodinyCelkom * sadzba;
-//         polozka.setAttr("dodané množstvo", hodinyCelkom);
-//         polozka.setAttr("základná sadzba", zakladnaSadzba);
-//         polozka.setAttr("zľava %", zlava);
-//         polozka.setAttr(attrMJ, sadzba);
-//         polozka.setAttr("cena celkom", sumaBezDPH);
-//     }
-//     vykaz.set("Suma bez DPH", sumaBezDPH);
-//     if (sDPH) {
-//         sumaDPH += sumaBezDPH * sadzbaDPH;
-//         vykaz.set("DPH", sumaDPH);
-//         vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
-//     } else {
-//         vykaz.set("DPH", null);
-//         vykaz.set("Suma s DPH", null);
-//     }
-//     // message("Suma bez DPH: " + sumaBezDPH);
-//     setTlac(vykaz);
-//     return sumaBezDPH;
-// };
-
-// const prepocitatVykazPracePolozky = (vykaz, sDPH, sadzbaDPH) => {
-//     // inicializácia
-//     //var sDPH = vykaz.field("s DPH");
-//     if (sDPH) { vykaz.set("s DPH", true) }
-//     var sumaDPH = 0;
-//     var sumaBezDPH = 0;
-//     var polozky = vykaz.field(FIELD_PRACE);
-
-//     if (polozky) {
-//         for (var p = 0; p < polozky.length; p++) {
-//             var mnozstvo = polozky[p].attr("dodané množstvo");
-//             var cena = polozky[p].attr("cena") || polozky[p].field("Cena bez DPH");
-//             cenaCelkom = mnozstvo * cena;
-//             polozky[p].setAttr("cena celkom", cenaCelkom);
-//             sumaBezDPH += cenaCelkom;
-//             // message("množstvo:+ " + mnozstvo + ", cena: " + cena + ", cena celkom: " + cenaCelkom);
-//             // nastav príznak Tlač
-//             polozky[p].set("Tlač", "Tlač");
-//         }
-//     }
-//     vykaz.set("Suma bez DPH", sumaBezDPH);
-//     if (sDPH) {
-//         sumaDPH += sumaBezDPH * sadzbaDPH;
-//         vykaz.set("DPH", sumaDPH);
-//         vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
-//     } else {
-//         vykaz.set("DPH", null);
-//         vykaz.set("Suma s DPH", null);
-
-//     }
-//     // message("Suma bez DPH: " + sumaBezDPH);
-//     vykaz.set("Tlač", "Tlač");
-//     return sumaBezDPH;
-// };
-
-// const spocitatVykazStrojov = (vykaz, sDPH, sadzbaDPH) => {
-//     // inicializácia
-//     if (sDPH) { vykaz.set("s DPH", true) }
-//     var sumaDPH = 0;
-//     var sumaBezDPH = 0;
-//     var polozky = vykaz.field(FIELD_STROJE);
+//     var polozky = vydajka.field(FIELD_MATERIAL);
 //     if (polozky) {
 //         // presť všetky položky na výdajke a spočitať sumy
 //         for (var p = 0; p < polozky.length; p++) {
-//             var mnozstvo = polozky[p].attr("prevádzka mth");
-//             var cena = polozky[p].attr("účtovaná sadzba");
+//             var mnozstvo = polozky[p].attr("dodané množstvo");
+//             var cena = polozky[p].attr("cena");
 //             var cenaCelkom = mnozstvo * cena;
 //             polozky[p].setAttr("cena celkom", cenaCelkom);
 //             //var cenaCelkom = mnozstvo * cena;
 //             sumaBezDPH += cenaCelkom;
-//             // nastav príznak Tlač
-//             setTlac(polozky[p]);
 //         }
 //     }
-//     vykaz.set("Suma bez DPH", sumaBezDPH);
+//     vydajka.set("Suma bez DPH", sumaBezDPH);
 //     if (sDPH) {
 //         sumaDPH += sumaBezDPH * sadzbaDPH;
-//         vykaz.set("DPH", sumaDPH);
-//         vykaz.set("Suma s DPH", sumaBezDPH + sumaDPH);
+//         vydajka.set("DPH", sumaDPH);
+//         vydajka.set("Suma s DPH", sumaBezDPH + sumaDPH);
 //     } else {
-//         vykaz.set("DPH", null);
-//         vykaz.set("Suma s DPH", null);
+//         vydajka.set("DPH", null);
+//         vydajka.set("Suma s DPH", null);
 
 //     }
 //     // message("Suma bez DPH: " + sumaBezDPH);
-//     setTlac(vykaz);
+//     setTlac(vydajka);
 //     return sumaBezDPH;
-// };
-
-const spocitatVydajkyMaterialu = (vydajka, sDPH, sadzbaDPH) => {
-    //message("Výdajka: " + vydajka.field("Popis"))
-    // inicializácia
-    //var sDPH = vydajka.field("s DPH");
-    if (sDPH) { vydajka.set("s DPH", true) }
-    var sumaDPH = 0;
-    var sumaBezDPH = 0;
-    var polozky = vydajka.field(FIELD_MATERIAL);
-    if (polozky) {
-        // presť všetky položky na výdajke a spočitať sumy
-        for (var p = 0; p < polozky.length; p++) {
-            var mnozstvo = polozky[p].attr("dodané množstvo");
-            var cena = polozky[p].attr("cena");
-            var cenaCelkom = mnozstvo * cena;
-            polozky[p].setAttr("cena celkom", cenaCelkom);
-            //var cenaCelkom = mnozstvo * cena;
-            sumaBezDPH += cenaCelkom;
-        }
-    }
-    vydajka.set("Suma bez DPH", sumaBezDPH);
-    if (sDPH) {
-        sumaDPH += sumaBezDPH * sadzbaDPH;
-        vydajka.set("DPH", sumaDPH);
-        vydajka.set("Suma s DPH", sumaBezDPH + sumaDPH);
-    } else {
-        vydajka.set("DPH", null);
-        vydajka.set("Suma s DPH", null);
-
-    }
-    // message("Suma bez DPH: " + sumaBezDPH);
-    setTlac(vydajka);
-    return sumaBezDPH;
-};
-
-// const zakazkaPraceEvidencia = zakazka => {
-//     var typ = zakazka.field("Cenová ponuka")[0].field("Typ cenovej ponuky");
-//     if (typ == "Položky") {
-//         message("spočítavám položky");
-//         // prejde výkazy práce
-//         var vykazy = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
-//         for (var v = 0; v < vykazy.length; v++) {
-//         }
-
-//     } else if (typ == "Hodinovka") {
-//         message("spočítavám hodiny");
-//         // prejde výkazy práce
-//         var vykazy = zakazka.linksFrom(DB_VYKAZY_PRAC, "Zákazka");
-//         for (var v = 0; v < vykazy.length; v++) {
-//         }
-//     } else {
-//         message("ad-hoc ešte nefunguje");
-//     }
 // };
 
 const zakazkaPrijmy = (zakazka, sDPH) => {
@@ -575,14 +411,14 @@ const efektivita = marza => {
 
 // Generuj vyúčtovanie
 
-const generujVyuctovanie = zakazka => {
+const generujVyuctovanie2 = zakazka => {
     // verzia
     //var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
     //if (!vyuctovanie.length>0) {
     var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
     var vKniznica = verziaZakazky();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("GENERUJ VYÚČTOVANIE" + "\nv." + vKniznica + "\nv." + vKrajinkaLib);
+    message("GENERUJ VYÚČTOVANIE" + "\n" + vKniznica + "\n" + vKrajinkaLib);
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
     var typCP = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
@@ -797,59 +633,226 @@ const generujVyuctovanie = zakazka => {
     // End of file: 11.03.2022, 11:27
 }
 
-const zakazkaNoveVyuctovanie = zakazka => {
-    var vyuctovania = libByName(DB_VYUCTOVANIA);
-    var noveVyuctovanie = new Object();
-    // inicializácia
-    var datum = new Date();
+const generujVyuctovanie = zakazka => {
+    // verzia
+    //var vyuctovanie = zakazka.field("Vyúčtovanie")[0];
+    //if (!vyuctovanie.length>0) {
+    var vKniznica = verziaZakazky();
+    var vKrajinkaLib = verziaKrajinkaLib();
+    message("GENERUJ VYÚČTOVANIE" + "\n" + vKniznica + "\n" + vKrajinkaLib);
+    prepocetZakazky(zakazka);
+    var noveVyuctovanie = zakazkaNoveVyuctovanie(zakazka);
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var sezona = cp.field(FIELD_SEZONA);
-    var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
-    var klient = cp.field("Klient")[0]
-    var miesto = cp.field("Miesto realizácie")[0];
-    var typ = cp.field("Typ cenovej ponuky");
+    var typCP = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
-
     // inicializácia
-    var empty = []; // mazacie pole
+    var sezona = noveVyuctovanie.field(FIELD_SEZONA);
+    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var zakazkaDPH = 0;
+    var zakazkaCelkom = 0;
+    var zakazkaCelkomBezDPH = 0;
 
-    // vyber diely zákazky podľa typu cp
-    if (typ == "Hodinovka") {
-        var diely = cp.field("Diely cenovej ponuky hzs");
+    if (typCP == W_HODINOVKA) {
+        var diely = cp.field("Diely cenovej ponuky hzs")
+    } else if (typCP == "Položky") {
+        var diely = cp.field("Diely cenovej ponuky")
     } else {
-        var diely = cp.field("Diely cenovej ponuky");
+
     }
-    // popis vyúčtovania
-    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field(FIELD_CISLO) + " (" + cp.field("Popis cenovej ponuky") + ")";
+    // PRÁCE
+    // prepočet výkazov prác
+    var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA);
+    if (vykazyPrac.length > 0) {
+        var praceCelkomBezDPH = 0;
+        var praceDPH = 0;
+        var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
+        for (var vp = 0; vp < vykazyPrac.length; vp++) {
+            var typ = vykazyPrac[vp].field("Typ výkazu");
+            if (typ == W_HODINOVKA || vykazyPrac[vp].field(FIELD_POPIS) == W_PRACE_NAVYSE) {
+                praceCelkomBezDPH += prepocitatVykazPraceHzs(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
+            } else if (typ == W_POLOZKY) {
+                praceCelkomBezDPH += prepocitatVykazPracePolozky(vykazyPrac[vp], praceUctovatDPH, sadzbaDPH);
+            } else {
+                message("Zle zadaný typ výkazu prác");
+            }
+            vykazyPrac[vp].link(FIELD_VYUCTOVANIE, noveVyuctovanie);
+            vydajkyMaterialu[vm].set(FIELD_STAV, "Vyúčtované");
 
-    // Hlavička a základné nastavenia
-    noveVyuctovanie["Dátum"] = datum;
-    noveVyuctovanie[FIELD_CISLO] = cislo;
-    noveVyuctovanie["Miesto realizácie"] = miesto;
-    noveVyuctovanie["Stav vyúčtovania"] = "Prebieha";
-    noveVyuctovanie["Typ vyúčtovania"] = typ;
-    noveVyuctovanie["+Materiál"] = cp.field("+Materiál");
-    noveVyuctovanie["+Mechanizácia"] = cp.field("+Mechanizácia");
-    noveVyuctovanie["+Subdodávky"] = cp.field("+Subdodávky");
-    noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
-    noveVyuctovanie["Klient"] = klient;
-    noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
-    noveVyuctovanie[FIELD_CENOVA_PONUKA] = cp;
-    noveVyuctovanie[FIELD_ZAKAZKA] = zakazka;
-    noveVyuctovanie[FIELD_SEZONA] = sezona;
-    noveVyuctovanie["Diely vyúčtovania"] = diely.join();
-    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();
-    // doprava
-    noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
-    noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
-    noveVyuctovanie["% zo zákazky"] = cp.field("% zo zákazky");
-    vyuctovania.create(noveVyuctovanie);
+            noveVyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
 
-    var vyuctovanie = vyuctovania.find(cislo)[0];
-    zakazka.set(FIELD_VYUCTOVANIE, empty);
-    zakazka.link(FIELD_VYUCTOVANIE, vyuctovanie);
-    return vyuctovanie;
+            // zápis do vyúčtovania
+            if (praceUctovatDPH) {
+                txtPrace = "s DPH";
+                praceDPH += vykazyPrac[vp].field("DPH");
+                zakazkaDPH += praceDPH;
+            } else {
+                txtPrace = "bez DPH";
+            }
+        }
+        zakazkaCelkomBezDPH += praceCelkomBezDPH;
+    } else {
+        txtPrace = "...žiadne práce";
+    }
+    zakazka.set("txt práce", txtPrace);
+
+    // MATERIÁL
+    // prepočet výdajok materiálu
+    var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    if (vydajkyMaterialu.length > 0) {
+        var materialUctovatDPH = mclCheck(uctovanieDPH, "Materiál");
+        var materialCelkomBezDPH = 0;
+        var materialDPH = 0;
+        for (var vm = 0; vm < vydajkyMaterialu.length; vm++) {
+            materialCelkomBezDPH += spocitatVydajkyMaterialu(vydajkyMaterialu[vm], materialUctovatDPH, sadzbaDPH);
+
+            if (materialUctovatDPH) {
+                txtMaterial = "s DPH";
+                materialDPH += vydajkyMaterialu[vm].field("DPH");
+                zakazkaDPH += materialDPH;
+            } else {
+                txtMaterial = "bez DPH";
+            }
+            zakazkaCelkomBezDPH += materialCelkomBezDPH;
+        }
+    } else {
+        txtMaterial = "...žiadny materiál";
+    }
+    zakazka.set("txt materiál", txtMaterial);
+
+    // STROJE
+    // prepočet výkazu strojov
+    var vykazStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, "Zákazka");
+    if (vykazStrojov.length > 0) {
+        var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
+        var strojeCelkomBezDPH = 0;
+        var strojeDPH = 0;
+        for (var vs = 0; vs < vykazStrojov.length; vs++) {
+
+            // strojeCelkomBezDPH += spocitatVykazStrojov(vykazStrojov[vs], strojeUctovatDPH, sadzbaDPH);
+            strojeCelkomBezDPH += prepocitatVykazStrojov(vykazStrojov[vs], strojeUctovatDPH);
+            vykazStrojov[vs].link(FIELD_VYUCTOVANIE, noveVyuctovanie);
+            vykazStrojov[vs].set(FIELD_STAV, "Vyúčtované");
+            // zápis do vyúčtovania
+            noveVyuctovanie.set(vykazStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+            if (strojeUctovatDPH) {
+                txtStroje = "s DPH";
+                strojeDPH += vykazStrojov[vs].field("DPH");
+                zakazkaDPH += strojeDPH;
+            } else {
+                txtStroje = "bez DPH";
+            }
+        }
+        zakazkaCelkomBezDPH += strojeCelkomBezDPH;
+    } else {
+        txtStroje = "...žiadne stroje";
+    }
+    zakazka.set("txt stroje", txtStroje);
+
+    // DOPRAVA
+    // prepočítať dopravu
+    var dopravaUctovatDPH = mclCheck(uctovanieDPH, "Doprava");;
+    var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
+    var dopravaDPH = 0;
+    if (dopravaCelkomBezDPH >= 0) {
+        if (dopravaUctovatDPH) {
+            txtDoprava = " s DPH";
+            dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
+            zakazkaDPH += dopravaDPH;
+        } else {
+            txtDoprava = " bez DPH";
+        }
+    } else {
+        txtDoprava = " žiadna doprava";
+    }
+    zakazka.set("txt doprava", txtDoprava);
+    zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
+
+    // Message
+    message(
+        "Práce: " + txtPrace + "\n" +
+        "Materiál: " + txtMaterial + "\n" +
+        "Stroje: " + txtStroje + "\n" +
+        "Doprava: " + txtDoprava + "\n"
+    );
+
+    // PLATBY
+    var vydavkySDPH = uctovanieDPH.filter(cast => cast === "Iné výdavky");
+    var prijmyCelkom = zakazkaPrijmy(zakazka);
+    var vydavkyCelkom = zakazkaVydavky(zakazka, vydavkySDPH);
+
+    // súčet vyúčtovania
+    zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPH;
+
+    // NASTAVENIE POLÍ
+    // časti vyúčtovania
+    noveVyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
+    // vyúčtovanie
+    noveVyuctovanie.set("Celkom (bez DPH)", zakazkaCelkomBezDPH);
+    noveVyuctovanie.set("DPH 20%", zakazkaDPH);
+    noveVyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
+    noveVyuctovanie.set("Zaplatená záloha", prijmyCelkom);
+    noveVyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - prijmyCelkom);
+
+    // texty
+
+    // pridané - treba skotnrolovať a refaktoring
+    // kopírovanie položiek bez prepočtu výdajok a výkazov
+
+    // iba ak typ je Položky
+    // nalinkuje jednotlivé položky z výkazov do vyúčtovania
+    if (typCP == W_POLOZKY) {
+        // nalinkuj výdajky materiálu
+        for (var v = 0; v < vydajkyMaterialu.length; v++) {
+            nalinkujMaterial(noveVyuctovanie, vydajkyMaterialu[v]);
+        }
+        // nalinkuj výkazy prác
+        for (var v = 0; v < vykazyPrac.length; v++) {
+            nalinkujPrace(noveVyuctovanie, vykazyPrac[v]);
+        }
+        // prepočítať diely
+        for (var d in diely) {
+            var sucetDielov = 0;
+
+            sucetDielov += noveVyuctovanie.field(diely[d] + " materiál celkom")
+            sucetDielov += noveVyuctovanie.field(diely[d] + " práce celkom")
+            if (diely[d] == "Výsadby") {
+                sucetDielov += noveVyuctovanie.field("Rastliny celkom")
+            }
+            noveVyuctovanie.set(diely[d] + " celkom", sucetDielov);
+        }
+    } else if (typCP == W_HODINOVKA) {
+        // ak je typ hodinovka nalinkuje práce, materiál a a stroje do vyúčtovania
+        for (var v = 0; v < vydajkyMaterialu.length; v++) {
+            nalinkujMaterial(noveVyuctovanie, vydajkyMaterialu[v]);
+        }
+        // nalinkuj výkazy prác
+        for (var v = 0; v < vykazyPrac.length; v++) {
+            if (typ == W_POLOZKY) {
+                nalinkujPrace(noveVyuctovanie, vykazyPrac[v]);
+            } else {
+                nalinkujPraceHZS(noveVyuctovanie, vykazyPrac[v]);
+            }
+        }
+        // nalinkuj výkazy strojov
+        for (var v = 0; v < vykazStrojov.length; v++) {
+            nalinkujStroje(noveVyuctovanie, vykazStrojov[v]);
+        }
+    } else {
+        message("Neviem aký je typ vyúčtovania (Položky/Hodinovka");
+    }
+
+    // doplň adresu klienta do Krycieho listu
+    noveVyuctovanie.set("Odberateľ", pullAddress(noveVyuctovanie.field("Klient")[0]));
+    //zakazkaToJsonHZS(zakazka);
+    message("Hotovo...!");
+    message("Bolo vygenerované vyúčtovane č.: " + noveVyuctovanie.field("Číslo"));
+    // } else {
+    //     message("Zákazka už má vyúčtovanie č." + noveVyuctovanie.field("Číslo"));
+    // }
+    // End of file: 11.03.2022, 11:27
 }
+
+
 // nalinkuj tovar z výdajok do vyúčtovanie / POLOŽKY -- bez prepočtu
 const nalinkujMaterial = (vyuctovanie, vydajka) => {
     var vydajkaCelkom = 0;
@@ -1016,51 +1019,5 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
 }
 
 
-// TODO json export
-const zakazkaToJsonHZS = zakazka => {
-    var result = "";
-    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
-    var f = file("/sdcard/" + zakazka.field(FIELD_CISLO) + "_file.json");
-    var odberatel = zakazka.field("Klient")[0];
-    f.writeLine('{"Odberateľ":{');
-    f.writeLine('"Nick"' + ':"' + odberatel.field("Nick") + '",');
-    f.writeLine('"Meno"' + ':"' + odberatel.field("Meno") + '",');
-    f.writeLine('"Priezvisko"' + ':"' + odberatel.field("Priezvisko") + '",');
-    f.writeLine('"Titul"' + ':"' + odberatel.field("Titul") + '",');
-    f.writeLine('"Ulica"' + ':"' + odberatel.field("Ulica") + '",');
-    f.writeLine('"PSČ"' + ':"' + odberatel.field("PSČ") + '",');
-    f.writeLine('"Mesto"' + ':"' + odberatel.field("Mesto") + '"},');
-    f.writeLine('"Základné nastavenia":{');
-    f.writeLine('"Typ vyúčtovania"' + ':"' + zakazka.field("Účtovanie zákazky") + '",');
-    f.writeLine('"+Mechanizácia"' + ':' + cp.field("+Mechanizácia") + ',');
-    f.writeLine('"+Materiál"' + ':' + cp.field("+Materiál") + ',');
-    f.writeLine('"Počítanie hodinových sadzieb"' + ':"' + cp.field("Počítanie hodinových sadzieb") + '",');
-    f.writeLine('"Účtovanie dopravy"' + ':"' + cp.field("Účtovanie dopravy") + '",');
-    f.writeLine('"Cenová ponuka"' + ':"' + cp.title + '",');
-    f.writeLine('"Účtovanie DPH":{');
-    f.writeLine('"Práce"' + ':' + mclCheck(zakazka.field("Účtovanie DPH"), "Práce") + ',');
-    f.writeLine('"Materiál"' + ':' + mclCheck(zakazka.field("Účtovanie DPH"), "Materiál") + ',');
-    f.writeLine('"Stroje"' + ':' + mclCheck(zakazka.field("Účtovanie DPH"), "Mechanizácia") + ',');
-    f.writeLine('"Doprava"' + ':' + mclCheck(zakazka.field("Účtovanie DPH"), "Doprava") + '}');
-    f.writeLine('},');
-    f.writeLine('"Rekapitulácia vyúčtovania":{');
-    f.writeLine('"Celkom (bez DPH)"' + ':' + vyuctovanie.field("Celkom (bez DPH)") + ',');
-    f.writeLine('"DPH 20%"' + ':' + vyuctovanie.field("DPH 20%") + ',');
-    f.writeLine('"Cena celkom (s DPH)"' + ':' + vyuctovanie.field("Cena celkom (s DPH)") + ',');
-    f.writeLine('"Zaplatená záloha"' + ':' + vyuctovanie.field("Zaplatená záloha") + ',');
-    f.writeLine('"Suma na úhradu"' + ':' + vyuctovanie.field("Suma na úhradu") + '},');
-    f.writeLine('"Rozpis prác":{');
-    f.writeLine('"' + vyuctovanie.field("Záhradnícke práce")[0].title + '":{');
-    f.writeLine('"počet hodín"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("počet hodín") + ',');
-    f.writeLine('"základná sadzba"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("základná sadzba") + ',');
-    f.writeLine('"zľava"' + ':"' + vyuctovanie.field("Záhradnícke práce")[0].attr("zľava") + '",');
-    f.writeLine('"účtovaná sadzba"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("účtovaná sadzba") + ',');
-    f.writeLine('"cena celkom"' + ':' + vyuctovanie.field("Záhradnícke práce")[0].attr("cena celkom") + '}');
-    f.writeLine('}}');
-    f.close();                      // Close & save. Until closed,
-    //   the file is still empty
-    //var a = f.readLines();
-    return result;
-}
+
 // End of file: 22.03.2022, 19:24 '{"result":true, "count":42}'
