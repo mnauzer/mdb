@@ -1,4 +1,4 @@
-const zakazky = "0.3.68";
+const zakazky = "0.3.69";
 
 const verziaZakazky = () => {
     var result = "";
@@ -276,7 +276,7 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
 
     // VYÚČTOVANIE
     if (vyuctovanie) {
-        var typCP = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
+        var typ = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
         // NASTAVENIE POLÍ
         // časti vyúčtovania
         vyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
@@ -286,7 +286,7 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
         vyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
         vyuctovanie.set("Zaplatená záloha", zaplatene);
         vyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - zaplatene);
-        if (typCP == W_POLOZKY) {
+        if (typ == W_POLOZKY) {
             // nalinkuj výdajky materiálu
             for (var v = 0; v < vydajkyMaterialu.length; v++) {
                 nalinkujMaterial(vyuctovanie, vydajkyMaterialu[v]);
@@ -306,7 +306,7 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
                 }
                 vyuctovanie.set(diely[d] + " celkom", sucetDielov);
             }
-        } else if (typCP == W_HODINOVKA) {
+        } else if (typ == W_HODINOVKA) {
             // ak je typ hodinovka nalinkuje práce, materiál a a stroje do vyúčtovania
             for (var v = 0; v < vydajkyMaterialu.length; v++) {
                 nalinkujMaterial(vyuctovanie, vydajkyMaterialu[v]);
