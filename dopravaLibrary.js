@@ -1,7 +1,7 @@
 const verziaDoprava = () => {
     var result = "";
     var nazov = "dopravaLibrary";
-    var verzia = "0.1.01";
+    var verzia = "0.1.02";
     result = nazov + " " + verzia;
     return result;
 }
@@ -44,7 +44,7 @@ const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
             } else {
                 message("nie ja zadaná cena za km v CP")
             }
-            if (vyuctovanie) {
+            if (vyuctovanie.length > 0) {
                 var vKm = vyuctovanie.field("Sadzba km")[0];
                 vKm.setAttr("cena", cena);
                 vKm.setAttr("počet km", km);
