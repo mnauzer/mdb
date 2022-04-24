@@ -145,7 +145,7 @@ const prepocetZakazky = (zakazka) => {
                 // nastaviť príznak výdajok materiálu na vyúčtované
                 if (vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).length > 0) {
                     for (var n = 0; n < vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).length; n++) {
-                        vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).unlink(FIELD_VYUCTOVANIE, vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE)[n]);
+                        vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).unlink(FIELD_VYUCTOVANIE, vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE)[0]);
                     }
                 }
                 vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
