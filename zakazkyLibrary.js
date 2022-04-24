@@ -25,6 +25,10 @@ const prepocetZakazky = (zakazka) => {
         sezona = zakazka.field(FIELD_DATUM).getFullYear();
         zakazka.set(FIELD_SEZONA, sezona);
     }
+
+    var stavZakazky = zakazka.field("Stav");
+    var stavVyuctovania = "Prebieha";
+
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
     var zakazkaCelkom = 0;
@@ -336,7 +340,11 @@ const prepocetZakazky = (zakazka) => {
         vyuctovanie.set("Odberateľ", pullAddress(vyuctovanie.field("Klient")[0]));
         //zakazkaToJsonHZS(zakazka);
         message("Vyúčtovane |" + vyuctovanie.field("Číslo") + "| bolo " + textVyuctovanie);
-        zakazka.set(FIELD_STAV, "Vyúčtovaná")
+        zakazka.set(FIELD_STAV, "Vyúčtovaná");
+        // stav vyúčtovania
+        if (stavZakazky == "Ukončená") {
+            vyuctovanie.set(FIELD_STAV, "Pripravené");
+        }
     }
     message("Hotovo...!");
 }

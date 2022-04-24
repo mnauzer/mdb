@@ -18,13 +18,14 @@ const noveVyuctovanie = zakazka => {
     // inicializácia
     var datum = new Date();
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var sezona = cp.field(FIELD_SEZONA);
+    var sezona = zakazka.field(FIELD_SEZONA);
     var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
-    var klient = cp.field("Klient")[0]
-    var miesto = cp.field("Miesto realizácie")[0];
+    var klient = zakazka.field("Klient")[0]
+    var miesto = zakazka.field("Miesto realizácie")[0];
     var typ = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
-
+    var stavZakazky = zakazka.field("Stav");
+    var stavVyuctovania = "Prebieha";
     // inicializácia
     var empty = []; // mazacie pole
 
@@ -36,17 +37,20 @@ const noveVyuctovanie = zakazka => {
     }
     // popis vyúčtovania
     var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field(FIELD_CISLO) + " (" + cp.field("Popis cenovej ponuky") + ")";
-
+    // stav vyúčtovania
+    if (stavZakazky == "Ukončená") {
+        stavVyuctovania = "Pripravené";
+    }
     // Hlavička a základné nastavenia
     noveVyuctovanie["Dátum"] = datum;
     noveVyuctovanie[FIELD_CISLO] = cislo;
     noveVyuctovanie["Miesto realizácie"] = miesto;
-    noveVyuctovanie["Stav vyúčtovania"] = "Prebieha";
+    noveVyuctovanie["Stav vyúčtovania"] = stavVyuctovania;
     noveVyuctovanie["Typ vyúčtovania"] = typ;
-    noveVyuctovanie["+Materiál"] = cp.field("+Materiál");
-    noveVyuctovanie["+Mechanizácia"] = cp.field("+Mechanizácia");
-    noveVyuctovanie["+Subdodávky"] = cp.field("+Subdodávky");
-    noveVyuctovanie["+Položky"] = cp.field("+Položky");
+    noveVyuctovanie["+Materiál"] = zakazka.field("+Materiál");
+    noveVyuctovanie["+Mechanizácia"] = zakazka.field("+Mechanizácia");
+    noveVyuctovanie["+Subdodávky"] = zakazka.field("+Subdodávky");
+    noveVyuctovanie["+Položky"] = zakazka.field("+Položky");
     noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
     noveVyuctovanie["Klient"] = klient;
     noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
@@ -54,8 +58,8 @@ const noveVyuctovanie = zakazka => {
     noveVyuctovanie[FIELD_ZAKAZKA] = zakazka;
     noveVyuctovanie[FIELD_SEZONA] = sezona;
     noveVyuctovanie["Diely vyúčtovania"] = diely.join();
-    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();
     // doprava
+    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();
     noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
     noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
     noveVyuctovanie["% zo zákazky"] = cp.field("% zo zákazky");
