@@ -3,7 +3,7 @@
 // Dátum:                   01.04.2022
 // Popis:
 // Autor:                   just me, for my garden business. this code is muddy like me
-const vyuctovania = "0.2.01";
+const vyuctovania = "0.2.02";
 
 const verziaVyuctovania = () => {
     var result = "";
@@ -21,7 +21,7 @@ const noveVyuctovanie = zakazka => {
     var sezona = zakazka.field(FIELD_SEZONA);
     var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
     var klient = zakazka.field("Klient")[0]
-    var miesto = zakazka.field("Miesto realizácie")[0];
+    var miesto = zakazka.field("Miesto")[0];
     var typ = cp.field("Typ cenovej ponuky");
     var uctovanieDPH = zakazka.field("Účtovanie DPH");
     var stavZakazky = zakazka.field("Stav");
