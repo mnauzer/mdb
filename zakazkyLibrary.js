@@ -1,4 +1,4 @@
-const zakazky = "0.3.70";
+const zakazky = "0.3.71";
 
 const verziaZakazky = () => {
     var result = "";
@@ -325,8 +325,8 @@ const prepocetZakazky = (zakazka) => {
                 }
             }
             // nalinkuj výkazy strojov
-            for (var v = 0; v < vykazStrojov.length; v++) {
-                nalinkujStroje(vyuctovanie, vykazStrojov[v]);
+            for (var v = 0; v < vykazyStrojov.length; v++) {
+                nalinkujStroje(vyuctovanie, vykazyStrojov[v]);
             }
         } else {
             message("Neviem aký je typ vyúčtovania (Položky/Hodinovka");
