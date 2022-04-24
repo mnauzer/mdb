@@ -1,4 +1,4 @@
-const zakazky = "0.4.02";
+const zakazky = "0.4.03";
 
 const verziaZakazky = () => {
     var result = "";
@@ -436,6 +436,7 @@ const prepocetZakazky = (zakazka) => {
         // stav vyúčtovania
 
     }
+    setBackgroudColor(zakazka, stav);
     message("Hotovo...!");
 }
 
@@ -513,5 +514,26 @@ const efektivita = marza => {
     var koeficient = 0.6; // 60% marža je top = 10 stars
     result = marza / koeficient;
     return result;
+}
+
+const setBackgroudColor = (zakazka, stav) => {
+
+    switch (stav) {
+        case "Vyúčtovaná":
+            zakazka.field("backgroud color", "#B3E5FC")
+            break;
+        case "Prebieha":
+            zakazka.field("backgroud color", "#F5E9F7")
+            break;
+        case "Ukončená":
+            zakazka.field("backgroud color", "#EDF7EE")
+            break;
+        case "Čakajúca":
+            zakazka.field("backgroud color", "#FFF9E6")
+            break;
+        case "Zaplatená":
+            zakazka.field("backgroud color", "#B3E0DB")
+            break;
+    }
 }
 // End of file: 22.03.2022, 19:24 '{"result":true, "count":42}'
