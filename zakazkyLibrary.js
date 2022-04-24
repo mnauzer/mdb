@@ -219,14 +219,9 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
     );
 
     // CELKOM
-    //zakazkaCelkom = zakazkaCelkomBezDPH + zakazkaDPH;
-
     var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
-
-
     var ineVydavky = zakazkaVydavky(zakazka);
     var zaplatene = zakazkaPrijmy(zakazka);
-
     var naklady = mzdy
         + mzdyDoprava
         + nakupMaterialu
@@ -236,15 +231,12 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
         + odvodDPHMaterial
         + strojeDPH;
     + dopravaDPH
-
     var sumaNaUhradu = zakazkaCelkom - zaplatene;
     var marza = marzaPercento(zakazkaCelkom, naklady);
     var marzaPoZaplateni = zaplatene > 1 ? marzaPercento(zaplatene, naklady) : 0;
     var zisk = zakazkaCelkom - naklady;
     var ziskPoZaplateni = zaplatene - naklady;
     var zostatok = rozpocetSDPH - zakazkaCelkom;
-
-
     if (zisk <= 0) {
         zakazka.set("Zisk", null);
         zakazka.set("Strata", zisk);
@@ -273,17 +265,18 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
     zakazka.set("Zaplatené", zaplatene);
     zakazka.set("Suma na úhradu", sumaNaUhradu);
     zakazka.set("Vyúčtovanie celkom", zakazkaCelkom);
-
     zakazka.set("Iné výdavky", ineVydavky);
     zakazka.set("efektivita", efektivita(marzaPoZaplateni));
-    // Náklady
+    // Náklady a marže
     zakazka.set("Marža", marza);       // TODO zakalkulovať DPH
     zakazka.set("Marža po zaplatení", marzaPoZaplateni);
     zakazka.set("Odpracovaných hodín", odpracovanychHodin);
-
     zakazka.set("Náklady celkom", naklady);
     message("Zákazka prepočítaná...");
+
+    // VYÚČTOVANIE
     if (vyuctovanie) {
+        var typCP = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
         // NASTAVENIE POLÍ
         // časti vyúčtovania
         vyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
