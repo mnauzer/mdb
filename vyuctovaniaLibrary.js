@@ -46,6 +46,7 @@ const noveVyuctovanie = zakazka => {
     noveVyuctovanie["+Materiál"] = cp.field("+Materiál");
     noveVyuctovanie["+Mechanizácia"] = cp.field("+Mechanizácia");
     noveVyuctovanie["+Subdodávky"] = cp.field("+Subdodávky");
+    noveVyuctovanie["+Položky"] = cp.field("+Položky");
     noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
     noveVyuctovanie["Klient"] = klient;
     noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
