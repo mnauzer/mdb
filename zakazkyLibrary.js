@@ -1,4 +1,4 @@
-const zakazky = "0.3.94";
+const zakazky = "0.3.95";
 
 const verziaZakazky = () => {
     var result = "";
@@ -34,6 +34,7 @@ const prepocetZakazky = (zakazka) => {
         stavZakazky = "Vyúčtovaná";
     }
 
+    var txtCelkoveNaklady = "✔....náklady na zákazku celkom";
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
     var zakazkaCelkom = 0;
@@ -45,14 +46,16 @@ const prepocetZakazky = (zakazka) => {
     var vykazyPrac = zakazka.linksFrom(DB_VYKAZY_PRAC, W_ZAKAZKA)
     // prepočet nákladov práce
     var mzdy = 0;
+    var odpracovanychHodin = 0;
+    var txtPrace = "✘...žiadne práce";
+    var txtMzdy = "✘...žiadne mzdy";
+    var txtOdvodDPHPrace = "✘...žiadna DPH za práce";
+    var txtOdpracovanychHodin = "✘...žiadne odpracované hodiny";
 
     // TODO: refaktoring prepočtu miezd (nákladov na práce)
     var praceCelkomBezDPH = 0;
     var praceDPH = 0;
     var praceCelkom = 0;
-    var txtPrace = "...žiadne práce";
-    var txtMzdy = "...žiadne mzdy";
-    var txtOdvodDPHPrace = "...žiadna DPH za práce";
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var prace = [];
@@ -85,7 +88,7 @@ const prepocetZakazky = (zakazka) => {
         zakazkaCelkomBezDPH += praceCelkomBezDPH;
         zakazkaDPH += praceDPH;
         zakazkaCelkom += praceCelkom;
-        var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);
+        odpracovanychHodin = spocitatHodinyZevidencie(zakazka);
     }
     // message("Práce celkom:" + praceCelkom);
     zakazka.set(FIELD_PRACE, praceCelkom);
@@ -95,19 +98,24 @@ const prepocetZakazky = (zakazka) => {
 
     zakazka.set("Odvod DPH Práce", praceDPH);
     if (praceDPH > 0) {
-        txtOdvodDPHPrace = "✓...odvod DPH za práce";
+        txtOdvodDPHPrace = "✔...odvod DPH za práce";
     }
     zakazka.set("txt odvod dph práce", txtOdvodDPHPrace);
     zakazka.set("Mzdy", mzdy);
     if (mzdy > 0) {
-        txtMzdy = "✓...mzdy vyplatené počas prác na zákazke";
+        txtMzdy = "✔...mzdy vyplatené počas prác na zákazke";
     }
     zakazka.set("txt mzdy", txtMzdy);
+    zakazka.set("Odpracovaných hodín", odpracovanychHodin);
+    if (odpracovanychHodin > 0) {
+        txtOdpracovanychHodin = "✔...pracovné hodiny na zákazke";
+    }
+    zakazka.set("txt odpracovaných hodín", txtOdpracovanychHodin);
 
     // MATERIÁL
-    var txtMaterial = "...žiadny materiál";
-    var txtNakupMaterialu = "...žiadny nákup materiálu";
-    var txtOdvodDPHMaterial = "...žiadny odvod DPH z materiálu";
+    var txtMaterial = "✘...žiadny materiál";
+    var txtNakupMaterialu = "✘...žiadny nákup materiálu";
+    var txtOdvodDPHMaterial = "✘...žiadny odvod DPH z materiálu";
     // prepočet výdajok materiálu
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
@@ -153,12 +161,12 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Nákup materiálu", nakupMaterialu);
     if (nakupMaterialu > 0) {
-        txtNakupMaterialu = "✓...materiál v nákupných cenách bez DPH";
+        txtNakupMaterialu = "✔...materiál v nákupných cenách bez DPH";
     }
     zakazka.set("txt nákup materiálu", txtNakupMaterialu);
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
     if (odvodDPHMaterial > 0) {
-        txtOdvodDPHMaterial = "✓...odvod DPH za nakúpený materiál (rozdiel)";
+        txtOdvodDPHMaterial = "✔...odvod DPH za nakúpený materiál (rozdiel)";
     }
     zakazka.set("txt odvod dph materiál", txtOdvodDPHMaterial);
 
@@ -172,9 +180,9 @@ const prepocetZakazky = (zakazka) => {
     var strojeCelkomBezDPH = 0;
     var strojeDPH = 0;
     var strojeCelkom = 0;
-    var txtStroje = "...žiadne stroje";
-    var txtNakladyStroje = "...žiadne náklady na stroje";
-    var txtOdvodDPHStroje = "...žiadna DPH za stroje";
+    var txtStroje = "✘...žiadne stroje";
+    var txtNakladyStroje = "✘...žiadne náklady na stroje";
+    var txtOdvodDPHStroje = "✘...žiadna DPH za stroje";
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             var stroje = 0;
@@ -201,7 +209,7 @@ const prepocetZakazky = (zakazka) => {
         // náklady stroje
         var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
         nakladyStroje = strojeCelkomBezDPH * koefStroje;
-        txtNakladyStroje = "✓...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+        txtNakladyStroje = "✔...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
         // globálny súčet
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
         zakazkaDPH += strojeDPH;
@@ -215,20 +223,20 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt náklady stroje", txtNakladyStroje);
     zakazka.set("Odvod DPH Stroje", strojeDPH);
     if (strojeDPH > 0) {
-        txtOdvodDPHStroje = "✓...odvod DPH za stroje";
+        txtOdvodDPHStroje = "✔...odvod DPH za stroje";
     }
     zakazka.set("txt odvod dph stroje", txtOdvodDPHStroje);
 
 
     // DOPRAVA
     // prepočítať dopravu
-    var txtDoprava = "...žiadna doprava";
-    var txtPocetJazd = "...žiadne jazdy";
-    var txtNajazdeneKm = "...žiadne najazdené km";
-    var txtNajazdenyCas = "...žiadny čas v aute";
-    var txtMzdyDoprava = "...žiadne mzdy v aute";
-    var txtNakladyVozidla = "...žiadne náklady na vozidlá";
-    var txtOdvodDPHDoprava = "...žiadna DPH za dopravu";
+    var txtDoprava = "✘...žiadna doprava";
+    var txtPocetJazd = "✘...žiadne jazdy";
+    var txtNajazdeneKm = "✘...žiadne najazdené km";
+    var txtNajazdenyCas = "✘...žiadny čas v aute";
+    var txtMzdyDoprava = "✘...žiadne mzdy v aute";
+    var txtNakladyVozidla = "✘...žiadne náklady na vozidlá";
+    var txtOdvodDPHDoprava = "✘...žiadna DPH za dopravu";
     var pocetJazd = 0;
     var najazdeneKm = 0;
     var najazdenyCas = 0;
@@ -267,44 +275,44 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
     if (pocetJazd > 0) {
-        txtPocetJazd = "✓...len jazdy tam (výjazd)";
+        txtPocetJazd = "✔...len jazdy tam (výjazd)";
     }
     zakazka.set("txt počet jázd", txtPocetJazd);
 
     zakazka.set("Najazdené km", najazdeneKm);
     if (najazdeneKm > 0) {
-        txtNajzdeneKm = "✓...km najazdené v rámci zákazky";
+        txtNajzdeneKm = "✔...km najazdené v rámci zákazky";
     }
     zakazka.set("txt najazdené km", txtNajazdeneKm);
 
     zakazka.set("Najazdený čas", najazdenyCas);
     if (najazdenyCas > 0) {
-        txtNajazdenyCas = "✓...pracovný čas v aute";
+        txtNajazdenyCas = "✔...pracovný čas v aute";
     }
     zakazka.set("txt najazdený čas", txtNajazdenyCas);
 
     zakazka.set("Mzdy v aute", mzdyDoprava);
     if (mzdyDoprava > 0) {
-        txtMzdyDoprava = "✓...mzdy počas jazdy autom";
+        txtMzdyDoprava = "✔...mzdy počas jazdy autom";
     }
     zakazka.set("txt mzdy v aute", txtMzdyDoprava);
 
     zakazka.set("Náklady vozidlá", nakladyVozidla);
     if (nakladyVozidla > 0) {
-        txtNakladyVozidla = "✓...náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+        txtNakladyVozidla = "✔...náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     }
     zakazka.set("txt náklady vozidlá", txtNakladyVozidla);
 
     zakazka.set("Odvod DPH Doprava", dopravaDPH);
     if (dopravaDPH > 0) {
-        txtOdvodDPHDoprava = "✓...odvod DPH za dopravu";
+        txtOdvodDPHDoprava = "✔...odvod DPH za dopravu";
     }
     zakazka.set("txt odvod dph doprava", txtOdvodDPHDoprava);
 
     // INÉ VÝDAVKY
     var ineVydavky = zakazkaVydavky(zakazka);
     if (ineVydavky <= 0) {
-        var txtVydavky = "...žiadne iné výdavky";
+        var txtVydavky = "✘...žiadne iné výdavky";
     } else {
         var txtVydavky = "priame výdavky z Pokladne";
     }
@@ -332,6 +340,13 @@ const prepocetZakazky = (zakazka) => {
         + strojeDPH
         + dopravaDPH
         + ineVydavky;
+    if (naklady < 0 || naklady == NaN) {
+        txtCelkoveNaklady = "!!!...chyba prepočtu nákladov";
+        naklady = 0;
+    }
+    zakazka.set("Náklady celkom", naklady);
+    zakazka.set("txt celkové náklady", txtCelkoveNaklady);
+
     var sumaNaUhradu = zakazkaCelkom - zaplatene;
     var marza = marzaPercento(zakazkaCelkom, naklady);
     var marzaPoZaplateni = zaplatene > 1 ? marzaPercento(zaplatene, naklady) : 0;
@@ -372,8 +387,6 @@ const prepocetZakazky = (zakazka) => {
     // Náklady a marže
     zakazka.set("Marža", marza);       // TODO zakalkulovať DPH
     zakazka.set("Marža po zaplatení", marzaPoZaplateni);
-    zakazka.set("Odpracovaných hodín", odpracovanychHodin);
-    zakazka.set("Náklady celkom", naklady);
     message("Zákazka |" + zakazka.field("Číslo") + "| bola prepočítaná...");
 
     // VYÚČTOVANIE
