@@ -1,4 +1,4 @@
-const zakazky = "0.3.72";
+const zakazky = "0.3.73";
 
 const verziaZakazky = () => {
     var result = "";
@@ -61,6 +61,13 @@ const prepocetZakazky = (zakazka) => {
                 vykazyPrac[vp].set(FIELD_STAV, "Vyúčtované");
                 // záapis do vyúčtovania
                 vyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
+                // nalinkuj výkazy prác
+                typVykazu = vykazyPrac[vp].field("Typ výkazu");
+                if (typVykazu == W_HODINOVKA) {
+                    nalinkujPraceHZS(vyuctovanie, vykazyPrac[vp]);
+                } else if (typVykazu == W_POLOZKY) {
+                    nalinkujPrace(vyuctovanie, vykazyPrac[vp]);
+                }
             }
         }
         praceCelkom += praceCelkomBezDPH + praceDPH;
@@ -111,6 +118,7 @@ const prepocetZakazky = (zakazka) => {
                 vydajkyMaterialu[vm].set(FIELD_STAV, "Vyúčtované");
                 // zápis do vyúčtovania
                 vyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
+                nalinkujMaterial(vyuctovanie, vydajkyMaterialu[vm]);
             }
         }
         materialCelkom += materialCelkomBezDPH + materialDPH;
@@ -158,6 +166,8 @@ const prepocetZakazky = (zakazka) => {
                 vykazyStrojov[vs].set(FIELD_STAV, "Vyúčtované");
                 // zápis do vyúčtovania
                 vyuctovanie.set(vykazyStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+                nalinkujStroje(vyuctovanie, vykazyStrojov[vs]);
+
             }
         }
         strojeCelkom += strojeCelkomBezDPH + strojeDPH;
@@ -292,14 +302,6 @@ const prepocetZakazky = (zakazka) => {
         vyuctovanie.set("Zaplatená záloha", zaplatene);
         vyuctovanie.set("Suma na úhradu", zakazkaCelkom - zaplatene);
         if (typ == W_POLOZKY) {
-            // nalinkuj výdajky materiálu
-            for (var v = 0; v < vydajkyMaterialu.length; v++) {
-                nalinkujMaterial(vyuctovanie, vydajkyMaterialu[v]);
-            }
-            // nalinkuj výkazy prác
-            for (var v = 0; v < vykazyPrac.length; v++) {
-                nalinkujPrace(vyuctovanie, vykazyPrac[v]);
-            }
             // prepočítať diely
             for (var d in diely) {
                 var sucetDielov = 0;
@@ -313,21 +315,7 @@ const prepocetZakazky = (zakazka) => {
             }
         } else if (typ == W_HODINOVKA) {
             // ak je typ hodinovka nalinkuje práce, materiál a a stroje do vyúčtovania
-            for (var v = 0; v < vydajkyMaterialu.length; v++) {
-                nalinkujMaterial(vyuctovanie, vydajkyMaterialu[v]);
-            }
-            // nalinkuj výkazy prác
-            for (var v = 0; v < vykazyPrac.length; v++) {
-                if (typ == W_POLOZKY) {
-                    nalinkujPrace(vyuctovanie, vykazyPrac[v]);
-                } else {
-                    nalinkujPraceHZS(vyuctovanie, vykazyPrac[v]);
-                }
-            }
-            // nalinkuj výkazy strojov
-            for (var v = 0; v < vykazyStrojov.length; v++) {
-                nalinkujStroje(vyuctovanie, vykazyStrojov[v]);
-            }
+
         } else {
             message("Neviem aký je typ vyúčtovania (Položky/Hodinovka");
         }
