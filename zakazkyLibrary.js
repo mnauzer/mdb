@@ -1,4 +1,4 @@
-const zakazky = "0.3.83";
+const zakazky = "0.3.84";
 
 const verziaZakazky = () => {
     var result = "";
@@ -158,7 +158,8 @@ const prepocetZakazky = (zakazka) => {
     var strojeCelkomBezDPH = 0;
     var strojeDPH = 0;
     var strojeCelkom = 0;
-    var txtStroje = "";
+    var txtStroje = "...žiadne stroje";
+    var txtNakladyStroje = "...žiadne náklady na stroje"
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             var stroje = 0;
@@ -182,21 +183,23 @@ const prepocetZakazky = (zakazka) => {
             }
         }
         strojeCelkom += strojeCelkomBezDPH + strojeDPH;
+        // náklady stroje
+        var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
+        nakladyStroje = stroje[0] * koefStroje;
+        txtNakladyStroje = "náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+        // globálny súčet
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
         zakazkaDPH += strojeDPH;
         zakazkaCelkom += strojeCelkom;
-        var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
-        nakladyStroje = stroje[0] * koefStroje;
-        var txtNakladyStroje = "náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
-    } else {
-        txtStroje = "...žiadne stroje";
     }
     //message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
     zakazka.set("txt stroje", txtStroje);
     // náklady
-    zakazka.set("Odvod DPH Stroje", strojeDPH);
     zakazka.set("Náklady stroje", nakladyStroje);
+    zakazka.set("náklady stroje", txtNakladyStroje);
+    zakazka.set("Odvod DPH Stroje", strojeDPH);
+
 
     // DOPRAVA
     // prepočítať dopravu
@@ -204,11 +207,11 @@ const prepocetZakazky = (zakazka) => {
     var dopravaDPH = 0;
     var dopravaCelkom = 0;
     if (dopravaCelkomBezDPH > 0) {
+        var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
+        var txtNakladyVozidla = "náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
         if (dopravaUctovatDPH) {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-            var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
-            var txtNakladyVozidla = "náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
         } else {
@@ -232,14 +235,13 @@ const prepocetZakazky = (zakazka) => {
     //message("Doprava celkom:" + dopravaCelkom);
     zakazka.set(FIELD_DOPRAVA, dopravaCelkom);
     zakazka.set("txt doprava", txtDoprava);
-    zakazka.set("náklady vozidlá", txtNakladyVozidla);
-    zakazka.set("náklady stroje", txtNakladyStroje);
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
     zakazka.set("Najazdené km", najazdeneKm);
     zakazka.set("Najazdený čas", najazdenyCas);
     zakazka.set("Mzdy v aute", mzdyDoprava);
     zakazka.set("Náklady vozidlá", nakladyDoprava);
+    zakazka.set("náklady vozidlá", txtNakladyVozidla);
     zakazka.set("Odvod DPH Doprava", dopravaDPH);
 
     // INÉ VÝDAVKY
