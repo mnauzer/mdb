@@ -1,4 +1,4 @@
-const zakazky = "0.3.87";
+const zakazky = "0.3.88";
 
 const verziaZakazky = () => {
     var result = "";
@@ -94,12 +94,14 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("Odvod DPH Práce", praceDPH);
     zakazka.set("Mzdy", mzdy);
     if (mzdy > 0) {
-        txtMzdy = "...mzdy vyplatené počas prác na zákazke";
+        txtMzdy = "✓...mzdy vyplatené počas prác na zákazke";
     }
     zakazka.set("txt mzdy", txtMzdy);
 
     // MATERIÁL
     var txtMaterial = "...žiadny materiál";
+    var txtNakupMaterialu = "...žiadny nákup materiálu";
+    var txtOdvodDPHMaterial = "...žiadny odvod DPH z materiálu";
     // prepočet výdajok materiálu
     var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
@@ -138,15 +140,16 @@ const prepocetZakazky = (zakazka) => {
         zakazkaCelkomBezDPH += materialCelkomBezDPH;
         zakazkaDPH += materialDPH;
         zakazkaCelkom += materialCelkom;
-    } else {
-        txtMaterial = "...žiadny materiál";
     }
-
     //message("Materiál celkom:" + materialCelkom);
     zakazka.set(FIELD_MATERIAL, materialCelkom);
     zakazka.set("txt materiál", txtMaterial);
     // náklady
     zakazka.set("Nákup materiálu", nakupMaterialu);
+    if (nakupMaterialu > 0) {
+        txtNakupMaterialu = "✓...matriál v nákupných cenách bez DPH";
+    }
+    zakazka.set("txt nákup materiálu", txtNakupMaterialu);
     zakazka.set("Odvod DPH Materiál", odvodDPHMaterial);
 
     // STROJE
@@ -241,32 +244,32 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
     if (pocetJazd > 0) {
-        txtPocetJazd = "...len jazdy tam (výjazd)"
+        txtPocetJazd = "✓...len jazdy tam (výjazd)"
     }
     zakazka.set("txt počet jázd", txtPocetJazd);
 
     zakazka.set("Najazdené km", najazdeneKm);
     if (najazdeneKm > 0) {
-        txtNajzdeneKm = "...km najazdené v rámci zákazky"
+        txtNajzdeneKm = "✓...km najazdené v rámci zákazky"
     }
     zakazka.set("txt najazdené km", txtNajazdeneKm);
 
     zakazka.set("Najazdený čas", najazdenyCas);
     if (najazdenyCas > 0) {
-        txtNajazdenyCas = "...pracovný čas v aute"
+        txtNajazdenyCas = "✓...pracovný čas v aute"
     }
     zakazka.set("txt najazdený čas", txtNajazdenyCas);
 
     zakazka.set("Mzdy v aute", mzdyDoprava);
     if (mzdyDoprava > 0) {
-        txtMzdyDoprava = "...mzdy počas jazdy autom"
+        txtMzdyDoprava = "✓...mzdy počas jazdy autom"
     }
     zakazka.set("txt mzdy v aute", txtMzdyDoprava);
 
     zakazka.set("Náklady vozidlá", nakladyDoprava);
     if (nakladyDoprava > 0) {
         var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
-        txtNakladyVozidla = "náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+        txtNakladyVozidla = "✓...náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     }
     zakazka.set("txt náklady vozidlá", txtNakladyVozidla);
 
