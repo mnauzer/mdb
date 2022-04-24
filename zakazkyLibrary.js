@@ -1,4 +1,4 @@
-const zakazky = "0.3.89";
+const zakazky = "0.3.90";
 
 const verziaZakazky = () => {
     var result = "";
@@ -218,6 +218,10 @@ const prepocetZakazky = (zakazka) => {
     var txtMzdyDoprava = "...žiadne mzdy v aute";
     var txtNakladyVozidla = "...žiadne náklady na vozidlá";
     var txtOdvodDPHDoprava = "...žiadna DPH za dopravu";
+    var pocetJazd = 0;
+    var najazdeneKm = 0;
+    var najazdenyCas = 0;
+    var nakladyDoprava = 0;
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var mzdyDoprava = 0;
     var dopravaDPH = 0;
@@ -232,12 +236,15 @@ const prepocetZakazky = (zakazka) => {
             txtDoprava = " bez DPH";
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
+        var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
+        nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
     }
-    var najazdenyCas = zakazkaCasJazdy(zakazka);
+    // náklady doprava
+    najazdenyCas = zakazkaCasJazdy(zakazka);
+    pocetJazd = zakazkaPocetJazd(zakazka);
     mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
-    var nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
-    var najazdeneKm = zakazkaKm(zakazka);
-    var pocetJazd = zakazkaPocetJazd(zakazka);
+    najazdeneKm = zakazkaKm(zakazka);
+
     // globálny súčet
     zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
     zakazkaDPH += dopravaDPH;
@@ -273,7 +280,6 @@ const prepocetZakazky = (zakazka) => {
 
     zakazka.set("Náklady vozidlá", nakladyDoprava);
     if (nakladyDoprava > 0) {
-        var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
         txtNakladyVozidla = "✓...náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     }
     zakazka.set("txt náklady vozidlá", txtNakladyVozidla);
