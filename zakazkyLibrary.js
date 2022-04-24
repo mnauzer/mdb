@@ -1,4 +1,4 @@
-const zakazky = "0.3.74";
+const zakazky = "0.3.75";
 
 const verziaZakazky = () => {
     var result = "";
@@ -227,6 +227,19 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("Náklady vozidlá", nakladyDoprava);
     zakazka.set("Odvod DPH Doprava", dopravaDPH);
 
+    // INÉ VÝDAVKY
+    var ineVydavky = zakazkaVydavky(zakazka);
+    if (ineVydavky <= 0) {
+        var txtVydavky = "...žiadne iné výdavky";
+    } else {
+        var txtVydavky = " výdavky s DPH";
+    }
+    zakazka.set("txt iné výdavky", txtVydavky);
+    // PLATBY
+    var zaplatene = zakazkaPrijmy(zakazka);
+    // CELKOM
+    var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
+
     // Message
     message(
         W_PRACE + txtPrace + "\n" +
@@ -235,10 +248,6 @@ const prepocetZakazky = (zakazka) => {
         W_DOPRAVA + txtDoprava + "\n"
     );
 
-    // CELKOM
-    var rozpocetSDPH = zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
-    var ineVydavky = zakazkaVydavky(zakazka);
-    var zaplatene = zakazkaPrijmy(zakazka);
     var naklady = mzdy
         + mzdyDoprava
         + nakupMaterialu
@@ -246,8 +255,9 @@ const prepocetZakazky = (zakazka) => {
         + nakladyDoprava
         + praceDPH
         + odvodDPHMaterial
-        + strojeDPH;
-    + dopravaDPH
+        + strojeDPH
+        + dopravaDPH
+        + ineVydavky;
     var sumaNaUhradu = zakazkaCelkom - zaplatene;
     var marza = marzaPercento(zakazkaCelkom, naklady);
     var marzaPoZaplateni = zaplatene > 1 ? marzaPercento(zaplatene, naklady) : 0;
