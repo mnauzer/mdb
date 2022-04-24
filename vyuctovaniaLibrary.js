@@ -541,6 +541,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     // najprv vymaž staré
     var popis = vykazPrac.field(FIELD_POPIS);
     // vynuluj staré položky
+    message("Linkujem +" + popis);
     var polozky = vyuctovanie.field(popis);
     if (polozky.length > 0) {
         for (var p in polozky) {
@@ -603,7 +604,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var polozkyRozpis = vyuctovanie.field("Rozpis " + popis);
     if (polozkyRozpis.length > 0) {
         for (var p in polozkyRozpis) {
-            vyuctovanie.unlink(popis, polozkyRozpis[p]);
+            vyuctovanie.unlink("Rozpis " + popis, polozkyRozpis[p]);
         }
     }
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
