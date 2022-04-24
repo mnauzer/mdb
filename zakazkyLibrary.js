@@ -1,4 +1,4 @@
-const zakazky = "0.3.76";
+const zakazky = "0.3.77";
 
 const verziaZakazky = () => {
     var result = "";
@@ -28,6 +28,10 @@ const prepocetZakazky = (zakazka) => {
 
     var stavZakazky = zakazka.field("Stav");
     var stavVyuctovania = "Prebieha";
+    if (stavZakazky == "Ukončená") {
+        stavVyuctovania = "Vyúčtované";
+        stavZakazky = "Vyúčtovaná";
+    }
 
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
@@ -64,7 +68,7 @@ const prepocetZakazky = (zakazka) => {
             if (vyuctovanie) {
                 // nastaviť status výkazov práce na Vyúčtované
                 vykazyPrac[vp].link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vykazyPrac[vp].set(FIELD_STAV, "Vyúčtované");
+                vykazyPrac[vp].set(FIELD_STAV, stavVyuctovania);
                 // záapis do vyúčtovania
                 vyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
                 // nalinkuj výkazy prác
@@ -121,7 +125,7 @@ const prepocetZakazky = (zakazka) => {
             if (vyuctovanie) {
                 // nastaviť príznak výdajok materiálu na vyúčtované
                 vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vydajkyMaterialu[vm].set(FIELD_STAV, "Vyúčtované");
+                vydajkyMaterialu[vm].set(FIELD_STAV, stavVyuctovania);
                 // zápis do vyúčtovania
                 vyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
                 nalinkujMaterial(vyuctovanie, vydajkyMaterialu[vm]);
@@ -169,7 +173,7 @@ const prepocetZakazky = (zakazka) => {
             if (vyuctovanie) {
                 // nastavenie statusu výkazu na Vyúčtované
                 vykazyStrojov[vs].link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vykazyStrojov[vs].set(FIELD_STAV, "Vyúčtované");
+                vykazyStrojov[vs].set(FIELD_STAV, stavVyuctovania);
                 // zápis do vyúčtovania
                 vyuctovanie.set(vykazyStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
                 nalinkujStroje(vyuctovanie, vykazyStrojov[vs]);
@@ -340,11 +344,9 @@ const prepocetZakazky = (zakazka) => {
         vyuctovanie.set("Odberateľ", pullAddress(vyuctovanie.field("Klient")[0]));
         //zakazkaToJsonHZS(zakazka);
         message("Vyúčtovane |" + vyuctovanie.field("Číslo") + "| bolo " + textVyuctovanie);
-        zakazka.set(FIELD_STAV, "Vyúčtovaná");
+        zakazka.set(FIELD_STAV, stavZakazky);
         // stav vyúčtovania
-        if (stavZakazky == "Ukončená") {
-            vyuctovanie.set(FIELD_STAV, "Pripravené");
-        }
+
     }
     message("Hotovo...!");
 }
