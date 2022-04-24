@@ -1,4 +1,4 @@
-const zakazky = "0.4.01";
+const zakazky = "0.4.02";
 
 const verziaZakazky = () => {
     var result = "";
@@ -326,10 +326,10 @@ const prepocetZakazky = (zakazka) => {
 
     // Message
     message(
-        W_PRACE + txtPrace + "\n" +
-        W_MATERIAL + txtMaterial + "\n" +
-        W_STROJE + txtStroje + "\n" +
-        W_DOPRAVA + txtDoprava + "\n"
+        W_PRACE + " " + txtPrace + "\n" +
+        W_MATERIAL + " " + txtMaterial + "\n" +
+        W_STROJE + " " + txtStroje + "\n" +
+        W_DOPRAVA + " " + txtDoprava + "\n"
     );
 
     var naklady = mzdy
