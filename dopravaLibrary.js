@@ -1,7 +1,7 @@
 const verziaDoprava = () => {
     var result = "";
     var nazov = "dopravaLibrary";
-    var verzia = "0.1.02";
+    var verzia = "0.1.03";
     result = nazov + " " + verzia;
     return result;
 }
@@ -75,7 +75,7 @@ const zakazkaPocetJazd = zakazka => {
     var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
     var zastavky = zakazka.linksFrom(DB_KNIHA_JAZD, "Zastávka na zákazke")
     var jazd = 0;
-    if (links.length > 0) {
+    if (links.length > 0 || zastavky.length > 0) {
         for (var p = 0; p < links.length; p++) {
             if (links[p].field("Účel jazdy") == "Výjazd") {
                 jazd += 1;
