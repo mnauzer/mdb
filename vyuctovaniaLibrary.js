@@ -541,7 +541,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     // najprv vymaž staré
     var popis = vykazPrac.field(FIELD_POPIS);
     // vynuluj staré položky
-    message("Linkujem +" + popis);
+
     var polozky = vyuctovanie.field(popis);
     if (polozky.length > 0) {
         for (var p in polozky) {
