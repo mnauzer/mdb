@@ -1,4 +1,4 @@
-const zakazky = "0.3.73";
+const zakazky = "0.3.74";
 
 const verziaZakazky = () => {
     var result = "";
@@ -7,11 +7,13 @@ const verziaZakazky = () => {
     return result;
 }
 
+var textVyuctovanie = "prepočítané";
 const prepocetZakazky = (zakazka) => {
     var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
     if (!vyuctovanie) {
         message("Zákazka ešte nemá záznam vyúčtovania...\nGenerujem nové vyúčtovanie...");
         vyuctovanie = noveVyuctovanie(zakazka);
+        textVyuctovanie = "vygenerované";
     }
     var vKniznica = verziaZakazky();
     var vKrajinkaLib = verziaKrajinkaLib();
@@ -287,7 +289,7 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("Marža po zaplatení", marzaPoZaplateni);
     zakazka.set("Odpracovaných hodín", odpracovanychHodin);
     zakazka.set("Náklady celkom", naklady);
-    message("Zákazka prepočítaná...");
+    message("Zákazka |" + zakazka.field("Číslo") + "| bola prepočítaná...");
 
     // VYÚČTOVANIE
     if (vyuctovanie) {
@@ -323,9 +325,10 @@ const prepocetZakazky = (zakazka) => {
         // doplň adresu klienta do Krycieho listu
         vyuctovanie.set("Odberateľ", pullAddress(vyuctovanie.field("Klient")[0]));
         //zakazkaToJsonHZS(zakazka);
-        message("Hotovo...!");
-        message("Bolo vygenerované vyúčtovane č.: " + vyuctovanie.field("Číslo"));
+        message("Vyúčtovane |" + vyuctovanie.field("Číslo") + "| bolo " + textVyuctovanie);
+        zakazka.set(FIELD_STAV, "Vyúčtovaná")
     }
+    message("Hotovo...!");
 }
 
 const spocitatHodinyZevidencie = zakazka => {
