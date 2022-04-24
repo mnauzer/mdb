@@ -15,9 +15,10 @@ const prepocetZakazky = (zakazka) => {
         vyuctovanie = noveVyuctovanie(zakazka);
         textVyuctovanie = "vygenerované";
     }
-    var vKniznica = verziaZakazky();
+    var vZakazky = verziaZakazky();
+    var vVyuctovania = verziaVyuctovania();
     var vKrajinkaLib = verziaKrajinkaLib();
-    message("PREPOČÍTAJ ZÁKAZKU" + "\n" + vKniznica + "\n" + vKrajinkaLib);
+    message("Prepočítavám zákazku..." + "\n" + vZakazky + "\n" + vVyuctovania + "\n" + vKrajinkaLib);
 
     var uctovanieDPH = zakazka.field(FIELD_UCTOVANIE_DPH);
     var sezona = zakazka.field(FIELD_SEZONA);
