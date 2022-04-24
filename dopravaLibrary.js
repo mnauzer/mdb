@@ -75,7 +75,7 @@ const zakazkaPocetJazd = zakazka => {
     var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
     var zastavky = zakazka.linksFrom(DB_KNIHA_JAZD, "Zastávka na zákazke")
     var jazd = 0;
-    if (links) {
+    if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
             if (links[p].field("Účel jazdy") == "Výjazd") {
                 jazd += 1;
@@ -95,7 +95,7 @@ const zakazkaPocetJazd = zakazka => {
 const zakazkaKm = zakazka => {
     var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
     var result = 0;
-    if (links) {
+    if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
             result += (links[p].field("Najazdené km"));
         };
@@ -106,7 +106,7 @@ const zakazkaKm = zakazka => {
 const zakazkaCasJazdy = zakazka => {
     var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
     var result = 0;
-    if (links) {
+    if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
             result += links[p].field("Trvanie") * links[p].field("Posádka").length;
         };
