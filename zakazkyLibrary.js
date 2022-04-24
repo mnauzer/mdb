@@ -1,4 +1,4 @@
-const zakazky = "0.3.85";
+const zakazky = "0.3.86";
 
 const verziaZakazky = () => {
     var result = "";
@@ -47,11 +47,11 @@ const prepocetZakazky = (zakazka) => {
     var mzdy = 0;
 
     // TODO: refaktoring prepočtu miezd (nákladov na práce)
-    var mzdy = zakazkaMzdy(zakazka);
     var praceCelkomBezDPH = 0;
     var praceDPH = 0;
     var praceCelkom = 0;
-    var txtPrace = "";
+    var txtPrace = "...žiadne práce";
+    var txtMzdy = "...žiadne mzdy";
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var prace = [];
@@ -63,8 +63,6 @@ const prepocetZakazky = (zakazka) => {
             } else {
                 txtPrace = " bez DPH";
             }
-            // message("Práce celkom bez dph: " + praceCelkomBezDPH);
-            //message("Práce bez dph: " + prace[0]);
             praceCelkomBezDPH += prace[0];
             if (vyuctovanie) {
                 // nastaviť status výkazov práce na Vyúčtované
@@ -87,15 +85,15 @@ const prepocetZakazky = (zakazka) => {
         zakazkaDPH += praceDPH;
         zakazkaCelkom += praceCelkom;
         var odpracovanychHodin = spocitatHodinyZevidencie(zakazka);
-    } else {
-        txtPrace = "...žiadne práce";
     }
     // message("Práce celkom:" + praceCelkom);
     zakazka.set(FIELD_PRACE, praceCelkom);
     zakazka.set("txt práce", txtPrace);
     // náklady
+    var mzdy = zakazkaMzdy(zakazka);
     zakazka.set("Odvod DPH Práce", praceDPH);
     zakazka.set("Mzdy", mzdy);
+    zakazka.set("txt mzdy", txtMzdy);
 
     // MATERIÁL
     var txtMaterial = "...žiadny materiál";
@@ -204,12 +202,16 @@ const prepocetZakazky = (zakazka) => {
     // DOPRAVA
     // prepočítať dopravu
     var txtDoprava = "...žiadna doprava";
+    var txtPocetJazd = "...žiadne jazdy";
+    var txtNajazdeneKm = "...žiadne najazdené km";
+    var txtNajazdenyCas = "...žiadny čas v aute";
+    var txtMzdyDoprava = "...žiadne mzdy v aute";
+    var txtNakladyVozidla = "...žiadne náklady na vozidlá";
+    var txtOdvodDPHDoprava = "...žiadna DPH za dopravu";
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var dopravaDPH = 0;
     var dopravaCelkom = 0;
     if (dopravaCelkomBezDPH > 0) {
-        var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
-        var txtNakladyVozidla = "náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
         if (dopravaUctovatDPH) {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
@@ -235,12 +237,38 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt doprava", txtDoprava);
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
+    if (pocetJazd > 0) {
+        txtPocetJazd = "len jazdy tam (výjazd)"
+    }
+    zakazka.set("txt počet jázd", txtPocetJazd);
+
     zakazka.set("Najazdené km", najazdeneKm);
+    if (najazdeneKm > 0) {
+        txtNajzdeneKm = "najazdené km v rámci zákazky"
+    }
+    zakazka.set("txt najazdené km", txtNajazdeneKm);
+
     zakazka.set("Najazdený čas", najazdenyCas);
+    if (najazdenyCas > 0) {
+        txtNajazdenyCas = "pracovný čas v aute"
+    }
+    zakazka.set("txt najazdený čas", txtNajazdenyCas);
+
     zakazka.set("Mzdy v aute", mzdyDoprava);
+    if (mzdyDoprava > 0) {
+        txtMzdyDoprava = "mzdy počas jazdy autom"
+    }
+    zakazka.set("txt mzdy v aute", txtMzdyDoprava);
+
     zakazka.set("Náklady vozidlá", nakladyDoprava);
-    zakazka.set("náklady vozidlá", txtNakladyVozidla);
+    if (nakladyDoprava > 0) {
+        var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
+        txtNakladyVozidla = "náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+    }
+    zakazka.set("txt náklady vozidlá", txtNakladyVozidla);
+
     zakazka.set("Odvod DPH Doprava", dopravaDPH);
+    zakazka.set("txt odvod dph doprava", txtOdvodDPHDoprava);
 
     // INÉ VÝDAVKY
     var ineVydavky = zakazkaVydavky(zakazka);
