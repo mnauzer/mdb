@@ -1,4 +1,4 @@
-const zakazky = "0.3.8";
+const zakazky = "0.3.81";
 
 const verziaZakazky = () => {
     var result = "";
@@ -323,6 +323,7 @@ const prepocetZakazky = (zakazka) => {
         vyuctovanie.set("Zaplatená záloha", zaplatene);
         vyuctovanie.set("Suma na úhradu", zakazkaCelkom - zaplatene);
         if (typ == W_POLOZKY) {
+            var diely = zakazka.field("Diely zákazky");
             // prepočítať diely
             for (var d in diely) {
                 var sucetDielov = 0;
