@@ -284,17 +284,17 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
     zakazka.set("Náklady celkom", naklady);
     message("Zákazka prepočítaná...");
     if (vyuctovanie) {
-        
-    // NASTAVENIE POLÍ
-    // časti vyúčtovania
-    noveVyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
-    // vyúčtovanie
-    noveVyuctovanie.set("Celkom (bez DPH)", zakazkaCelkomBezDPH);
-    noveVyuctovanie.set("DPH 20%", zakazkaDPH);
-    noveVyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
-    noveVyuctovanie.set("Zaplatená záloha", prijmyCelkom);
-    noveVyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - prijmyCelkom);
-    message("Vyúčtovanie vygenerované...");
+
+        // NASTAVENIE POLÍ
+        // časti vyúčtovania
+        noveVyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
+        // vyúčtovanie
+        noveVyuctovanie.set("Celkom (bez DPH)", zakazkaCelkomBezDPH);
+        noveVyuctovanie.set("DPH 20%", zakazkaDPH);
+        noveVyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
+        noveVyuctovanie.set("Zaplatená záloha", prijmyCelkom);
+        noveVyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - prijmyCelkom);
+        message("Vyúčtovanie vygenerované...");
     }
 }
 

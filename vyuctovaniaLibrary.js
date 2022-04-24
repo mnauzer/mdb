@@ -10,6 +10,60 @@ function verziaKniznice() {
     return nazov + " " + verzia;
 }
 
+const noveVyuctovanie = zakazka => {
+    var vyuctovania = libByName(DB_VYUCTOVANIA);
+    var noveVyuctovanie = new Object();
+    // inicializácia
+    var datum = new Date();
+    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+    var sezona = cp.field(FIELD_SEZONA);
+    var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
+    var klient = cp.field("Klient")[0]
+    var miesto = cp.field("Miesto realizácie")[0];
+    var typ = cp.field("Typ cenovej ponuky");
+    var uctovanieDPH = zakazka.field("Účtovanie DPH");
+
+    // inicializácia
+    var empty = []; // mazacie pole
+
+    // vyber diely zákazky podľa typu cp
+    if (typ == "Hodinovka") {
+        var diely = cp.field("Diely cenovej ponuky hzs");
+    } else {
+        var diely = cp.field("Diely cenovej ponuky");
+    }
+    // popis vyúčtovania
+    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field(FIELD_CISLO) + " (" + cp.field("Popis cenovej ponuky") + ")";
+
+    // Hlavička a základné nastavenia
+    noveVyuctovanie["Dátum"] = datum;
+    noveVyuctovanie[FIELD_CISLO] = cislo;
+    noveVyuctovanie["Miesto realizácie"] = miesto;
+    noveVyuctovanie["Stav vyúčtovania"] = "Prebieha";
+    noveVyuctovanie["Typ vyúčtovania"] = typ;
+    noveVyuctovanie["+Materiál"] = cp.field("+Materiál");
+    noveVyuctovanie["+Mechanizácia"] = cp.field("+Mechanizácia");
+    noveVyuctovanie["+Subdodávky"] = cp.field("+Subdodávky");
+    noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
+    noveVyuctovanie["Klient"] = klient;
+    noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
+    noveVyuctovanie[FIELD_CENOVA_PONUKA] = cp;
+    noveVyuctovanie[FIELD_ZAKAZKA] = zakazka;
+    noveVyuctovanie[FIELD_SEZONA] = sezona;
+    noveVyuctovanie["Diely vyúčtovania"] = diely.join();
+    noveVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();
+    // doprava
+    noveVyuctovanie["Paušál"] = cp.field("Paušál")[0];
+    noveVyuctovanie["Sadzba km"] = cp.field("Sadzba km")[0];
+    noveVyuctovanie["% zo zákazky"] = cp.field("% zo zákazky");
+    vyuctovania.create(noveVyuctovanie);
+
+    var vyuctovanie = vyuctovania.find(cislo)[0];
+    zakazka.set(FIELD_VYUCTOVANIE, empty);
+    zakazka.link(FIELD_VYUCTOVANIE, vyuctovanie);
+    return vyuctovanie;
+}
+
 const zakazkaDoprava = (zakazka, cenaCelkomBezDPH) => {
     var jazd = zakazkaPocetJazd(zakazka);
     var cp = zakazka.field("Cenová ponuka")[0];
