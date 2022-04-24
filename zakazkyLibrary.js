@@ -1,4 +1,4 @@
-const zakazky = "0.3.90";
+const zakazky = "0.3.91";
 
 const verziaZakazky = () => {
     var result = "";
@@ -52,6 +52,7 @@ const prepocetZakazky = (zakazka) => {
     var praceCelkom = 0;
     var txtPrace = "...žiadne práce";
     var txtMzdy = "...žiadne mzdy";
+    var txtOdvodDPHPrace = "...žiadna DPH za práce";
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
             var prace = [];
@@ -91,7 +92,12 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt práce", txtPrace);
     // náklady
     var mzdy = zakazkaMzdy(zakazka);
+
     zakazka.set("Odvod DPH Práce", praceDPH);
+    if (praceDPH > 0) {
+        txtOdvodDPHPrace = "✓...odvod DPH za práce";
+    }
+    zakazka.set("txt odvod dph práce", txtOdvodDPHPrace);
     zakazka.set("Mzdy", mzdy);
     if (mzdy > 0) {
         txtMzdy = "✓...mzdy vyplatené počas prác na zákazke";
