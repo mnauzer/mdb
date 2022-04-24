@@ -1,4 +1,4 @@
-const zakazky = "0.3.95";
+const zakazky = "0.3.96";
 
 const verziaZakazky = () => {
     var result = "";
@@ -280,6 +280,7 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt počet jázd", txtPocetJazd);
 
     zakazka.set("Najazdené km", najazdeneKm);
+    message("najazdené km: " + najazdeneKm);
     if (najazdeneKm > 0) {
         txtNajzdeneKm = "✔...km najazdené v rámci zákazky";
     }
@@ -340,7 +341,7 @@ const prepocetZakazky = (zakazka) => {
         + strojeDPH
         + dopravaDPH
         + ineVydavky;
-    if (naklady < 0 || naklady == NaN) {
+    if (!naklady) {
         txtCelkoveNaklady = "!!!...chyba prepočtu nákladov";
         naklady = 0;
     }
