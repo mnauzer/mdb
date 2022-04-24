@@ -1,4 +1,4 @@
-const zakazky = "0.3.96";
+const zakazky = "0.4.01";
 
 const verziaZakazky = () => {
     var result = "";
@@ -35,6 +35,7 @@ const prepocetZakazky = (zakazka) => {
     }
 
     var txtCelkoveNaklady = "✔....náklady na zákazku celkom";
+    var txtVyuctovanieCelkom = "✔....celkové vyúčtovanie zákazky";
     var zakazkaCelkomBezDPH = 0;
     var zakazkaDPH = 0;
     var zakazkaCelkom = 0;
@@ -280,9 +281,9 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt počet jázd", txtPocetJazd);
 
     zakazka.set("Najazdené km", najazdeneKm);
-    message("najazdené km: " + najazdeneKm);
+    // message("najazdené km: " + najazdeneKm);
     if (najazdeneKm > 0) {
-        txtNajzdeneKm = "✔...km najazdené v rámci zákazky";
+        txtNajazdeneKm = "✔...km najazdené v rámci zákazky";
     }
     zakazka.set("txt najazdené km", txtNajazdeneKm);
 
@@ -342,11 +343,16 @@ const prepocetZakazky = (zakazka) => {
         + dopravaDPH
         + ineVydavky;
     if (!naklady) {
-        txtCelkoveNaklady = "!!!...chyba prepočtu nákladov";
+        txtCelkoveNaklady = "✘...chyba prepočtu nákladov";
         naklady = 0;
+    }
+    if (!zakazkaCelkom) {
+        txtVyuctovanieCelkom = "✘...chyba prepočtu zákazky";
+        zakazkaCelkom = 0;
     }
     zakazka.set("Náklady celkom", naklady);
     zakazka.set("txt celkové náklady", txtCelkoveNaklady);
+    zakazka.set("txt vyúčtovanie celkom", txtVyuctovanieCelkom);
 
     var sumaNaUhradu = zakazkaCelkom - zaplatene;
     var marza = marzaPercento(zakazkaCelkom, naklady);
