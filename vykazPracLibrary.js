@@ -14,17 +14,11 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     var popis = vykaz.field(FIELD_POPIS);
     if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
     var sDPH = vykaz.field("s DPH");
-    // message(
-    //     "Výkaz typ: " + typ
-    //     + "\n"
-    //     + (uctovatDPH ? "Účtovanie s DPH" : "Účtovanie bez DPH")
-    //     + "\n"
-    // );
+
     if (typ == "Hodinovka") {
         var prace = vykaz.field("Práce sadzby")[0];
         var hodinyCelkom = 0;
 
-        //var vykaz = vykaz.field("Práce sadzby")[0];
         var evidenciaLinks = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
         var limity = prace.field("Limity");
         var uctovanie = vykaz.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
@@ -79,8 +73,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                             if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
                                 zlava = limity[m].field("Zľava");
                             }
-                            // výpočítať novú sadzbu so zľavou
-                            //sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
                         }
                     }
                     sadzba = sadzba - (sadzba * zlava / 100);
@@ -109,9 +101,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             prace[p].setAttr("cena", cena);
             prace[p].setAttr("cena celkom", cenaCelkom);
             sumaBezDPH += cenaCelkom;
-
-            // message("množstvo:+ " + mnozstvo + ", cena: " + cena + ", cena celkom: " + cenaCelkom);
-            // nastav príznak Tlač
             setTlac(prace[p]);
         }
         var attrMJ = "cena";

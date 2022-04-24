@@ -1,4 +1,4 @@
-const zakazky = "0.4.05";
+const zakazky = "0.4.06";
 
 const verziaZakazky = () => {
     var result = "";
@@ -143,6 +143,11 @@ const prepocetZakazky = (zakazka) => {
             materialCelkomBezDPH += material[0];
             if (vyuctovanie) {
                 // nastaviť príznak výdajok materiálu na vyúčtované
+                if (vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).length > 0) {
+                    for (var n = 0; n < vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).length; n++) {
+                        vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE).unlink(FIELD_VYUCTOVANIE, vydajkyMaterialu[vm].field(FIELD_VYUCTOVANIE)[n]);
+                    }
+                }
                 vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
                 vydajkyMaterialu[vm].set(FIELD_STAV, stavVyuctovania);
                 // zápis do vyúčtovania
@@ -316,7 +321,7 @@ const prepocetZakazky = (zakazka) => {
     if (ineVydavky <= 0) {
         var txtVydavky = "✘...žiadne iné výdavky";
     } else {
-        var txtVydavky = "priame výdavky z Pokladne";
+        var txtVydavky = "✔...priame výdavky z Pokladne";
     }
     zakazka.set("txt iné výdavky", txtVydavky);
     // PLATBY
