@@ -436,7 +436,7 @@ const prepocetZakazky = (zakazka) => {
         // stav vyúčtovania
 
     }
-    setBackgroudColor(zakazka, stav);
+    setBackgroudColor(zakazka, zakazka.field(FIELD_STAV));
     message("Hotovo...!");
 }
 
