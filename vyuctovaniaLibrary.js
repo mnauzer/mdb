@@ -584,7 +584,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
     var pocitanieHodinovychSadzieb = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-    var empty = [];
+    var empty = null;
     var popis = vykazPrac.field(FIELD_POPIS);
     message(popis);
     vyuctovanie.set(popis, empty);

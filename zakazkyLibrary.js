@@ -1,4 +1,4 @@
-const zakazky = "0.3.71";
+const zakazky = "0.3.72";
 
 const verziaZakazky = () => {
     var result = "";
@@ -178,10 +178,10 @@ const prepocetZakazky = (zakazka) => {
     // DOPRAVA
     // prepočítať dopravu
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
+    var dopravaDPH = 0;
+    var dopravaCelkom = 0;
     if (dopravaCelkomBezDPH > 0) {
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
-        var dopravaDPH = 0;
-        var dopravaCelkom = 0;
         if (dopravaUctovatDPH) {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
             txtDoprava = " s DPH";
