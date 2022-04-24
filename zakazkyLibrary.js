@@ -1,4 +1,4 @@
-const zakazky = "0.3.93";
+const zakazky = "0.3.94";
 
 const verziaZakazky = () => {
     var result = "";
@@ -212,11 +212,12 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt stroje", txtStroje);
     // náklady
     zakazka.set("Náklady stroje", nakladyStroje);
-    zakazka.set("náklady stroje", txtNakladyStroje);
+    zakazka.set("txt náklady stroje", txtNakladyStroje);
+    zakazka.set("Odvod DPH Stroje", strojeDPH);
     if (strojeDPH > 0) {
         txtOdvodDPHStroje = "✓...odvod DPH za stroje";
     }
-    zakazka.set("Odvod DPH Stroje", strojeDPH);
+    zakazka.set("txt odvod dph stroje", txtOdvodDPHStroje);
 
 
     // DOPRAVA
@@ -231,7 +232,7 @@ const prepocetZakazky = (zakazka) => {
     var pocetJazd = 0;
     var najazdeneKm = 0;
     var najazdenyCas = 0;
-    var nakladyDoprava = 0;
+    var nakladyVozidla = 0;
     var dopravaCelkomBezDPH = spocitatDopravu(zakazka, zakazkaCelkomBezDPH);
     var mzdyDoprava = 0;
     var dopravaDPH = 0;
@@ -247,7 +248,7 @@ const prepocetZakazky = (zakazka) => {
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
         var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
-        nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
+        nakladyVozidla = dopravaCelkomBezDPH * koefVozidla;
     }
     // náklady doprava
     najazdenyCas = zakazkaCasJazdy(zakazka);
@@ -288,13 +289,16 @@ const prepocetZakazky = (zakazka) => {
     }
     zakazka.set("txt mzdy v aute", txtMzdyDoprava);
 
-    zakazka.set("Náklady vozidlá", nakladyDoprava);
-    if (nakladyDoprava > 0) {
+    zakazka.set("Náklady vozidlá", nakladyVozidla);
+    if (nakladyVozidla > 0) {
         txtNakladyVozidla = "✓...náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     }
     zakazka.set("txt náklady vozidlá", txtNakladyVozidla);
 
     zakazka.set("Odvod DPH Doprava", dopravaDPH);
+    if (dopravaDPH > 0) {
+        txtOdvodDPHDoprava = "✓...odvod DPH za dopravu";
+    }
     zakazka.set("txt odvod dph doprava", txtOdvodDPHDoprava);
 
     // INÉ VÝDAVKY
@@ -322,7 +326,7 @@ const prepocetZakazky = (zakazka) => {
         + mzdyDoprava
         + nakupMaterialu
         + nakladyStroje
-        + nakladyDoprava
+        + nakladyVozidla
         + praceDPH
         + odvodDPHMaterial
         + strojeDPH
