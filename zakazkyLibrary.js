@@ -284,8 +284,8 @@ const prepocetZakazky = (zakazka, vyuctovanie) => {
         vyuctovanie.set("Celkom (bez DPH)", zakazkaCelkomBezDPH);
         vyuctovanie.set("DPH 20%", zakazkaDPH);
         vyuctovanie.set("Cena celkom (s DPH)", zakazkaCelkom);
-        vyuctovanie.set("Zaplatená záloha", prijmyCelkom);
-        vyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - prijmyCelkom);
+        vyuctovanie.set("Zaplatená záloha", zaplatene);
+        vyuctovanie.set("Suma na úhradu", zakazkaCelkomBezDPH + zakazkaDPH - zaplatene);
         if (typCP == W_POLOZKY) {
             // nalinkuj výdajky materiálu
             for (var v = 0; v < vydajkyMaterialu.length; v++) {
