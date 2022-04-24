@@ -1,4 +1,4 @@
-const zakazky = "0.3.77";
+const zakazky = "0.3.78";
 
 const verziaZakazky = () => {
     var result = "";
@@ -28,7 +28,7 @@ const prepocetZakazky = (zakazka) => {
 
     var stavZakazky = zakazka.field("Stav");
     var stavVyuctovania = "Prebieha";
-    if (stavZakazky == "Ukončená") {
+    if (stavZakazky == "Ukončená" || stavZakazky == "Vyúčtovaná") {
         stavVyuctovania = "Vyúčtované";
         stavZakazky = "Vyúčtovaná";
     }
@@ -240,7 +240,7 @@ const prepocetZakazky = (zakazka) => {
     if (ineVydavky <= 0) {
         var txtVydavky = "...žiadne iné výdavky";
     } else {
-        var txtVydavky = " výdavky s DPH";
+        var txtVydavky = "priame výdavky z Pokladne";
     }
     zakazka.set("txt iné výdavky", txtVydavky);
     // PLATBY
