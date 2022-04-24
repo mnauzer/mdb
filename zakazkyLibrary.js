@@ -520,19 +520,19 @@ const setBackgroudColor = (zakazka, stav) => {
 
     switch (stav) {
         case "Vyúčtovaná":
-            zakazka.field("backgroud color", "#B3E5FC")
+            zakazka.field("background color", "#B3E5FC")
             break;
         case "Prebieha":
-            zakazka.field("backgroud color", "#F5E9F7")
+            zakazka.field("background color", "#F5E9F7")
             break;
         case "Ukončená":
-            zakazka.field("backgroud color", "#EDF7EE")
+            zakazka.field("background color", "#EDF7EE")
             break;
         case "Čakajúca":
-            zakazka.field("backgroud color", "#FFF9E6")
+            zakazka.field("background color", "#FFF9E6")
             break;
         case "Zaplatená":
-            zakazka.field("backgroud color", "#B3E0DB")
+            zakazka.field("background color", "#B3E0DB")
             break;
     }
 }
