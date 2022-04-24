@@ -1,4 +1,4 @@
-const zakazky = "0.3.91";
+const zakazky = "0.3.93";
 
 const verziaZakazky = () => {
     var result = "";
@@ -173,7 +173,8 @@ const prepocetZakazky = (zakazka) => {
     var strojeDPH = 0;
     var strojeCelkom = 0;
     var txtStroje = "...žiadne stroje";
-    var txtNakladyStroje = "...žiadne náklady na stroje"
+    var txtNakladyStroje = "...žiadne náklady na stroje";
+    var txtOdvodDPHStroje = "...žiadna DPH za stroje";
     if (vykazyStrojov.length > 0) {
         for (var vs = 0; vs < vykazyStrojov.length; vs++) {
             var stroje = 0;
@@ -199,8 +200,8 @@ const prepocetZakazky = (zakazka) => {
         strojeCelkom += strojeCelkomBezDPH + strojeDPH;
         // náklady stroje
         var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
-        nakladyStroje = stroje[0] * koefStroje;
-        txtNakladyStroje = "náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+        nakladyStroje = strojeCelkomBezDPH * koefStroje;
+        txtNakladyStroje = "✓...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
         // globálny súčet
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
         zakazkaDPH += strojeDPH;
@@ -212,6 +213,9 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Náklady stroje", nakladyStroje);
     zakazka.set("náklady stroje", txtNakladyStroje);
+    if (strojeDPH > 0) {
+        txtOdvodDPHStroje = "✓...odvod DPH za stroje";
+    }
     zakazka.set("Odvod DPH Stroje", strojeDPH);
 
 
@@ -262,25 +266,25 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
     if (pocetJazd > 0) {
-        txtPocetJazd = "✓...len jazdy tam (výjazd)"
+        txtPocetJazd = "✓...len jazdy tam (výjazd)";
     }
     zakazka.set("txt počet jázd", txtPocetJazd);
 
     zakazka.set("Najazdené km", najazdeneKm);
     if (najazdeneKm > 0) {
-        txtNajzdeneKm = "✓...km najazdené v rámci zákazky"
+        txtNajzdeneKm = "✓...km najazdené v rámci zákazky";
     }
     zakazka.set("txt najazdené km", txtNajazdeneKm);
 
     zakazka.set("Najazdený čas", najazdenyCas);
     if (najazdenyCas > 0) {
-        txtNajazdenyCas = "✓...pracovný čas v aute"
+        txtNajazdenyCas = "✓...pracovný čas v aute";
     }
     zakazka.set("txt najazdený čas", txtNajazdenyCas);
 
     zakazka.set("Mzdy v aute", mzdyDoprava);
     if (mzdyDoprava > 0) {
-        txtMzdyDoprava = "✓...mzdy počas jazdy autom"
+        txtMzdyDoprava = "✓...mzdy počas jazdy autom";
     }
     zakazka.set("txt mzdy v aute", txtMzdyDoprava);
 
