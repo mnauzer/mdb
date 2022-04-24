@@ -1,4 +1,4 @@
-const zakazky = "0.3.86";
+const zakazky = "0.3.87";
 
 const verziaZakazky = () => {
     var result = "";
@@ -93,6 +93,9 @@ const prepocetZakazky = (zakazka) => {
     var mzdy = zakazkaMzdy(zakazka);
     zakazka.set("Odvod DPH Práce", praceDPH);
     zakazka.set("Mzdy", mzdy);
+    if (mzdy > 0) {
+        txtMzdy = "...mzdy vyplatené počas prác na zákazke";
+    }
     zakazka.set("txt mzdy", txtMzdy);
 
     // MATERIÁL
@@ -238,25 +241,25 @@ const prepocetZakazky = (zakazka) => {
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
     if (pocetJazd > 0) {
-        txtPocetJazd = "len jazdy tam (výjazd)"
+        txtPocetJazd = "...len jazdy tam (výjazd)"
     }
     zakazka.set("txt počet jázd", txtPocetJazd);
 
     zakazka.set("Najazdené km", najazdeneKm);
     if (najazdeneKm > 0) {
-        txtNajzdeneKm = "najazdené km v rámci zákazky"
+        txtNajzdeneKm = "...km najazdené v rámci zákazky"
     }
     zakazka.set("txt najazdené km", txtNajazdeneKm);
 
     zakazka.set("Najazdený čas", najazdenyCas);
     if (najazdenyCas > 0) {
-        txtNajazdenyCas = "pracovný čas v aute"
+        txtNajazdenyCas = "...pracovný čas v aute"
     }
     zakazka.set("txt najazdený čas", txtNajazdenyCas);
 
     zakazka.set("Mzdy v aute", mzdyDoprava);
     if (mzdyDoprava > 0) {
-        txtMzdyDoprava = "mzdy počas jazdy autom"
+        txtMzdyDoprava = "...mzdy počas jazdy autom"
     }
     zakazka.set("txt mzdy v aute", txtMzdyDoprava);
 
