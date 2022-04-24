@@ -3,7 +3,7 @@
 // Dátum:                   01.04.2022
 // Popis:
 // Autor:                   just me, for my garden business. this code is muddy like me
-const vyuctovania = "0.2.02";
+const vyuctovania = "0.2.03";
 
 const verziaVyuctovania = () => {
     var result = "";
@@ -47,10 +47,10 @@ const noveVyuctovanie = zakazka => {
     noveVyuctovanie["Miesto realizácie"] = miesto;
     noveVyuctovanie["Stav vyúčtovania"] = stavVyuctovania;
     noveVyuctovanie["Typ vyúčtovania"] = typ;
-    noveVyuctovanie["+Materiál"] = zakazka.field("+Materiál");
-    noveVyuctovanie["+Mechanizácia"] = zakazka.field("+Mechanizácia");
-    noveVyuctovanie["+Subdodávky"] = zakazka.field("+Subdodávky");
-    noveVyuctovanie["+Položky"] = zakazka.field("+Položky");
+    noveVyuctovanie["+Materiál"] = cp.field("+Materiál");
+    noveVyuctovanie["+Mechanizácia"] = cp.field("+Mechanizácia");
+    noveVyuctovanie["+Subdodávky"] = cp.field("+Subdodávky");
+    noveVyuctovanie["+Položky"] = cp.field("+Položky");
     noveVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
     noveVyuctovanie["Klient"] = klient;
     noveVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
