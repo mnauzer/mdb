@@ -1,4 +1,4 @@
-const zakazky = "0.3.82";
+const zakazky = "0.3.83";
 
 const verziaZakazky = () => {
     var result = "";
@@ -185,7 +185,9 @@ const prepocetZakazky = (zakazka) => {
         zakazkaCelkomBezDPH += strojeCelkomBezDPH;
         zakazkaDPH += strojeDPH;
         zakazkaCelkom += strojeCelkom;
-        nakladyStroje = stroje[0] * 0.75;                         // náklady 75%
+        var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
+        nakladyStroje = stroje[0] * koefStroje;
+        var txtNakladyStroje = "náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     } else {
         txtStroje = "...žiadne stroje";
     }
@@ -205,21 +207,23 @@ const prepocetZakazky = (zakazka) => {
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
         if (dopravaUctovatDPH) {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+            var koefVozidla = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky vozidiel");
+            var txtNakladyVozidla = "náklady na prevádzku vozidiel (" + koefVozidla * 100 + "% z účtovanej sadzby)";                        // náklady 75%
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
         } else {
             txtDoprava = " bez DPH";
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
-        var najazdenyCas = zakazkaCasJazdy(zakazka);
-        var najazdeneKm = zakazkaKm(zakazka);
-        var pocetJazd = zakazkaPocetJazd(zakazka);
 
         var mzdyDoprava = najazdenyCas * (mzdy / odpracovanychHodin);   // priemerná mzda za čas strávený v aute
-        var nakladyDoprava = dopravaCelkomBezDPH * 0.75;
+        var nakladyDoprava = dopravaCelkomBezDPH * koefVozidla;
     } else {
         txtDoprava = "...žiadna doprava";
     }
+    var najazdenyCas = zakazkaCasJazdy(zakazka);
+    var najazdeneKm = zakazkaKm(zakazka);
+    var pocetJazd = zakazkaPocetJazd(zakazka);
     // globálny súčet
     zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
     zakazkaDPH += dopravaDPH;
@@ -228,6 +232,8 @@ const prepocetZakazky = (zakazka) => {
     //message("Doprava celkom:" + dopravaCelkom);
     zakazka.set(FIELD_DOPRAVA, dopravaCelkom);
     zakazka.set("txt doprava", txtDoprava);
+    zakazka.set("náklady vozidlá", txtNakladyVozidla);
+    zakazka.set("náklady stroje", txtNakladyStroje);
     // náklady
     zakazka.set("Počet jázd", pocetJazd);
     zakazka.set("Najazdené km", najazdeneKm);
@@ -273,6 +279,7 @@ const prepocetZakazky = (zakazka) => {
     var zisk = zakazkaCelkom - naklady;
     var ziskPoZaplateni = zaplatene - naklady;
     var zostatok = rozpocetSDPH - zakazkaCelkom;
+
     if (zisk <= 0) {
         zakazka.set("Zisk", null);
         zakazka.set("Strata", zisk);
@@ -296,7 +303,7 @@ const prepocetZakazky = (zakazka) => {
         zakazka.set("Zostatok rozpočtu", null);
         zakazka.set("Prečerpanie rozpočtu", zostatok);
     }
-    // Vyúčtovanie
+    // Prepočet zákazky
     zakazka.set("Rozpočet", rozpocetSDPH);
     zakazka.set("Zaplatené", zaplatene);
     zakazka.set("Suma na úhradu", sumaNaUhradu);
@@ -404,40 +411,6 @@ const zakazkaMaterialRozdielDPH = vykaz => {
     return result;
 };
 
-// const spocitatVydajkyMaterialu = (vydajka, sDPH, sadzbaDPH) => {
-//     //message("Výdajka: " + vydajka.field("Popis"))
-//     // inicializácia
-//     //var sDPH = vydajka.field("s DPH");
-//     if (sDPH) { vydajka.set("s DPH", true) }
-//     var sumaDPH = 0;
-//     var sumaBezDPH = 0;
-//     var polozky = vydajka.field(FIELD_MATERIAL);
-//     if (polozky) {
-//         // presť všetky položky na výdajke a spočitať sumy
-//         for (var p = 0; p < polozky.length; p++) {
-//             var mnozstvo = polozky[p].attr("dodané množstvo");
-//             var cena = polozky[p].attr("cena");
-//             var cenaCelkom = mnozstvo * cena;
-//             polozky[p].setAttr("cena celkom", cenaCelkom);
-//             //var cenaCelkom = mnozstvo * cena;
-//             sumaBezDPH += cenaCelkom;
-//         }
-//     }
-//     vydajka.set("Suma bez DPH", sumaBezDPH);
-//     if (sDPH) {
-//         sumaDPH += sumaBezDPH * sadzbaDPH;
-//         vydajka.set("DPH", sumaDPH);
-//         vydajka.set("Suma s DPH", sumaBezDPH + sumaDPH);
-//     } else {
-//         vydajka.set("DPH", null);
-//         vydajka.set("Suma s DPH", null);
-
-//     }
-//     // message("Suma bez DPH: " + sumaBezDPH);
-//     setTlac(vydajka);
-//     return sumaBezDPH;
-// };
-
 const zakazkaPrijmy = (zakazka, sDPH) => {
     var links = zakazka.linksFrom(DB_POKLADNA, "Zákazka");
     var result = 0;
@@ -462,9 +435,4 @@ const efektivita = marza => {
     result = marza / koeficient;
     return result;
 }
-
-
-
-
-
 // End of file: 22.03.2022, 19:24 '{"result":true, "count":42}'
