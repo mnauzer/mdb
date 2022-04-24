@@ -538,10 +538,9 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
 const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
-    var empty = [];
     var popis = vykazPrac.field(FIELD_POPIS);
-    vyuctovanie.set(popis, empty);
-    vyuctovanie.set(popis + " celkom", empty);
+    vyuctovanie.set(popis, null);
+    vyuctovanie.set(popis + " celkom", null);
     // práce navyše ošetriť inak
     if (popis != "Práce navyše") {
         // položky z výdajky do array
@@ -584,11 +583,12 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
     var pocitanieHodinovychSadzieb = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-    var empty = null;
+    var empty = [];
     var popis = vykazPrac.field(FIELD_POPIS);
-    message(popis);
-    vyuctovanie.set(popis, empty);
-    vyuctovanie.set(popis + " celkom", empty);
+    if (vyuctovanie.field(popis) > 0) {
+        vyuctovanie.set(popis, empty);
+        vyuctovanie.set(popis + " celkom", empty);
+    }
     var vykazPraceSadzby = vykazPrac.field("Práce sadzby")[0];
     var vykazPraceSadzbyCelkom = 0;
     var cenaCelkom = 0;
@@ -625,7 +625,6 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
         }
         vykazPracCelkom += cenaCelkom;
     } else if (pocitanieHodinovychSadzieb == "Individuálne za každý výjazd") {
-
         vyuctovanie.field(popis)[0].setAttr("počet hodín", vykazPraceSadzby.attr("dodané množstvo"));
         vyuctovanie.field(popis)[0].setAttr("cena celkom", vykazPraceSadzby.attr("cena celkom"));
         for (var e = 0; e < evidenciaLinks.length; e++) {
