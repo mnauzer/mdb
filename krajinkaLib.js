@@ -206,10 +206,6 @@ const mclCheck = (mcl, value) => {
     return result;
 }
 
-const setBackgroudColor = (entry, color) => {
-    entry.set(FIELD_BACKROUND_COLOR, color)
-}
-
 const setColor = (entry, color) => {
     entry.set(FIELD_ENTRY_COLOR, color)
 }
