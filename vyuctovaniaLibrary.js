@@ -522,8 +522,18 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
     vyuctovanie.set(popis, empty);
     // položky z výdajky do array
     var polozkyVydajka = vydajka.field(FIELD_MATERIAL);
+    var typVydajky = vydajka.field("Typ výkazu");
+    if (typVydajky == "Hodinovka") {
+        var polozkyVyuctovanie = vyuctovanie.field(popis);
+    } else if (typVydajky == "Položky") {
+        var polozkyVyuctovanie = vyuctovanie.field(popis + " materiál");
+        if (popis == "Rastliny") {
+            var polozkyVyuctovanie = vyuctovanie.field(popis);
+        }
+
+    } else {
+    }
     // nastav atribúty položiek vo vyúčtovaní
-    var polozkyVyuctovanie = vyuctovanie.field(popis);
     for (var m = 0; m < polozkyVydajka.length; m++) {
         vyuctovanie.link(popis, polozkyVydajka[m]);
         var mnozstvo = polozkyVydajka[m].attr("dodané množstvo");
