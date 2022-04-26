@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.16";
+    var verzia = "0.2.17";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
