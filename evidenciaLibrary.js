@@ -105,22 +105,22 @@ const prepocetZaznamuEvidencie = evidencia => {
                 // ak nemá vygenerovanýv výkaz, vygeneruj nový
                 // ...
             }
-        } else {
-            var stroje = vykazStrojov.field("Stroje");
-            for (var i = 0; i < vyuzitieStrojov.length; i++) {
-                for (var j = 0; j < stroje.length; j++) {
-                    if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
-                        message("true");
-                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + (vyuzitieStrojov[i].attr("doba prevádzky")) / 36000);
-                        break;
-                    } else {
-                        message("false");
-                        vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                        stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky"));
-                    }
+        }
+        var stroje = vykazStrojov.field("Stroje");
+        for (var i = 0; i < vyuzitieStrojov.length; i++) {
+            for (var j = 0; j < stroje.length; j++) {
+                if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
+                    message("true");
+                    stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + (vyuzitieStrojov[i].attr("doba prevádzky")) / 36000);
+                    break;
+                } else {
+                    message("false");
+                    vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
+                    stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky"));
                 }
             }
         }
+
     }
 
     evidencia.set("Číslo", cislo);
