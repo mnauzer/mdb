@@ -563,7 +563,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
             var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
             vyuctovanie.link(popis, polozkyVykazPrac[m])
             vyuctovanie.field(popis)[m].setAttr("počet hodín", mnozstvo);
-            vyuctovanie.field(popis)[m].setAttr("sadzba", cena);
+            vyuctovanie.field(popis)[m].setAttr("účtovaná sadzba", cena);
             vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
             vykazPracCelkom += cenaCelkom;
             // nastav príznak Tlač
