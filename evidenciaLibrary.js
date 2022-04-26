@@ -6,20 +6,20 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.08";
+    var verzia = "0.2.09";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
 }
 
-const evidenciaSadzbaPrace = (vykaz, hodinyCelkom) => {
+const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     try {
 
-        var zakladnaSadzba = vykaz.field("Práce sadzby")[0].field("Cena bez DPH");
+        var zakladnaSadzba = vykazPrac.field("Práce sadzby")[0].field("Cena bez DPH");
 
         // zistiť zľavu podľa počtu odpracovaných hodín
         var zlava = 0;
-        var limity = vykaz.field("Práce sadzby")[0].field("Limity");
+        var limity = vykazPrac.field("Práce sadzby")[0].field("Limity");
 
         for (var m = 0; m < limity.length; m++) {
             if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
@@ -71,52 +71,63 @@ const prepocetZaznamuEvidencie = evidencia => {
         nakladyZamestnatec = odpracovaneOsoba * hodinovka;
         mzdoveNakladyCelkom += nakladyZamestnatec;
     };
-    //nastaviť atribúty výkazu
-    var vykaz = evidencia.field("Výkaz prác");
+    // PRÁCE
+    var vykazPrac = evidencia.field("Výkaz prác");
     var hodinCelkom = 0;
-    if (vykaz) {
-        for (var v = 0; v < vykaz.length; v++) {
+    if (vykazPrac) {
+        for (var v = 0; v < vykazPrac.length; v++) {
             // zistiť hodinovú sadzbu
             var sadzba = 0;
-            var hodin = vykaz[v].attr("počet hodín") || odpracovane;
+            var hodin = vykazPrac[v].attr("počet hodín") || odpracovane;
             hodinCelkom += hodin;
-            vykaz[v].setAttr("popis prác", vykaz[v].attr("popis prác") || evidencia.field("Rozpis prác"));
-            vykaz[v].setAttr("počet hodín", hodin);
-            var uctovanie = vykaz[v].field("Cenová ponuka")[0].field("Počítanie hodinových sadzieb");
+            vykazPrac[v].setAttr("popis prác", vykazPrac[v].attr("popis prác") || evidencia.field("Rozpis prác"));
+            vykazPrac[v].setAttr("počet hodín", hodin);
+            var uctovanie = vykazPrac[v].field("Cenová ponuka")[0].field("Počítanie hodinových sadzieb");
             if (uctovanie == "Individuálne za každý výjazd") {
-                sadzba = evidenciaSadzbaPrace(vykaz[v], hodin);
-                vykaz[v].setAttr("sadzba", sadzba);
-                vykaz[v].setAttr("cena celkom", hodin * sadzba);
+                sadzba = evidenciaSadzbaPrace(vykazPrac[v], hodin);
+                vykazPrac[v].setAttr("sadzba", sadzba);
+                vykazPrac[v].setAttr("cena celkom", hodin * sadzba);
             }
-        }
-        if (hodinCelkom > odpracovane && typ == "Hodinovka") {
-            message("Vo výkazoch je viac hodín ako je celkom odpracované");
-            // nastaviť príznak a farbu záznamu
-            evidencia.set("farba pozadia", "#FFDCD5");
-        } else if (hodinCelkom < odpracovane && typ == "Hodinovka") {
-            message("Vo výkazoch je menej hodín ako je celkom odpracované");
-            // nastaviť príznak a farbu záznamu
-            evidencia.set("farba pozadia", "#FFDCD5");
-        } else if (typ == "Položky") {
-            evidencia.set("farba pozadia", "#D5FFF3");
-        }
-        else {
-            // nastaviť príznak a farbu záznamu
-            evidencia.set("farba pozadia", "#EEFFD5");
-            evidencia.set("farba pozadia", "#EEFFD5");
-            evidencia.set("hzs ok", true);
         }
     };
 
-    evidencia.set("Číslo", cislo);
-    evidencia.set("Od", casOd);
-    evidencia.set("Do", casDo);
-    evidencia.set("Počet pracovníkov", zamestnanci.length);
-    evidencia.set("Odpracované", odpracovane);
-    evidencia.set("Mzdové náklady", mzdoveNakladyCelkom);
-    evidencia.set("Odpracované/os", odpracovaneOsoba);
-    evidencia.set("sezóna", sezona);
-}
+    //STROJE
+    var evidovatStroje = evidencia.field("Evidovať stroje");
+    if (evidovatStroje) {
+        var vyuzitieStrojov = evidencia.field("Využitie strojov");
+        var vykazStrojov = evidencia.field("Výkaz strojov")[0];
+        if (vykazStrojov.length <= 0) {
+            // ak má zákazka už vygenerovaný výkaz s cp
+            var vykazStrojovZakazka = vykazPrac.filed("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
+            if (vykazStrojovZakazka) {
+                evidencia.link("vykazStrojov", vykazStrojovZakazka);
+            } else {
+                // ak nemá vygenerovanýv výkaz, vygeneruj nový
+                // ...
+            }
+        }
+        var stroje = vykazStrojov.field("Stroje");
+        for (var i = 0; i < vyuzitieStrojov.length; i++) {
+            for (var j = 0; j < stroje.length; j++) {
+                if (vyuzitieStrojov[i].title == vykazStrojov[j].title) {
+                    stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + vyuzitieStrojov[i].attr("doba prevádzky"));
+                    break;
+                } else {
+                    vykazStrojov.link("Stroje", vyuzitieStrojov[i]);
+                    stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky"));
+                }
+            }
+        }
+
+        evidencia.set("Číslo", cislo);
+        evidencia.set("Od", casOd);
+        evidencia.set("Do", casDo);
+        evidencia.set("Počet pracovníkov", zamestnanci.length);
+        evidencia.set("Odpracované", odpracovane);
+        evidencia.set("Mzdové náklady", mzdoveNakladyCelkom);
+        evidencia.set("Odpracované/os", odpracovaneOsoba);
+        evidencia.set("sezóna", sezona);
+    }
 
 
 
