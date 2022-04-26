@@ -562,7 +562,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
         var cena = polozkyVykazPrac[m].attr("cena");
         var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
         vyuctovanie.link(popis, polozkyVykazPrac[m])
-        vyuctovanie.field(popis)[m].setAttr("dodané množstvo", mnozstvo);
+        vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
         vyuctovanie.field(popis)[m].setAttr("cena", cena);
         vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
         vykazPracCelkom += cenaCelkom;
