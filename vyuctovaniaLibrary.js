@@ -554,21 +554,40 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
         vyuctovanie.set(popis + " celkom", null);
     }
     // práce navyše ošetriť inak
-    //    if (popis != "Práce navyše") {
-    // položky z výdajky do array
-    var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
-    for (var m = 0; m < polozkyVykazPrac.length; m++) {
-        var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
-        var cena = polozkyVykazPrac[m].attr("cena");
-        var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
-        vyuctovanie.link(popis, polozkyVykazPrac[m])
-        vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
-        vyuctovanie.field(popis)[m].setAttr("cena", cena);
-        vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
-        vykazPracCelkom += cenaCelkom;
-        // nastav príznak Tlač
-        setTlac(polozkyVykazPrac[m]);
+
+    if (popis == "Práce navyše" {
+        var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+        for (var m = 0; m < polozkyVykazPrac.length; m++) {
+            var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
+            var cena = polozkyVykazPrac[m].attr("cena");
+            var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
+            vyuctovanie.link(popis, polozkyVykazPrac[m])
+            vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
+            vyuctovanie.field(popis)[m].setAttr("cena", cena);
+            vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
+            vykazPracCelkom += cenaCelkom;
+            // nastav príznak Tlač
+            setTlac(polozkyVykazPrac[m]);
+        } else {
+            
+        }
+        var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+        for (var m = 0; m < polozkyVykazPrac.length; m++) {
+            var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
+            var cena = polozkyVykazPrac[m].attr("cena");
+            var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
+            vyuctovanie.link(popis, polozkyVykazPrac[m])
+            vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
+            vyuctovanie.field(popis)[m].setAttr("cena", cena);
+            vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
+            vykazPracCelkom += cenaCelkom;
+            // nastav príznak Tlač
+            setTlac(polozkyVykazPrac[m]);
+        }
+
     }
+
+
 
     vyuctovanie.set(popis + " celkom", vykazPracCelkom);
     return vykazPracCelkom;
