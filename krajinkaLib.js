@@ -213,7 +213,6 @@ const mclCheck = (mcl, value) => {
 }
 
 const lteClear = (lte) => {
-    var links = lte;
     if (lte.length > 0) {
         for (var l = 0; l < lte.length; l++) {
             lte.unlink(lte[l]);
