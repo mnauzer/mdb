@@ -111,7 +111,7 @@ const prepocetZaznamuEvidencie = evidencia => {
             for (var i = 0; i < vyuzitieStrojov.length; i++) {
                 for (var j = 0; j < stroje.length; j++) {
                     if (vyuzitieStrojov[i] == vykazStrojov[j]) {
-                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + vyuzitieStrojov[i].attr("doba prevádzky"));
+                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + (vyuzitieStrojov[i].attr("doba prevádzky")) / 36000);
                         break;
                     } else {
                         vykazStrojov.link("Stroje", vyuzitieStrojov[i]);
