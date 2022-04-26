@@ -564,39 +564,38 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
         vyuctovanie.set(popis + " celkom", null);
     }
     // práce navyše ošetriť inak
-    //    if (popis != "Práce navyše") {
-    // položky z výdajky do array
-    var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
-    for (var m = 0; m < polozkyVykazPrac.length; m++) {
-        var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
-        var cena = polozkyVykazPrac[m].attr("cena");
-        var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
-        vyuctovanie.link(popis, polozkyVykazPrac[m])
-        vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
-        vyuctovanie.field(popis)[m].setAttr("cena", cena);
-        vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
-        vykazPracCelkom += cenaCelkom;
-        // nastav príznak Tlač
-        setTlac(polozkyVykazPrac[m]);
-    }
-    // } else {
-    //     // práce navyše
-    //     var praceNavyse = vykazPrac.field("Práce sadzby")[0];
-    //     var hodinCelkom = 0;
-    //     var uctovanaSadzba = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field(popis)[0].attr("sadzba");
-    //     var cenaCelkom = 0;
-    //     vyuctovanie.link(popis, praceNavyse);
-    //     var evidenciaLinks = vykazPrac.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz prác");
-    //     for (var e = 0; e < evidenciaLinks.length; e++) {
-    //         vyuctovanie.link("Rozpis", evidenciaLinks[e]);
-    //         vyuctovanie.field("Rozpis")[e].setAttr("popis prác", evidenciaLinks[e].attr("popis prác"));
-    //         vyuctovanie.field("Rozpis")[e].setAttr("počet hodín", evidenciaLinks[e].attr("počet hodín"));
-    //         hodinCelkom += evidenciaLinks[e].attr("počet hodín");
-    //     }
-    //     cenaCelkom = hodinCelkom * uctovanaSadzba;
-    //     vyuctovanie.field(popis)[0].setAttr("cena celkom", cenaCelkom);
 
-    // }
+    var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+    if (popis == "Práce navyše") {
+        for (var m = 0; m < polozkyVykazPrac.length; m++) {
+            var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
+            var cena = polozkyVykazPrac[m].attr("cena");
+            var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
+            vyuctovanie.link(popis, polozkyVykazPrac[m])
+            vyuctovanie.field(popis)[m].setAttr("počet hodín", mnozstvo);
+            vyuctovanie.field(popis)[m].setAttr("účtovaná sadzba", cena);
+            vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
+            vykazPracCelkom += cenaCelkom;
+            // nastav príznak Tlač
+            setTlac(polozkyVykazPrac[m]);
+        }
+    } else {
+        for (var m = 0; m < polozkyVykazPrac.length; m++) {
+            var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
+            var cena = polozkyVykazPrac[m].attr("cena");
+            var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
+            vyuctovanie.link(popis, polozkyVykazPrac[m])
+            vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
+            vyuctovanie.field(popis)[m].setAttr("cena", cena);
+            vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
+            vykazPracCelkom += cenaCelkom;
+            // nastav príznak Tlač
+            setTlac(polozkyVykazPrac[m]);
+        }
+    }
+
+
+
     vyuctovanie.set(popis + " celkom", vykazPracCelkom);
     return vykazPracCelkom;
 }

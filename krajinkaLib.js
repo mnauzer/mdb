@@ -20,6 +20,12 @@ const setTlac = entry => {
     return;
 }
 
+const setConfidental = entry => {
+    entry.set(FIELD_VIEW, "Confidental");
+    entry.set(FIELD_DEBUG, false);
+    return;
+}
+
 const pad = (number, length) => {
     let str = '' + number;
     while (str.length < length) {
@@ -206,8 +212,28 @@ const mclCheck = (mcl, value) => {
     return result;
 }
 
-const setColor = (entry, color) => {
-    entry.set(FIELD_ENTRY_COLOR, color)
+const lteClear = (lte) => {
+    var links = lte;
+    if (lte.length > 0) {
+        for (var l = 0; l < lte.length; l++) {
+            lte.unlink(lte[l]);
+        }
+    }
+}
+
+const lteCheck = (lte, entry) => {
+    result = false;
+    if (lte.length > 0) {
+        for (var index = 0; index < lte.length; index++) {
+            if (entry.id === lte[index].id) {
+                result = true;
+                break;
+            }
+        }
+        return index;
+    } else {
+        return -1;
+    }
 }
 
 const zistiIndexLinku = (link, remoteLinks) => {
