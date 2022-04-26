@@ -107,14 +107,16 @@ const prepocetZaznamuEvidencie = evidencia => {
             }
         }
         var stroje = vykazStrojov.field("Stroje");
-        for (var i = 0; i < vyuzitieStrojov.length; i++) {
-            for (var j = 0; j < stroje.length; j++) {
-                if (vyuzitieStrojov[i].title == vykazStrojov[j].title) {
-                    stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + vyuzitieStrojov[i].attr("doba prevádzky"));
-                    break;
-                } else {
-                    vykazStrojov.link("Stroje", vyuzitieStrojov[i]);
-                    stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky"));
+        if (vykazStrojov) {
+            for (var i = 0; i < vyuzitieStrojov.length; i++) {
+                for (var j = 0; j < stroje.length; j++) {
+                    if (vyuzitieStrojov[i].title == vykazStrojov[j].title) {
+                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + vyuzitieStrojov[i].attr("doba prevádzky"));
+                        break;
+                    } else {
+                        vykazStrojov.link("Stroje", vyuzitieStrojov[i]);
+                        stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky"));
+                    }
                 }
             }
         }
