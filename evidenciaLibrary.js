@@ -110,7 +110,7 @@ const prepocetZaznamuEvidencie = evidencia => {
         if (vykazStrojov) {
             for (var i = 0; i < vyuzitieStrojov.length; i++) {
                 for (var j = 0; j < stroje.length; j++) {
-                    if (vyuzitieStrojov[i].title == vykazStrojov[j].title) {
+                    if (vyuzitieStrojov[i] == vykazStrojov[j]) {
                         stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + vyuzitieStrojov[i].attr("doba prevádzky"));
                         break;
                     } else {
