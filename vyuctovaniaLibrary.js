@@ -555,23 +555,21 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     }
     // práce navyše ošetriť inak
 
-    if (popis == "Práce navyše" {
-        var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+    var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+    if (popis == "Práce navyše") {
         for (var m = 0; m < polozkyVykazPrac.length; m++) {
             var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
             var cena = polozkyVykazPrac[m].attr("cena");
             var cenaCelkom = polozkyVykazPrac[m].attr("cena celkom");
             vyuctovanie.link(popis, polozkyVykazPrac[m])
-            vyuctovanie.field(popis)[m].setAttr("množstvo", mnozstvo);
-            vyuctovanie.field(popis)[m].setAttr("cena", cena);
+            vyuctovanie.field(popis)[m].setAttr("počet hodín", mnozstvo);
+            vyuctovanie.field(popis)[m].setAttr("sadzba", cena);
             vyuctovanie.field(popis)[m].setAttr("cena celkom", cenaCelkom);
             vykazPracCelkom += cenaCelkom;
             // nastav príznak Tlač
             setTlac(polozkyVykazPrac[m]);
-        } else {
-            
         }
-        var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+    } else {
         for (var m = 0; m < polozkyVykazPrac.length; m++) {
             var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
             var cena = polozkyVykazPrac[m].attr("cena");
@@ -584,7 +582,6 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
             // nastav príznak Tlač
             setTlac(polozkyVykazPrac[m]);
         }
-
     }
 
 
