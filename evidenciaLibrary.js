@@ -105,10 +105,12 @@ const prepocetZaznamuEvidencie = evidencia => {
             } else {
                 message("Generujem výkaz strojov");
                 vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka")[0]);
+                evidencia.link("Výkaz strojov", vykazStrojov);
             }
         }
         var stroje = vykazStrojov.field("Stroje");
         for (var i = 0; i < vyuzitieStrojov.length; i++) {
+            message("Strojov: " + vyuzitieStrojov.length);
             if (stroje) {
                 for (var j = 0; j < stroje.length; j++) {
                     if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
