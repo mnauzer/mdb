@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.19";
+    var verzia = "0.2.20";
     result = nazov + " " + verzia;
     return result;
 }
@@ -23,7 +23,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
             var prevadzkaMTH = 0;
 
             if (zaznamyEvidencia.length > 0) {
-                message(zaznamyEvidencia);
+                message(zaznamyEvidencia.length);
                 for (var v = 0; v < zaznamyEvidencia.length; v++) {
                     var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
                     for (var s = 0; s < vyuzitieStrojov.length; s++) {
