@@ -1,4 +1,4 @@
-const zakazky = "0.4.10";
+const zakazky = "0.4.11";
 
 const verziaZakazky = () => {
     var result = "";
@@ -201,7 +201,7 @@ const prepocetZakazky = (zakazka) => {
             // nastavenie statusu výkazu na Vyúčtované
             if (vykazStrojovVyuctovanie.length > 0) {
                 for (var l = 0; l < vykazStrojovVyuctovanie.length; l++) {
-                    vykazStrojov.unlink(vykazStrojovVyuctovanie[l]);
+                    vykazStrojov.unlink(vykazStrojovVyuctovanie, vykazStrojovVyuctovanie[l]);
                 }
             }
             vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
