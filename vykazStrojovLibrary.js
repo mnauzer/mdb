@@ -8,7 +8,7 @@ const verziaVykazStrojov = () => {
 
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     var stroje = vykaz.field(FIELD_STROJE);
-    var zaznamyEvidencia = vykaz.linksFrom(LINK_EVIDENCIA_PRAC, W_ZAKAZKA);
+    var zaznamyEvidencia = vykaz.linksFrom(FIELD_EVIDENCIA_PRAC, W_ZAKAZKA);
     var sumaBezDPH = 0;
     var sumaDPH = null;
     var sumaCelkom = null;
