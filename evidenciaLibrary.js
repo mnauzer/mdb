@@ -120,7 +120,7 @@ const prepocetZaznamuEvidencie = evidencia => {
             } else {
                 message("false");
                 vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky") / 360000000));
+                stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky") / 360000000);
             }
         }
 
