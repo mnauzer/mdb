@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.32";
+    var verzia = "0.2.33";
     result = nazov + " " + verzia;
     return result;
 }
@@ -30,24 +30,12 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         if (!stroje) {
                             //ak nie je žiadny záznam strojov, vytvor nové pre všetky záznamy strojov z evidencie prác
                             var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                            prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
-                            cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
-                            cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
-                            newLink.setAttr("prevádzka mth", prevadzkaMTH);
-                            newLink.setAttr("účtovaná sadzba", cena);
-                            newLink.setAttr("cena celkom", cenaCelkom);
-
                             vyuzitieZapisane = true;
                         } else {
                             // ak už existuje nejaký záznam, spáruj s evidenciou
                             for (var s in stroje) {
                                 if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[s].id) {
-                                    prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
-                                    cena = stroje[s].attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
-                                    cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
-                                    stroje[s].setAttr("prevádzka mth", prevadzkaMTH);
-                                    stroje[s].setAttr("účtovaná sadzba", cena);
-                                    stroje[s].setAttr("cena celkom", cenaCelkom);
+                                    var newLink = stroje[s];
                                     vyuzitieZapisane = true;
                                 }
                             }
@@ -55,27 +43,20 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         if (!vyuzitieZapisane) {
                             // ak sa využitie strojov nezápísalo do výkazu, vytvor nový záznam vo výkaze
                             var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                            prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
-                            cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
-                            cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
-                            newLink.setAttr("prevádzka mth", prevadzkaMTH);
-                            newLink.setAttr("účtovaná sadzba", cena);
-                            newLink.setAttr("cena celkom", cenaCelkom);
                             vyuzitieStrojov = true;
                         }
+                        prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                        cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
+                        cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
+                        newLink.setAttr("prevádzka mth", prevadzkaMTH);
+                        newLink.setAttr("účtovaná sadzba", cena);
+                        newLink.setAttr("cena celkom", cenaCelkom);
                     }
                 }
             }
         } else {
             message("Žiadne záznamy využitia strojov v Evidencii prác");
         }
-        // prepočet atribútov položky
-        // var cena = stroje[p].attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
-        // var cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
-        // stroje[p].setAttr("prevádzka mth", prevadzkaMTH);
-        // stroje[p].setAttr("účtovaná sadzba", cena);
-        // stroje[p].setAttr("cena celkom", cenaCelkom);
-        // sumaBezDPH += cenaCelkom;
 
         if (sDPH) {
             var sezona = vykaz.field(FIELD_SEZONA);

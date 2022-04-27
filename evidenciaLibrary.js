@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.27";
+    var verzia = "0.2.28";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -95,39 +95,42 @@ const prepocetZaznamuEvidencie = evidencia => {
     var evidovatStroje = evidencia.field("Evidovať stroje");
     if (evidovatStroje) {
         var vyuzitieStrojov = evidencia.field("Využitie strojov");
-        var vykazStrojov = evidencia.field("Výkaz strojov")[0];
-        if (vykazStrojov) {
-            // ak má zákazka už vygenerovaný výkaz s cp
-        } else {
-            var vykazStrojovZakazka = evidencia.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
-            if (vykazStrojovZakazka) {
-                evidencia.link("Výkaz strojov", vykazStrojovZakazka);
-            } else {
-                // ak neexistuje, vygeneruj nový výkaz strojov
-                message("Generujem výkaz strojov");
-                vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka")[0]);
-                evidencia.link("Výkaz strojov", vykazStrojov);
-            }
-        }
-        var stroje = vykazStrojov.field("Stroje");
-        for (var i = 0; i < vyuzitieStrojov.length; i++) {
-            message("Stroje evidencia: " + vyuzitieStrojov.length + "\nStroje výkaz: " + stroje.length);
-            if (stroje) {
-                var prevadzkaMTH = 0;
-                for (var j = 0; j < stroje.length; j++) {
-                    if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
-                        message("true");
-                        prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky" / 3600000);
+        if (vyuzitieStrojov) {
+            var vykazStrojov = evidencia.field("Výkaz strojov")[0];
+            if (vykazStrojov) {
+                // ak má zákazka už vygenerovaný výkaz s cp
+                var stroje = vykazStrojov.field("Stroje");
+                for (var i = 0; i < vyuzitieStrojov.length; i++) {
+                    message("Stroje evidencia: " + vyuzitieStrojov.length + "\nStroje výkaz: " + stroje.length);
+                    if (stroje) {
+                        var prevadzkaMTH = 0;
+                        for (var j = 0; j < stroje.length; j++) {
+                            if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
+                                message("true");
+                                prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky" / 3600000);
+                            }
+                            stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth", prevadzkaMTH));
+                        }
+                    } else {
+                        message("false");
+                        vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
+                        stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky") / 360000000);
                     }
-                    stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth", prevadzkaMTH));
                 }
             } else {
-                message("false");
-                vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky") / 360000000);
+                var vykazStrojovZakazka = evidencia.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
+                if (vykazStrojovZakazka) {
+                    evidencia.link("Výkaz strojov", vykazStrojovZakazka);
+                } else {
+                    // ak neexistuje, vygeneruj nový výkaz strojov
+                    message("Generujem výkaz strojov");
+                    vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka")[0]);
+                    evidencia.link("Výkaz strojov", vykazStrojov);
+                }
             }
+        } else {
+            message("V zázname nie su vybraté žiadne využité stroje");
         }
-
     }
 
     evidencia.set(FIELD_CISLO, cislo);
