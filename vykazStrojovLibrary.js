@@ -1,14 +1,14 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.15";
+    var verzia = "0.2.16";
     result = nazov + " " + verzia;
     return result;
 }
 
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     var stroje = vykaz.field(FIELD_STROJE);
-    var zaznamyEvidencia = vykaz.linksFrom(FIELD_EVIDENCIA_PRAC, W_ZAKAZKA);
+    var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, W_ZAKAZKA);
     var sumaBezDPH = 0;
     var sumaDPH = null;
     var sumaCelkom = null;
