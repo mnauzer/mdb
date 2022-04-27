@@ -39,6 +39,8 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                 stroje[p].setAttr("účtovaná sadzba", cena);
                 stroje[p].setAttr("cena celkom", cenaCelkom);
                 sumaBezDPH += cenaCelkom;
+            } else {
+                message("Žiadne záznamy využitia strojov v Evidencii prác");
             }
         }
     }
