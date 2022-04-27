@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.29";
+    var verzia = "0.2.30";
     result = nazov + " " + verzia;
     return result;
 }
