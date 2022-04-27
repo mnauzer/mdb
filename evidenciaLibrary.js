@@ -104,7 +104,7 @@ const prepocetZaznamuEvidencie = evidencia => {
                 evidencia.link("Výkaz strojov", vykazStrojovZakazka);
             } else {
                 message("Generujem výkaz strojov");
-                vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka"));
+                vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka")[0]);
             }
         }
         var stroje = vykazStrojov.field("Stroje");
