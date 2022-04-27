@@ -103,6 +103,7 @@ const prepocetZaznamuEvidencie = evidencia => {
             if (vykazStrojovZakazka) {
                 evidencia.link("Výkaz strojov", vykazStrojovZakazka);
             } else {
+                message("Generujem výkaz strojov");
                 // ak nemá vygenerovanýv výkaz, vygeneruj nový
                 // ...
             }
