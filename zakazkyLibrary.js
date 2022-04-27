@@ -1,4 +1,4 @@
-const zakazky = "0.4.09";
+const zakazky = "0.4.10";
 
 const verziaZakazky = () => {
     var result = "";
@@ -187,7 +187,7 @@ const prepocetZakazky = (zakazka) => {
     var txtOdvodDPHStroje = "✘...žiadna DPH za stroje";
     if (vykazStrojov) {
         var stroje = 0;
-        stroje = prepocitatVykazStrojov(vykazStrojov[vs], strojeUctovatDPH);
+        stroje = prepocitatVykazStrojov(vykazStrojov, strojeUctovatDPH);
         if (strojeUctovatDPH) {
             strojeDPH += stroje[1];
             zakazkaDPH += strojeDPH;
@@ -198,12 +198,12 @@ const prepocetZakazky = (zakazka) => {
         strojeCelkomBezDPH += stroje[0];
         if (vyuctovanie) {
             // nastavenie statusu výkazu na Vyúčtované
-            lteClear(vykazStrojov[vs].field(FIELD_VYUCTOVANIE));
-            vykazStrojov[vs].link(FIELD_VYUCTOVANIE, vyuctovanie);
-            vykazStrojov[vs].set(FIELD_STAV, stavVyuctovania);
+            lteClear(vykazStrojov.field(FIELD_VYUCTOVANIE));
+            vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
+            vykazStrojov.set(FIELD_STAV, stavVyuctovania);
             // zápis do vyúčtovania
-            vyuctovanie.set(vykazStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
-            nalinkujStroje(vyuctovanie, vykazStrojov[vs]);
+            vyuctovanie.set(vykazStrojov.field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+            nalinkujStroje(vyuctovanie, vykazStrojov);
 
         }
 
