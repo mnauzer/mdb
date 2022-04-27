@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.22";
+    var verzia = "0.2.23";
     result = nazov + " " + verzia;
     return result;
 }
@@ -32,7 +32,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                             prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 3600000;
                             break;
                         } else {
-                            vykaz.link("Stroje", vyuzitieStrojov[s])
+                            vykaz.link("Stroje", vyuzitieStrojov[s].field("Cena")[0]);
                             prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 3600000;
                         }
                     }
