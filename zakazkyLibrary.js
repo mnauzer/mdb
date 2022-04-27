@@ -1,4 +1,4 @@
-const zakazky = "0.4.08";
+const zakazky = "0.4.09";
 
 const verziaZakazky = () => {
     var result = "";
@@ -199,7 +199,7 @@ const prepocetZakazky = (zakazka) => {
             strojeCelkomBezDPH += stroje[0];
             if (vyuctovanie) {
                 // nastavenie statusu výkazu na Vyúčtované
-                lteClear(vykazyStrojov[vs.field(FIELD_VYUCTOVANIE)]);
+                lteClear(vykazyStrojov[vs].field(FIELD_VYUCTOVANIE));
                 vykazyStrojov[vs].link(FIELD_VYUCTOVANIE, vyuctovanie);
                 vykazyStrojov[vs].set(FIELD_STAV, stavVyuctovania);
                 // zápis do vyúčtovania
