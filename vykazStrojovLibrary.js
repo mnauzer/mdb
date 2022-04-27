@@ -27,8 +27,9 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         var prevadzkaMTH = 0;
                         if (!stroje) {
                             //ak nie je žiadny záznam strojov, vytvor nové pre všetky záznamy strojov z evidencie prác
-                            vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
+                            var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
                             prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                            newLink.setAttr("prevádzka mth", prevadzkaMTH);
                             vyuzitieZapisane = true;
                         } else {
                             // ak už existuje nejaký záznam, spáruj s evidenciou
@@ -46,18 +47,18 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                             vyuzitieStrojov = true;
                         }
                     }
-                    // prepočet atribútov položky
-                    var cena = stroje[p].attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
-                    var cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
-                    stroje[p].setAttr("prevádzka mth", prevadzkaMTH);
-                    stroje[p].setAttr("účtovaná sadzba", cena);
-                    stroje[p].setAttr("cena celkom", cenaCelkom);
-                    sumaBezDPH += cenaCelkom;
                 }
             }
         } else {
             message("Žiadne záznamy využitia strojov v Evidencii prác");
         }
+        // prepočet atribútov položky
+        // var cena = stroje[p].attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
+        // var cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
+        // stroje[p].setAttr("prevádzka mth", prevadzkaMTH);
+        // stroje[p].setAttr("účtovaná sadzba", cena);
+        // stroje[p].setAttr("cena celkom", cenaCelkom);
+        // sumaBezDPH += cenaCelkom;
 
         if (sDPH) {
             var sezona = vykaz.field(FIELD_SEZONA);
