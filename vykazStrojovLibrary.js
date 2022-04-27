@@ -25,11 +25,16 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                     var vyuzitieZapisane = false;
                     for (var i in vyuzitieStrojov) {
                         var prevadzkaMTH = 0;
+                        var cena = 0;
+                        var cenaCelkom = 0;
                         if (!stroje) {
                             //ak nie je žiadny záznam strojov, vytvor nové pre všetky záznamy strojov z evidencie prác
                             var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
                             prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
                             newLink.setAttr("prevádzka mth", prevadzkaMTH);
+                            newLink.setAttr("účtovaná sadzba", cena);
+                            newLink.setAttr("cena celkom", cenaCelkom);
+
                             vyuzitieZapisane = true;
                         } else {
                             // ak už existuje nejaký záznam, spáruj s evidenciou
