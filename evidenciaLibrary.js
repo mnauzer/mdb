@@ -127,14 +127,14 @@ const prepocetZaznamuEvidencie = evidencia => {
 
     }
 
-    evidencia.set("Číslo", cislo);
+    evidencia.set(FIELD_CISLO, cislo);
     evidencia.set("Od", casOd);
     evidencia.set("Do", casDo);
     evidencia.set("Počet pracovníkov", zamestnanci.length);
     evidencia.set("Odpracované", odpracovane);
     evidencia.set("Mzdové náklady", mzdoveNakladyCelkom);
     evidencia.set("Odpracované/os", odpracovaneOsoba);
-    evidencia.set("sezóna", sezona);
+    evidencia.set(FIELD_SEZONA, sezona);
 }
 
 
