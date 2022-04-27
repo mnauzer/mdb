@@ -113,13 +113,13 @@ const prepocetZaznamuEvidencie = evidencia => {
         for (var i = 0; i < vyuzitieStrojov.length; i++) {
             message("Stroje evidencia: " + vyuzitieStrojov.length + "\nStroje výkaz: " + stroje.length);
             if (stroje) {
+                var prevadzkaMTH = 0;
                 for (var j = 0; j < stroje.length; j++) {
                     if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
                         message("true");
-                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth")
-                            + (vyuzitieStrojov[i].attr("doba prevádzky")) / 3600000);
-
+                        prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky" / 3600000);
                     }
+                    stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth", prevadzkaMTH));
                 }
             } else {
                 message("false");
