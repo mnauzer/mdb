@@ -30,6 +30,10 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         if (stroje[p].id == vyuzitieStrojov[s].field("Cena")[0].id) {
                             message("True");
                             prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 3600000;
+                            break;
+                        } else {
+                            vykaz.link("Stroje", vyuzitieStrojov[s])
+                            prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 3600000;
                         }
                     }
                 }
