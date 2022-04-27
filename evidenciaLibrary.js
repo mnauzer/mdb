@@ -98,7 +98,6 @@ const prepocetZaznamuEvidencie = evidencia => {
         var vykazStrojov = evidencia.field("Výkaz strojov")[0];
         if (vykazStrojov != undefined) {
             // ak má zákazka už vygenerovaný výkaz s cp
-            var stroje = vykazStrojov.field("Stroje");
         } else {
             var vykazStrojovZakazka = evidencia.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
             if (vykazStrojovZakazka) {
@@ -108,6 +107,7 @@ const prepocetZaznamuEvidencie = evidencia => {
                 // ...
             }
         }
+        var stroje = vykazStrojov.field("Stroje");
         for (var i = 0; i < vyuzitieStrojov.length; i++) {
             if (stroje) {
                 for (var j = 0; j < stroje.length; j++) {
