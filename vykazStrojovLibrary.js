@@ -8,7 +8,7 @@ const verziaVykazStrojov = () => {
 
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     var stroje = vykaz.field(FIELD_STROJE);
-    var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, W_ZAKAZKA);
+    var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz strojov");
     var sumaBezDPH = 0;
     var sumaDPH = null;
     var sumaCelkom = null;
@@ -27,7 +27,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                     var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
                     for (var s = 0; s < vyuzitieStrojov.length; s++) {
                         if (stroje[p].id == vyuzitieStrojov[s].field("Cena").id) {
-                            prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 360000;
+                            prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 36000000;
                         }
                     }
                 }
