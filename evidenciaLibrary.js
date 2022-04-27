@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.28";
+    var verzia = "0.2.29";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -101,20 +101,16 @@ const prepocetZaznamuEvidencie = evidencia => {
                 // ak má zákazka už vygenerovaný výkaz s cp
                 var stroje = vykazStrojov.field("Stroje");
                 for (var i = 0; i < vyuzitieStrojov.length; i++) {
-                    message("Stroje evidencia: " + vyuzitieStrojov.length + "\nStroje výkaz: " + stroje.length);
                     if (stroje) {
                         var prevadzkaMTH = 0;
                         for (var j = 0; j < stroje.length; j++) {
                             if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
-                                message("true");
-                                prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky" / 3600000);
                             }
                             stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth", prevadzkaMTH));
                         }
                     } else {
                         message("false");
                         vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                        stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky") / 360000000);
                     }
                 }
             } else {
@@ -128,6 +124,7 @@ const prepocetZaznamuEvidencie = evidencia => {
                     evidencia.link("Výkaz strojov", vykazStrojov);
                 }
             }
+            prepocitatVykazStrojov(vykazStrojov);
         } else {
             message("V zázname nie su vybraté žiadne využité stroje");
         }
