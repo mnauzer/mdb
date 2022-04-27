@@ -176,6 +176,7 @@ const prepocetZakazky = (zakazka) => {
     // prepočet výkazov strojov
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA)[0];
+    var vykazStrojovVyuctovanie = vykazStrojov.field("Vyúčtovanie");
     // prepočet nákladov strojov
     var nakladyStroje = 0; // náklady
 
@@ -198,7 +199,11 @@ const prepocetZakazky = (zakazka) => {
         strojeCelkomBezDPH += stroje[0];
         if (vyuctovanie) {
             // nastavenie statusu výkazu na Vyúčtované
-            lteClear(vykazStrojov.field(FIELD_VYUCTOVANIE));
+            if (vykazStrojovVyuctovanie.length > 0) {
+                for (var l = 0; l < vykazStrojovVyuctovanie.length; l++) {
+                    vykazStrojov.unlink(vykazStrojovVyuctovanie[l]);
+                }
+            }
             vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
             vykazStrojov.set(FIELD_STAV, stavVyuctovania);
             // zápis do vyúčtovania
