@@ -98,7 +98,7 @@ const prepocetZaznamuEvidencie = evidencia => {
         var vykazStrojov = evidencia.field("Výkaz strojov")[0];
         if (!vykazStrojov) {
             // ak má zákazka už vygenerovaný výkaz s cp
-            var vykazStrojovZakazka = evidencia.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
+            var vykazStrojovZakazka = evidencia.field("Zákazka").linksFrom("Výkaz strojov", "Zákazka")[0];
             if (vykazStrojovZakazka) {
                 evidencia.link("vykazStrojov", vykazStrojovZakazka);
             } else {
