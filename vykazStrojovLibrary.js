@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.33";
+    var verzia = "0.2.34";
     result = nazov + " " + verzia;
     return result;
 }
@@ -51,6 +51,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         newLink.setAttr("prevádzka mth", prevadzkaMTH);
                         newLink.setAttr("účtovaná sadzba", cena);
                         newLink.setAttr("cena celkom", cenaCelkom);
+                        sumaBezDPH += cenaCelkom;
                     }
                 }
             }
