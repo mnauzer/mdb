@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.24";
+    var verzia = "0.2.25";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -104,8 +104,7 @@ const prepocetZaznamuEvidencie = evidencia => {
                 evidencia.link("Výkaz strojov", vykazStrojovZakazka);
             } else {
                 message("Generujem výkaz strojov");
-                // ak nemá vygenerovanýv výkaz, vygeneruj nový
-                // ...
+                vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka"));
             }
         }
         var stroje = vykazStrojov.field("Stroje");
