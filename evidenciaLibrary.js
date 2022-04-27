@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.21";
+    var verzia = "0.2.22";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -96,8 +96,10 @@ const prepocetZaznamuEvidencie = evidencia => {
     if (evidovatStroje) {
         var vyuzitieStrojov = evidencia.field("Využitie strojov");
         var vykazStrojov = evidencia.field("Výkaz strojov")[0];
-        if (vykazStrojov == undefined) {
+        if (vykazStrojov != undefined) {
             // ak má zákazka už vygenerovaný výkaz s cp
+            var stroje = vykazStrojov.field("Stroje");
+        } else {
             var vykazStrojovZakazka = evidencia.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
             if (vykazStrojovZakazka) {
                 evidencia.link("Výkaz strojov", vykazStrojovZakazka);
@@ -106,7 +108,6 @@ const prepocetZaznamuEvidencie = evidencia => {
                 // ...
             }
         }
-        var stroje = vykazStrojov.field("Stroje");
         for (var i = 0; i < vyuzitieStrojov.length; i++) {
             if (stroje.length > 0) {
                 for (var j = 0; j < stroje.length; j++) {
