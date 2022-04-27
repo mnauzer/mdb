@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.31";
+    var verzia = "0.2.32";
     result = nazov + " " + verzia;
     return result;
 }
@@ -54,7 +54,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         }
                         if (!vyuzitieZapisane) {
                             // ak sa využitie strojov nezápísalo do výkazu, vytvor nový záznam vo výkaze
-                            vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
+                            var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
                             prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
                             cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
                             cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
