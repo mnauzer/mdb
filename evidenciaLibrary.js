@@ -6,7 +6,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "evidenciaLibrary";
-    var verzia = "0.2.23";
+    var verzia = "0.2.27";
     result = nazov + " " + verzia;
     //message("cpLibrary v." + verzia);
     return result;
@@ -96,19 +96,22 @@ const prepocetZaznamuEvidencie = evidencia => {
     if (evidovatStroje) {
         var vyuzitieStrojov = evidencia.field("Využitie strojov");
         var vykazStrojov = evidencia.field("Výkaz strojov")[0];
-        if (vykazStrojov != undefined) {
+        if (vykazStrojov) {
             // ak má zákazka už vygenerovaný výkaz s cp
         } else {
             var vykazStrojovZakazka = evidencia.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
             if (vykazStrojovZakazka) {
                 evidencia.link("Výkaz strojov", vykazStrojovZakazka);
             } else {
-                // ak nemá vygenerovanýv výkaz, vygeneruj nový
-                // ...
+                // ak neexistuje, vygeneruj nový výkaz strojov
+                message("Generujem výkaz strojov");
+                vykazStrojov = novyVykazStrojov(evidencia.field("Zákazka")[0]);
+                evidencia.link("Výkaz strojov", vykazStrojov);
             }
         }
         var stroje = vykazStrojov.field("Stroje");
         for (var i = 0; i < vyuzitieStrojov.length; i++) {
+            message("Stroje evidencia: " + vyuzitieStrojov.length + "\nStroje výkaz: " + stroje.length);
             if (stroje) {
                 for (var j = 0; j < stroje.length; j++) {
                     if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
@@ -127,14 +130,14 @@ const prepocetZaznamuEvidencie = evidencia => {
 
     }
 
-    evidencia.set("Číslo", cislo);
+    evidencia.set(FIELD_CISLO, cislo);
     evidencia.set("Od", casOd);
     evidencia.set("Do", casDo);
     evidencia.set("Počet pracovníkov", zamestnanci.length);
     evidencia.set("Odpracované", odpracovane);
     evidencia.set("Mzdové náklady", mzdoveNakladyCelkom);
     evidencia.set("Odpracované/os", odpracovaneOsoba);
-    evidencia.set("sezóna", sezona);
+    evidencia.set(FIELD_SEZONA, sezona);
 }
 
 

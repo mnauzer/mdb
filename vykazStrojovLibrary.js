@@ -60,3 +60,29 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     setTlac(vykaz);
     return [sumaBezDPH, sumaDPH];
 }
+
+const novyVykazStrojov = (zakazka) => {
+    // inicializácia
+    var lib = libByName("Výkaz strojov");
+    var cp = zakazka.field("Cenová ponuka")[0];
+    var typVykazu = cp.field("Typ cenovej ponuky");
+    var datum = zakazka.field("Dátum");
+    var sezona = zakazka.field(FIELD_SEZONA);
+    var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
+    // vytvoriť novú výdajku
+    var novyVykaz = new Object();
+    novyVykaz[FIELD_CISLO] = cislo;
+    novyVykaz["Dátum"] = datum;
+    novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
+    novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
+    novyVykaz["s DPH"] = true; //harcoded
+    novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
+    novyVykaz["Vydané"] = "Zákazka";
+    novyVykaz["Zákazka"] = zakazka;
+    novyVykaz["Cenová ponuka"] = cp;
+    novyVykaz[FIELD_SEZONA] = sezona;
+    lib.create(novyVykaz);
+    var vykazStrojov = lib.find(cislo)[0];
+
+    return vykazStrojov;
+}
