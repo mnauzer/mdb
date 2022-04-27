@@ -114,8 +114,8 @@ const prepocetZaznamuEvidencie = evidencia => {
                     if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
                         message("true");
                         stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth")
-                            + (vyuzitieStrojov[i].attr("doba prevádzky")) / 360000000);
-                        break;
+                            + (vyuzitieStrojov[i].attr("doba prevádzky")) / 3600000);
+
                     }
                 }
             } else {
