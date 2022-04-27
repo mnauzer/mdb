@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.27";
+    var verzia = "0.2.28";
     result = nazov + " " + verzia;
     return result;
 }
@@ -47,7 +47,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         }
                     }
                     // prepočet atribútov položky
-                    var cena = stroje[p].attr("účtovaná sadzba") || stroje[p].field("Cena bez DPH");
+                    var cena = stroje[p].attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
                     var cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
                     stroje[p].setAttr("prevádzka mth", prevadzkaMTH);
                     stroje[p].setAttr("účtovaná sadzba", cena);
@@ -75,7 +75,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         setTlac(vykaz);
         return [sumaBezDPH, sumaDPH];
     } catch (err) {
-        message("Chyba v riadku: " + err.lineNumber);
+        message("Chyba skriptu: vykazStrojovLibrary/prepocitatVykazyStrojov\nRiadok: " + err.lineNumber + "\n-------------------------\n" + err);
     }
 }
 
