@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.25";
+    var verzia = "0.2.26";
     result = nazov + " " + verzia;
     return result;
 }
@@ -17,21 +17,6 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
         var sDPH = vykaz.field("s DPH");
         // najprv prejdi záznamy z evidencie a dosaď hodnoty do atribútov
-
-        for (var p = 0; p < stroje.length; p++) {
-
-            if (zaznamyEvidencia.length > 0) {
-                message(zaznamyEvidencia.length);
-                for (var v = 0; v < zaznamyEvidencia.length; v++) {
-                    for (var s = 0; s < vyuzitieStrojov.length; s++) {
-                        message("True");
-                        break;
-                    } else {
-                        vykaz.link("Stroje", vyuzitieStrojov[s].field("Cena")[0]);
-                    }
-                }
-            }
-        }
         if (zaznamyEvidencia) {
             for (var v in zaznamyEvidencia) {
                 var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
@@ -70,51 +55,28 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                     sumaBezDPH += cenaCelkom;
                 }
             }
+        } else {
+            message("Žiadne záznamy využitia strojov v Evidencii prác");
         }
 
-
-    } else {
-        message("Žiadne záznamy využitia strojov v Evidencii prác");
-    }
-
-
-    for (var s in stroje) {
-
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    if (sDPH) {
-        var sezona = vykaz.field(FIELD_SEZONA);
-        if (!sezona || sezona == 0) {
-            sezona = vykaz.field(FIELD_DATUM).getFullYear();
-            vykaz.set(FIELD_SEZONA, sezona);
+        if (sDPH) {
+            var sezona = vykaz.field(FIELD_SEZONA);
+            if (!sezona || sezona == 0) {
+                sezona = vykaz.field(FIELD_DATUM).getFullYear();
+                vykaz.set(FIELD_SEZONA, sezona);
+            }
+            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+            sumaDPH = sumaBezDPH * sadzbaDPH;
         }
-        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-        sumaDPH = sumaBezDPH * sadzbaDPH;
+        sumaCelkom = sumaBezDPH + sumaDPH;
+        vykaz.set("Suma bez DPH", sumaBezDPH);
+        vykaz.set("DPH", sumaDPH);
+        vykaz.set("Suma s DPH", sumaCelkom);
+        setTlac(vykaz);
+        return [sumaBezDPH, sumaDPH];
+    } catch (err) {
+        message("Chyba v riadku: " + err.lineNumber);
     }
-    sumaCelkom = sumaBezDPH + sumaDPH;
-    vykaz.set("Suma bez DPH", sumaBezDPH);
-    vykaz.set("DPH", sumaDPH);
-    vykaz.set("Suma s DPH", sumaCelkom);
-    setTlac(vykaz);
-    return [sumaBezDPH, sumaDPH];
-} catch (err) {
-    message("Chyba v riadku: " + err.lineNuber);
-}
-
 }
 
 const novyVykazStrojov = (zakazka) => {
