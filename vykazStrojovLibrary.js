@@ -19,7 +19,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         for (var p = 0; p < stroje.length; p++) {
             // výpočet ceny
             var dodaneMnozstvo = stroje[p].attr("prevádzka mth");
-            var cena = stroje[p].attr("účtovaná sadzba") || stroje[p].field("Cena");
+            var cena = stroje[p].attr("účtovaná sadzba") || stroje[p].field("Cena bez DPH");
             var cenaCelkom = dodaneMnozstvo ? dodaneMnozstvo * cena : null;
             stroje[p].setAttr("účtovaná sadzba", cena);
             stroje[p].setAttr("cena celkom", cenaCelkom);
