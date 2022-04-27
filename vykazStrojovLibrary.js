@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.34";
+    var verzia = "0.2.35";
     result = nazov + " " + verzia;
     return result;
 }
@@ -18,7 +18,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         var sDPH = vykaz.field("s DPH");
         // najprv prejdi záznamy z evidencie a dosaď hodnoty do atribútov
         if (zaznamyEvidencia) {
-            for (var v in zaznamyEvidencia) {
+            for (var v = 0; v < zaznamyEvidencia.length; v++) {
                 var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
                 var stroje = vykaz.field(FIELD_STROJE);
                 if (vyuzitieStrojov) {
