@@ -1,7 +1,7 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.30";
+    var verzia = "0.2.31";
     result = nazov + " " + verzia;
     return result;
 }
@@ -31,6 +31,8 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                             //ak nie je žiadny záznam strojov, vytvor nové pre všetky záznamy strojov z evidencie prác
                             var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
                             prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                            cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
+                            cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
                             newLink.setAttr("prevádzka mth", prevadzkaMTH);
                             newLink.setAttr("účtovaná sadzba", cena);
                             newLink.setAttr("cena celkom", cenaCelkom);
@@ -41,6 +43,11 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                             for (var s in stroje) {
                                 if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[s].id) {
                                     prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                                    cena = stroje[s].attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
+                                    cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
+                                    stroje[s].setAttr("prevádzka mth", prevadzkaMTH);
+                                    stroje[s].setAttr("účtovaná sadzba", cena);
+                                    stroje[s].setAttr("cena celkom", cenaCelkom);
                                     vyuzitieZapisane = true;
                                 }
                             }
@@ -49,6 +56,11 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                             // ak sa využitie strojov nezápísalo do výkazu, vytvor nový záznam vo výkaze
                             vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
                             prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                            cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
+                            cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
+                            newLink.setAttr("prevádzka mth", prevadzkaMTH);
+                            newLink.setAttr("účtovaná sadzba", cena);
+                            newLink.setAttr("cena celkom", cenaCelkom);
                             vyuzitieStrojov = true;
                         }
                     }
