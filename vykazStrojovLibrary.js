@@ -27,7 +27,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                 for (var v = 0; v < zaznamyEvidencia.length; v++) {
                     var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
                     for (var s = 0; s < vyuzitieStrojov.length; s++) {
-                        if (stroje[p].id == vyuzitieStrojov[s].field("Cena").id) {
+                        if (stroje[p].id == vyuzitieStrojov[s].field("Cena")[0].id) {
                             message("True");
                             prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 36000000;
                         }
