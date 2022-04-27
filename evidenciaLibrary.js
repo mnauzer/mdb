@@ -112,14 +112,15 @@ const prepocetZaznamuEvidencie = evidencia => {
                 for (var j = 0; j < stroje.length; j++) {
                     if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
                         message("true");
-                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth") + (vyuzitieStrojov[i].attr("doba prevádzky")) / 36000);
+                        stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth")
+                            + (vyuzitieStrojov[i].attr("doba prevádzky")) / 360000000);
                         break;
                     }
                 }
             } else {
                 message("false");
                 vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky"));
+                stroje[j].setAttr("prevádzka mth", vyuzitieStrojov[i].attr("doba prevádzky") / 360000000));
             }
         }
 
