@@ -110,7 +110,7 @@ const prepocetZaznamuEvidencie = evidencia => {
         }
         var stroje = vykazStrojov.field("Stroje");
         for (var i = 0; i < vyuzitieStrojov.length; i++) {
-            message("Strojov: " + vyuzitieStrojov.length);
+            message("Stroje evidencia: " + vyuzitieStrojov.length + "\nStroje výkaz: " + stroje.length);
             if (stroje) {
                 for (var j = 0; j < stroje.length; j++) {
                     if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
