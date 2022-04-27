@@ -1,14 +1,13 @@
 const verziaVykazStrojov = () => {
     var result = "";
     var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.24";
+    var verzia = "0.2.25";
     result = nazov + " " + verzia;
     return result;
 }
 
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     try {
-        var stroje = vykaz.field(FIELD_STROJE);
         var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz strojov");
         var sumaBezDPH = 0;
         var sumaDPH = null;
@@ -19,54 +18,102 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         var sDPH = vykaz.field("s DPH");
         // najprv prejdi záznamy z evidencie a dosaď hodnoty do atribútov
 
-        if (stroje.length > 0) {
-            for (var p = 0; p < stroje.length; p++) {
-                var prevadzkaMTH = 0;
+        for (var p = 0; p < stroje.length; p++) {
 
-                if (zaznamyEvidencia.length > 0) {
-                    message(zaznamyEvidencia.length);
-                    for (var v = 0; v < zaznamyEvidencia.length; v++) {
-                        var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
-                        for (var s = 0; s < vyuzitieStrojov.length; s++) {
-                            if (stroje[p].id == vyuzitieStrojov[s].field("Cena")[0].id) {
-                                message("True");
-                                prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 3600000;
-                                break;
-                            } else {
-                                vykaz.link("Stroje", vyuzitieStrojov[s].field("Cena")[0]);
-                                prevadzkaMTH += vyuzitieStrojov[s].attr("doba prevádzky") / 3600000;
+            if (zaznamyEvidencia.length > 0) {
+                message(zaznamyEvidencia.length);
+                for (var v = 0; v < zaznamyEvidencia.length; v++) {
+                    for (var s = 0; s < vyuzitieStrojov.length; s++) {
+                        message("True");
+                        break;
+                    } else {
+                        vykaz.link("Stroje", vyuzitieStrojov[s].field("Cena")[0]);
+                    }
+                }
+            }
+        }
+        if (zaznamyEvidencia) {
+            for (var v in zaznamyEvidencia) {
+                var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
+                var stroje = vykaz.field(FIELD_STROJE);
+                if (vyuzitieStrojov) {
+                    var vyuzitieZapisane = false;
+                    for (var i in vyuzitieStrojov) {
+                        var prevadzkaMTH = 0;
+                        if (!stroje) {
+                            //ak nie je žiadny záznam strojov, vytvor nové pre všetky záznamy strojov z evidencie prác
+                            vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
+                            prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                            vyuzitieZapisane = true;
+                        } else {
+                            // ak už existuje nejaký záznam, spáruj s evidenciou
+                            for (var s in stroje) {
+                                if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[s].id) {
+                                    prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                                    vyuzitieZapisane = true;
+                                }
                             }
                         }
+                        if (!vyuzitieZapisane) {
+                            // ak sa využitie strojov nezápísalo do výkazu, vytvor nový záznam vo výkaze
+                            vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
+                            prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
+                            vyuzitieStrojov = true;
+                        }
                     }
+                    // prepočet atribútov položky
                     var cena = stroje[p].attr("účtovaná sadzba") || stroje[p].field("Cena bez DPH");
                     var cenaCelkom = prevadzkaMTH ? prevadzkaMTH * cena : null;
                     stroje[p].setAttr("prevádzka mth", prevadzkaMTH);
                     stroje[p].setAttr("účtovaná sadzba", cena);
                     stroje[p].setAttr("cena celkom", cenaCelkom);
                     sumaBezDPH += cenaCelkom;
-                } else {
-                    message("Žiadne záznamy využitia strojov v Evidencii prác");
                 }
             }
         }
-        if (sDPH) {
-            var sezona = vykaz.field(FIELD_SEZONA);
-            if (!sezona || sezona == 0) {
-                sezona = vykaz.field(FIELD_DATUM).getFullYear();
-                vykaz.set(FIELD_SEZONA, sezona);
-            }
-            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-            sumaDPH = sumaBezDPH * sadzbaDPH;
-        }
-        sumaCelkom = sumaBezDPH + sumaDPH;
-        vykaz.set("Suma bez DPH", sumaBezDPH);
-        vykaz.set("DPH", sumaDPH);
-        vykaz.set("Suma s DPH", sumaCelkom);
-        setTlac(vykaz);
-        return [sumaBezDPH, sumaDPH];
-    } catch (err) {
-        message("Chyba v riadku: " + err.lineNuber);
+
+
+    } else {
+        message("Žiadne záznamy využitia strojov v Evidencii prác");
     }
+
+
+    for (var s in stroje) {
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    if (sDPH) {
+        var sezona = vykaz.field(FIELD_SEZONA);
+        if (!sezona || sezona == 0) {
+            sezona = vykaz.field(FIELD_DATUM).getFullYear();
+            vykaz.set(FIELD_SEZONA, sezona);
+        }
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+        sumaDPH = sumaBezDPH * sadzbaDPH;
+    }
+    sumaCelkom = sumaBezDPH + sumaDPH;
+    vykaz.set("Suma bez DPH", sumaBezDPH);
+    vykaz.set("DPH", sumaDPH);
+    vykaz.set("Suma s DPH", sumaCelkom);
+    setTlac(vykaz);
+    return [sumaBezDPH, sumaDPH];
+} catch (err) {
+    message("Chyba v riadku: " + err.lineNuber);
+}
 
 }
 
