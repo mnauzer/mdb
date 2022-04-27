@@ -175,7 +175,7 @@ const prepocetZakazky = (zakazka) => {
     // STROJE
     // prepočet výkazov strojov
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
-    var vykazyStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA);
+    var vykazStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA)[0];
     // prepočet nákladov strojov
     var nakladyStroje = 0; // náklady
 
@@ -185,29 +185,28 @@ const prepocetZakazky = (zakazka) => {
     var txtStroje = "✘...žiadne stroje";
     var txtNakladyStroje = "✘...žiadne náklady na stroje";
     var txtOdvodDPHStroje = "✘...žiadna DPH za stroje";
-    if (vykazyStrojov.length > 0) {
-        for (var vs = 0; vs < vykazyStrojov.length; vs++) {
-            var stroje = 0;
-            stroje = prepocitatVykazStrojov(vykazyStrojov[vs], strojeUctovatDPH);
-            if (strojeUctovatDPH) {
-                strojeDPH += stroje[1];
-                zakazkaDPH += strojeDPH;
-                txtStroje = " s DPH";
-            } else {
-                txtStroje = " bez DPH";
-            }
-            strojeCelkomBezDPH += stroje[0];
-            if (vyuctovanie) {
-                // nastavenie statusu výkazu na Vyúčtované
-                lteClear(vykazyStrojov[vs].field(FIELD_VYUCTOVANIE));
-                vykazyStrojov[vs].link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vykazyStrojov[vs].set(FIELD_STAV, stavVyuctovania);
-                // zápis do vyúčtovania
-                vyuctovanie.set(vykazyStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
-                nalinkujStroje(vyuctovanie, vykazyStrojov[vs]);
-
-            }
+    if (vykazStrojov) {
+        var stroje = 0;
+        stroje = prepocitatVykazStrojov(vykazStrojov[vs], strojeUctovatDPH);
+        if (strojeUctovatDPH) {
+            strojeDPH += stroje[1];
+            zakazkaDPH += strojeDPH;
+            txtStroje = " s DPH";
+        } else {
+            txtStroje = " bez DPH";
         }
+        strojeCelkomBezDPH += stroje[0];
+        if (vyuctovanie) {
+            // nastavenie statusu výkazu na Vyúčtované
+            lteClear(vykazStrojov[vs].field(FIELD_VYUCTOVANIE));
+            vykazStrojov[vs].link(FIELD_VYUCTOVANIE, vyuctovanie);
+            vykazStrojov[vs].set(FIELD_STAV, stavVyuctovania);
+            // zápis do vyúčtovania
+            vyuctovanie.set(vykazStrojov[vs].field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+            nalinkujStroje(vyuctovanie, vykazStrojov[vs]);
+
+        }
+
         strojeCelkom += strojeCelkomBezDPH + strojeDPH;
         // náklady stroje
         var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
