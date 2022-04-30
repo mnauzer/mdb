@@ -29,7 +29,7 @@ const calcUcet = (ucet) => {
 }
 
 const prepocetPlatby = platba => {
-    var vKniznica = verziaPokladny();
+    var vKniznica = verziaPokladna();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČET PLATBY" + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
