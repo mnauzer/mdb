@@ -44,7 +44,7 @@ const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
             } else {
                 message("nie ja zadaná cena za km v CP")
             }
-            if (vyuctovanie.length > 0) {
+            if (vyuctovanie) {
                 var vKm = vyuctovanie.field("Sadzba km")[0];
                 vKm.setAttr("cena", cena);
                 vKm.setAttr("počet km", km);

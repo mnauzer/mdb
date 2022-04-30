@@ -178,11 +178,9 @@ const prepocetZakazky = (zakazka) => {
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA)[0];
     if (vykazStrojov) {
-
         var vykazStrojovVyuctovanie = vykazStrojov.field("Vyúčtovanie");
         // prepočet nákladov strojov
         var nakladyStroje = 0; // náklady
-
         var strojeCelkomBezDPH = 0;
         var strojeDPH = 0;
         var strojeCelkom = 0;
@@ -226,6 +224,7 @@ const prepocetZakazky = (zakazka) => {
             zakazkaCelkom += strojeCelkom;
         }
     }
+
     //message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
     zakazka.set("txt stroje", txtStroje);
