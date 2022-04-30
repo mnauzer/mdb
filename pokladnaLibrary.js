@@ -5,7 +5,7 @@
 const varziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.2.04";
+    var verzia = "0.2.05";
     result = nazov + " " + verzia;
     return result;
 }
