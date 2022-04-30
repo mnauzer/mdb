@@ -2,10 +2,10 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const varziaPokladna = () => {
+const verziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.2.05";
+    var verzia = "0.2.06";
     result = nazov + " " + verzia;
     return result;
 }
