@@ -5,7 +5,7 @@
 const varziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.2.03";
+    var verzia = "0.2.04";
     result = nazov + " " + verzia;
     return result;
 }
@@ -29,7 +29,7 @@ const calcUcet = (ucet) => {
 }
 
 const prepocetPlatby = platba => {
-    var vKniznica = verziaKniznice();
+    var vKniznica = verziaPokladny();
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČET PLATBY" + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
