@@ -1,4 +1,4 @@
-const zakazky = "0.4.14";
+const zakazky = "0.4.15";
 
 const verziaZakazky = () => {
     var result = "";
@@ -134,7 +134,6 @@ const prepocetZakazky = (zakazka) => {
             if (materialUctovatDPH) {
                 odvodDPHMaterial += zakazkaMaterialRozdielDPH(vydajkyMaterialu[vm]);
                 materialDPH += material[1];
-                zakazkaDPH += materialDPH;
                 txtMaterial = " s DPH";
             } else {
                 txtMaterial = " bez DPH";
@@ -191,7 +190,6 @@ const prepocetZakazky = (zakazka) => {
             stroje = prepocitatVykazStrojov(vykazStrojov, strojeUctovatDPH);
             if (strojeUctovatDPH) {
                 strojeDPH += stroje[1];
-                zakazkaDPH += strojeDPH;
                 txtStroje = " s DPH";
             } else {
                 txtStroje = " bez DPH";
