@@ -278,7 +278,7 @@ const prepocetZakazky = (zakazka) => {
     zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
     zakazkaDPH += dopravaDPH;
     zakazkaCelkom += dopravaCelkom;
-
+    message(zakazkaDPH);
     //message("Doprava celkom:" + dopravaCelkom);
     zakazka.set(FIELD_DOPRAVA, dopravaCelkom);
     zakazka.set("txt doprava", txtDoprava);
