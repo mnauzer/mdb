@@ -1,4 +1,4 @@
-const zakazky = "0.4.13";
+const zakazky = "0.4.14";
 
 const verziaZakazky = () => {
     var result = "";
@@ -63,7 +63,6 @@ const prepocetZakazky = (zakazka) => {
             prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
             if (praceUctovatDPH) {
                 praceDPH += prace[1];
-                zakazkaDPH += praceDPH;
                 txtPrace = " s DPH";
             } else {
                 txtPrace = " bez DPH";
@@ -172,7 +171,6 @@ const prepocetZakazky = (zakazka) => {
     }
     zakazka.set("txt odvod dph materiál", txtOdvodDPHMaterial);
 
-    message(zakazkaDPH);
     // STROJE
     // prepočet výkazov strojov
 
