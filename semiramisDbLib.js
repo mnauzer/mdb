@@ -1,7 +1,7 @@
 // libraries
 // app
-const DB_ASSISTENT = "KRAJINKA APP";
-const DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
+const DB_ASSISTENT = "SEMIRAMIS APP";
+const DB_ASSISTENT_DATABAZY = "SEMIRAMIS APP DATABÁZY";
 // projekty
 const DB_CENOVE_PONUKY = "Cenové ponuky";
 const DB_ZAKAZKY = "Zákazky";
