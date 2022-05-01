@@ -1,4 +1,4 @@
-const zakazky = "0.4.15";
+const zakazky = "0.4.16";
 
 const verziaZakazky = () => {
     var result = "";
@@ -175,52 +175,50 @@ const prepocetZakazky = (zakazka) => {
 
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
     var vykazStrojov = zakazka.linksFrom(DB_VYKAZY_STROJOV, W_ZAKAZKA)[0];
+    var nakladyStroje = 0; // náklady
+    var strojeCelkomBezDPH = 0;
+    var strojeDPH = 0;
+    var strojeCelkom = 0;
+    var txtStroje = "✘...žiadne stroje";
+    var txtNakladyStroje = "✘...žiadne náklady na stroje";
+    var txtOdvodDPHStroje = "✘...žiadna DPH za stroje";
     if (vykazStrojov) {
         var vykazStrojovVyuctovanie = vykazStrojov.field("Vyúčtovanie");
         // prepočet nákladov strojov
-        var nakladyStroje = 0; // náklady
-        var strojeCelkomBezDPH = 0;
-        var strojeDPH = 0;
-        var strojeCelkom = 0;
-        var txtStroje = "✘...žiadne stroje";
-        var txtNakladyStroje = "✘...žiadne náklady na stroje";
-        var txtOdvodDPHStroje = "✘...žiadna DPH za stroje";
-        if (vykazStrojov) {
-            var stroje = 0;
-            stroje = prepocitatVykazStrojov(vykazStrojov, strojeUctovatDPH);
-            if (strojeUctovatDPH) {
-                strojeDPH += stroje[1];
-                txtStroje = " s DPH";
-            } else {
-                txtStroje = " bez DPH";
-            }
-            strojeCelkomBezDPH += stroje[0];
-            if (vyuctovanie) {
-                // nastavenie statusu výkazu na Vyúčtované
-                if (vykazStrojovVyuctovanie.length > 0) {
-                    for (var l = 0; l < vykazStrojovVyuctovanie.length; l++) {
-                        vykazStrojov.unlink("Vyúčtovanie", vykazStrojovVyuctovanie[l]);
-                    }
-                }
-                vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vykazStrojov.set(FIELD_STAV, stavVyuctovania);
-                // zápis do vyúčtovania
-                vyuctovanie.set(vykazStrojov.field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
-                nalinkujStroje(vyuctovanie, vykazStrojov);
-
-            }
-
-            strojeCelkom += strojeCelkomBezDPH + strojeDPH;
-            // náklady stroje
-            var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
-            nakladyStroje = strojeCelkomBezDPH * koefStroje;
-            txtNakladyStroje = "✔...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
-            // globálny súčet
-            zakazkaCelkomBezDPH += strojeCelkomBezDPH;
-            zakazkaDPH += strojeDPH;
-            zakazkaCelkom += strojeCelkom;
+        var stroje = 0;
+        stroje = prepocitatVykazStrojov(vykazStrojov, strojeUctovatDPH);
+        if (strojeUctovatDPH) {
+            strojeDPH += stroje[1];
+            txtStroje = " s DPH";
+        } else {
+            txtStroje = " bez DPH";
         }
+        strojeCelkomBezDPH += stroje[0];
+        if (vyuctovanie) {
+            // nastavenie statusu výkazu na Vyúčtované
+            if (vykazStrojovVyuctovanie.length > 0) {
+                for (var l = 0; l < vykazStrojovVyuctovanie.length; l++) {
+                    vykazStrojov.unlink("Vyúčtovanie", vykazStrojovVyuctovanie[l]);
+                }
+            }
+            vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
+            vykazStrojov.set(FIELD_STAV, stavVyuctovania);
+            // zápis do vyúčtovania
+            vyuctovanie.set(vykazStrojov.field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+            nalinkujStroje(vyuctovanie, vykazStrojov);
+
+        }
+
     }
+    strojeCelkom += strojeCelkomBezDPH + strojeDPH;
+    // náklady stroje
+    var koefStroje = libByName(DB_ASSISTENT).find(sezona)[0].field("Koeficient nákladov prevádzky strojov");
+    nakladyStroje = strojeCelkomBezDPH * koefStroje;
+    txtNakladyStroje = "✔...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
+    // globálny súčet
+    zakazkaCelkomBezDPH += strojeCelkomBezDPH;
+    zakazkaDPH += strojeDPH;
+    zakazkaCelkom += strojeCelkom;
 
     //message("Stroje celkom:" + strojeCelkom);
     zakazka.set(FIELD_STROJE, strojeCelkom);
