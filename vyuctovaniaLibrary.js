@@ -160,6 +160,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
 const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
+    message("Vyýkaz prác " + vykazPrac.title);
     var pocitanieHodinovychSadzieb = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
     var popis = vykazPrac.field(FIELD_POPIS);
     var polozky = vyuctovanie.field(popis);
