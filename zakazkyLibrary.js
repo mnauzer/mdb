@@ -233,6 +233,18 @@ const prepocetZakazky = (zakazka) => {
     }
     zakazka.set("txt odvod dph stroje", txtOdvodDPHStroje);
 
+    // INÉ VÝDAVKY
+    var ineVydavky = zakazkaVydavky(zakazka, true, vyuctovanie);
+    if (ineVydavky <= 0) {
+        var txtVydavky = "✘...žiadne iné výdavky";
+    } else {
+        var txtVydavky = "✔...priame výdavky z Pokladne";
+    }
+
+    zakazkaCelkomBezDPH += ineVydavky[0];
+    zakazkaDPH += ineVydavky[1];
+    zakazkaCelkom += ineVydavky[2];
+    zakazka.set("txt iné výdavky", ineVydavky[3]);
 
     // DOPRAVA
     // prepočítať dopravu
@@ -315,19 +327,7 @@ const prepocetZakazky = (zakazka) => {
     }
     zakazka.set("txt odvod dph doprava", txtOdvodDPHDoprava);
 
-    // INÉ VÝDAVKY
-    var ineVydavky = zakazkaVydavky(zakazka, true, vyuctovanie);
-    if (ineVydavky <= 0) {
-        var txtVydavky = "✘...žiadne iné výdavky";
-    } else {
-        var txtVydavky = "✔...priame výdavky z Pokladne";
-    }
-    vydavkyCelkomBezDPH += ineVydavky[0];
 
-    zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
-    zakazkaDPH += dopravaDPH;
-    zakazkaCelkom += ineVydavky;
-    zakazka.set("txt iné výdavky", txtVydavky);
     // PLATBY
     var zaplatene = zakazkaPrijmy(zakazka);
     // CELKOM
@@ -539,7 +539,7 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
         // zápis do vyúčtovania
         vyuctovanie.set(vydavky.field("Iné výdavky celkom", vydavkyCelkom));
     }
-    return [vydavkyBezDPH, vydavkyDPH, txtVydavky];
+    return [vydavkyBezDPH, vydavkyDPH, vydavkyCelkom, txtVydavky];
 };
 
 const efektivita = marza => {
