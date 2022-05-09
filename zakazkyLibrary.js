@@ -515,25 +515,28 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     var vydavkyDPH = 0;
     var vydavkyCelkom = 0;
     var txtVydavky = "";
-    for (var v = 0; vydavkyLinks.length; v++) {
-        if (sDPH) {
-            vydavkyBezDPH += vydavkyLinks[v].field("Výdavok bez DPH");
-            vydavkyDPH += vydavkyLinks[v].field("DPH-");
-            txtVydavky = " s DPH";
-        } else {
-            txtVydavky = " bez DPH";
-        }
-        if (vyuctovanie) {
-            // zápis do vyúčtovania
-            vyuctovanie.link("Výdavky", vydavkyLinks[v]);
-            vyuctovanie.field("Výdavky")[0].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
-            vyuctovanie.field("Výdavky")[0].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
+    if (vydavkyLinks) {
+
+        for (var v = 0; vydavkyLinks.length; v++) {
+            if (sDPH) {
+                vydavkyBezDPH += vydavkyLinks[v].field("Výdavok bez DPH");
+                vydavkyDPH += vydavkyLinks[v].field("DPH-");
+                txtVydavky = " s DPH";
+            } else {
+                txtVydavky = " bez DPH";
+            }
+            if (vyuctovanie) {
+                // zápis do vyúčtovania
+                vyuctovanie.link("Výdavky", vydavkyLinks[v]);
+                vyuctovanie.field("Výdavky")[0].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
+                vyuctovanie.field("Výdavky")[0].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
+            }
         }
     }
     vydavkyCelkom = vydavkyBezDPH + vydavkyDPH;
     if (vyuctovanie) {
         // zápis do vyúčtovania
-        vyuctovanie.set(vydavkyL.field("Iné výdavky celkom", vydavkyCelkom));
+        vyuctovanie.set(vydavky.field("Iné výdavky celkom", vydavkyCelkom));
     }
     return [vydavkyBezDPH, vydavkyDPH, txtVydavky];
 };
