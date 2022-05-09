@@ -515,9 +515,9 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     var vydavkyDPH = 0;
     var vydavkyCelkom = 0;
     var txtVydavky = "";
-    var vydavky = [];
+    var reset = [];
     if (vyuctovanie) {
-        vyuctovanie.set("Výdavky", vydavky);
+        vyuctovanie.set("Výdavky", reset);
     }
     if (vydavkyLinks) {
         for (var v = 0; v < vydavkyLinks.length; v++) {
