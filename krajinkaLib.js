@@ -8,7 +8,8 @@ const verziaKrajinkaLib = () => {
     return nazov + " " + verzia;
 }
 
-const setEdit = (entry, create = 0) => { // default je update
+const setEdit = (entry) => { // default je update
+    var create = true;
     if (create) {
         entry.set(FIELD_VIEW, "Editácia");
         entry.set(FIELD_DEBUG, false);
