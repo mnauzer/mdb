@@ -55,7 +55,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                         var rVykazy = evidenciaLinks[el].field("Výkaz prác");
                         var index = zistiIndexLinku(vykaz, rVykazy);
                         var rVykaz = evidenciaLinks[el].field("Výkaz prác")[index];
-                        hodinyCelkom += rVykaz.attr("počet hodín") || evidenciaLinks[el].field("Odpracované");
+                        hodinyCelkom += evidenciaLinks[el].field("Odpracované");
                         vykaz.link("Rozpis", evidenciaLinks[el]);
                         vykaz.field("Rozpis")[el].setAttr("vykonané práce", rVykaz.attr("popis prác"));
                         vykaz.field("Rozpis")[el].setAttr("počet hodín", null);
