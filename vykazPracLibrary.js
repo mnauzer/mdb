@@ -75,7 +75,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                             }
                         }
                     }
-                    message(hodinyCelkom);
+                    //message(hodinyCelkom);
                     sadzba = sadzba - (sadzba * zlava / 100);
                     // dosadiť výsledky do poľa "Práce" - pri výkazoch práce je len jedno
                     sumaBezDPH = hodinyCelkom * sadzba;
