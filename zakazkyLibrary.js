@@ -1,4 +1,4 @@
-const zakazky = "0.4.16";
+const zakazky = "0.4.17";
 
 const verziaZakazky = () => {
     var result = "";
@@ -315,12 +315,17 @@ const prepocetZakazky = (zakazka) => {
     zakazka.set("txt odvod dph doprava", txtOdvodDPHDoprava);
 
     // INÉ VÝDAVKY
-    var ineVydavky = zakazkaVydavky(zakazka);
+    var ineVydavky = zakazkaVydavky(zakazka, true, vyuctovanie);
     if (ineVydavky <= 0) {
         var txtVydavky = "✘...žiadne iné výdavky";
     } else {
         var txtVydavky = "✔...priame výdavky z Pokladne";
     }
+    vydavkyCelkomBezDPH += ineVydavky[0];
+
+    zakazkaCelkomBezDPH += dopravaCelkomBezDPH;
+    zakazkaDPH += dopravaDPH;
+    zakazkaCelkom += ineVydavky;
     zakazka.set("txt iné výdavky", txtVydavky);
     // PLATBY
     var zaplatene = zakazkaPrijmy(zakazka);
@@ -503,14 +508,35 @@ const zakazkaPrijmy = (zakazka, sDPH) => {
     return result;
 };
 
-const zakazkaVydavky = (zakazka, sDPH) => {
-    var links = zakazka.linksFrom(DB_POKLADNA, "Zákazka")
-    var result = 0;
-    for (var p = 0; p < links.length; p++) {
-        result += (links[p].field("Výdavok bez DPH") + links[p].field("DPH-"));
-    };
-    return result;
+const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
+    var vydavkyLinks = zakazka.linksFrom(DB_POKLADNA, "Zákazka")
+    var vydavkyBezDPH = 0;
+    var vydavkyDPH = 0;
+    var vydavkyCelkom = 0;
+    var txtVydavky = "";
+    for (var v = 0; vydavkyLinks.length; v++) {
+        if (sDPH) {
+            vydavkyBezDPH += vydavkyLinks[p].field("Výdavok bez DPH");
+            vydavkyDPH += vydavkyLinks[p].field("DPH-");
+            txtVydavky = " s DPH";
+        } else {
+            txtVydavky = " bez DPH";
+        }
+        if (vyuctovanie) {
+            // zápis do vyúčtovania
+            vyuctovanie.link("Výdavky", vydavkyLinks[v]);
+            vyuctovanie.field("Výdavky")[0].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
+            vyuctovanie.field("Výdavky")[0].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
+        }
+    }
+    vydavkyCelkom = vydavkyBezDPH + vydavkyDPH;
+    if (vyuctovanie) {
+        // zápis do vyúčtovania
+        vyuctovanie.set(vydavkyL.field("Iné výdavky celkom", vydavkyCelkom));
+    }
+    return [vydavkyBezDPH, vydavkyDPH, txtVydavky];
 };
+
 
 const efektivita = marza => {
     result = 0;
