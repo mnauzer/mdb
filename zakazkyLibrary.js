@@ -530,8 +530,9 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
                 // zápis do vyúčtovania
                 vyuctovanie.set("Výdavky", vydavky);
                 vyuctovanie.link("Výdavky", vydavkyLinks[v]);
-                vyuctovanie.field("Výdavky")[v].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
-                vyuctovanie.field("Výdavky")[v].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
+                setTlac(vydavkyLinks[v]);
+                // vyuctovanie.field("Výdavky")[v].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
+                // vyuctovanie.field("Výdavky")[v].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
             }
         }
     }
