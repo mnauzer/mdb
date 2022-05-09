@@ -1,4 +1,4 @@
-const zakazky = "0.4.25";
+const zakazky = "0.4.26";
 
 const verziaZakazky = () => {
     var result = "";
@@ -531,8 +531,8 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
                 vyuctovanie.set("Výdavky", vydavky);
                 vyuctovanie.link("Výdavky", vydavkyLinks[v]);
                 setTlac(vydavkyLinks[v]);
-                // vyuctovanie.field("Výdavky")[v].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
-                // vyuctovanie.field("Výdavky")[v].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
+                vyuctovanie.field("Výdavky")[v + 1].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
+                vyuctovanie.field("Výdavky")[v + 1].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
             }
         }
     }
