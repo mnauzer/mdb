@@ -4,13 +4,18 @@
 // Popis:                   knižnica krajinkaLib
 const verziaKrajinkaLib = () => {
     var nazov = "krajinkalib";
-    var verzia = "0.2.29";
+    var verzia = "0.2.30";
     return nazov + " " + verzia;
 }
 
-const setEdit = entry => {
-    entry.set(FIELD_VIEW, "Editácia");
-    entry.set(FIELD_DEBUG, false);
+const setEdit = (entry, create = 0) => { // default je update
+    if (create) {
+        entry.set(FIELD_VIEW, "Editácia");
+        entry.set(FIELD_DEBUG, false);
+    } else {
+        entryDefault.set(FIELD_VIEW, "Editácia");
+        entryDefault.set(FIELD_DEBUG, false);
+    }
     return;
 }
 
