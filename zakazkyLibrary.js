@@ -1,4 +1,4 @@
-const zakazky = "0.4.17";
+const zakazky = "0.4.18";
 
 const verziaZakazky = () => {
     var result = "";
@@ -516,8 +516,8 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     var txtVydavky = "";
     for (var v = 0; vydavkyLinks.length; v++) {
         if (sDPH) {
-            vydavkyBezDPH += vydavkyLinks[p].field("Výdavok bez DPH");
-            vydavkyDPH += vydavkyLinks[p].field("DPH-");
+            vydavkyBezDPH += vydavkyLinks[v].field("Výdavok bez DPH");
+            vydavkyDPH += vydavkyLinks[v].field("DPH-");
             txtVydavky = " s DPH";
         } else {
             txtVydavky = " bez DPH";
