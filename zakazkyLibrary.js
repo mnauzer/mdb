@@ -1,4 +1,4 @@
-const zakazky = "0.4.26";
+const zakazky = "0.4.27";
 
 const verziaZakazky = () => {
     var result = "";
@@ -516,8 +516,10 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     var vydavkyCelkom = 0;
     var txtVydavky = "";
     var vydavky = [];
+    if (vyuctovanie) {
+        vyuctovanie.set("Výdavky", vydavky);
+    }
     if (vydavkyLinks) {
-
         for (var v = 0; v < vydavkyLinks.length; v++) {
             if (sDPH) {
                 vydavkyBezDPH += vydavkyLinks[v].field("Výdavok bez DPH");
@@ -528,11 +530,10 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
             }
             if (vyuctovanie) {
                 // zápis do vyúčtovania
-                vyuctovanie.set("Výdavky", vydavky);
                 vyuctovanie.link("Výdavky", vydavkyLinks[v]);
                 setTlac(vydavkyLinks[v]);
-                vyuctovanie.field("Výdavky")[v + 1].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
-                vyuctovanie.field("Výdavky")[v + 1].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
+                vyuctovanie.field("Výdavky")[v].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
+                vyuctovanie.field("Výdavky")[v].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
             }
         }
     }
