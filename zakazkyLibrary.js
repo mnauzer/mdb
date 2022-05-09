@@ -59,7 +59,7 @@ const prepocetZakazky = (zakazka) => {
     var praceCelkom = 0;
     if (vykazyPrac.length > 0) {
         for (var vp = 0; vp < vykazyPrac.length; vp++) {
-            message(vykazyPrac.length);
+            // message(vykazyPrac.length);
             var prace = [];
             prace = prepocitatVykazPrac(vykazyPrac[vp], praceUctovatDPH);
             if (praceUctovatDPH) {
