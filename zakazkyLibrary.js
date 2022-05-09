@@ -82,7 +82,6 @@ const prepocetZakazky = (zakazka) => {
                 } else if (typVykazu == W_POLOZKY) {
                     nalinkujPrace(vyuctovanie, vykazyPrac[vp]);
                 }
-                nalinkujPraceHZS()
             }
         }
         praceCelkom += praceCelkomBezDPH + praceDPH;
