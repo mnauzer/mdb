@@ -1,4 +1,4 @@
-const zakazky = "0.4.23";
+const zakazky = "0.4.24";
 
 const verziaZakazky = () => {
     var result = "";
@@ -537,7 +537,7 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     vydavkyCelkom = vydavkyBezDPH + vydavkyDPH;
     if (vyuctovanie) {
         // zápis do vyúčtovania
-        vyuctovanie.set(vydavky.field("Iné výdavky celkom", vydavkyCelkom));
+        vyuctovanie.set("Iné výdavky celkom", vydavkyCelkom);
     }
     return [vydavkyBezDPH, vydavkyDPH, vydavkyCelkom, txtVydavky];
 };
