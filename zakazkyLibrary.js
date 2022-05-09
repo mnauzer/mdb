@@ -1,4 +1,4 @@
-const zakazky = "0.4.18";
+const zakazky = "0.4.19";
 
 const verziaZakazky = () => {
     var result = "";
@@ -81,6 +81,7 @@ const prepocetZakazky = (zakazka) => {
                 } else if (typVykazu == W_POLOZKY) {
                     nalinkujPrace(vyuctovanie, vykazyPrac[vp]);
                 }
+                nalinkujPraceHZS()
             }
         }
         praceCelkom += praceCelkomBezDPH + praceDPH;
@@ -536,7 +537,6 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     }
     return [vydavkyBezDPH, vydavkyDPH, txtVydavky];
 };
-
 
 const efektivita = marza => {
     result = 0;
