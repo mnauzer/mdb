@@ -1,4 +1,4 @@
-const zakazky = "0.4.24";
+const zakazky = "0.4.25";
 
 const verziaZakazky = () => {
     var result = "";
@@ -515,6 +515,7 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
     var vydavkyDPH = 0;
     var vydavkyCelkom = 0;
     var txtVydavky = "";
+    var vydavky = [];
     if (vydavkyLinks) {
 
         for (var v = 0; v < vydavkyLinks.length; v++) {
@@ -527,7 +528,7 @@ const zakazkaVydavky = (zakazka, sDPH, vyuctovanie) => {
             }
             if (vyuctovanie) {
                 // zápis do vyúčtovania
-                vyuctovanie.set("Výdavky", null);
+                vyuctovanie.set("Výdavky", vydavky);
                 vyuctovanie.link("Výdavky", vydavkyLinks[v]);
                 vyuctovanie.field("Výdavky")[v].setAttr("popis", vydavkyLinks[v].field("Popis platby"))
                 vyuctovanie.field("Výdavky")[v].setAttr("suma", vydavkyLinks[v].field("Výdavok bez DPH") + vydavkyLinks[v].field("DPH-"))
