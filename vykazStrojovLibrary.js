@@ -43,7 +43,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         if (!vyuzitieZapisane) {
                             // ak sa využitie strojov nezápísalo do výkazu, vytvor nový záznam vo výkaze
                             var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                            vyuzitieStrojov = true;
+                            vyuzitieZapisane = true;
                         }
                         prevadzkaMTH += vyuzitieStrojov[i].attr("doba prevádzky") / 3600000;
                         cena = newLink.attr("účtovaná sadzba") || vyuzitieStrojov[i].field("Cena")[0].field("Cena bez DPH");
