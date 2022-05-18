@@ -122,10 +122,17 @@ const noveCisloV2 = (entry, lib, withPrefix, sliceNum) => {
 };
 
 const pullAddress = klient => {
-    var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim();
-    var ulica = klient.field("Ulica");
-    var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
-    var adresa = meno + "\n" + ulica + "\n" + mesto + "\n";
+    if (klient.field("Firma/Osoba") == "Osoba") {
+        var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim();
+        var ulica = klient.field("Ulica");
+        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
+        var adresa = meno + "\n" + ulica + "\n" + mesto + "\n";
+    } else {
+        var firma = klient.field("Názov firmy");
+        var ulica = klient.field("Ulica");
+        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
+        var adresa = firma + "\n" + ulica + "\n" + mesto + "\n";
+    }
     return adresa;
 };
 
