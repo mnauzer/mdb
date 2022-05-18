@@ -14,6 +14,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         var sumaCelkom = 0;
 
         var typ = vykaz.field("Typ výkazu");
+        message(uctovatDPH);
         if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
         var sDPH = vykaz.field("s DPH");
         // najprv prejdi záznamy z evidencie a dosaď hodnoty do atribútov
