@@ -10,8 +10,8 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     try {
         var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz strojov");
         var sumaBezDPH = 0;
-        var sumaDPH = null;
-        var sumaCelkom = null;
+        var sumaDPH = 0;
+        var sumaCelkom = 0;
 
         var typ = vykaz.field("Typ výkazu");
         if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
@@ -73,7 +73,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         vykaz.set("DPH", sumaDPH);
         vykaz.set("Suma s DPH", sumaCelkom);
         setTlac(vykaz);
-        return [sumaBezDPH, sumaDPH];
+        return [sumaBezDPH, sumaDPH, sumaCelkom];
     } catch (err) {
         message("Chyba skriptu: vykazStrojovLibrary/prepocitatVykazyStrojov\nRiadok: " + err.lineNumber + "\n-------------------------\n" + err);
     }
