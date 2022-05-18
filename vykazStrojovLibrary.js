@@ -22,7 +22,6 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                 var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
                 var stroje = vykaz.field(FIELD_STROJE);
                 if (vyuzitieStrojov) {
-                    var vyuzitieZapisane = false;
                     for (var i in vyuzitieStrojov) {
                         var prevadzkaMTH = 0;
                         var cena = 0;
@@ -30,13 +29,13 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                         if (!stroje) {
                             //ak nie je žiadny záznam strojov, vytvor nové pre všetky záznamy strojov z evidencie prác
                             var newLink = vykaz.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                            vyuzitieZapisane = true;
+                            var vyuzitieZapisane = true;
                         } else {
                             // ak už existuje nejaký záznam, spáruj s evidenciou
                             for (var s in stroje) {
                                 if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[s].id) {
                                     var newLink = stroje[s];
-                                    vyuzitieZapisane = true;
+                                    var vyuzitieZapisane = true;
                                 }
                             }
                         }
