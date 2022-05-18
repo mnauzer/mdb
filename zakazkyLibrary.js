@@ -1,4 +1,4 @@
-const zakazky = "0.4.27";
+const zakazky = "0.4.28";
 
 const verziaZakazky = () => {
     var result = "";
@@ -186,7 +186,7 @@ const prepocetZakazky = (zakazka) => {
     if (vykazStrojov) {
         var vykazStrojovVyuctovanie = vykazStrojov.field("Vyúčtovanie");
         // prepočet nákladov strojov
-        var stroje = 0;
+        var stroje = [];
         stroje = prepocitatVykazStrojov(vykazStrojov, strojeUctovatDPH);
         if (strojeUctovatDPH) {
             strojeDPH += stroje[1];
