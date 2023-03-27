@@ -4,14 +4,13 @@
 // Popis:
 const verziaCenovePonuky = () => {
     var nazov = "cpLibrary";
-    var verzia = "0.3.01";
+    var verzia = "0.3.02";
     return nazov + " " + verzia;
 }
 
 const prepocetPonuky = ponuka => {
     // verzia
-    message("CENOVÁ PONUKA v."
-        + "\n" + verziaCenovePonuky()
+    message("CENOVÁ PONUKA " + verziaCenovePonuky()
         + "\n" + verziaKrajinkaLib());
     //
     message("Prepočítavam...")
