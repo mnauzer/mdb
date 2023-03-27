@@ -10,7 +10,7 @@ const verziaCenovePonuky = () => {
 
 const prepocetPonuky = ponuka => {
     // verzia
-    var verzia = "0.2.09";
+    var verzia = "0.2.14";
     message("CENOVÁ PONUKA v." + verzia
         + "\n" + verziaCenovePonuky()
         + "\n" + verziaKrajinkaLib());
