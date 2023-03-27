@@ -1,17 +1,16 @@
 // Library/Event/Script:    Projekty\Cenové ponuky\shared\cpLibrary_w.js
 // JS Libraries:
-// Dátum:                   07.03.2022
+// Dátum:                   27.03.2023
 // Popis:
 const verziaCenovePonuky = () => {
     var nazov = "cpLibrary";
-    var verzia = "0.2.13";
+    var verzia = "0.3.01";
     return nazov + " " + verzia;
 }
 
 const prepocetPonuky = ponuka => {
     // verzia
-    var verzia = "0.2.14";
-    message("CENOVÁ PONUKA v." + verzia
+    message("CENOVÁ PONUKA v."
         + "\n" + verziaCenovePonuky()
         + "\n" + verziaKrajinkaLib());
     //
