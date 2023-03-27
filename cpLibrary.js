@@ -102,7 +102,7 @@ const prepocetPonuky = ponuka => {
     ponuka.set("Celkom (bez DPH)", cenaCelkomBezDPH);
     ponuka.set("DPH 20%", dph);
     ponuka.set("Cena celkom (s DPH)", cenaSDPH);
-    message("Hotovo...Cena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
+    message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
 }
 
 const generujZakazku = cp => {
