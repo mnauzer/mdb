@@ -21,6 +21,5 @@ function najdiPracujucich(fiscalYear) {
                 }
             }
         }
-        message("Pracujúcich zamestnancov: " + pracujuci.length);
-        return pracujuci;
+       return pracujuci;
 }
