@@ -20,7 +20,7 @@ function najdiPracujucich(pracujuci, fiscalYear){
                 for (var z = 0;z < zamestnanci.length; z++){
                     if(pracujuci.indexOf(zamestnanci[z]) === -1) {
                         pracujuci.push(zamestnanci[z]);
-                        message('Zamestnanec: ' + zamestnanci[z].field('Nick') + ' pridaný');
+                        //message('Zamestnanec: ' + zamestnanci[z].field('Nick') + ' pridaný');
                     }
                 }
             }
