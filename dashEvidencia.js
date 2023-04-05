@@ -2,11 +2,12 @@ function spocitajDochadzku(zamestnanec) {
 
 }
 
-function spocitajMzdy(zamestnanec){
+function spocitajMzdy(zamestnanec) {
 
 }
 
-function najdiPracujucich(pracujuci, fiscalYear){
+function najdiPracujucich(fiscalYear) {
+        var pracujuci = [];
         var lib = libByName("Dochádzka");
         var entries = lib.entries();
         const fiscalEntries = entries.filter(e => e.field('sezóna') == fiscalYear)
