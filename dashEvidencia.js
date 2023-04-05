@@ -12,7 +12,7 @@ function najdiPracujucich(pracujuci, fiscalYear){
     try{
         var lib = libByName("Dochádzka");
         var entries = lib.entries();
-        const fiscalEntries = entries.filter(e => e.field('sezóna') === fiscalYear)
+        const fiscalEntries = entries.filter(e => e.field('sezóna') == fiscalYear)
         message("Počet záznamov: " + fiscalEntries);
         for (var e = 0;e < fiscalEntries.length; e++) {
             if (entries[e].field("sezóna") === fiscalYear){
