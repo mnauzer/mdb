@@ -8,7 +8,7 @@ function spocitajMzdy(zamestnanec){
 var pracujuci = [];
 var fiscalYear = 2003;
 
-const najdiPracujucich = (pracujuci, fiscalYear) => {
+function najdiPracujucich(pracujuci, fiscalYear){
     try{
         var lib = libByName("Dochádzka");
         var entries = lib.entries();
