@@ -5,30 +5,21 @@ function spocitajDochadzku(zamestnanec) {
 function spocitajMzdy(zamestnanec){
 
 }
-var pracujuci = [];
-var fiscalYear = 2003;
 
 function najdiPracujucich(pracujuci, fiscalYear){
-    try{
         var lib = libByName("Dochádzka");
         var entries = lib.entries();
         const fiscalEntries = entries.filter(e => e.field('sezóna') == fiscalYear)
         message("Počet záznamov: " + fiscalEntries.length);
         for (var e = 0;e < fiscalEntries.length; e++) {
-            if (fiscalEntries[e].field("sezóna") === fiscalYear){
-                var zamestnanci = fiscalEntries[e].field("Zamestnanci");
-                for (var z = 0;z < zamestnanci.length; z++){
-                    if(pracujuci.indexOf(zamestnanci[z]) === -1) {
-                        pracujuci.push(zamestnanci[z]);
-                        //message('Zamestnanec: ' + zamestnanci[z].field('Nick') + ' pridaný');
-                    }
+            var zamestnanci = fiscalEntries[e].field("Zamestnanci");
+            for (var z = 0;z < zamestnanci.length; z++) {
+                if(pracujuci.indexOf(zamestnanci[z]) === -1) {
+                    pracujuci.push(zamestnanci[z]);
+                    //message('Zamestnanec: ' + zamestnanci[z].field('Nick') + ' pridaný');
                 }
             }
         }
-
+        message("Pracujúcich zamestnancov: " + pracujuci.length);
         return pracujuci;
-
-    } catch (error) {
-        message('Chyba: ' + error);
-    }
 }
