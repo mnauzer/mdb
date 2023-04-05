@@ -13,11 +13,11 @@ function najdiPracujucich(pracujuci, fiscalYear){
         var lib = libByName("Dochádzka");
         var entries = lib.entries();
         for (var e = 0;e < entries.length; e++) {
-            var zamestnanci = e.field("Zamestnanci");
+            var zamestnanci = entries[e].field("Zamestnanci");
             for (var z = 0;z < zamestnanci.length; z++){
-                if(pracujuci.indexOf(z) === -1) {
-                    pracujuci.push(z);
-                    message('Zamestnanec: ' + z.field('Nick') + ' pridaný');
+                if(pracujuci.indexOf(zamestnanci[z]) === -1) {
+                    pracujuci.push(zamestnanci[z]);
+                    message('Zamestnanec: ' + zamestnanci[z].field('Nick') + ' pridaný');
                 }
             }
         }
