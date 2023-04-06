@@ -31,8 +31,6 @@ const zamestnanecPlatby = zamestnanec => {
     zamestnanec.set("Preplatok/Nedoplatok", zamestnanec.field("Zarobené") - vyplateneCelkom);
 };
 
-
-
 const zamestnanecDochadzka = zamestnanec => {
     //    var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
     //    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
