@@ -50,7 +50,7 @@ const zamestnanecDochadzka = zamestnanec => {
         lfDochadzka = zamestnanec.linksFrom("Dochádzka", "Zamestnanci");
         if (lfDochadzka) {
             for (var d in lfDochadzka) {
-                var dSezona = lfDochadzka[d].field("Sezóna");
+                var dSezona = lfDochadzka[d].field("sezóna");
                 if (dSezona == sezona) {
                     odpracovaneCelkom += lfDochadzka[d].field("Odpracované");
                     // prebehni pole zamestnanci

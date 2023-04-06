@@ -21,7 +21,7 @@ function najdiPracujucich(fiscalYear) {
                 }
             }
         }
-       return pracujuci;
+    return pracujuci;
 }
 
 // spočítať vyplatené mzdy zamestnancovi za obdobie (rok)
