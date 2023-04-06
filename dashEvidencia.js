@@ -25,7 +25,7 @@ function najdiPracujucich(fiscalYear) {
 }
 
 // spočítať vyplatené mzdy zamestnancovi za obdobie (rok)
-const zamPlatba = (zam, rok ) =>{
+const zamPlatby = (zam, rok ) =>{
     var lib = libByName(DB_POKLADNA); // const dbLib.js
     var entries = lib.entries();
     var vyplatene = 0;
