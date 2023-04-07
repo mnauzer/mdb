@@ -127,6 +127,7 @@ const zamDochadzka = (zam, sezona ) =>{
     if (entries.length > 0){
         for (var e = 0; e < entries.length; e++) {
             var zamestnanci = entries[e].field("Zamestnanci");
+            message("Záznam: " + e + "/" + entries[e].field("Číslo"));
             if ( zamestnanci.length > 0) {
                 for ( var z = 0; z < zamestnanci.length; z++) {
                     if (zamestnanci[z] == zam){
