@@ -135,9 +135,11 @@ const zamDochadzka = (zam, sezona) => {
                     odpracovane += entries[e].field("Pracovná doba");
                 }
             }
+
         }
     } else {
         message("Nie je žiadny záznam v databáze: " + lib.title);
     }
+    zam.set("Odpracované nevyplatené", odpracovane);
     return odpracovane;
 }
