@@ -140,6 +140,6 @@ const zamDochadzka = (zam, sezona) => {
     } else {
         message("Nie je žiadny záznam v databáze: " + lib.title);
     }
-    zam.set("Odpracované nevyplatené", odpracovane);
+    zam.set("Odpracované", odpracovane);
     return odpracovane;
 }
