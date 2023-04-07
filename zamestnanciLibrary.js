@@ -128,13 +128,11 @@ const zamDochadzka = (zam, sezona ) =>{
         for (var e = 0; e < entries.length; e++) {
             var zamestnanci = entries[e].field("Zamestnanci");
             if ( zamestnanci.length > 0) {
-                for ( var z =0; z < zamestnanci.length; z++) {
+                for ( var z = 0; z < zamestnanci.length; z++) {
                     if (zamestnanci[z] === zam){
                         odpracovane += zamestnanci[z].field("Výdavok bez DPH");
-                        return odpracovane;
                     } else {
                         message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
-                        return 0;
                     }
                 }
             } else {
@@ -144,4 +142,5 @@ const zamDochadzka = (zam, sezona ) =>{
     } else {
         message("Nie je žiadny záznam v databáze: " + lib.title);
     }
+    return odpracovane;
 }
