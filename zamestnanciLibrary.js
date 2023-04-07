@@ -13,7 +13,7 @@ const zamestnanecPlatby = zamestnanec => {
     for (var s in sz) {
         nastaveneSezony.push(sz[s]);
     }
-    var vyplateneCelkom = 0; // vyplatené mzdy => Pokladňa
+    var odpracovaneCelkom = 0; // vyplatené mzdy => Pokladňa
     nastaveneSezony.forEach((sezona) => {
         var platby = zamestnanec.linksFrom("Pokladňa", "Zamestnanec")
         // Mzdy
@@ -97,3 +97,51 @@ const zamestnanecPrace = zamestnanec => {
     zamestnanec.set("Odpracované na zákazkach", evidenciaCelkom);
     //zamestnanec.set("Zákazky", hodnotenieEvidenciaCelkom);
 };
+
+// spočítať vyplatené mzdy zamestnancovi za obdobie (rok)
+const zamPlatby = (zam, sezona ) =>{
+    var lib = libByName("Pokladňa"); // const dbLib.js
+    var entries = lib.entries();
+    var vyplatene = 0;
+    if (entries.length > 0){
+        for (var e = 0; e < entries.length; e++) {
+            if (entries[e].field("Zamestnanec") === zam && entries[e].field("sezóna") === sezona){
+                vyplatene += entries[e].field("Výdavok bez DPH");
+                return vyplatene;
+            } else {
+                message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
+                return 0;
+            }
+        }
+    } else {
+        message("Nie je žiadny záznam v databáze " + lib.title);
+    }
+}
+// spočítať dochádzku zamestnanca za obdobie (rok)
+const zamDochadzka = (zam, sezona ) =>{
+    var lib = libByName("Dochádzka"); // const dbLib.js
+    var entries = lib.entries().filter(function(entry){
+        return entry.field("sezóna") === sezona;
+    });
+    var odpracovane = 0;
+    if (entries.length > 0){
+        for (var e = 0; e < entries.length; e++) {
+            var zamestnanci = entries[e].field("Zamestnanci");
+            if ( zamestnanci.length > 0) {
+                for ( var z =0; z < zamestnanci.length; z++) {
+                    if (zamestnanci[z] === zam){
+                        odpracovane += zamestnanci[z].field("Výdavok bez DPH");
+                        return odpracovane;
+                    } else {
+                        message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
+                        return 0;
+                    }
+                }
+            } else {
+                message("V zázname dochádzky " + entries[e].field("Číslo") + " chýbajú zamestnanci");
+            }
+        }
+    } else {
+        message("Nie je žiadny záznam v databáze " + lib.title);
+    }
+}
