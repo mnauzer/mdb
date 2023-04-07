@@ -129,7 +129,7 @@ const zamDochadzka = (zam, sezona ) =>{
             var zamestnanci = entries[e].field("Zamestnanci");
             if ( zamestnanci.length > 0) {
                 for ( var z = 0; z < zamestnanci.length; z++) {
-                    if (zamestnanci[z] === zam){
+                    if (zamestnanci[z] == zam){
                         odpracovane += zamestnanci[z].field("Výdavok bez DPH");
                     } else {
                         message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
