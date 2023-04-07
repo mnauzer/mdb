@@ -119,6 +119,7 @@ const zamPlatby = (zam, sezona ) =>{
 }
 // spočítať dochádzku zamestnanca za obdobie (rok)
 const zamDochadzka = (zam, sezona ) =>{
+    message("Prepočítavam zamestnanca: " + zam.field("Nick") + "\nza sezónu: " + sezona);
     var lib = libByName("Dochádzka"); // const dbLib.js
     var entries = lib.entries().filter(entry => entry.field("sezóna") == sezona);
     message("Počet záznamov: " + entries.length);
