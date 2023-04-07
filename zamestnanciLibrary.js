@@ -121,7 +121,8 @@ const zamPlatby = (zam, sezona ) =>{
 const zamDochadzka = (zam, sezona) => {
     message("Prepočítavam\n zamestnanec: " + zam.field("Nick") + "\n za sezónu: " + sezona);
     var lib = libByName("Dochádzka"); // const dbLib.js
-    var entries = lib.entries().filter(entry => entry.field("sezóna") == sezona);
+   // var entries = lib.entries().filter(entry => entry.field("sezóna") == sezona);
+    var entries = linksFrom("Dochádzka", "Zamestnanci").filter(entry => entry.field("sezóna") == sezona);
     message("Počet záznamov: " + entries.length);
     var odpracovane = 0;
     if (entries.length > 0){
