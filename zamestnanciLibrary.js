@@ -129,8 +129,8 @@ const zamDochadzka = (zam, sezona ) =>{
             message("Záznam: " + e + "(" + entries[e].field("Číslo") + ")");
             var zamestnanci = entries[e].field("Zamestnanci");
             for ( var z = 0; z < zamestnanci.length; z++) {
-                if (zamestnanci[z] == zam){
-                    odpracovane += zamestnanci[z].field("Výdavok bez DPH");
+                if (zamestnanci[z].field("Nick") === zam.field("Nick")){
+                    odpracovane += entries[e].field("Pracovná doba");
                 } else {
                     message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
                 }
