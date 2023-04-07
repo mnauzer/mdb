@@ -123,6 +123,7 @@ const zamDochadzka = (zam, sezona ) =>{
     var entries = lib.entries().filter(function(entry){
         return entry.field("sezóna") === sezona;
     });
+    message(entries.length);
     var odpracovane = 0;
     if (entries.length > 0){
         for (var e = 0; e < entries.length; e++) {
@@ -142,6 +143,6 @@ const zamDochadzka = (zam, sezona ) =>{
             }
         }
     } else {
-        message("Nie je žiadny záznam v databáze " + lib.title);
+        message("Nie je žiadny záznam v databáze: " + lib.title);
     }
 }
