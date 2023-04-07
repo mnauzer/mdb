@@ -126,18 +126,14 @@ const zamDochadzka = (zam, sezona ) =>{
     var odpracovane = 0;
     if (entries.length > 0){
         for (var e = 0; e < entries.length; e++) {
+            message("Záznam: " + e + "(" + entries[e].field("Číslo") + ")");
             var zamestnanci = entries[e].field("Zamestnanci");
-            message("Záznam: " + e + "/" + entries[e].field("Číslo"));
-            if ( zamestnanci.length > 0) {
-                for ( var z = 0; z < zamestnanci.length; z++) {
-                    if (zamestnanci[z] == zam){
-                        odpracovane += zamestnanci[z].field("Výdavok bez DPH");
-                    } else {
-                        message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
-                    }
+            for ( var z = 0; z < zamestnanci.length; z++) {
+                if (zamestnanci[z] == zam){
+                    odpracovane += zamestnanci[z].field("Výdavok bez DPH");
+                } else {
+                    message("Nie je žiadny záznam pre zamestnanca " + zam.field("Nick"));
                 }
-            } else {
-                message("V zázname dochádzky " + entries[e].field("Číslo") + " chýbajú zamestnanci");
             }
         }
     } else {
