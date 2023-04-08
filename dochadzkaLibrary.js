@@ -76,7 +76,7 @@ const prepocitatZaznamDochadzky = zaznam => {
 }
 
 const newMzdy = zaznam => {
-    message("Evidujem mzdy v.7");
+    message("Evidujem mzdy v.8");
     var mzdy = libByName("aMzdy");
     var zamestnanci = zaznam.field("Zamestnanci");
     var links = zaznam.linksFrom("aMzdy", "Dochádzka")
@@ -103,6 +103,27 @@ const newMzdy = zaznam => {
         var zaznamMzdy = zaznam.linksFrom("aMzdy", "Dochádzka")[0];
         zaznamMzdy.field("Dochádzka")[0].setAttr("odpracované", zaznam.field("Pracovná doba"));
         zaznamMzdy.field("Zamestnanec")[0].setAttr("sadzba", zamestnanci[z].attr("hodinovka"));
-    }
+        // zauctuj preplatok ak je
+        var preplatokLinks = zamestnanci[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
+        if (preplatokLinks.length > 0) {
+            message("Účtujem preplatky");
+            for (var l = 0; l < preplatokLinks.length; l++) {
+                var preplatok = preplatokLinks[l].field("Preplatok");
+                var vyplata = zaznamMzdy.field("Vyplatiť");
+                if (preplatok >= vyplata) {
+                    zaznamMzdy.set("Vyplatiť", vyplata);
+                    preplatok -= vyplata;
+                    zaznamMzdy.link("Platby", zaznam);
+                    zaznamMzdy.field("Platby")[0].setAttr("suma", vyplata);
+                } else if ( preplatok != 0 && preplatok < vyplata){
+                    zaznamMzdy.set("Vyplatená mzda", preplatok);
+                    zaznamMzdy.set("Vyplatiť", vyplata - preplatok);
+                    zaznamMzdy.link("Platby", zaznam);
+                    zaznamMzdy.field("Platby")[0].setAttr("suma", preplatok);
 
+                }
+            }
+
+        }
+    }
 }

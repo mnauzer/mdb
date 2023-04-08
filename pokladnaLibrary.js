@@ -105,7 +105,7 @@ const prepocetPlatby = platba => {
 }
 
 const vyplataMzdy = zaznam => {
-    message("Evidujem platby v.10");
+    message("Evidujem platby v.12");
     var sumaUhrady =  zaznam.field("Výdavok bez DPH");
     var mzdy = libByName("aMzdy");
     var zamestnanec = zaznam.field("Zamestnanec")[0];
@@ -124,17 +124,21 @@ const vyplataMzdy = zaznam => {
                 links[l].set("Vyplatená mzda", vyplata);
                 links[l].set("Vyplatiť", 0);
                 links[l].set("Vyúčtované", true);
-                sumaUhrady -= vyplata;
                 links[l].link("Platby", zaznam);
                 links[l].field("Platby")[0].setAttr("suma", vyplata);
+                sumaUhrady -= vyplata;
             } else if ( sumaUhrady != 0 && sumaUhrady < vyplata) {
                 links[l].set("Vyplatená mzda", sumaUhrady);
                 links[l].set("Vyplatiť", vyplata - sumaUhrady);
                 links[l].link("Platby", zaznam);
-                sumaUhrady = 0;
                 links[l].link("Platby", zaznam);
-                links[l].field("Platby")[0].setAttr("suma", vyplata);
+                links[l].field("Platby")[0].setAttr("suma", sumaUhrady);
+                sumaUhrady = 0;
             }
+        }
+        if (sumaUhrady > 0) {
+            zaznam.set("Preplatok na mzde", true);
+            zaznam.set("Preplatok", sumaUhrady);
         }
 
     } else {
