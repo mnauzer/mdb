@@ -77,7 +77,9 @@ const lastSadzba = (zam, date) => {
     for (var s =0; s < sadzbyLinks.length; s++) {
         sadzby.push(sadzbyLinks[s].field("Sadzba"));
     }
-    message("Sadzby: " + sadzby);
+    // message("Sadzby: " + sadzby);
+    zam.set("Hodinovka", sadzby[0]);
+    return sadzby[0];
 }
 
 const zamestnanecPrace = zamestnanec => {
