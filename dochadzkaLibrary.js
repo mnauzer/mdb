@@ -76,7 +76,7 @@ const prepocitatZaznamDochadzky = zaznam => {
 }
 
 const newMzdy = zaznam => {
-    message("Evidujem mzdy v.3");
+    message("Evidujem mzdy v.4");
     var mzdy = libByName("aMzdy");
     var zamestnanci = zaznam.field("Zamestnanci");
     var links = zaznam.linksFrom("aMzdy", "Dochádzka")
@@ -99,8 +99,10 @@ const newMzdy = zaznam => {
         novyZaznam["sezóna"] = zaznam.field("Dátum").getFullYear();
         novyZaznam["Dochádzka"] = zaznam;
         mzdy.create(novyZaznam);
+        var zaznamMzdy = zaznam.linksFrom("aMzdy", "Dochádzka")[0];
+        return zaznamMzdy;
     }
-    novyZaznam.field("Dochádzka").setAttr("odpracované", zaznam.field("Pracovná doba"));
-    novyZaznam.field("Zamestnanec").setAttr("sadzba", zamestnanci[z].attr("hodinovka"));
+    zaznamMzdy.field("Dochádzka").setAttr("odpracované", zaznam.field("Pracovná doba"));
+    zaznamMzdy.field("Zamestnanec").setAttr("sadzba", zamestnanci[z].attr("hodinovka"));
 
 }
