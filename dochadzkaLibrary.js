@@ -74,3 +74,20 @@ const prepocitatZaznamDochadzky = zaznam => {
     zaznam.set("Prestoje", prestojeCelkom);
     message("Hotovo...");
 }
+
+const newMzdy = zaznam => {
+    var mzdy = libByName("aMzdy");
+    var zamestnanci = zaznam.field("Zamestnanci");
+    for (var z = 0; z < zamestnanci.length; z++) {
+        var novyZaznam = new Object();
+
+        novyZaznam["Dochádzka"] = link.(zaznam);
+        novyZaznam["Nick"] =  zamestnanci[z].field("Nick");
+        novyZaznam["Dátum"] = zaznam.field("Dátum");
+        novyZaznam["Odpracované"] = zaznam.field("Pracovná doba");
+        novyZaznam["Sadzba"] =  zamestnanci[z].attr("hodinovka");
+        novyZaznam["Mzda"] =  zamestnanci[z].attr("denná mzda");
+        mzdy.create(novyZaznam);
+    }
+
+}

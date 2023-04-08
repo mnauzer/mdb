@@ -136,6 +136,7 @@ const zamDochadzka = (zam, sezona) => {
     var entries = zam.linksFrom("Dochádzka", "Zamestnanci").filter(entry => entry.field("sezóna") == sezona);
     message("Počet záznamov: " + entries.length);
     var odpracovane = 0;
+    var zarobene = 0;
     if (entries.length > 0){
         for (var e = 0; e < entries.length; e++) {
             message("Záznam: " + e + "(" + entries[e].field("Dátum") + ")");
