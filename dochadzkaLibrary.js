@@ -76,17 +76,23 @@ const prepocitatZaznamDochadzky = zaznam => {
 }
 
 const newMzdy = zaznam => {
+    message("Evidujem mzdy");
     var mzdy = libByName("aMzdy");
     var zamestnanci = zaznam.field("Zamestnanci");
+    // skontrolovať či je už záznam nalinkovaný
+    if (linksFrom("aMzdy", "Dochádzka")){
+        //vymaž nalinkované záznamy
+        message("Mažem už nalinkované");
+    }
     for (var z = 0; z < zamestnanci.length; z++) {
         var novyZaznam = new Object();
-
-        novyZaznam["Dochádzka"] = zaznam;
-        novyZaznam["Nick"] =  zamestnanci[z].field("Nick");
         novyZaznam["Dátum"] = zaznam.field("Dátum");
+        novyZaznam["Nick"] =  zamestnanci[z].field("Nick");
         novyZaznam["Odpracované"] = zaznam.field("Pracovná doba");
         novyZaznam["Sadzba"] =  zamestnanci[z].attr("hodinovka");
         novyZaznam["Mzda"] =  zamestnanci[z].attr("denná mzda");
+        novyZaznam["Zamestnanec"] = zamestnanci[z];
+        novyZaznam["Dochádzka"] = zaznam;
         mzdy.create(novyZaznam);
     }
 
