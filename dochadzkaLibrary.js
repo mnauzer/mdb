@@ -8,7 +8,7 @@ function verziaKniznice() {
 }
 
 const prepocitatZaznamDochadzky = zaznam => {
-    message("Prepočítavám záznam...");
+    message("Prepočítavám záznam...v23.1");
     // výpočet pracovnej doby
     var datum = zaznam.field("Dátum");
     var prichod = roundTimeQ(zaznam.field("Príchod")); //zaokrúhlenie času na 15min
