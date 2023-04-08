@@ -83,7 +83,7 @@ const newMzdy = zaznam => {
     // skontrolovať či je už záznam nalinkovaný
     if (links){
         //vymaž nalinkované záznamy
-        message("Mažem už nalinkované");
+        message("Mažem už nalinkované záznamy");
         links.trash();
     }
     for (var z = 0; z < zamestnanci.length; z++) {
