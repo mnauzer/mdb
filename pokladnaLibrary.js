@@ -105,8 +105,8 @@ const prepocetPlatby = platba => {
 }
 
 const vyplataMzdy = zaznam => {
-    message("Evidujem platby v.1");
-    var sumaUhrady =  zaznam.field("Výdavok bet DPH");
+    message("Evidujem platby v.2");
+    var sumaUhrady =  zaznam.field("Výdavok bez DPH");
     var mzdy = libByName("aMzdy");
     var zamestnanec = zaznam.field("Zamestnanec");
     var links = zamestnanec.linksFrom("aMzdy", "Zamestnanec").filter(e => e.field("Vyúčtované") == false )
