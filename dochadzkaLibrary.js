@@ -79,10 +79,12 @@ const newMzdy = zaznam => {
     message("Evidujem mzdy");
     var mzdy = libByName("aMzdy");
     var zamestnanci = zaznam.field("Zamestnanci");
+    var links = lib().linksFrom("aMzdy", "Dochádzka")
     // skontrolovať či je už záznam nalinkovaný
-    if (lib().linksFrom("aMzdy", "Dochádzka")){
+    if (links){
         //vymaž nalinkované záznamy
         message("Mažem už nalinkované");
+        links.trash();
     }
     for (var z = 0; z < zamestnanci.length; z++) {
         var novyZaznam = new Object();
