@@ -80,7 +80,7 @@ const newMzdy = zaznam => {
     var mzdy = libByName("aMzdy");
     var zamestnanci = zaznam.field("Zamestnanci");
     // skontrolovať či je už záznam nalinkovaný
-    if (linksFrom("aMzdy", "Dochádzka")){
+    if (lib().linksFrom("aMzdy", "Dochádzka")){
         //vymaž nalinkované záznamy
         message("Mažem už nalinkované");
     }
