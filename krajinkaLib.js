@@ -4,7 +4,7 @@
 // Popis:                   knižnica krajinkaLib
 const verziaKrajinkaLib = () => {
     var nazov = "krajinkalib";
-    var verzia = "23.1";
+    var verzia = "23.2";
     return nazov + " " + verzia;
 }
 
@@ -204,6 +204,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 
 const lastSadzba = (zam, date) => {
     var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(entry => entry.field("Platnosť od") <= date);
+    if (sadzbyLinks.length<0) {message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")}
     var sadzby = [];
     for (var s =0; s < sadzbyLinks.length; s++) {
         sadzby.push(sadzbyLinks[s].field("Sadzba"));
