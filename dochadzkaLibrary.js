@@ -95,9 +95,9 @@ const newMzdy = zaznam => {
         novyZaznam["Odpracované"] = zaznam.field("Pracovná doba");
         novyZaznam["Sadzba"] =  zamestnanci[z].attr("hodinovka");
         novyZaznam["Mzda"] =  zamestnanci[z].attr("denná mzda");
-        novyZaznam["Zamestnanec"] = zamestnanci[z];
         novyZaznam["sezóna"] = zaznam.field("Dátum").getFullYear();
         novyZaznam["Dochádzka"] = zaznam;
+        novyZaznam["Zamestnanec"] = zamestnanci[z];
         mzdy.create(novyZaznam);
         var zaznamMzdy = zaznam.linksFrom("aMzdy", "Dochádzka")[0];
         zaznamMzdy.field("Dochádzka").setAttr("odpracované", zaznam.field("Pracovná doba"));
