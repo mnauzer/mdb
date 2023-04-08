@@ -84,7 +84,9 @@ const newMzdy = zaznam => {
     if (links){
         //vymaž nalinkované záznamy
         message("Mažem už nalinkované záznamy");
-        links.trash();
+        for (var l = 0; l < links.length; l++){
+            links[l].trash();
+        }
     }
     for (var z = 0; z < zamestnanci.length; z++) {
         var novyZaznam = new Object();
