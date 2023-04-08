@@ -2,7 +2,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "dochadzkaLibrary";
-    var verzia = "0.2.02";
+    var verzia = "23.1";
     result = nazov + " " + verzia;
     return result;
 }
