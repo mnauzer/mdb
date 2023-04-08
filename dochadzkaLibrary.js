@@ -96,6 +96,7 @@ const newMzdy = zaznam => {
         novyZaznam["Sadzba"] =  zamestnanci[z].attr("hodinovka");
         novyZaznam["Mzda"] =  zamestnanci[z].attr("denná mzda");
         novyZaznam["Zamestnanec"] = zamestnanci[z];
+        novyZaznam["sezóna"] = zaznam.field("Dátum").getFullYear();
         novyZaznam["Dochádzka"] = zaznam;
         mzdy.create(novyZaznam);
     }
