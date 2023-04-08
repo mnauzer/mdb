@@ -112,9 +112,10 @@ const newMzdy = zaznam => {
                 var vyplata = zaznamMzdy.field("Vyplatiť");
                 if (preplatok >= vyplata) {
                     zaznamMzdy.set("Vyplatiť", vyplata);
-                    preplatok -= vyplata;
-                    zaznamMzdy.link("Platby", zaznam);
+                    zaznamMzdy.link("Platby", preplatokLinks[l]);
                     zaznamMzdy.field("Platby")[0].setAttr("suma", vyplata);
+                    preplatok -= vyplata;
+                    preplatokLinks[l].set("Preplatok", preplatok);
                 } else if ( preplatok != 0 && preplatok < vyplata){
                     zaznamMzdy.set("Vyplatená mzda", preplatok);
                     zaznamMzdy.set("Vyplatiť", vyplata - preplatok);
