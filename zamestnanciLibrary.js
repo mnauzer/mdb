@@ -71,16 +71,7 @@ const zamestnanecDochadzka = zamestnanec => {
     zamestnanec.set("Preplatok/Nedoplatok", zarobeneCelkom - zamestnanec.field("Vyplatené"));
 }
 
-const lastSadzba = (zam, date) => {
-    var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(entry => entry.field("Platnosť od") <= date);
-    var sadzby = [];
-    for (var s =0; s < sadzbyLinks.length; s++) {
-        sadzby.push(sadzbyLinks[s].field("Sadzba"));
-    }
-    // message("Sadzby: " + sadzby);
-    zam.set("Hodinovka", sadzby[0]);
-    return sadzby[0];
-}
+
 
 const zamestnanecPrace = zamestnanec => {
     //   var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)

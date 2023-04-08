@@ -202,6 +202,17 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 
+const lastSadzba = (zam, date) => {
+    var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(entry => entry.field("Platnosť od") <= date);
+    var sadzby = [];
+    for (var s =0; s < sadzbyLinks.length; s++) {
+        sadzby.push(sadzbyLinks[s].field("Sadzba"));
+    }
+    // message("Sadzby: " + sadzby);
+    zam.set("Hodinovka", sadzby[0]);
+    return sadzby[0];
+}
+
 const setTest = (status) => {
     var lib = libByName(DB_ASSISTENT_DATABAZY);
     var databazy = lib.entries();

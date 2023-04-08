@@ -10,6 +10,7 @@ function verziaKniznice() {
 const prepocitatZaznamDochadzky = zaznam => {
     message("Prepočítavám záznam...");
     // výpočet pracovnej doby
+    var datum = zaznam.field("Dátum");
     var prichod = roundTimeQ(zaznam.field("Príchod")); //zaokrúhlenie času na 15min
     var odchod = roundTimeQ(zaznam.field("Odchod"));
     var pracovnaDoba = (odchod - prichod) / 3600000;
@@ -21,9 +22,10 @@ const prepocitatZaznamDochadzky = zaznam => {
     var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
     var zamestnanci = zaznam.field("Zamestnanci");
     var evidenciaPrac = zaznam.field("Práce");
-    if (zamestnanci) {
-        for (var zm in zamestnanci) {
-            var hodinovka = zamestnanci[zm].attr("hodinovka") ? zamestnanci[zm].attr("hodinovka") : zamestnanci[zm].field("Hodinovka");
+    if (zamestnanci.length > 0) {
+        for (var zm = 0; zm < zamestnanci.length; zm++) {
+            //var hodinovka = zamestnanci[zm].attr("hodinovka") ? zamestnanci[zm].attr("hodinovka") : zamestnanci[zm].field("Hodinovka");
+            var hodinovka = zamestnanci[zm].attr("hodinovka") ? zamestnanci[zm].attr("hodinovka") : lastSadzba(zamestnanci[zm], datum);
             var hodnotenie = zamestnanci[zm].attr("hodnotenie") ? zamestnanci[zm].attr("hodnotenie") : 5;
             var dennaMzda = zamestnanci[zm].attr("denná mzda") ? zamestnanci[zm].attr("denná mzda") : 0; // jedného zamestnanca
             // premenné z knižnice Zamestnanci
