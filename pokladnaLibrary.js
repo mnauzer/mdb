@@ -103,4 +103,34 @@ const prepocetPlatby = platba => {
     }
     message("Hotovo...");
 }
+
+const vyplataMzdy = zaznam => {
+    message("Evidujem platby v.1");
+    var sumaUhrady =  zaznam.field("Výdavok bet DPH");
+    var mzdy = libByName("aMzdy");
+    var zamestnanec = zaznam.field("Zamestnanec");
+    var links = zamestnanec.linksFrom("aMzdy", "Zamestnanec").filter(e => e.field("Vyúčtované") == false )
+    // skontrolovať či je už záznam nalinkovaný
+    if (links.length > 0){
+        //updatuj nalinkované záznamy
+        message("Updatujem mzdové záznamy");
+
+        for(var l = 0; l < links.length; l++) {
+            var mzda = links[l].field("Mzda");
+            var vMzda = links[l].field("Vyplatená mzda");
+
+            if (sumaUhrady >= mzda) {
+                links[l].set("Vyplatená mzda", mzda);
+                sumaUhrady -= mzda;
+                links[l].field("Platby") = zaznam;
+            } else {
+                links[l].set("Vyplatená mzda", sumaUhrady);
+            }
+        }
+
+    } else {
+        message("Nie je žiadna dochádzka na úhradu")
+    }
+
+}
 // End of file: 20.03.2022, 12:17
