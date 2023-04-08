@@ -81,7 +81,7 @@ const newMzdy = zaznam => {
     for (var z = 0; z < zamestnanci.length; z++) {
         var novyZaznam = new Object();
 
-        novyZaznam["Dochádzka"] = link.(zaznam);
+        novyZaznam["Dochádzka"] = zaznam;
         novyZaznam["Nick"] =  zamestnanci[z].field("Nick");
         novyZaznam["Dátum"] = zaznam.field("Dátum");
         novyZaznam["Odpracované"] = zaznam.field("Pracovná doba");
