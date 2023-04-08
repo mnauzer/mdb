@@ -75,7 +75,7 @@ const lastSadzba = (zam, date) => {
     var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(entry => entry.field("Platnosť od") <= date);
     var sadzby = [];
     for (var s =0; s < sadzbyLinks.length; s++) {
-        sadzby.push(sadzbyLinks[s].field.("Sadzba"));
+        sadzby.push(sadzbyLinks[s].field("Sadzba"));
     }
     message("Sadzby: " + sadzby);
 }
