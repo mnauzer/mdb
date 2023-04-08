@@ -76,12 +76,12 @@ const prepocitatZaznamDochadzky = zaznam => {
 }
 
 const newMzdy = zaznam => {
-    message("Evidujem mzdy v.1");
+    message("Evidujem mzdy v.2");
     var mzdy = libByName("aMzdy");
     var zamestnanci = zaznam.field("Zamestnanci");
     var links = zaznam.linksFrom("aMzdy", "Dochádzka")
     // skontrolovať či je už záznam nalinkovaný
-    if (links){
+    if (links.length > 0){
         //vymaž nalinkované záznamy
         message("Mažem už nalinkované záznamy");
         for (var l = 0; l < links.length; l++){
