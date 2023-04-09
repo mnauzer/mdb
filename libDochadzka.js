@@ -28,47 +28,47 @@ const prepocitatZaznamDochadzky = en => {
     var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
     var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
     var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-    var zamestnanci = en.field("Zamestnanci");
+    var employees = en.field("employees");
     var evidenciaPrac = en.field("Práce");
-    if (zamestnanci.length > 0) {
-        for (var zm = 0; zm < zamestnanci.length; zm++) {
-            //var hodinovka = zamestnanci[zm].attr("hodinovka") ? zamestnanci[zm].attr("hodinovka") : zamestnanci[zm].field("Hodinovka");
-            var hodinovka = zamestnanci[zm].attr("hodinovka") ? zamestnanci[zm].attr("hodinovka") : lastSadzba(zamestnanci[zm], datum);
-            var hodnotenie = zamestnanci[zm].attr("hodnotenie") ? zamestnanci[zm].attr("hodnotenie") : 5;
-            var dennaMzda = zamestnanci[zm].attr("denná mzda") ? zamestnanci[zm].attr("denná mzda") : 0; // jedného zamestnanca
-            // premenné z knižnice Zamestnanci
-            var libZarobene = zamestnanci[zm].field("Zarobené") - dennaMzda;
-            var libOdrobene = zamestnanci[zm].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-            var libVyplatene = zamestnanci[zm].field("Vyplatené");
-            var libHodnotenieD = zamestnanci[zm].field(ATTENDANCE);
+    if (employees.length > 0) {
+        for (var z = 0; z < employees.length; z++) {
+            //var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
+            var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
+            var hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
+            var dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
+            // premenné z knižnice employees
+            var libZarobene = employees[z].field("Zarobené") - dennaMzda;
+            var libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
+            var libVyplatene = employees[z].field("Vyplatené");
+            var libHodnotenieD = employees[z].field(ATTENDANCE);
 
-            zamestnanci[zm].setAttr("hodinovka", hodinovka);
+            employees[z].setAttr("hodinovka", hodinovka);
             dennaMzda = (pracovnaDoba * (hodinovka
-                + zamestnanci[zm].attr("+príplatok (€/h)")))
-                + zamestnanci[zm].attr("+prémia (€)")
-                - zamestnanci[zm].attr("-pokuta (€)");
-            zamestnanci[zm].setAttr("denná mzda", dennaMzda);
-            zamestnanci[zm].setAttr("hodnotenie", hodnotenie);
-            // nastavenie v knižnici Zamestnanci
+                + employees[z].attr("+príplatok (€/h)")))
+                + employees[z].attr("+prémia (€)")
+                - employees[z].attr("-pokuta (€)");
+            employees[z].setAttr("denná mzda", dennaMzda);
+            employees[z].setAttr("hodnotenie", hodnotenie);
+            // nastavenie v knižnici employees
             libZarobene += dennaMzda;
             libOdrobene += pracovnaDoba;
             libHodnotenieD += hodnotenie;
             var libNedoplatok = libZarobene - libVyplatene;
 
-            zamestnanci[zm].set("Zarobené", libZarobene);
-            zamestnanci[zm].set("Odpracované", libOdrobene);
-            zamestnanci[zm].set("Preplatok/Nedoplatok", libNedoplatok);
-            zamestnanci[zm].set(ATTENDANCE, libHodnotenieD);
+            employees[z].set("Zarobené", libZarobene);
+            employees[z].set("Odpracované", libOdrobene);
+            employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
+            employees[z].set(ATTENDANCE, libHodnotenieD);
 
             mzdyCelkom += dennaMzda;
             odpracovaneCelkom += pracovnaDoba;
             //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
             if (evidenciaPrac) {
                 for (var ep in evidenciaPrac) {
-                    var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
+                    var zamNaZakazke = evidenciaPrac[ep].field("employees");
                     var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
                     for (var znz in zamNaZakazke) {
-                        if (zamestnanci[zm].field(NICK) == zamNaZakazke[znz].field(NICK)) {
+                        if (employees[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                             evidenciaCelkom += naZakazke;
                         }
                     }
