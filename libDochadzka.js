@@ -33,8 +33,8 @@ const prepocitatZaznamDochadzky = en => {
     if (employees.length > 0) {
         for (var z = 0; z < employees.length; z++) {
             //var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
-            var links = employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-            var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastValid(links, datum, "Sadzba", "Platnosť od");
+            //  var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastValid(links, datum, "Sadzba", "Platnosť od");
+            var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
             var hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
             var dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
             // premenné z knižnice employees
