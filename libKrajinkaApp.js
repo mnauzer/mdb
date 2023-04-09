@@ -216,24 +216,8 @@ const lastSadzba = (employee, date) => {
 
 const lastValid = (links, date, valueField, dateField) => {
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
-    // odfiltruje vysoký dátum
-    message(
-    "Links: v3: " + links.length
-    + "\nDate: " + date
-    + "\nValue Field: " + valueField
-    + "\nDate Field: " + dateField
-    );
-
-    links.filter(e => e.field(dateField) < date);
-    message(
-    "Filtrované:\
-    Links: " + links.length
-    + "\nlinks" + links[0].field(dateField)
-    + "\nDate: " + date
-    + "\nValue Field: " + valueField
-    + "\nDate Field: " + dateField
-    );
-    links.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"));
+    links.filter(e => e.field(dateField) < date)
+    .sort((a, b) => a.field(DATE) - b.field(DATE)).reverse();
     return links[0].field(valueField);
 }
 
