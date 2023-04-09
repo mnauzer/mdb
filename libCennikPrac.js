@@ -12,6 +12,8 @@ const setPrice = en => {
     if (links.length > 0) {
         let date = new Date();
         let price = lastValid(links, date, "Cena", "Platnosť od");
+        message(price);
+
         en.set("Cena bez DPH", price);
     } else {
         message("Položka nemá žiadne zaevidované ceny");
