@@ -15,21 +15,21 @@ const updateEntry = en => {
 
 }
 
-const prepocitatZaznamDochadzky = zaznam => {
+const prepocitatZaznamDochadzky = en => {
     message("Prepočítavám záznam...v23.1");
     // výpočet pracovnej doby
-    var datum = zaznam.field(DATE);
-    var prichod = roundTimeQ(zaznam.field("Príchod")); //zaokrúhlenie času na 15min
-    var odchod = roundTimeQ(zaznam.field("Odchod"));
+    var datum = en.field(DATE);
+    var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
+    var odchod = roundTimeQ(en.field("Odchod"));
     var pracovnaDoba = (odchod - prichod) / 3600000;
-    zaznam.set("Príchod", prichod); //uloženie upravených časov
-    zaznam.set("Odchod", odchod);
+    en.set("Príchod", prichod); //uloženie upravených časov
+    en.set("Odchod", odchod);
     var mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
     var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
     var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
     var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-    var zamestnanci = zaznam.field("Zamestnanci");
-    var evidenciaPrac = zaznam.field("Práce");
+    var zamestnanci = en.field("Zamestnanci");
+    var evidenciaPrac = en.field("Práce");
     if (zamestnanci.length > 0) {
         for (var zm = 0; zm < zamestnanci.length; zm++) {
             //var hodinovka = zamestnanci[zm].attr("hodinovka") ? zamestnanci[zm].attr("hodinovka") : zamestnanci[zm].field("Hodinovka");
@@ -77,11 +77,11 @@ const prepocitatZaznamDochadzky = zaznam => {
         }
     }
     prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
-    zaznam.set("Mzdové náklady", mzdyCelkom);
-    zaznam.set("Pracovná doba", pracovnaDoba);
-    zaznam.set("Odpracované", odpracovaneCelkom);
-    zaznam.set("Na zákazkách", evidenciaCelkom);
-    zaznam.set("Prestoje", prestojeCelkom);
+    en.set("Mzdové náklady", mzdyCelkom);
+    en.set("Pracovná doba", pracovnaDoba);
+    en.set("Odpracované", odpracovaneCelkom);
+    en.set("Na zákazkách", evidenciaCelkom);
+    en.set("Prestoje", prestojeCelkom);
     message("Hotovo...");
 }
 
@@ -110,8 +110,8 @@ const aSalary = en => {
         newEntry[ATTENDANCE] = en;
         newEntry["Zamestnanec"] = employees[z];
         salaries.create(newEntry);
-        var entrySalaries = zaznam.linksFrom(DBA_SAL,ATTENDANCE)[0];
-        entrySalaries.field(ATTENDANCE)[0].setAttr("odpracované", zaznam.field("Pracovná doba"));
+        var entrySalaries = en.linksFrom(DBA_SAL,ATTENDANCE)[0];
+        entrySalaries.field(ATTENDANCE)[0].setAttr("odpracované", en.field("Pracovná doba"));
         entrySalaries.field("Zamestnanec")[0].setAttr("sadzba", employees[z].attr("hodinovka"));
         // zauctuj preplatok ak je
         var preplatokLinks = employees[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
@@ -129,7 +129,7 @@ const aSalary = en => {
                 } else if ( preplatok != 0 && preplatok < vyplata){
                     entrySalaries.set("Vyplatená mzda", preplatok);
                     entrySalaries.set("Vyplatiť", vyplata - preplatok);
-                    entrySalaries.link("Platby", zaznam);
+                    entrySalaries.link("Platby", en);
                     entrySalaries.field("Platby")[0].setAttr("suma", preplatok);
 
                 }
