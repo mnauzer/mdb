@@ -7,7 +7,12 @@ function verziaKniznice() {
 
 const setPrice = en => {
     let links = en.linksFrom("Ceny prác", "Práca");
-    let date = new Date();
-    let price = lastValid(links, date, "Cena", "Platnosť od");
-    en.set("Cena bez DPH", price);
+    if (links.lenght > 0) {
+        let date = new Date();
+        let price = lastValid(links, date, "Cena", "Platnosť od");
+        en.set("Cena bez DPH", price);
+    } else {
+        message("Položka nemá žiadne zaevidované ceny");
+
+    }
 }
