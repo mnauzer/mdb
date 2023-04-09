@@ -6,7 +6,7 @@ function verziaKniznice() {
 }
 
 const setPrice = en => {
-    message("V11");
+    message("V12");
 
     let links = en.linksFrom("Ceny prác", "Práca");
     if (links.length > 0) {
