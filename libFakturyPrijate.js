@@ -22,11 +22,11 @@ const updateObligations = entry => {
     var links = entry.linksFrom(DBA_OBL, A_OBL_FAKTURY);
     if (links.length < 0) {
         // if not exist, create new entry
-        message("entry exist");
+        message("entry not exist");
 
     } else {
         // if exist update entry
-        message("entry not exist");
+        message("entry exist");
     }
 
 
