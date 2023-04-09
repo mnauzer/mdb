@@ -190,7 +190,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    var links = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
+    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
     if (links.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
