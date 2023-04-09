@@ -217,7 +217,7 @@ const lastValid = (links, date, valueField, dateField) => {
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
     // odfiltruje vysoký dátum
     message(
-    "Links: v2 " + links.length
+    "Links: v3: " + links.length
     + "\nDate: " + date
     + "\nValue Field: " + valueField
     + "\nDate Field: " + dateField
@@ -232,7 +232,7 @@ const lastValid = (links, date, valueField, dateField) => {
     + "\nValue Field: " + valueField
     + "\nDate Field: " + dateField
     );
-    links.sort((a, b) => b.field(dateField) - a.field(dateField));
+    links.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"));
     return links[0].field(valueField);
 }
 
