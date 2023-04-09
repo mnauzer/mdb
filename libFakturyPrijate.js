@@ -3,7 +3,7 @@
 // Dátum:                   09.04.2023
 // Popis:
 // Autor:                   just me, for my garden business. this code is muddy like me
-// scrtipt library pre knižnicu Faktúry Prijaté
+// script library pre knižnicu Faktúry Prijaté
 const checkOverdue = (en, date) => {
     if (!en.field(DOFA_PAYED)){
         if (en.field(DOFA_D_SPL) <= date ) {
@@ -16,11 +16,11 @@ const checkOverdue = (en, date) => {
     }
 }
 
-const updateObligations = entry => {
+const updateObligations = en => {
     var obligations = libByName(DBA_OBL);
     // check if entry exist
-    var links = entry.linksFrom(DBA_OBL, A_OBL_INVC);
-    if (links.length < 0) {
+    var links = en.linksFrom(DBA_OBL, A_OBL_INVC);
+    if (links.length <= 0) {
         // if not exist, create new entry
         message("entry not exist");
 
