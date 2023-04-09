@@ -27,7 +27,6 @@ const FIELD_ZAHRADNICKE_PRACE = "Záhradnícke práce";
 const FIELD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania";
 const FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
 const FIELD_PRACE_NAVYSE = "Práce navyše";
-const FIELD_DATUM = "Dátum";
 // zamestnanci
 const FIELD_ZAMESTNANCI = "Zamestnanci";
 const FLD_ZAMESTNANCI = 'field("Zamestnanci")';
