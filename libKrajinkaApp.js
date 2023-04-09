@@ -187,14 +187,14 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 
-const lastSadzba = (zam, date) => {
+const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-    var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    // var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
-    if (sadzbyLinks.length < 0) {
+    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+    // var links = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
+    if (links.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
-        lastValid(sadzbyLinks, "Sadzba", "Platnosť od", date)
+        lastValid(links, date, "Sadzba", "Platnosť od")
     //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
         // sadzbyLinks.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"))
     }
@@ -203,10 +203,15 @@ const lastSadzba = (zam, date) => {
     // return sadzba;
 }
 
-const lastValid = (links, valueField, dateField, date) => {
+const lastValid = (links, date, valueField, dateField) => {
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
     // odfiltruje vysoký dátum
-    message(links.length);
+    message(
+    "Links: " + links.length
+    + "\nDate: " + date
+    + "\nValue Field: " + valueField
+    + "\nDate Field: " + dateField
+    );
 
     links.filter(e => e.field(dateField) < date);
     message("filtrované: " + links.length);
