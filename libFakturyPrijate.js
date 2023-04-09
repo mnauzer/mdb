@@ -4,6 +4,9 @@
 // Popis:
 // Autor:                   just me, for my garden business. this code is muddy like me
 // script library pre knižnicu Faktúry Prijaté
+
+// check if invoice is overdue and set entry color code
+// skontroluje či je faktúra po splatnosti a nastaví farebný práznak záznamu
 const checkOverdue = (en, date) => {
     if (!en.field(DOFA_PAYED)){
         if (en.field(DOFA_D_SPL) <= date ) {
@@ -16,6 +19,8 @@ const checkOverdue = (en, date) => {
     }
 }
 
+// create or update new entry in DBA_OBL
+// vytvorí alebo upraví záznam v aZáväzky
 const updateObligations = en => {
     var obligations = libByName(DBA_OBL);
     // check if entry exist
