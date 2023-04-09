@@ -217,7 +217,7 @@ const lastValid = (links, date, valueField, dateField) => {
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
     // odfiltruje vysoký dátum
     message(
-    "Links: " + links.length
+    "Links: v2 " + links.length
     + "\nDate: " + date
     + "\nValue Field: " + valueField
     + "\nDate Field: " + dateField
