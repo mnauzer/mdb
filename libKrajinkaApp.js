@@ -189,7 +189,10 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 
 const lastSadzba = (zam, date) => {
     var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(entry => entry.field("Platnosť od") <= date);
-    if (sadzbyLinks.length<0) {message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")}
+    if (sadzbyLinks.length<0) {message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")} else {
+        sadzbyLinks.sort((a, b) => a.field(DATE) - b.field(DATE))
+        //items.sort((a, b) => a.value - b.value);
+    }
     var sadzby = [];
     for (var s =0; s < sadzbyLinks.length; s++) {
         sadzby.push(sadzbyLinks[s].field("Sadzba"));
