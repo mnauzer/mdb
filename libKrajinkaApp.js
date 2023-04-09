@@ -195,12 +195,13 @@ const lastSadzba = (employee, date) => {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
     //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
-        links.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"))
+        links.sort((a, b) => a.field("Platnosť od") - b.field("Platnosť od")).reverse();
         // lastValid(links, date, "Sadzba", "Platnosť od")
     }
     //vyberie a vráti sadzbu z prvého záznamu
     var sadzba = links[0].field("Sadzba");
     return sadzba;
+}
 
 // const lastSadzba = (employee, date) => {
 //     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
@@ -234,19 +235,6 @@ const lastValid = (links, date, valueField, dateField) => {
     );
     links.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"));
     return links[0].field(valueField);
-}
-
-const setTest = (status) => {
-    var lib = libByName(DB_ASSISTENT_DATABAZY);
-    var databazy = lib.entries();
-    for (var d = 0; d < databazy.length; d++) {
-        databazy[d].set("Testovanie", status);
-    }
-    if (status) {
-        message("Databázy nastavené na Testovanie");
-    } else {
-        message("Databázy nastavené na Ostrý režim");
-    }
 }
 
 const mclCheck = (mcl, value) => {
