@@ -195,7 +195,7 @@ const lastSadzba = (employee, date) => {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
     //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
-        sadzbyLinks.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"))
+        links.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"))
         // lastValid(links, date, "Sadzba", "Platnosť od")
     }
     //vyberie a vráti sadzbu z prvého záznamu
