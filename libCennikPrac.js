@@ -12,7 +12,7 @@ const setPrice = en => {
     if (links.length > 0) {
         message(links.length);
 
-        let date = new Date().getDate();
+        let date = new Date().getTime();
         let price = lastValid(links, date, "Cena", "Platnosť od");
         message("Cena: " + price + "\nDátum: " + date);
 

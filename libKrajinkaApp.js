@@ -216,15 +216,15 @@ const lastSadzba = (employee, date) => {
 
 const lastValid = (links, date, valueField, dateField) => {
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
-    links.filter(e => new Date(e.field(dateField)).getDate() < new Date(date).getDate());
-    links.sort((a, b) => new Date(a.field(dateField)).getDate() - new Date(b.field(dateField)).getDate());
+    links.filter(e => new Date(e.field(dateField)).getTime() < new Date(date).getTime());
+    links.sort((a, b) => new Date(a.field(dateField)).getTime() - new Date(b.field(dateField)).getTime());
     links.reverse();
     message("Links: " + links.length + "\nDátum: " + date);
     return links[0].field(valueField);
 }
 
 const mclCheck = (mcl, value) => {
-    result = false;
+    result = false;up
     for (var m = 0; m < mcl.length; m++) {
         if (value === mcl[m]) {
             result = true;
