@@ -6,13 +6,12 @@ function verziaKniznice() {
 }
 
 const setPrice = en => {
-    let links = en.linksFrom("Ceny prác", "Práca");
+    var links = en.linksFrom("Ceny prác", "Práca");
     if (links.lenght > 0) {
-        let date = new Date();
-        let price = lastValid(links, date, "Cena", "Platnosť od");
+        var date = new Date();
+        var price = lastValid(links, date, "Cena", "Platnosť od");
         en.set("Cena bez DPH", price);
     } else {
         message("Položka nemá žiadne zaevidované ceny");
-
     }
 }
