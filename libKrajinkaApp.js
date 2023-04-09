@@ -207,7 +207,7 @@ const lastValid = (links, valueField, dateField, date) => {
     // vráti poslednú hodnotu poľa field zo záznamov links podľa dátumu date
     // odfiltruje vysoký dátum
     links.filter(e => e.field(dateField) < date);
-    links.sort((a, b) => b.field(dateField) - a.field(dateField);)
+    links.sort((a, b) => b.field(dateField) - a.field(dateField));
     return links[0].field(valueField);
 }
 
