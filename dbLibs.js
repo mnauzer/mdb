@@ -35,7 +35,8 @@ const DB_MIESTA = "Miesta";
 const DB_UCTY = "Účty";
 const DB_STROJE = "Stroje";
 const DB_VOZIDLA = "Vozidlá";
-const DB_RASTLINY = "Databáza rastlín";
+const DB_PLANTS = "Databáza rastlín";
+const DB_RCPTS = "Príjemky";
 
 // aGroup
 const DBA_OBL = "aZáväzky";

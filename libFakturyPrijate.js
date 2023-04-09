@@ -18,6 +18,22 @@ const checkOverdue = (en, date) => {
             en.set(ENT_COLOR, MEM_GREEN)
     }
 }
+// check if invoice is overdue and set entry color code
+// skontroluje či je faktúra po splatnosti a nastaví farebný práznak záznamu
+const checkRcpts = en => {
+    var receipts = libByName(DB_RCPTS);
+
+    var links = en.linksFrom(DB_RCPTS, RCPTS_INVC);
+    if (links.length <= 0) {
+        // if not exist, create new entry
+        message("entry not exist");
+
+    } else {
+        // if exist update entry
+        message("entry exist");
+    }
+
+}
 
 // create or update new entry in DBA_OBL
 // vytvorí alebo upraví záznam v aZáväzky

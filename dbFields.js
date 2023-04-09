@@ -65,6 +65,9 @@ const A_OBL_PAYED = "Uhradené";
 const A_OBL_PAYED_DATE = "Dátum úhrady";
 const A_OBL_INVC = "Faktúry prijaté";
 
+// Príjemky
+// DB_RCPTS
+const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
 // # SPOLOČNÉ POLIA

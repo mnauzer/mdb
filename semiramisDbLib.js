@@ -32,5 +32,5 @@ const DB_MIESTA = "Miesta";
 const DB_UCTY = "Účty Semiramis";
 const DB_STROJE = "Stroje";
 const DB_VOZIDLA = "Vozidlá";
-const DB_RASTLINY = "Databáza rastlín";
+const DB_PLANTS = "Databáza rastlín";
 
