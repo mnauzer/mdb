@@ -199,7 +199,7 @@ const lastSadzba = (employee, date) => {
         // lastValid(links, date, "Sadzba", "Platnosť od")
     }
     //vyberie a vráti sadzbu z prvého záznamu
-    var sadzba = sadzbyLinks[0].field("Sadzba");
+    var sadzba = links[0].field("Sadzba");
     return sadzba;
 }
 
@@ -214,7 +214,14 @@ const lastValid = (links, date, valueField, dateField) => {
     );
 
     links.filter(e => e.field(dateField) < date);
-    message("filtrované: " + links.length);
+    message(
+    "Filtrované:\
+    Links: " + links.length
+    + "\nlinks" + links[0].field(dateField)
+    + "\nDate: " + date
+    + "\nValue Field: " + valueField
+    + "\nDate Field: " + dateField
+    );
     links.sort((a, b) => b.field(dateField) - a.field(dateField));
     return links[0].field(valueField);
 }
