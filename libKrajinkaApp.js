@@ -4,7 +4,7 @@
 // Popis:                   knižnica krajinkaLib
 const verziaKrajinkaLib = () => {
     var nazov = "libKrajinkaApp.js";
-    var verzia = "23.4";
+    var verzia = "23.5";
     return nazov + " " + verzia;
 }
 
