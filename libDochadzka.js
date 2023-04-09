@@ -28,7 +28,7 @@ const prepocitatZaznamDochadzky = en => {
     var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
     var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
     var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-    var employees = en.field("employees");
+    var employees = en.field("Zamestnanci");
     var evidenciaPrac = en.field("Práce");
     if (employees.length > 0) {
         for (var z = 0; z < employees.length; z++) {
