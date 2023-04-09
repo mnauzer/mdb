@@ -17,6 +17,9 @@ const DB_INVENTURY = "Invenúry";
 const DB_PRIJEMKY = "Príjemky";
 const DB_REZERVACIE = "Rezervácie";
 const DB_OBJEDNAVKY = "Objednávky";
+const DB_DOFA = "Faktúry prijaté";
+const DB_ODFA = "Faktúry odoslané";
+
 // evidencia
 const DB_POKLADNA = "Pokladňa";
 const DB_EVIDENCIA_PRAC = "Evidencia prác";

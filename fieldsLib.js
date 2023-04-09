@@ -50,3 +50,29 @@ const W_MATERIAL = "Materiál";
 const W_STROJE = "Stroje";
 const W_HODINOVKA = "Hodinovka";
 const W_POLOZKY = "Položky";
+
+// Knižnica Faktúry prijaté
+// DB_DOFA
+const DOFA_VIEW = "View";
+const DOFA_DBG = "debug";
+const DOFA_NUMBER = "Číslo";
+const DOFA_SUP = "Dodávateľ";
+const DOFA_SUP_NUMBER = "Číslo faktúry";
+const DOFA_SUP_VS = "VS";
+const DOFA_DATE_VYS = "Dátum vystavenia";
+const DOFA_DATE_SPL = "Dátum splatnosti";
+const DOFA_SUM = "Suma bez DPH";
+const DOFA_SUM_DPH = "DPH";
+const DOFA_SUM_TOTAL = "Suma s DPH";
+const DOFA_PAYED = "Uhradená";
+
+// # SPOLOČNÉ POLIA
+const SEASON = "sezóna";
+const APP_SEASON = "Sezóna";
+const CR = "zapísal";
+const CR_DATE = "dátum zápisu";
+const MOD = "upravil";
+const MOD_DATE = "dátum úpravy";
+const ENT_COLOR = "farba záznamu";
+const BKG_COLOR = "farba pozadia";
+
