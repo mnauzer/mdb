@@ -206,7 +206,10 @@ const lastSadzba = (zam, date) => {
 const lastValid = (links, valueField, dateField, date) => {
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
     // odfiltruje vysoký dátum
+    message(links.length);
+
     links.filter(e => e.field(dateField) < date);
+    message(links.length);
     links.sort((a, b) => b.field(dateField) - a.field(dateField));
     return links[0].field(valueField);
 }
