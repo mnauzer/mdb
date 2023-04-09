@@ -209,7 +209,7 @@ const lastValid = (links, valueField, dateField, date) => {
     message(links.length);
 
     links.filter(e => e.field(dateField) < date);
-    message(links.length);
+    message("filtrované: " + links.length);
     links.sort((a, b) => b.field(dateField) - a.field(dateField));
     return links[0].field(valueField);
 }
