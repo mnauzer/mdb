@@ -71,6 +71,16 @@ const A_OBL_PAYED = "Uhradené";
 const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
+
+// Dochádzka/Attendance
+// DB_ATTDC
+const ATTENDANCE = "Dochádzka";
+const ATTDC_ARRIVAL = "Príchod;";
+const ATTDC_DEPARTURE = "Odchod";
+const ATTDC_WORKS = "Práce"; // Link to Entry
+const ATTDC_EMPLOYEES = "Zamestnanci";
+
+
 // # SPOLOČNÉ POLIA
 const NUMBER = "Číslo"
 const DATE = "Dátum"

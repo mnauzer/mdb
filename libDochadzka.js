@@ -7,10 +7,18 @@ function verziaKniznice() {
     return result;
 }
 
+const newEntry = en => {
+
+}
+
+const updateEntry = en => {
+
+}
+
 const prepocitatZaznamDochadzky = zaznam => {
     message("Prepočítavám záznam...v23.1");
     // výpočet pracovnej doby
-    var datum = zaznam.field("Dátum");
+    var datum = zaznam.field(DATE);
     var prichod = roundTimeQ(zaznam.field("Príchod")); //zaokrúhlenie času na 15min
     var odchod = roundTimeQ(zaznam.field("Odchod"));
     var pracovnaDoba = (odchod - prichod) / 3600000;
@@ -32,7 +40,7 @@ const prepocitatZaznamDochadzky = zaznam => {
             var libZarobene = zamestnanci[zm].field("Zarobené") - dennaMzda;
             var libOdrobene = zamestnanci[zm].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
             var libVyplatene = zamestnanci[zm].field("Vyplatené");
-            var libHodnotenieD = zamestnanci[zm].field("Dochádzka");
+            var libHodnotenieD = zamestnanci[zm].field(ATTENDANCE);
 
             zamestnanci[zm].setAttr("hodinovka", hodinovka);
             dennaMzda = (pracovnaDoba * (hodinovka
@@ -50,7 +58,7 @@ const prepocitatZaznamDochadzky = zaznam => {
             zamestnanci[zm].set("Zarobené", libZarobene);
             zamestnanci[zm].set("Odpracované", libOdrobene);
             zamestnanci[zm].set("Preplatok/Nedoplatok", libNedoplatok);
-            zamestnanci[zm].set("Dochádzka", libHodnotenieD);
+            zamestnanci[zm].set(ATTENDANCE, libHodnotenieD);
 
             mzdyCelkom += dennaMzda;
             odpracovaneCelkom += pracovnaDoba;
@@ -60,7 +68,7 @@ const prepocitatZaznamDochadzky = zaznam => {
                     var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
                     var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
                     for (var znz in zamNaZakazke) {
-                        if (zamestnanci[zm].field("Nick") == zamNaZakazke[znz].field("Nick")) {
+                        if (zamestnanci[zm].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                             evidenciaCelkom += naZakazke;
                         }
                     }
@@ -77,11 +85,11 @@ const prepocitatZaznamDochadzky = zaznam => {
     message("Hotovo...");
 }
 
-const newMzdy = zaznam => {
+const aSalary = en => {
     message("Evidujem mzdy v.9");
-    var mzdy = libByName("aMzdy");
-    var zamestnanci = zaznam.field("Zamestnanci");
-    var links = zaznam.linksFrom("aMzdy", "Dochádzka")
+    var salaries = libByName(DBA_SAL);
+    var employees = en.field(ATTDC_EMPLOYEES);
+    var links = en.linksFrom(DBA_SAL, ATTENDANCE)
     // skontrolovať či je už záznam nalinkovaný
     if (links.length > 0){
         //vymaž nalinkované záznamy
@@ -90,39 +98,39 @@ const newMzdy = zaznam => {
             links[l].trash();
         }
     }
-    for (var z = 0; z < zamestnanci.length; z++) {
-        var novyZaznam = new Object();
-        novyZaznam["Dátum"] = zaznam.field("Dátum");
-        novyZaznam["Nick"] =  zamestnanci[z].field("Nick");
-        novyZaznam["Odpracované"] = zaznam.field("Pracovná doba");
-        novyZaznam["Sadzba"] =  zamestnanci[z].attr("hodinovka");
-        novyZaznam["Mzda"] =  zamestnanci[z].attr("denná mzda");
-        novyZaznam["Vyplatiť"] =  zamestnanci[z].attr("denná mzda");
-        novyZaznam["sezóna"] = zaznam.field("Dátum").getFullYear();
-        novyZaznam["Dochádzka"] = zaznam;
-        novyZaznam["Zamestnanec"] = zamestnanci[z];
-        mzdy.create(novyZaznam);
-        var zaznamMzdy = zaznam.linksFrom("aMzdy", "Dochádzka")[0];
-        zaznamMzdy.field("Dochádzka")[0].setAttr("odpracované", zaznam.field("Pracovná doba"));
-        zaznamMzdy.field("Zamestnanec")[0].setAttr("sadzba", zamestnanci[z].attr("hodinovka"));
+    for (var z = 0; z < employees.length; z++) {
+        var newEntry = new Object();
+        newEntry[DATE] = en.field(DATE);
+        newEntry[NICK] =  employees[z].field(NICK);
+        newEntry["Odpracované"] = en.field("Pracovná doba");
+        newEntry["Sadzba"] =  employees[z].attr("hodinovka");
+        newEntry["Mzda"] =  employees[z].attr("denná mzda");
+        newEntry["Vyplatiť"] =  employees[z].attr("denná mzda");
+        newEntry[SEASON] = en.field(DATE).getFullYear();
+        newEntry[ATTENDANCE] = en;
+        newEntry["Zamestnanec"] = employees[z];
+        salaries.create(newEntry);
+        var entrySalaries = zaznam.linksFrom(DBA_SAL,ATTENDANCE)[0];
+        entrySalaries.field(ATTENDANCE)[0].setAttr("odpracované", zaznam.field("Pracovná doba"));
+        entrySalaries.field("Zamestnanec")[0].setAttr("sadzba", employees[z].attr("hodinovka"));
         // zauctuj preplatok ak je
-        var preplatokLinks = zamestnanci[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
+        var preplatokLinks = employees[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
         if (preplatokLinks.length > 0) {
             message("Účtujem preplatky");
             for (var l = 0; l < preplatokLinks.length; l++) {
                 var preplatok = preplatokLinks[l].field("Preplatok");
-                var vyplata = zaznamMzdy.field("Vyplatiť");
+                var vyplata = entrySalaries.field("Vyplatiť");
                 if (preplatok >= vyplata) {
-                    zaznamMzdy.set("Vyplatiť", vyplata);
-                    zaznamMzdy.link("Platby", preplatokLinks[l]);
-                    zaznamMzdy.field("Platby")[0].setAttr("suma", vyplata);
+                    entrySalaries.set("Vyplatiť", vyplata);
+                    entrySalaries.link("Platby", preplatokLinks[l]);
+                    entrySalaries.field("Platby")[0].setAttr("suma", vyplata);
                     preplatok -= vyplata;
                     preplatokLinks[l].set("Preplatok", preplatok);
                 } else if ( preplatok != 0 && preplatok < vyplata){
-                    zaznamMzdy.set("Vyplatená mzda", preplatok);
-                    zaznamMzdy.set("Vyplatiť", vyplata - preplatok);
-                    zaznamMzdy.link("Platby", zaznam);
-                    zaznamMzdy.field("Platby")[0].setAttr("suma", preplatok);
+                    entrySalaries.set("Vyplatená mzda", preplatok);
+                    entrySalaries.set("Vyplatiť", vyplata - preplatok);
+                    entrySalaries.link("Platby", zaznam);
+                    entrySalaries.field("Platby")[0].setAttr("suma", preplatok);
 
                 }
             }
