@@ -1,0 +1,2 @@
+// COLOR CODES
+const FIREBRICK = "#B22222"
