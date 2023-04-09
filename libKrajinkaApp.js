@@ -188,20 +188,26 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 };
 
 const lastSadzba = (zam, date) => {
-    var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(entry => entry.field("Platnosť od") <= date);
+    // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+    var sadzbyLinks = zam.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") <= date);
     if (sadzbyLinks.length<0) {message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")} else {
 
+        //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
         sadzbyLinks.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"))
         //message(sadzbyLinks[0].field("Platnosť od"));
         //items.sort((a, b) => a.value - b.value);
     }
-    var sadzby = [];
-    for (var s =0; s < sadzbyLinks.length; s++) {
-        sadzby.push(sadzbyLinks[s].field("Sadzba"));
-    }
-    // message("Sadzby: " + sadzby);
-    zam.set("Hodinovka", sadzby[0]);
-    return sadzby[0];
+    // tu by šlo vybrať sadzbu len z prvého záznamu
+    var sadzba = sadzbyLinks[0].field("Sadzba");
+    return sadzba;
+
+    // var sadzby = [];
+    // for (var s = 0; s < sadzbyLinks.length; s++) {
+    //     sadzby.push(sadzbyLinks[s].field("Sadzba"));
+    // }
+    // // message("Sadzby: " + sadzby);
+    // zam.set("Hodinovka", sadzby[0]);
+    // return sadzby[0];
 }
 
 const setTest = (status) => {
