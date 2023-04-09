@@ -26,11 +26,11 @@ const checkRcpts = en => {
     var links = en.linksFrom(DB_RCPTS, RCPTS_INVC);
     if (links.length <= 0) {
         // if not exist, create new entry
-        message("entry not exist");
+        en.set(BKG_COLOR, MEM_LIGHT_BLUE)
 
     } else {
         // if exist update entry
-        message("entry exist");
+        en.set(BKG_COLOR, MEM_LIGHT_GREEN)
     }
 
 }
