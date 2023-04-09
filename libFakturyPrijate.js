@@ -19,7 +19,7 @@ const checkOverdue = (en, date) => {
 const updateObligations = entry => {
     var obligations = libByName(DBA_OBL);
     // check if entry exist
-    var links = entry.linksFrom(DBA_OBL, A_OBL_FAKTURY);
+    var links = entry.linksFrom(DBA_OBL, A_OBL_INVC);
     if (links.length < 0) {
         // if not exist, create new entry
         message("entry not exist");
