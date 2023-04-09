@@ -65,7 +65,7 @@ const prepocitatZaznamDochadzky = en => {
             //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
             if (evidenciaPrac) {
                 for (var ep in evidenciaPrac) {
-                    var zamNaZakazke = evidenciaPrac[ep].field("employees");
+                    var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
                     var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
                     for (var znz in zamNaZakazke) {
                         if (employees[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
