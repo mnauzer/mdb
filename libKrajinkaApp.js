@@ -215,9 +215,11 @@ const lastSadzba = (employee, date) => {
 // }
 
 const lastValid = (links, date, valueField, dateField) => {
+    message(new Date(e.field(dateField)).getTime());
+
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
     links.filter(e => new Date(e.field(dateField)).getTime() < new Date(date).getTime());
-    links.sort((a, b) => new Date(a.field(dateField)).getTime() - new Date(b.field(dateField)).getTime());
+    links.sort((a, b) => new Date(b.field(dateField)).getTime() - new Date(a.field(dateField)).getTime());
     links.reverse();
     message("Links: " + links.length + "\nDátum: " + date);
     return links[0].field(valueField);
