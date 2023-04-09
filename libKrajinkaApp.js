@@ -192,7 +192,7 @@ const lastSadzba = (zam, date) => {
     if (sadzbyLinks.length<0) {message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")} else {
 
         sadzbyLinks.sort((a, b) => b.field("Platnosť od") - a.field("Platnosť od"))
-        message(sadzbyLinks[0].field("Platnosť od"));
+        //message(sadzbyLinks[0].field("Platnosť od"));
         //items.sort((a, b) => a.value - b.value);
     }
     var sadzby = [];
