@@ -53,8 +53,6 @@ const W_POLOZKY = "Položky";
 
 // Knižnica Faktúry prijaté
 // DB_DOFA
-const DOFA_VIEW = "View";
-const DOFA_DBG = "debug";
 const DOFA_NUMBER = "Číslo";
 const DOFA_SUP = "Dodávateľ";
 const DOFA_SUP_NUMBER = "Číslo faktúry";
@@ -67,6 +65,8 @@ const DOFA_SUM_TOTAL = "Suma s DPH";
 const DOFA_PAYED = "Uhradená";
 
 // # SPOLOČNÉ POLIA
+const VIEW = "View";
+const DBG = "debug";
 const SEASON = "sezóna";
 const APP_SEASON = "Sezóna";
 const CR = "zapísal";

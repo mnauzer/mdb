@@ -26,6 +26,15 @@ const setTlac = entry => {
     return;
 }
 
+const setView(en, view) => {
+    if (view == "E") {
+        en.set(VIEW, "Edit")
+    } else {
+        en.set(VIEW, "Tlač")
+        en.set(DBG, false)
+    }
+}
+
 const setConfidental = entry => {
     entry.set(FIELD_VIEW, "Confidental");
     entry.set(FIELD_DEBUG, false);
