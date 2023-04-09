@@ -6,6 +6,8 @@ function verziaKniznice() {
 }
 
 const setPrice = en => {
+    message("V1");
+
     var links = en.linksFrom("Ceny prác", "Práca");
     if (links.lenght > 0) {
         var date = new Date();
