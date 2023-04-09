@@ -205,7 +205,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 const lastSadzba = (employee, date) => {
     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
     if (links.length > 0) {
-        var sadzba = lastValid(links, date, "Zamestnanci Sadzby", "Plaznosť od");
+        var sadzba = lastValid(links, date, "Zamestnanci Sadzby", "Platnosť od");
         return sadzba;
     } else {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu");
