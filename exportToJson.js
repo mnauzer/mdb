@@ -3,7 +3,7 @@ const zakazkaToJsonHZS = zakazka => {
     var result = "";
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
     var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
-    var f = file("/sdcard/" + zakazka.field(FIELD_CISLO) + "_file.json");
+    var f = file("/sdcard/" + zakazka.field(NUMBER) + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
     f.writeLine('{"Odberateľ":{');
     f.writeLine('"Nick"' + ':"' + odberatel.field("Nick") + '",');

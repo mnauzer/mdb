@@ -37,3 +37,9 @@ const DB_STROJE = "Stroje";
 const DB_VOZIDLA = "Vozidlá";
 const DB_RASTLINY = "Databáza rastlín";
 
+// aGroup
+const DBA_OBL = "aZáväzky";
+const DBA_SAL= "aMzdy";
+const DBA_POHLADAVKY = "aPohľadávky";
+const DBA_DOCHADZKA = "aDochádzka";
+const DBA_WORK = "aPráce";

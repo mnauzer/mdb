@@ -11,18 +11,18 @@ const verziaKrajinkaLib = () => {
 const setEdit = (entry) => { // default je update
     var create = true;
     if (create) {
-        entry.set(FIELD_VIEW, "Editácia");
-        entry.set(FIELD_DEBUG, false);
+        entry.set(VIEW, "Editácia");
+        entry.set(DBG, false);
     } else {
-        entryDefault.set(FIELD_VIEW, "Editácia");
-        entryDefault.set(FIELD_DEBUG, false);
+        entryDefault.set(VIEW, "Editácia");
+        entryDefault.set(DBG, false);
     }
     return;
 }
 
 const setTlac = entry => {
-    entry.set(FIELD_VIEW, "Tlač");
-    entry.set(FIELD_DEBUG, false);
+    entry.set(VIEW, "Tlač");
+    entry.set(DBG, false);
     return;
 }
 
@@ -36,8 +36,8 @@ const setView = (en, view) => {
 }
 
 const setConfidental = entry => {
-    entry.set(FIELD_VIEW, "Confidental");
-    entry.set(FIELD_DEBUG, false);
+    entry.set(VIEW, "Confidental");
+    entry.set(DBG, false);
     return;
 }
 
@@ -105,7 +105,7 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
 // generuje nové číslo záznamu
 const noveCisloV2 = (entry, withPrefix, sliceNum) => {
     var db = lib.title;
-    var sezona = entry.field(FIELD_SEZONA) ? entry.field(FIELD_SEZONA) : new Date().getFullYear();
+    var sezona = entry.field(SEASON) ? entry.field(SEASON) : new Date().getFullYear();
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;

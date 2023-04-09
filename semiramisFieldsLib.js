@@ -5,14 +5,14 @@ const FIELD_ZAKAZKA = "Zákazka";
 const FIELD_VYUCTOVANIE = "Vyúčtovanie";
 const FIELD_TYP_VYKAZU = "Typ výkazu";
 const FIELD_POPIS = "Popis";
-const FIELD_CISLO = "Číslo";
+const NUMBER = "Číslo";
 // nastavenia
-const FIELD_SEZONA = "sezóna";
-const FIELD_DEBUG = "debug";
+const SEASON = "sezóna";
+const DBG = "debug";
 const FIELD_BACKROUND_COLOR = "background color";
-const FIELD_ENTRY_COLOR = "entry color";
-const FIELD_VIEW = "Tlač";
-const FIELD_STAV = "Stav";
+const ENT_COLOR = "entry color";
+const VIEW = "Tlač";
+const STATUS = "Stav";
 //
 const FIELD_PRACE = "Práce";
 const FIELD_MATERIAL = "Materiál";

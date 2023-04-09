@@ -18,7 +18,7 @@ const noveVyuctovanie = zakazka => {
     // inicializácia
     var datum = new Date();
     var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var sezona = zakazka.field(FIELD_SEZONA);
+    var sezona = zakazka.field(SEASON);
     var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
     var klient = zakazka.field("Klient")[0]
     var miesto = zakazka.field("Miesto")[0];
@@ -36,14 +36,14 @@ const noveVyuctovanie = zakazka => {
         var diely = cp.field("Diely cenovej ponuky");
     }
     // popis vyúčtovania
-    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field(FIELD_CISLO) + " (" + cp.field("Popis cenovej ponuky") + ")";
+    var popisVyuctovania = "Vyúčtovanie zákazky č." + zakazka.field(NUMBER) + " (" + cp.field("Popis cenovej ponuky") + ")";
     // stav vyúčtovania
     if (stavZakazky == "Ukončená") {
         stavVyuctovania = "Pripravené";
     }
     // Hlavička a základné nastavenia
     nVyuctovanie["Dátum"] = datum;
-    nVyuctovanie[FIELD_CISLO] = cislo;
+    nVyuctovanie[NUMBER] = cislo;
     nVyuctovanie["Miesto realizácie"] = miesto;
     nVyuctovanie["Stav vyúčtovania"] = stavVyuctovania;
     nVyuctovanie["Typ vyúčtovania"] = typ;
@@ -56,7 +56,7 @@ const noveVyuctovanie = zakazka => {
     nVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
     nVyuctovanie[FIELD_CENOVA_PONUKA] = cp;
     nVyuctovanie[FIELD_ZAKAZKA] = zakazka;
-    nVyuctovanie[FIELD_SEZONA] = sezona;
+    nVyuctovanie[SEASON] = sezona;
     nVyuctovanie["Diely vyúčtovania"] = diely.join();
     // doprava
     nVyuctovanie["Účtovanie DPH"] = uctovanieDPH.join();

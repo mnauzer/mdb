@@ -109,10 +109,10 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         message("Neurčený typ výkazu (Hodinovka/Položky");
     }
     if (sDPH) {
-        var sezona = vykaz.field(FIELD_SEZONA);
+        var sezona = vykaz.field(SEASON);
         if (!sezona || sezona == 0) {
             sezona = vykaz.field(FIELD_DATUM).getFullYear();
-            vykaz.set(FIELD_SEZONA, sezona);
+            vykaz.set(SEASON, sezona);
         }
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
         sumaDPH = sumaBezDPH * sadzbaDPH;

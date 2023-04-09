@@ -18,7 +18,7 @@ const prepocetPonuky = ponuka => {
     var typ = ponuka.field("Typ cenovej ponuky");
     var uctoDopravy = ponuka.field("Účtovanie dopravy");
     //spôsob účtovania dopravy
-    var cislo = ponuka.field(FIELD_CISLO);
+    var cislo = ponuka.field(NUMBER);
     var pracaCelkom = 0;
     var strojeCelkom = 0;
     var materialCelkom = 0;
@@ -27,8 +27,8 @@ const prepocetPonuky = ponuka => {
     var dph = 0;
 
     // nastaviť sezónu
-    ponuka.set(FIELD_SEZONA, ponuka.field(FIELD_DATUM).getFullYear());
-    var sezona = ponuka.field(FIELD_SEZONA);
+    ponuka.set(SEASON, ponuka.field(FIELD_DATUM).getFullYear());
+    var sezona = ponuka.field(SEASON);
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
 
     // nastaviť splatnosť
@@ -46,7 +46,7 @@ const prepocetPonuky = ponuka => {
 
     // generuj nové číslo
     cislo = cislo ? cislo : noveCislo(sezona, DB_CENOVE_PONUKY, 1, 2);
-    ponuka.set(FIELD_CISLO, cislo);
+    ponuka.set(NUMBER, cislo);
 
     // prepočet podľa typu cenovej ponuky
     switch (typ) {
@@ -139,9 +139,9 @@ const generujZakazku = cp => {
         }
 
         cp.set("Stav cenovej ponuky", "Uzavretá");
-        message("Zákazka č." + zakazka.field(FIELD_CISLO) + " bola vygenerovaná");
+        message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
     } else if (!zakazka) {
-        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(FIELD_CISLO));
+        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(NUMBER));
     } else {
         message("Cenová ponuka musí byť schválená");
     }
@@ -151,8 +151,8 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
     // nastaviť sezónu
-    cp.set(FIELD_SEZONA, cp.field("Dátum").getFullYear());
-    var sezona = cp.field(FIELD_SEZONA);
+    cp.set(SEASON, cp.field("Dátum").getFullYear());
+    var sezona = cp.field(SEASON);
     var lib = libByName(DB_ZAKAZKY);
     // inicializácia
     var novaZakazka = new Object();
@@ -182,14 +182,14 @@ const ponukaNovaZakazka = cp => {
     // hlavička a základné nastavenia
     novaZakazka["Dátum"] = datum;
     novaZakazka["Typ zákazky"] = typZakazky;
-    novaZakazka[FIELD_CISLO] = cislo;
+    novaZakazka[NUMBER] = cislo;
     novaZakazka["Klient"] = klient;
     novaZakazka["Miesto"] = miesto;
     novaZakazka["Stav zákazky"] = "Čakajúca";
     novaZakazka["Názov zákazky"] = nazovZakazky;
     novaZakazka["Diely zákazky"] = dielyZakazky.join();
     novaZakazka["Cenová ponuka"] = cp;
-    novaZakazka[FIELD_SEZONA] = sezona;
+    novaZakazka[SEASON] = sezona;
     novaZakazka["Účtovanie DPH"] = uctovanieDPH;
     novaZakazka["Účtovanie zákazky"] = typ;
     lib.create(novaZakazka);
@@ -239,11 +239,11 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
     var lib = libByName("Výdajky");
     var cp = zakazka.field("Cenová ponuka")[0];
     var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field(FIELD_SEZONA);
+    var sezona = zakazka.field(SEASON);
     var cislo = noveCislo(sezona, "Výdajky", 0, 3);
     // vytvoriť novú výdajku
     var novaVydajka = new Object();
-    novaVydajka[FIELD_CISLO] = cislo;
+    novaVydajka[NUMBER] = cislo;
     novaVydajka["Dátum"] = datum;
     novaVydajka["Popis"] = popis;
     novaVydajka["s DPH"] = true; // hardcoded
@@ -251,7 +251,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
     novaVydajka["Vydané"] = "Zákazka";
     novaVydajka["Zákazka"] = zakazka;
     novaVydajka["Cenová ponuka"] = cp;
-    novaVydajka[FIELD_SEZONA] = sezona;
+    novaVydajka[SEASON] = sezona;
     lib.create(novaVydajka);
     var vydajkaMaterialu = lib.find(cislo)[0];
 
@@ -274,11 +274,11 @@ const novyVykazPrac = (zakazka, popis) => {
     var cp = zakazka.field("Cenová ponuka")[0];
     var typVykazu = cp.field("Typ cenovej ponuky");
     var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field(FIELD_SEZONA);
+    var sezona = zakazka.field(SEASON);
     var cislo = noveCislo(sezona, "Výkaz prác", 0, 3);
     // vytvoriť novú výdajku
     var novyVykaz = new Object();
-    novyVykaz[FIELD_CISLO] = cislo;
+    novyVykaz[NUMBER] = cislo;
     novyVykaz["Dátum"] = datum;
     novyVykaz["Popis"] = popis;
     novyVykaz["Typ výkazu"] = typVykazu;
@@ -288,7 +288,7 @@ const novyVykazPrac = (zakazka, popis) => {
     novyVykaz["Zákazka"] = zakazka;
     novyVykaz["Cenová ponuka"] = cp;
 
-    novyVykaz[FIELD_SEZONA] = sezona;
+    novyVykaz[SEASON] = sezona;
     lib.create(novyVykaz);
     var vykazPrac = lib.find(cislo)[0];
 
@@ -384,7 +384,7 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
     // inicializácia
-    var sezona = doklad.field(FIELD_SEZONA);
+    var sezona = doklad.field(SEASON);
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
     var sumaBezDPH = 0;
     var sumaDPH = 0;

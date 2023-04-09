@@ -21,10 +21,10 @@ const prepocetZakazky = (zakazka) => {
     message("Prepočítavám zákazku..." + "\n" + vZakazky + "\n" + vVyuctovania + "\n" + vKrajinkaLib);
 
     var uctovanieDPH = zakazka.field(FIELD_UCTOVANIE_DPH);
-    var sezona = zakazka.field(FIELD_SEZONA);
+    var sezona = zakazka.field(SEASON);
     if (!sezona || sezona == 0) {
         sezona = zakazka.field(FIELD_DATUM).getFullYear();
-        zakazka.set(FIELD_SEZONA, sezona);
+        zakazka.set(SEASON, sezona);
     }
 
     var stavZakazky = zakazka.field("Stav");
@@ -72,7 +72,7 @@ const prepocetZakazky = (zakazka) => {
             if (vyuctovanie) {
                 // nastaviť status výkazov práce na Vyúčtované
                 vykazyPrac[vp].link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vykazyPrac[vp].set(FIELD_STAV, stavVyuctovania);
+                vykazyPrac[vp].set(STATUS, stavVyuctovania);
                 // záapis do vyúčtovania
                 vyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
                 // nalinkuj výkazy prác
@@ -144,7 +144,7 @@ const prepocetZakazky = (zakazka) => {
                 // nastaviť príznak výdajok materiálu na vyúčtované
 
                 vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
-                vydajkyMaterialu[vm].set(FIELD_STAV, stavVyuctovania);
+                vydajkyMaterialu[vm].set(STATUS, stavVyuctovania);
                 // zápis do vyúčtovania
                 vyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
                 nalinkujMaterial(vyuctovanie, vydajkyMaterialu[vm]);
@@ -203,7 +203,7 @@ const prepocetZakazky = (zakazka) => {
                 }
             }
             vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
-            vykazStrojov.set(FIELD_STAV, stavVyuctovania);
+            vykazStrojov.set(STATUS, stavVyuctovania);
             // zápis do vyúčtovania
             vyuctovanie.set(vykazStrojov.field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
             nalinkujStroje(vyuctovanie, vykazStrojov);
@@ -441,11 +441,11 @@ const prepocetZakazky = (zakazka) => {
         vyuctovanie.set("Odberateľ", pullAddress(vyuctovanie.field("Klient")[0]));
         //zakazkaToJsonHZS(zakazka);
         message("Vyúčtovane |" + vyuctovanie.field("Číslo") + "| bolo " + textVyuctovanie);
-        zakazka.set(FIELD_STAV, stavZakazky);
+        zakazka.set(STATUS, stavZakazky);
         // stav vyúčtovania
 
     }
-    setBackgroudColor(zakazka, zakazka.field(FIELD_STAV));
+    setBackgroudColor(zakazka, zakazka.field(STATUS));
     message("Hotovo...!");
 }
 

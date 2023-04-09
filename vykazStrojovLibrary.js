@@ -60,10 +60,10 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         }
 
         if (sDPH) {
-            var sezona = vykaz.field(FIELD_SEZONA);
+            var sezona = vykaz.field(SEASON);
             if (!sezona || sezona == 0) {
                 sezona = vykaz.field(FIELD_DATUM).getFullYear();
-                vykaz.set(FIELD_SEZONA, sezona);
+                vykaz.set(SEASON, sezona);
             }
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
             sumaDPH = sumaBezDPH * sadzbaDPH;
@@ -85,11 +85,11 @@ const novyVykazStrojov = (zakazka) => {
     var cp = zakazka.field("Cenová ponuka")[0];
     var typVykazu = cp.field("Typ cenovej ponuky");
     var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field(FIELD_SEZONA);
+    var sezona = zakazka.field(SEASON);
     var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
     // vytvoriť novú výdajku
     var novyVykaz = new Object();
-    novyVykaz[FIELD_CISLO] = cislo;
+    novyVykaz[NUMBER] = cislo;
     novyVykaz["Dátum"] = datum;
     novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
     novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
@@ -98,7 +98,7 @@ const novyVykazStrojov = (zakazka) => {
     novyVykaz["Vydané"] = "Zákazka";
     novyVykaz["Zákazka"] = zakazka;
     novyVykaz["Cenová ponuka"] = cp;
-    novyVykaz[FIELD_SEZONA] = sezona;
+    novyVykaz[SEASON] = sezona;
     lib.create(novyVykaz);
     var vykazStrojov = lib.find(cislo)[0];
 

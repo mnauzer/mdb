@@ -36,14 +36,14 @@ const prepocetPlatby = platba => {
     var datum = platba.field(FIELD_DATUM);
     var db = lib();
     // nastaviť sezónu
-    platba.set(FIELD_SEZONA, datum.getFullYear());
-    var sezona = platba.field(FIELD_SEZONA);
+    platba.set(SEASON, datum.getFullYear());
+    var sezona = platba.field(SEASON);
 
     // vygenerovať nové číslo
     // var cislo = platba.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = platba.field(FIELD_CISLO) || noveCisloV2(platba, db, 0, 3);
-    platba.set(FIELD_CISLO, cislo);
+    var cislo = platba.field(NUMBER) || noveCisloV2(platba, db, 0, 3);
+    platba.set(NUMBER, cislo);
 
     // zistiť aktuálnu sadzbu dph v databáze
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
