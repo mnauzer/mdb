@@ -3,27 +3,9 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinkaLib
 const verziaKrajinkaLib = () => {
-    var nazov = "krajinkalib";
-    var verzia = "23.2";
+    var nazov = "libKrajinkaApp.js";
+    var verzia = "23.4";
     return nazov + " " + verzia;
-}
-
-const setEdit = (entry) => { // default je update
-    var create = true;
-    if (create) {
-        entry.set(VIEW, "Editácia");
-        entry.set(DBG, false);
-    } else {
-        entryDefault.set(VIEW, "Editácia");
-        entryDefault.set(DBG, false);
-    }
-    return;
-}
-
-const setTlac = entry => {
-    entry.set(VIEW, "Tlač");
-    entry.set(DBG, false);
-    return;
 }
 
 const setView = (en, view) => {
@@ -33,12 +15,6 @@ const setView = (en, view) => {
         en.set(VIEW, "Tlač");
         en.set(DBG, false);
     }
-}
-
-const setConfidental = entry => {
-    entry.set(VIEW, "Confidental");
-    entry.set(DBG, false);
-    return;
 }
 
 const pad = (number, length) => {
