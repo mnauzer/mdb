@@ -16,7 +16,7 @@ const updateEntry = en => {
 }
 
 const prepocitatZaznamDochadzky = en => {
-    message("Prepočítavám záznam..." + verziaKniznice());
+    message("Prepočítavám záznam...\nKnižnica: " + verziaKniznice());
     // výpočet pracovnej doby
     var datum = en.field(DATE);
     var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
