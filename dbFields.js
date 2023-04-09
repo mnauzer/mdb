@@ -52,6 +52,7 @@ const DOFA_SUP_NUMBER = "Číslo faktúry";
 const DOFA_SUP_VS = "VS"; // variabilný symbol
 const DOFA_DATE = "Dátum vystavenia";
 const DOFA_DUE_DATE = "Dátum splatnosti";
+const DOFA_PAY_DATE = "Dátum úhrady";
 const DOFA_SUM = "Suma bez DPH";
 const DOFA_SUM_DPH = "DPH";
 const DOFA_SUM_TOTAL = "Suma s DPH";
@@ -61,9 +62,9 @@ const DOFA_PAYED = "Uhradená";
 const A_OBL_TYPE = "Typ záväzku";
 const A_OBL_SUM = "Suma";
 const A_OBL_DUE_DATE = "Dátum splatnosti";
-const A_OBL_PAYED = "Uhradené";
-const A_OBL_PAYED_DATE = "Dátum úhrady";
+const A_OBL_PAY_DATE = "Dátum úhrady";
 const A_OBL_INVC = "Faktúry prijaté";
+const A_OBL_PAYED = "Uhradené";
 
 // Príjemky
 // DB_RCPTS
