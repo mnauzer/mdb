@@ -6,10 +6,12 @@ function verziaKniznice() {
 }
 
 const setPrice = en => {
-    message("V3");
+    message("V4");
 
     let links = en.linksFrom("Ceny prác", "Práca");
     if (links.length > 0) {
+        message(links.length);
+
         let date = new Date();
         let price = lastValid(links, date, "Cena", "Platnosť od");
         message(price);
