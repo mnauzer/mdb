@@ -28,7 +28,7 @@ const setTlac = entry => {
 
 const setView = (en, view) => {
     if (view === "E") {
-        en.set(VIEW, "Edit");
+        en.set(VIEW, "Editácia");
     } else {
         en.set(VIEW, "Tlač");
         en.set(DBG, false);
