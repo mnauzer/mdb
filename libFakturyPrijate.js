@@ -18,8 +18,8 @@ const checkOverdue = (en, date) => {
             en.set(ENT_COLOR, MEM_GREEN)
     }
 }
-// check if invoice is overdue and set entry color code
-// skontroluje či je faktúra po splatnosti a nastaví farebný práznak záznamu
+// check if invoice items are
+// skontroluje či položky faktúry sú zaevidované na skladovej príjemke
 const checkRcpts = en => {
     var receipts = libByName(DB_RCPTS);
 
