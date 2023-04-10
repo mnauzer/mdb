@@ -149,15 +149,15 @@ const vyplataMzdy = zaznam => {
 
 const convOld = en => {
     if (en.field("Pohyb") == "Výdavok") {
-        en.set("Suma", en.field("Výdavok bez DPH"))
-        en.set("DPH", en.field("DPH-"))
-        en.set("Suma s DPH", en.field("Výdavok s DPH"))
+        en.set("Suma", en.field("Výdavok bez DPH").toFixed(2))
+        en.set("DPH", en.field("DPH-").toFixed(2))
+        en.set("Suma s DPH", en.field("Výdavok s DPH").toFixed(2))
     } else if (en.field("Pohyb") == "Príjem") {
-        en.set("Suma", en.field("Príjem bez DPH"))
-        en.set("DPH", en.field("DPH-"))
-        en.set("Suma s DPH", en.field("Príjem s DPH"))
+        en.set("Suma", en.field("Príjem bez DPH").toFixed(2))
+        en.set("DPH", en.field("DPH-").toFixed(2))
+        en.set("Suma s DPH", en.field("Príjem s DPH").toFixed(2))
     } else if  (en.field("Pohyb") == "PP") {
-        en.set("Suma", en.field("Priebežná položka"))
+        en.set("Suma", en.field("Priebežná položka").toFixed(2))
 
     } else {
         message("Nie je zadaný pohyb záznamu");
