@@ -6,7 +6,7 @@
 const verziaKrajinkaLib = () => {
     var result = "";
     var nazov = "libKrajinkaApp";
-    var verzia = "0.23.02";
+    var verzia = "0.23.03";
     result = nazov + " " + verzia;
     return result;
 }
@@ -15,7 +15,7 @@ const setNumber = (en, lib) => {
     // vygenerovať nové číslo
     // var cislo = en.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var number = en.field(NUMBER) || noveCisloV2(en, lib, 0, 3);
+    var number = en.field(NUMBER) || newNumber(en, lib, 0, 3);
     en.set(NUMBER, number);
 }
 
@@ -63,7 +63,7 @@ const isTest = (sezona, db) => {
 };
 
 // generuje nové číslo záznamu
-const noveCislo = (sezona, db, withPrefix, sliceNum) => {
+const newNumber = (sezona, db, withPrefix, sliceNum) => {
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;
@@ -90,7 +90,7 @@ const noveCislo = (sezona, db, withPrefix, sliceNum) => {
 };
 
 // generuje nové číslo záznamu
-const noveCisloV2 = (entry, withPrefix, sliceNum) => {
+const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var db = lib.title;
     var sezona = entry.field(SEASON) ? entry.field(SEASON) : new Date().getFullYear();
     var prefix = 0;
