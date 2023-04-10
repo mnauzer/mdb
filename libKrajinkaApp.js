@@ -85,12 +85,12 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
             //  message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
-            var test = isTest(sezona, databazy[d]);
+            var test = isTest(sezona, fDb);
             attr = test ? "číslo testu" : "posledné číslo";
-            lastNum = databazy[d].attr(attr);
-            databazy[d].setAttr(attr, lastNum + 1);
-            prefix = test ? "T!" + databazy[d].field("Prefix") : databazy[d].field("Prefix");
-            dbID = test ? "T!" + databazy[d].field("ID") : databazy[d].field("ID");
+            lastNum = fDb.attr(attr);
+            fDb.setAttr(attr, lastNum + 1);
+            prefix = test ? "T!" + fDb.field("Prefix") : fDb.field("Prefix");
+            dbID = test ? "T!" + fDb.field("ID") : fDb.field("ID");
             cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
         }
@@ -125,10 +125,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     message("Databáz 2: " + databazy.length);
     var fDb = databazy.filter(fltrDb)[0];
     message("Filtrovaných databáz: " + fDb.field("Názov"));
-    for (var d = 0; d < databazy.length; d++) {
-        if (databazy[d].field("Názov") === db) {
-            message("Cyklus " + d + "\nDatabáza: " + databazy[d].field("Názov") + "\nSezóna: " + sezona);
-            var test = isTest(sezona, databazy[d]);
+            var test = isTest(sezona, fDb);
             attr = test ? "číslo testu" : "posledné číslo";
             lastNum = databazy[d].attr(attr);
             databazy[d].setAttr(attr, lastNum + 1);
@@ -136,8 +133,6 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
             dbID = test ? "T!" + databazy[d].field("ID") : databazy[d].field("ID");
             cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
-        }
-    }
     return cislo;
 };
 
