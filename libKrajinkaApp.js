@@ -92,7 +92,7 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
 // generuje nové číslo záznamu
 const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var db = lib.title;
-    var sezona = entry.field(SEASON) ? entry.field(SEASON) : new Date().getFullYear();
+    var sezona = entry.field(SEASON) ? entry.field(SEASON) : now().getFullYear();
     message(sezona);
 
     var prefix = 0;
