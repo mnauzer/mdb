@@ -104,7 +104,7 @@ const getSeason = (en) => {
 
 // generuje nové číslo záznamu
 const newNumberV2 = (entry, withPrefix, sliceNum) => {
-    var db = lib.title;
+    var db = lib().title;
     var sezona = getSeason(entry);
     var prefix = 0;
     var lastNum = 0;
