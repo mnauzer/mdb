@@ -61,23 +61,23 @@ const prepocetPlatby = en => {
 
     if (en.field("Pohyb") == "Výdavok") {
         if (en.field("s DPH")) {
-            total = en.field("Výdavok s DPH");
-            zaklad = en.field("Výdavok bez DPH");
+            total = en.field("Suma s DPH");
+            zaklad = en.field("Suma bez DPH");
             if (total) {
                 zaklad = getSumaBezDPH(total, sadzbaDPH);
             } else if (zaklad) {
                 zaklad = getSumaSDPH(zaklad, sadzbaDPH);
             }
             dph = total - zaklad;
-            en.set("Výdavok bez DPH", zaklad);
-            en.set("DPH-", dph);
+            en.set("Suma bez DPH", zaklad);
+            en.set("DPH", dph);
         } else {
-            en.set("Výdavok s DPH", 0);
-            en.set("DPH-", 0);
+            en.set("Suma s DPH", 0);
+            en.set("DPH", 0);
         };
         en.set("Príjem s DPH", 0);
         en.set("Príjem bez DPH", 0);
-        en.set("DPH+", 0);
+        en.set("DPH", 0);
         en.set("Do pokladne", null);
         en.set("Účel príjmu", null);
         //en.set("Zákazka", null);
@@ -90,14 +90,14 @@ const prepocetPlatby = en => {
             zaklad = total / (sadzbaDPH + 1);
             dph = total - zaklad;
             en.set("Príjem bez DPH", zaklad);
-            en.set("DPH+", dph);
+            en.set("DPH", dph);
         } else {
             en.set("Príjem s DPH", 0);
-            en.set("DPH+", 0);
+            en.set("DPH", 0);
         };
-        en.set("Výdavok s DPH", 0);
-        en.set("Výdavok bez DPH", 0);
-        en.set("DPH-", 0);
+        en.set("Suma s DPH", 0);
+        en.set("Suma bez DPH", 0);
+        en.set("DPH", 0);
         en.set("Z pokladne", null);
         en.set("Účel výdaja", null);
         en.set("Prevádzková réžia", null);
@@ -111,7 +111,7 @@ const prepocetPlatby = en => {
 
 const vyplataMzdy = zaznam => {
     message("Evidujem platby v.13");
-    var sumaUhrady =  zaznam.field("Výdavok bez DPH");
+    var sumaUhrady =  zaznam.field("Suma bez DPH");
     var mzdy = libByName("aMzdy");
     var zamestnanec = zaznam.field("Zamestnanec")[0];
     var links = zamestnanec.linksFrom("aMzdy", "Zamestnanec").filter(e => e.field("Vyúčtované") == false )
@@ -154,12 +154,12 @@ const vyplataMzdy = zaznam => {
 
 const convOld = en => {
     if (en.field("Pohyb") == "Výdavok") {
-        en.set("Suma", en.field("Výdavok bez DPH").toFixed(2))
-        en.set("DPH", en.field("DPH-").toFixed(2))
-        en.set("Suma s DPH", en.field("Výdavok s DPH").toFixed(2))
+        en.set("Suma", en.field("Suma bez DPH").toFixed(2))
+        en.set("DPH", en.field("DPH").toFixed(2))
+        en.set("Suma s DPH", en.field("Suma s DPH").toFixed(2))
     } else if (en.field("Pohyb") == "Príjem") {
         en.set("Suma", en.field("Príjem bez DPH").toFixed(2))
-        en.set("DPH", en.field("DPH-").toFixed(2))
+        en.set("DPH", en.field("DPH").toFixed(2))
         en.set("Suma s DPH", en.field("Príjem s DPH").toFixed(2))
     } else if  (en.field("Pohyb") == "PP") {
         en.set("Suma", en.field("Priebežná položka").toFixed(2))
