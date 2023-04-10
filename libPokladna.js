@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.10";
+const vPokladna = "0.23.11";
 
 const verziaPokladna = () => {
     var result = "";
@@ -61,6 +61,9 @@ const fillPopis = en => {
                 // code block
             }
         en.set("Popis", popis);
+    } else {
+        message(popis);
+
     }
 }
 
@@ -143,8 +146,8 @@ const prepocetPlatby = en => {
         en.set("Zamestnanec", null);
         en.set("Stroj", null);
         en.set("Vozidlo", null);
-        fillPopis(en);
     }
+    fillPopis(en);
     message("Hotovo...");
 }
 
