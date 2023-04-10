@@ -2,10 +2,13 @@
 // JS Libraries:
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinkaLib
+
 const verziaKrajinkaLib = () => {
-    var nazov = "libKrajinkaApp.js";
-    var verzia = "23.6";
-    return nazov + " " + verzia;
+    var result = "";
+    var nazov = "libKrajinkaApp";
+    var verzia = "0.23.01";
+    result = nazov + " " + verzia;
+    return result;
 }
 
 const setView = (en, view) => {
@@ -267,4 +270,18 @@ const zistiIndexLinku = (link, remoteLinks) => {
     // message(index);
     return index;
 }
+
+
+const getSumaBezDPH = (sumaSDPH, sadzbaDPH) => {
+    result = 0;
+    result = sumaSDPH / (sadzbaDPH + 1);
+    return result;
+}
+
+const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
+    result = 0;
+    result = sumaBezDPH * (sadzbaDPH + 1);
+    return result;
+}
+
 // End of file: 25.03.2022, 16:16

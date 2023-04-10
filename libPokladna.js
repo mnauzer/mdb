@@ -11,18 +11,6 @@ const verziaPokladna = () => {
 }
 
 
-const getSumaBezDPH = (sumaSDPH, sadzbaDPH) => {
-    result = 0;
-    result = sumaSDPH / (sadzbaDPH + 1);
-    return result;
-}
-
-const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
-    result = 0;
-    result = sumaBezDPH * (sadzbaDPH + 1);
-    return result;
-}
-
 const calcUcet = ucet => {
     var result = 0;
     // prepočíta zadaný účet
