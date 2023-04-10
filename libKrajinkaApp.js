@@ -89,9 +89,9 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
     return cislo;
 };
 
-const getSeason = en => {
+const getSeason = (en, date) => {
     var season = en.field(SEASON);
-    if (season <= 0) {
+    if (season < 0) {
         message("getSeason: " + season);
         return season;
     } else {
