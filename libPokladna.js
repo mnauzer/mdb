@@ -29,76 +29,80 @@ const calcUcet = ucet => {
     return result;
 }
 
-const prepocetPlatby = platba => {
+const prepocetPlatby = en => {
     message(verziaPokladna);
 
-    var datum = platba.field(DATE);
+    var datum = en.field(DATE);
     var db = lib();
     // nastaviť sezónu
-    platba.set(SEASON, datum.getFullYear());
-    var sezona = platba.field(SEASON);
+    en.set(SEASON, datum.getFullYear());
+    var sezona = en.field(SEASON);
 
     // vygenerovať nové číslo
-    // var cislo = platba.field("Číslo");
+    // var cislo = en.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = platba.field(NUMBER) || noveCisloV2(platba, db, 0, 3);
-    platba.set(NUMBER, cislo);
+    var cislo = en.field(NUMBER) || noveCisloV2(en, db, 0, 3);
+    en.set(NUMBER, cislo);
 
     // zistiť aktuálnu sadzbu dph v databáze
-    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
-    platba.set("%DPH", sadzbaDPH * 100);
+    if (en.field("sadzba") === "základná") {
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
+    } else if (en.field("sadzba") === "zvýšená0") {
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Zvýšená sadzba DPH") / 100
+    }
+    en.set("%DPH", sadzbaDPH * 100);
 
     // inicializácia
     var zaklad = 0;
     var total = 0;
     var dph = 0;
 
-    if (platba.field("Pohyb") == "Výdavok") {
-        if (platba.field("s DPH")) {
-            total = platba.field("Výdavok s DPH");
-            zaklad = platba.field("Výdavok bez DPH");
+    if (en.field("Pohyb") == "Výdavok") {
+        if (en.field("s DPH")) {
+            total = en.field("Výdavok s DPH");
+            zaklad = en.field("Výdavok bez DPH");
             if (total) {
                 zaklad = getSumaBezDPH(total, sadzbaDPH);
             } else if (zaklad) {
                 zaklad = getSumaSDPH(zaklad, sadzbaDPH);
             }
             dph = total - zaklad;
-            platba.set("Výdavok bez DPH", zaklad);
-            platba.set("DPH-", dph);
+            en.set("Výdavok bez DPH", zaklad);
+            en.set("DPH-", dph);
         } else {
-            platba.set("Výdavok s DPH", 0);
-            platba.set("DPH-", 0);
+            en.set("Výdavok s DPH", 0);
+            en.set("DPH-", 0);
         };
-        platba.set("Príjem s DPH", 0);
-        platba.set("Príjem bez DPH", 0);
-        platba.set("DPH+", 0);
-        platba.set("Do pokladne", null);
-        platba.set("Účel príjmu", null);
-        //platba.set("Zákazka", null);
-        //platba.set("Klient", null);
-        platba.set("Partner", null);
+        en.set("Príjem s DPH", 0);
+        en.set("Príjem bez DPH", 0);
+        en.set("DPH+", 0);
+        en.set("Do pokladne", null);
+        en.set("Účel príjmu", null);
+        //en.set("Zákazka", null);
+        //en.set("Klient", null);
+        en.set("Partner", null);
 
-    } else if (platba.field("Pohyb") == "Príjem") {
-        if (platba.field("s DPH")) {
-            total = platba.field("Príjem s DPH");
+    } else if (en.field("Pohyb") == "Príjem") {
+        if (en.field("s DPH")) {
+            total = en.field("Príjem s DPH");
             zaklad = total / (sadzbaDPH + 1);
             dph = total - zaklad;
-            platba.set("Príjem bez DPH", zaklad);
-            platba.set("DPH+", dph);
+            en.set("Príjem bez DPH", zaklad);
+            en.set("DPH+", dph);
         } else {
-            platba.set("Príjem s DPH", 0);
-            platba.set("DPH+", 0);
+            en.set("Príjem s DPH", 0);
+            en.set("DPH+", 0);
         };
-        platba.set("Výdavok s DPH", 0);
-        platba.set("Výdavok bez DPH", 0);
-        platba.set("DPH-", 0);
-        platba.set("Z pokladne", null);
-        platba.set("Účel výdaja", null);
-        platba.set("Prevádzková réžia", null);
-        platba.set("Dodávateľ", null);
-        platba.set("Zamestnanec", null);
-        platba.set("Stroj", null);
-        platba.set("Vozidlo", null);
+        en.set("Výdavok s DPH", 0);
+        en.set("Výdavok bez DPH", 0);
+        en.set("DPH-", 0);
+        en.set("Z pokladne", null);
+        en.set("Účel výdaja", null);
+        en.set("Prevádzková réžia", null);
+        en.set("Dodávateľ", null);
+        en.set("Zamestnanec", null);
+        en.set("Stroj", null);
+        en.set("Vozidlo", null);
     }
     message("Hotovo...");
 }
