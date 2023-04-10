@@ -146,4 +146,23 @@ const vyplataMzdy = zaznam => {
     }
 
 }
+
+const convOld = en => {
+    if (en.field("Pohyb") == "Výdavok") {
+        en.set("Suma", en.field("Výdavok bez DPH"))
+        en.set("DPH", en.field("DPH-"))
+        en.set("Suma s DPH", en.field("Výdavok s DPH"))
+    } else if (en.field("Pohyb") == "Príjem") {
+        en.set("Suma", en.field("Príjem bez DPH"))
+        en.set("DPH", en.field("DPH-"))
+        en.set("Suma s DPH", en.field("Príjem s DPH"))
+    } else if  (en.field("Pohyb") == "PP") {
+        en.set("Suma", en.field("Priebežná položka"))
+
+    } else {
+        message("Nie je zadaný pohyb záznamu");
+
+    }
+
+}
 // End of file: 20.03.2022, 12:17
