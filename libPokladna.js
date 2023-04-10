@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.08";
+const vPokladna = "0.23.09";
 
 const verziaPokladna = () => {
     var result = "";
@@ -60,8 +60,8 @@ const prepocetPlatby = en => {
                 total = getSumaSDPH(zaklad, sadzbaDPH).toFixed(2);
                 en.set("Suma s DPH", total);
             }
-            dph = total - zaklad;
-            en.set("DPH", dph).toFixed(2);
+            dph = (total - zaklad).toFixed(2);
+            en.set("DPH", dph);
         } else {
             en.set("Suma s DPH", null);
             en.set("DPH", null);
