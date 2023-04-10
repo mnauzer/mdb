@@ -15,8 +15,8 @@ const setNumber = (en, lib) => {
     // vygenerovať nové číslo
     // var cislo = en.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = en.field(NUMBER) || noveCisloV2(en, lib, 0, 3);
-    en.set(NUMBER, cislo);
+    var number = en.field(NUMBER) || noveCisloV2(en, lib, 0, 3);
+    en.set(NUMBER, number);
 }
 
 const setView = (en, view) => {
