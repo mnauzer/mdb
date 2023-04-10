@@ -92,12 +92,12 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
 const getSeason = (en) => {
     var season = en.field(SEASON);
     if (season < 0) {
-        message("getSeason: " + season);
+       // message("getSeason: " + season);
         return season;
     } else {
         let date = new Date();
         season = date.getFullYear();
-        message("Sezóna: " + season + "\nDate: " + date);
+       // message("Sezóna: " + season + "\nDate: " + date);
         return season;
     }
 }
@@ -106,8 +106,6 @@ const getSeason = (en) => {
 const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var db = lib.title;
     var sezona = getSeason(entry);
-    message("Sezóna: " + sezona);
-
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;
@@ -118,7 +116,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
 
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
-            //  message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
+            message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
             var test = isTest(sezona, databazy[d]);
             attr = test ? "číslo testu" : "posledné číslo";
             lastNum = databazy[d].attr(attr);
