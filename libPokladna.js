@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.11";
+const vPokladna = "0.23.12";
 
 const verziaPokladna = () => {
     var result = "";
@@ -20,7 +20,7 @@ const fillPopis = en => {
     let popis = en.field("Popis");
     if (!popis) {
         let typVydavku = en.field("Účel výdaja");
-        switch(expression) {
+        switch(typVydavku) {
             case "Mzdy zamestnanci":
                 // code block
                 popis = "Mzdy";
