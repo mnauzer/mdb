@@ -33,7 +33,7 @@ const prepocetPlatby = platba => {
     var vKrajinkaLib = verziaKrajinkaLib();
     message("PREPOČET PLATBY" + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
-    var datum = platba.field(FIELD_DATUM);
+    var datum = platba.field(DATE);
     var db = lib();
     // nastaviť sezónu
     platba.set(SEASON, datum.getFullYear());
