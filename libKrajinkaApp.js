@@ -115,6 +115,8 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var databazy = entry.field("Databázy");
     message("Databáz: " + databazy.length);
     for (var d = 0; d < databazy.length; d++) {
+        databazy.filter(e => e.field("Názov") == db );
+        message("Databáz: " + databazy.length);
         if (databazy[d].field("Názov") === db) {
             message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
             var test = isTest(sezona, databazy[d]);
