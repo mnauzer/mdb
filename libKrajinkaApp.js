@@ -83,8 +83,8 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
     var databazy = rok.field("Databázy");
 
     for (var d = 0; d < databazy.length; d++) {
-        if (databazy[d].field("Názov") === db) {
-            //  message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
+        if (fDb.field("Názov") === db) {
+            //  message("Cyklus " + d + "Databáza ..." + fDb.field("Názov"));
             var test = isTest(sezona, fDb);
             attr = test ? "číslo testu" : "posledné číslo";
             lastNum = fDb.attr(attr);
@@ -127,10 +127,10 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     message("Filtrovaných databáz: " + fDb.field("Názov"));
             var test = isTest(sezona, fDb);
             attr = test ? "číslo testu" : "posledné číslo";
-            lastNum = databazy[d].attr(attr);
-            databazy[d].setAttr(attr, lastNum + 1);
-            prefix = test ? "T!" + databazy[d].field("Prefix") : databazy[d].field("Prefix");
-            dbID = test ? "T!" + databazy[d].field("ID") : databazy[d].field("ID");
+            lastNum = fDb.attr(attr);
+            fDb.setAttr(attr, lastNum + 1);
+            prefix = test ? "T!" + fDb.field("Prefix") : fDb.field("Prefix");
+            dbID = test ? "T!" + fDb.field("ID") : fDb.field("ID");
             cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
     return cislo;
