@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.15";
+const vPokladna = "0.23.16";
 
 const verziaPokladna = () => {
     var result = "";
@@ -68,6 +68,8 @@ const fillPopis = en => {
     }
 }
 
+
+
 const prepocetPlatby = en => {
     message(verziaPokladna());
 
@@ -77,11 +79,7 @@ const prepocetPlatby = en => {
     en.set(SEASON, datum.getFullYear());
     var sezona = en.field(SEASON);
 
-    // vygenerovať nové číslo
-    // var cislo = en.field("Číslo");
-    //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var cislo = en.field(NUMBER) || noveCisloV2(en, db, 0, 3);
-    en.set(NUMBER, cislo);
+
 
     // zistiť aktuálnu sadzbu dph v databáze
     if (en.field("s DPH")) {

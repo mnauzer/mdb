@@ -6,9 +6,17 @@
 const verziaKrajinkaLib = () => {
     var result = "";
     var nazov = "libKrajinkaApp";
-    var verzia = "0.23.01";
+    var verzia = "0.23.02";
     result = nazov + " " + verzia;
     return result;
+}
+
+const setNumber = (en, lib) => {
+    // vygenerovať nové číslo
+    // var cislo = en.field("Číslo");
+    //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
+    var cislo = en.field(NUMBER) || noveCisloV2(en, lib, 0, 3);
+    en.set(NUMBER, cislo);
 }
 
 const setView = (en, view) => {
