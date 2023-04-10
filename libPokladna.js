@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.12";
+const vPokladna = "0.23.14";
 
 const verziaPokladna = () => {
     var result = "";
@@ -17,7 +17,7 @@ const calcUcet = ucet => {
     return result;
 }
 const fillPopis = en => {
-    let popis = en.field("Popis");
+    let popis = en.field("Popis platby");
     if (!popis) {
         let typVydavku = en.field("Účel výdaja");
         switch(typVydavku) {
@@ -60,7 +60,7 @@ const fillPopis = en => {
             default:
                 // code block
             }
-        en.set("Popis", popis);
+        en.set("Popis platby", popis);
     } else {
         message(popis);
 
