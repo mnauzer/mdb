@@ -114,7 +114,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
     message("Databáz: " + databazy.length);
-    databazy.filter(e => e.field("Názov") == db );
+    databazy.filter(e => e.field("Názov") === db );
     message("Databáz: " + databazy.length);
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
