@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.14";
+const vPokladna = "0.23.15";
 
 const verziaPokladna = () => {
     var result = "";
@@ -23,19 +23,20 @@ const fillPopis = en => {
         switch(typVydavku) {
             case "Mzdy zamestnanci":
                 // code block
-                popis = "Mzdy";
+                popis = "Mzda " + en.field("Zamestnanec")[0].field("Nick") ;
                 break;
             case "Mzdy odmeny":
                 // code block
-                popis = "Mzdy";
+                popis = "Prémia " + en.field("Zamestnanec")[0].field("Nick");
                 break;
             case "Mzdy externé":
                 // code block
-                popis = "Mzdy";
+                popis = "Externá mzda " + en.field("Zamestnanec")[0].field("Nick");
                 break;
             case "Prevádzková réžia":
                 // code block
-                popis = "Prevádzková réžia";
+                let rezia = en.field("Prevádzková réžia");
+                popis = "Réžia " + rezia;
                 break;
             case "Nákup tovaru":
                 // code block
