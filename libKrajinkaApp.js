@@ -123,8 +123,8 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
     message("Databáz 2: " + databazy.length);
-    var fDb = databazy.filter(fltrDb);
-    message("Filtrovaných databáz: " + fDb.length);
+    var fDb = databazy.filter(fltrDb)[0];
+    message("Filtrovaných databáz: " + fDb.field("Názov"));
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
             message("Cyklus " + d + "\nDatabáza: " + databazy[d].field("Názov") + "\nSezóna: " + sezona);
