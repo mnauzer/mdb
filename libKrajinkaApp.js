@@ -19,6 +19,15 @@ const setNumber = en => {
     en.set(NUMBER, number);
 }
 
+
+function fltrDb(value, db) {
+    var arr = [0];
+    if (value.field("Názov") !== lib().title) {
+        arr.push(value)
+        return arr
+    }
+}
+
 const setView = (en, view) => {
     if (view === "E") {
         en.set(VIEW, "Editácia");
@@ -114,7 +123,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
     message("Databáz: " + databazy.length);
-    databazy.filter(e => e.field("Názov") !== db );
+    databazy.filter(fltrDb);
     message("Filtrovaných databáz: " + databazy.length);
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
