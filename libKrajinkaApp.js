@@ -92,6 +92,7 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
 const getSeason = en => {
     var season = en.field(SEASON);
     if (season) {
+        message("Sezóna: " + season);
         return season;
     } else {
         let date = new Date();
