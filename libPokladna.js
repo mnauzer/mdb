@@ -5,7 +5,7 @@
 const verziaPokladna = () => {
     var result = "";
     var nazov = "libPokladna";
-    var verzia = "0.23.04";
+    var verzia = "0.23.05";
     result = nazov + " " + verzia;
     return result;
 }
@@ -36,9 +36,9 @@ const prepocetPlatby = en => {
     if (en.field("s DPH")) {
         if (en.field("sadzba") === "základná") {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
-        } else if (en.field("sadzba") === "zvýšená") {
+        } else if (en.field("sadzba") === "znížená") {
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Znížená sadzba DPH") / 100
-        } else if (en.field("sadzba") === "bez DPH") {
+        } else if (en.field("sadzba") === "nulová") {
             var sadzbaDPH = 0;
         }
         en.set("DPH%", sadzbaDPH * 100);
@@ -55,15 +55,16 @@ const prepocetPlatby = en => {
             zaklad = en.field("Suma");
             if (total) {
                 zaklad = getSumaBezDPH(total, sadzbaDPH);
+                en.set("Suma", zaklad);
             } else if (zaklad) {
-                zaklad = getSumaSDPH(zaklad, sadzbaDPH);
+                total = getSumaSDPH(zaklad, sadzbaDPH);
+                en.set("Suma s DPH", total);
             }
             dph = total - zaklad;
-            en.set("Suma", zaklad);
             en.set("DPH", dph);
         } else {
-            en.set("Suma s DPH", 0);
-            en.set("DPH", 0);
+            en.set("Suma s DPH", null);
+            en.set("DPH", null);
         };
         en.set("Suma s DPH", 0);
         en.set("Suma", 0);
