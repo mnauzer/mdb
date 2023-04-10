@@ -2,14 +2,14 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
+const vPokladna = "0.23.06";
+
 const verziaPokladna = () => {
     var result = "";
     var nazov = "libPokladna";
-    var verzia = "0.23.06";
-    result = nazov + " " + verzia;
+    result = nazov + " " + vPokladna;
     return result;
 }
-
 
 const calcUcet = ucet => {
     var result = 0;
