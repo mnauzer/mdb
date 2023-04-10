@@ -89,6 +89,18 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
     return cislo;
 };
 
+const getSeason = en => {
+    var season = en.field(SEASON);
+    if (season) {
+        return season;
+    } else {
+        let date = new Date();
+        season = date.getFullYear();
+        message("Sezóna: " + season + "\nDate: " + date);
+        return season;
+    }
+}
+
 // generuje nové číslo záznamu
 const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var db = lib.title;
