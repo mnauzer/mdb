@@ -5,10 +5,11 @@
 const verziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.2.06";
+    var verzia = "0.23.01";
     result = nazov + " " + verzia;
     return result;
 }
+
 
 const getSumaBezDPH = (sumaSDPH, sadzbaDPH) => {
     result = 0;
@@ -22,7 +23,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
     return result;
 }
 
-const calcUcet = (ucet) => {
+const calcUcet = ucet => {
     var result = 0;
     // prepočíta zadaný účet
     return result;
@@ -30,7 +31,7 @@ const calcUcet = (ucet) => {
 
 const prepocetPlatby = platba => {
     var vKniznica = verziaPokladna();
-    var vKrajinkaLib = verziaKrajinkaLib();
+    var vKrajinkaLib = libKrajinkaApp();
     message("PREPOČET PLATBY" + "\n" + vKniznica + "\n" + vKrajinkaLib);
 
     var datum = platba.field(DATE);
@@ -47,7 +48,7 @@ const prepocetPlatby = platba => {
 
     // zistiť aktuálnu sadzbu dph v databáze
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
-    platba.set("sadzba DPH", sadzbaDPH * 100);
+    platba.set("%DPH", sadzbaDPH * 100);
 
     // inicializácia
     var zaklad = 0;

@@ -71,6 +71,16 @@ const A_OBL_PAYED = "Uhradené";
 const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
+// Pokladňa/bi
+// DB_POKLADNA
+// Polia
+const POK_POHYB = "Pohyb"; //Select
+const POK_U_PREVOD = "Účel prevodu"; //Select
+const POK_DOKLAD = "Doklad"; //Multiple choice
+const POK_S_DPH = "s DPH"; //Checklist
+const POK_SADZBA_DPH = "sadzba DPH"; //Real Number
+const POK_ = "%DPH"; //Real number
+
 
 // Dochádzka/Attendance
 // DB_ATTDC
