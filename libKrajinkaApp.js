@@ -11,7 +11,7 @@ const verziaKrajinkaLib = () => {
     return result;
 }
 
-const setNumber = (en, lib) => {
+const setNumber = en => {
     // vygenerovať nové číslo
     // var cislo = en.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
