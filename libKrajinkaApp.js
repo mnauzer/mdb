@@ -118,7 +118,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     message("Databáz: " + databazy.length);
     for (var d = 0; d < databazy.length; d++) {
         if (databazy[d].field("Názov") === db) {
-            message("Cyklus " + d + "Databáza ..." + databazy[d].field("Názov"));
+            message("Cyklus " + d + "\nDatabáza ..." + databazy[d].field("Názov") + "\nSezóna: " + sezona);
             var test = isTest(sezona, databazy[d]);
             attr = test ? "číslo testu" : "posledné číslo";
             lastNum = databazy[d].attr(attr);
