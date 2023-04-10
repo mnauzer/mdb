@@ -22,7 +22,7 @@ const setNumber = en => {
 
 function fltrDb(value) {
     var arr = [0];
-    if (value.field("Názov") === lib().title) {
+    if (value.field("Názov") == lib().title) {
         arr.push(value)
         return arr
     }
@@ -122,7 +122,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var attr = "";
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
-    message("Databáz1: " + databazy.length);
+    message("Databáz 2: " + databazy.length);
     var fDb = databazy.filter(fltrDb);
     message("Filtrovaných databáz: " + fDb.length);
     for (var d = 0; d < databazy.length; d++) {
