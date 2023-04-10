@@ -20,7 +20,7 @@ const setNumber = en => {
 }
 
 
-function fltrDb(value, db) {
+function fltrDb(value) {
     var arr = [0];
     if (value.field("Názov") !== lib().title) {
         arr.push(value)
