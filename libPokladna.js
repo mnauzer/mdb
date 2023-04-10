@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   20.03.2022
 // Popis:
-const vPokladna = "0.23.07";
+const vPokladna = "0.23.08";
 
 const verziaPokladna = () => {
     var result = "";
@@ -61,19 +61,19 @@ const prepocetPlatby = en => {
                 en.set("Suma s DPH", total);
             }
             dph = total - zaklad;
-            en.set("DPH", dph);
+            en.set("DPH", dph).toFixed(2);
         } else {
             en.set("Suma s DPH", null);
             en.set("DPH", null);
         };
+        en.set("Do pokladne", null);
+        en.set("Účel príjmu", null);
+        en.set("Partner", null);
+        //en.set("Zákazka", null);
+        //en.set("Klient", null);
         // en.set("Suma s DPH", 0);
         // en.set("Suma", 0);
         // en.set("DPH", 0);
-        // en.set("Do pokladne", null);
-        // en.set("Účel príjmu", null);
-        // //en.set("Zákazka", null);
-        // //en.set("Klient", null);
-        // en.set("Partner", null);
 
     } else if (en.field("Pohyb") == "Príjem") {
         if (en.field("s DPH")) {
