@@ -16,6 +16,53 @@ const calcUcet = ucet => {
     // prepočíta zadaný účet
     return result;
 }
+const fillPopis = en => {
+    let popis = en.field("Popis");
+    if (!popis) {
+        let typVydavku = en.field("Účel výdaja");
+        switch(expression) {
+            case "Mzdy zamestnanci":
+                // code block
+                popis = "Mzdy";
+                break;
+            case "Mzdy odmeny":
+                // code block
+                popis = "Mzdy";
+                break;
+            case "Mzdy externé":
+                // code block
+                popis = "Mzdy";
+                break;
+            case "Prevádzková réžia":
+                // code block
+                popis = "Prevádzková réžia";
+                break;
+            case "Nákup tovaru":
+                // code block
+                popis = "Nákup tovaru";
+                break;
+            case "Finančné poplatky":
+                // code block
+                popis = "Finančné poplatky";
+                break;
+            case "Podiely":
+                // code block
+                popis = "Podiely";
+                break;
+            case "Výdavok na zákazku":
+                // code block
+                popis = "Výdavok na zákazku";
+                break;
+            case "Súkromé do nákladov":
+                // code block
+                popis = "Súkromné";
+                break;
+            default:
+                // code block
+            }
+        en.set("Popis", popis);
+    }
+}
 
 const prepocetPlatby = en => {
     message(verziaPokladna());
