@@ -5,7 +5,7 @@
 const verziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.23.03";
+    var verzia = "0.23.04";
     result = nazov + " " + verzia;
     return result;
 }
@@ -45,14 +45,16 @@ const prepocetPlatby = en => {
     en.set(NUMBER, cislo);
 
     // zistiť aktuálnu sadzbu dph v databáze
-    if (en.field("sadzba") === "základná") {
-        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
-    } else if (en.field("sadzba") === "zvýšená") {
-        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Znížená sadzba DPH") / 100
-    } else if (en.field("sadzba") === "bez DPH") {
-        var sadzbaDPH = 0;
+    if (en.field("s DPH")) {
+        if (en.field("sadzba") === "základná") {
+            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
+        } else if (en.field("sadzba") === "zvýšená") {
+            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Znížená sadzba DPH") / 100
+        } else if (en.field("sadzba") === "bez DPH") {
+            var sadzbaDPH = 0;
+        }
+        en.set("DPH%", sadzbaDPH * 100);
     }
-    en.set("DPH%", sadzbaDPH * 100);
 
     // inicializácia
     var zaklad = 0;
@@ -62,21 +64,21 @@ const prepocetPlatby = en => {
     if (en.field("Pohyb") == "Výdavok") {
         if (en.field("s DPH")) {
             total = en.field("Suma s DPH");
-            zaklad = en.field("Suma bez DPH");
+            zaklad = en.field("Suma");
             if (total) {
                 zaklad = getSumaBezDPH(total, sadzbaDPH);
             } else if (zaklad) {
                 zaklad = getSumaSDPH(zaklad, sadzbaDPH);
             }
             dph = total - zaklad;
-            en.set("Suma bez DPH", zaklad);
+            en.set("Suma", zaklad);
             en.set("DPH", dph);
         } else {
             en.set("Suma s DPH", 0);
             en.set("DPH", 0);
         };
-        en.set("Príjem s DPH", 0);
-        en.set("Príjem bez DPH", 0);
+        en.set("Suma s DPH", 0);
+        en.set("Suma", 0);
         en.set("DPH", 0);
         en.set("Do pokladne", null);
         en.set("Účel príjmu", null);
@@ -86,17 +88,17 @@ const prepocetPlatby = en => {
 
     } else if (en.field("Pohyb") == "Príjem") {
         if (en.field("s DPH")) {
-            total = en.field("Príjem s DPH");
+            total = en.field("Suma s DPH");
             zaklad = total / (sadzbaDPH + 1);
             dph = total - zaklad;
-            en.set("Príjem bez DPH", zaklad);
+            en.set("Suma", zaklad);
             en.set("DPH", dph);
         } else {
-            en.set("Príjem s DPH", 0);
+            en.set("Suma s DPH", 0);
             en.set("DPH", 0);
         };
         en.set("Suma s DPH", 0);
-        en.set("Suma bez DPH", 0);
+        en.set("Suma", 0);
         en.set("DPH", 0);
         en.set("Z pokladne", null);
         en.set("Účel výdaja", null);
@@ -111,7 +113,7 @@ const prepocetPlatby = en => {
 
 const vyplataMzdy = zaznam => {
     message("Evidujem platby v.13");
-    var sumaUhrady =  zaznam.field("Suma bez DPH");
+    var sumaUhrady =  zaznam.field("Suma");
     var mzdy = libByName("aMzdy");
     var zamestnanec = zaznam.field("Zamestnanec")[0];
     var links = zamestnanec.linksFrom("aMzdy", "Zamestnanec").filter(e => e.field("Vyúčtované") == false )
@@ -154,13 +156,13 @@ const vyplataMzdy = zaznam => {
 
 const convOld = en => {
     if (en.field("Pohyb") == "Výdavok") {
-        en.set("Suma", en.field("Suma bez DPH").toFixed(2))
+        en.set("Suma", en.field("Suma").toFixed(2))
         en.set("DPH", en.field("DPH").toFixed(2))
         en.set("Suma s DPH", en.field("Suma s DPH").toFixed(2))
     } else if (en.field("Pohyb") == "Príjem") {
-        en.set("Suma", en.field("Príjem bez DPH").toFixed(2))
+        en.set("Suma", en.field("Suma").toFixed(2))
         en.set("DPH", en.field("DPH").toFixed(2))
-        en.set("Suma s DPH", en.field("Príjem s DPH").toFixed(2))
+        en.set("Suma s DPH", en.field("Suma s DPH").toFixed(2))
     } else if  (en.field("Pohyb") == "PP") {
         en.set("Suma", en.field("Priebežná položka").toFixed(2))
 
