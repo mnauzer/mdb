@@ -5,7 +5,7 @@
 const verziaPokladna = () => {
     var result = "";
     var nazov = "pokladnaLibrary";
-    var verzia = "0.23.02";
+    var verzia = "0.23.03";
     result = nazov + " " + verzia;
     return result;
 }
@@ -30,7 +30,7 @@ const calcUcet = ucet => {
 }
 
 const prepocetPlatby = en => {
-    message(verziaPokladna);
+    message(verziaPokladna());
 
     var datum = en.field(DATE);
     var db = lib();
@@ -47,10 +47,12 @@ const prepocetPlatby = en => {
     // zistiť aktuálnu sadzbu dph v databáze
     if (en.field("sadzba") === "základná") {
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
-    } else if (en.field("sadzba") === "zvýšená0") {
-        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Zvýšená sadzba DPH") / 100
+    } else if (en.field("sadzba") === "zvýšená") {
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Znížená sadzba DPH") / 100
+    } else if (en.field("sadzba") === "bez DPH") {
+        var sadzbaDPH = 0;
     }
-    en.set("%DPH", sadzbaDPH * 100);
+    en.set("DPH%", sadzbaDPH * 100);
 
     // inicializácia
     var zaklad = 0;
