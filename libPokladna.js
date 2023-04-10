@@ -4,7 +4,7 @@
 // Popis:
 const verziaPokladna = () => {
     var result = "";
-    var nazov = "pokladnaLibrary";
+    var nazov = "libPokladna";
     var verzia = "0.23.04";
     result = nazov + " " + verzia;
     return result;
