@@ -6,7 +6,7 @@
 const verziaKrajinkaLib = () => {
     var result = "";
     var nazov = "libKrajinkaApp";
-    var verzia = "0.23.03";
+    var verzia = "0.23.04";
     result = nazov + " " + verzia;
     return result;
 }
@@ -15,7 +15,7 @@ const setNumber = (en, lib) => {
     // vygenerovať nové číslo
     // var cislo = en.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
-    var number = en.field(NUMBER) || newNumber(en, lib, 0, 3);
+    var number = en.field(NUMBER) || newNumberV2(en, 0, 3);
     en.set(NUMBER, number);
 }
 
