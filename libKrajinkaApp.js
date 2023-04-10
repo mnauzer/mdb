@@ -93,6 +93,8 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
 const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var db = lib.title;
     var sezona = entry.field(SEASON) ? entry.field(SEASON) : new Date().getFullYear();
+    message(sezona);
+
     var prefix = 0;
     var lastNum = 0;
     var dbID = 0;
