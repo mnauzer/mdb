@@ -140,6 +140,10 @@ const setEntry = en =>{
     en.set(LAST_NUM, number[0]);
 }
 
+const saveEntry = en => {
+
+
+}
 
 const findAppDB = sezona => {
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
