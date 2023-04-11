@@ -26,7 +26,7 @@ const prepocetPonuky = en => {
     var dph = 0;
     var season = getSeason(en);
 
-    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+    var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
 
     // nastaviť splatnosť
     var datum = new Date(en.field(FIELD_DATUM));
