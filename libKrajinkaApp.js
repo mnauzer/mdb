@@ -132,10 +132,8 @@ const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
-    // filteredDB.setAttr(attr, lastNum + 1);
-    var cislo = withPrefix ? prefix + season.slice(sliceNum) + pad(lastNum, 3) : dbID + season.slice(sliceNum) + pad(lastNum, 3);
-    // message("generujem prefix: " + withPrefix ? prefix : dbID);
-    return [cislo, lastNum];
+    var number = withPrefix ? prefix + season.slice(sliceNum) + pad(lastNum, 3) : dbID + season.slice(sliceNum) + pad(lastNum, 3);
+    return [number, lastNum];
 };
 
 const setEntry = en =>{
@@ -158,15 +156,22 @@ const setEntry = en =>{
 }
 
 const saveEntry = en => {
+
     message("Ukladám záznam");
     setView(en, "T");
     let season = getSeason(en);
     let db = findAppDB(season);
     db.setAttr("posledné číslo", number[1])
+    unlockDB(en);
+
+}
+
+const unlockDB = en => {
+    let season = getSeason(en);
+    let db = findAppDB(season);
     db.setAttr("rezervované číslo", null)
     db.setAttr("locked", false)
     db.setAttr("locked reason", null)
-
 }
 
 const findAppDB = season => {
