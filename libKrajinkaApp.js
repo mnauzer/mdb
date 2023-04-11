@@ -142,19 +142,20 @@ const setEntry = en =>{
     var locked = db.attr("locked");
     if (locked) {
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-        return;
-    };
-    message(db.field("Názov") + " ,"+ season);
+        return false;
+    } else {
+        message(db.field("Názov") + " ,"+ season);
 
-    var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
-    message(number);
-    // nastav základné polia
-    en.set(SEASON, season);
-    en.set(NUMBER, number[0]);
-    db.setAttr("rezervované číslo", number[1])
-    db.setAttr("locked", true);
-    db.setAttr("locked reason", "editácia užívateľom ");
-    en.set(LAST_NUM, number[1]);
+        var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
+        message(number);
+        // nastav základné polia
+        en.set(SEASON, season);
+        en.set(NUMBER, number[0]);
+        db.setAttr("rezervované číslo", number[1])
+        db.setAttr("locked", true);
+        db.setAttr("locked reason", "editácia užívateľom ");
+        en.set(LAST_NUM, number[1]);
+    }
 }
 
 const saveEntry = en => {
