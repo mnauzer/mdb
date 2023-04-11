@@ -39,6 +39,8 @@ const DB_VOZIDLA = "Vozidlá";
 const DB_PLANTS = "Databáza rastlín";
 const DB_RCPTS = "Príjemky";
 let e = entry();
+message("Set constants");
+
 
 // aGroup
 //const DBA_OBL = "aZáväzky";
