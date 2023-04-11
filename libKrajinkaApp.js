@@ -112,7 +112,6 @@ const getSeason = (en) => {
 // generuje nové číslo záznamu
 const newNumberV2 = (en, dv, withPrefix, sliceNum) => {
     var sezona = en.field(SEASON);
-
     var test = isTest(sezona, db);
     var dbID = test ? "T!" + db.field("ID") : db.field("ID");
     var prefix = test ? "T!" + db.field("Prefix") : db.field("Prefix");
@@ -132,7 +131,7 @@ const newNumberV2 = (en, dv, withPrefix, sliceNum) => {
 const setNewEntry = en =>{
     setView(en, "E");
     let season = getSeason(en);
-    let db = findAppDB(sezona);
+    let db = findAppDB(season);
     let number = en.field(NUMBER) || newNumberV2(en, db, 0, 3);
     // nastav základné polia
     en.set(SEASON, season);
