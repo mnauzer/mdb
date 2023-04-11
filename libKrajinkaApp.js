@@ -133,6 +133,7 @@ const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
         lastNum += 1;
     }
     var number = withPrefix ? prefix + season.slice(sliceNum) + pad(lastNum, 3) : dbID + season.slice(sliceNum) + pad(lastNum, 3);
+    message("Nové číslo: " + number);
     return [number, lastNum];
 };
 
