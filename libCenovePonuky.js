@@ -29,7 +29,7 @@ const prepocetPonuky = en => {
     var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
 
     // nastaviť splatnosť
-    var datum = new Date(en.field(FIELD_DATUM));
+    var datum = new Date(en.field(DATE));
     var platnost = new Date(en.field("Platnosť do"));
     var platnost30 = new Date(moment(datum).add(en.field("Platnosť ponuky"), "Days"));
     en.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
