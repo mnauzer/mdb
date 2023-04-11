@@ -120,12 +120,13 @@ const newNumberV2 = (en, db, season, withPrefix, sliceNum) => {
     };
     let dbID =  db.field("ID");
     let prefix = db.field("Prefix");
+    let attr = "posledné číslo";
     if (test) {
-        var dbID = "T!" + db.field("ID");
-        var prefix = "T!" + db.field("Prefix");
+        dbID = "T!" + db.field("ID");
+        prefix = "T!" + db.field("Prefix");
+        attr =  "číslo testu";
     };
 
-    var attr = test ? "číslo testu" : "posledné číslo";
     var lastNum = db.attr(attr);
     var reservedNum = db.attr("rezervované číslo");
     if (lastNum == reservedNum) {
