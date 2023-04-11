@@ -111,7 +111,14 @@ const getSeason = en => {
 
 // generuje nové číslo záznamu
 const newNumberV2 = (en, db, season, withPrefix, sliceNum) => {
-    var test = isTest(season, db);
+    message("Generujem nové číslo");
+    var test = db.attr("test");
+    var locked = db.attr("locked");
+    if (locked) {
+        message("Databáza je zamknutá \nDôvod:"+ db.attr("locked reason"));
+        return;
+    }
+
     var dbID = test ? "T!" + db.field("ID") : db.field("ID");
     var prefix = test ? "T!" + db.field("Prefix") : db.field("Prefix");
     var attr = test ? "číslo testu" : "posledné číslo";
