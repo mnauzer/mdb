@@ -34,7 +34,7 @@ function fltrDbByName(value, name) {
     }
 }
 
-function dateDiff(date1, date2) {
+const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
     var tmp = date2 - date1;
 
@@ -69,7 +69,7 @@ function dateDiff(date1, date2) {
 
 const setID = entries => {
     message("set id v.5");
-    entries.sort((a,b)=> dateDiff(new Date(b.field(DATE)), new Date(a.field(DATE))));
+  //  entries.sort((a,b)=> dateDiff(new Date(b.field(DATE)), new Date(a.field(DATE))));
     for (var e in entries) {
         entries[e].set("ID", e + 1);
     }
