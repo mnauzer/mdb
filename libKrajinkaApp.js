@@ -34,10 +34,42 @@ function fltrDbByName(value, name) {
     }
 }
 
+function dateDiff(date1, date2) {
+    var diff = {}// Initialization of the return
+    var tmp = date2 - date1;
+
+    tmp = Math.floor(tmp/1000);// Number of seconds between the 2 dates
+    diff.sec = tmp % 60;
+    //Extracting the number of seconds
+
+    tmp = Math.floor((tmp-diff.sec)/60);// Number of minutes (whole part)
+    diff.min = tmp % 60;
+    // Extract the number of minutes
+
+    tmp = Math.floor((tmp-diff.min)/60);// Number of hours (whole)
+    diff.hour = tmp % 24;
+    // Extract the number of hours
+
+    tmp = Math.floor((tmp-diff.hour)/24);
+
+    // Nombre de jours restants
+    diff.day = tmp % 7;
+
+    tmp = Math.floor((tmp-diff.day)/7);
+    diff.week = tmp % 4;
+
+    tmp = Math.floor((tmp-diff.week)/4);
+    diff.mon = tmp % 12;
+
+    tmp = Math.floor((tmp-diff.mon)/12);
+    diff.year = tmp;
+
+    return diff;
+}
 
 const setID = entries => {
-    message("set id v.4");
-    entries.sort((a,b)=> new Date(b.field(DATE)) - new Date(a.field(DATE)));
+    message("set id v.5");
+    entries.sort((a,b)=> dateDiff(new Date(b.field(DATE)), new Date(a.field(DATE))));
     for (var e in entries) {
         entries[e].set("ID", e + 1);
     }
