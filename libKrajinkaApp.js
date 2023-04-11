@@ -110,7 +110,7 @@ const getSeason = (en) => {
 }
 
 // generuje nové číslo záznamu
-const newNumberV2 = (en, dv, withPrefix, sliceNum) => {
+const newNumberV2 = (en, db, withPrefix, sliceNum) => {
     var sezona = en.field(SEASON);
     var test = isTest(sezona, db);
     var dbID = test ? "T!" + db.field("ID") : db.field("ID");
