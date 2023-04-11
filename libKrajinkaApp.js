@@ -113,11 +113,7 @@ const getSeason = en => {
 const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
     message("Generujem nové číslo");
     var test = db.attr("test");
-    var locked = db.attr("locked");
-    if (locked) {
-        message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-        return;
-    };
+
     let dbID =  db.field("ID");
     let prefix = db.field("Prefix");
     let attr = "posledné číslo";
@@ -141,10 +137,14 @@ const setEntry = en =>{
     message("Nastavujem záznam");
     setView(en, "E");
     var season = getSeason(en);
-    message(season);
 
     var db = findAppDB(season);
-    message(db.field("Názov"));
+    var locked = db.attr("locked");
+    if (locked) {
+        message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
+        return;
+    };
+    message(db.field("Názov") + " ,"+ season);
 
     var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
     message(number);
