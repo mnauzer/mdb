@@ -130,7 +130,11 @@ const setEntry = en =>{
     message("Nastavujem záznam");
     setView(en, "E");
     let season = getSeason(en);
+    message(season);
+
     let db = findAppDB(season);
+    message(db.field("Názov"));
+
     let number = en.field(NUMBER) || newNumberV2(en, db, season, false, 3);
     // nastav základné polia
     en.set(SEASON, season);
