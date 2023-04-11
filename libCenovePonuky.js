@@ -99,12 +99,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var verzia = "0.2.07";
-    var vKniznica = verziaCenovePonuky();
-    var vKrajinkaLib = verziaKrajinkaLib();
-    message("GENERUJ ZÁKAZKU v." + verzia + "\n" + vKniznica + "\n" + vKrajinkaLib);
-
-    var zakazka = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
+      var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
 
     if (cp.field("Stav cenovej ponuky") == "Schválená") {
 
@@ -112,36 +107,37 @@ const generujZakazku = cp => {
         var typ = cp.field("Typ cenovej ponuky");
 
         // vygenerovať novú zákazku
-        zakazka = ponukaNovaZakazka(cp);
+        en = ponukaNovaZakazka(cp);
 
         if (typ == "Hodinovka") {
-            generujVykazyPrac(zakazka);
+            generujVykazyPrac(en);
             if (cp.field("+Materiál")) {
-                generujVydajkyMaterialu(zakazka);
+                generujVydajkyMaterialu(en);
             }
             if (cp.field("+Mechanizácia")) {
-                generujVykazStrojov(zakazka);
+                generujVykazStrojov(en);
             }
             if (cp.field("+Položky")) {
-                generujVykazyPrac(zakazka);
+                generujVykazyPrac(en);
             }
         } else if (typ == "Položky") {
-            generujVykazyPrac(zakazka);
-            generujVydajkyMaterialu(zakazka);
+            generujVykazyPrac(en);
+            generujVydajkyMaterialu(en);
         } else {
             message("Nie je jasný typ zákazky");
         }
 
         cp.set("Stav cenovej ponuky", "Uzavretá");
-        message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
-    } else if (!zakazka) {
-        message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(NUMBER));
+        message("Zákazka č." + en.field(NUMBER) + " bola vygenerovaná");
+    } else if (!en) {
+        message("Z cenovej ponuky už je vytvorená zákazk č." + en.field(NUMBER));
     } else {
         message("Cenová ponuka musí byť schválená");
     }
 
     // End of file: 08.03.2022, 08:01
 }
+
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = cp => {
     // nastaviť sezónu
