@@ -1,10 +1,4 @@
-const verziaVydajky = () => {
-    var result = "";
-    var nazov = "vydajkyLibrary";
-    var verzia = "0.2.01";
-    result = nazov + " " + verzia;
-    return result;
-}
+
 
 const prepocitatVydajkuMaterialu = (vykaz, uctovatDPH) => {
     var material = vykaz.field(FIELD_MATERIAL);
@@ -28,7 +22,7 @@ const prepocitatVydajkuMaterialu = (vykaz, uctovatDPH) => {
         if (sDPH) {
             var sezona = vykaz.field(SEASON);
             if (!sezona || sezona == 0) {
-                sezona = vykaz.field(FIELD_DATUM).getFullYear();
+                sezona = vykaz.field(DATE).getFullYear();
                 vykaz.set(SEASON, sezona);
             }
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;

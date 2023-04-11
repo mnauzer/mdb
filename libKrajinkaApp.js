@@ -34,6 +34,15 @@ function fltrDbByName(value, name) {
     }
 }
 
+
+const setID = lib => {
+    let entries = lib().entries();
+    entries.sort((a,b)=> a.field(DATE).getTime() - b.field(DATE).getTime())
+    for (var e in entries) {
+        entries[e].set("ID", e + 1);
+    }
+}
+
 const setView = (en, view) => {
     if (view === "E") {
         en.set(VIEW, "Editácia");
