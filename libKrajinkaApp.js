@@ -101,7 +101,8 @@ const newNumber = ( db, season, isPrefix, trailingNum) => {
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
-    var number = isPrefix ? prefix + season.slice(trailingNum) + pad(lastNum, 3) : dbID + season.slice(trailingNum) + pad(lastNum, 3);
+    var number = isPrefix ? prefix + season.slice(trailingNum
+    ) + pad(lastNum, 3) : dbID + season.slice(trailingNum) + pad(lastNum, 3);
     message("Vygenerované nové číslo: " + number);
     return [number, lastNum];
 };
@@ -340,4 +341,8 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
     return result;
 }
 
+const getSadzbaDPH = season => {
+
+
+}
 // End of file: 25.03.2022, 16:16

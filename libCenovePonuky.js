@@ -24,7 +24,7 @@ const prepocetPonuky = en => {
     var cenaCelkomBezDPH = 0;
     var cenaSDPH = 0;
     var dph = 0;
-
+    var season = getSeason(en);
 
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
 
