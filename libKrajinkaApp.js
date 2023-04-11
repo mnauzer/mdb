@@ -84,7 +84,7 @@ const getSeason = en => {
 }
 
 // generuje nové číslo záznamu
-const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
+const newNumber = ( db, season, isPrefix, trailingNum) => {
     var test = db.attr("test");
 
     let dbID =  db.field("ID");
@@ -101,12 +101,12 @@ const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
-    var number = withPrefix ? prefix + season.slice(sliceNum) + pad(lastNum, 3) : dbID + season.slice(sliceNum) + pad(lastNum, 3);
+    var number = isPrefix ? prefix + season.slice(trailingNum) + pad(lastNum, 3) : dbID + season.slice(trailingNum) + pad(lastNum, 3);
     message("Vygenerované nové číslo: " + number);
     return [number, lastNum];
 };
 
-const setEntry = (en, proj = false) => {
+const setEntry = (en, prefix = false, num = 3) => {
     message("Nastavujem záznam");
     setView(en, "E");
     var season = getSeason(en);
@@ -123,7 +123,7 @@ const setEntry = (en, proj = false) => {
         if (isNumber > null) {
             number.push(en.field(NUMBER));
         } else {
-            number = newNumberV2( db, season, proj, 3);
+            number = newNumber( db, season, prefix, num);
         }
         // nastav základné polia
         en.set(SEASON, season);
