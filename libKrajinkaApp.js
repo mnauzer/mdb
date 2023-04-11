@@ -162,6 +162,8 @@ const saveEntry = en => {
     let db = findAppDB(season);
     db.setAttr("posledné číslo", number[1])
     db.setAttr("rezervované číslo", null)
+    db.setAttr("locked", false)
+    db.setAttr("locked reason", null)
 
 }
 
