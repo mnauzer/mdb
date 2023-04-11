@@ -130,7 +130,7 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
                 lastNum += 1;
             }
             filteredDB.setAttr("rezervované číslo", lastNum)
-            filteredDB.setAttr(attr, lastNum + 1);
+           // filteredDB.setAttr(attr, lastNum + 1);
             prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
             dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
             cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
