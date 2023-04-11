@@ -103,37 +103,29 @@ const getSeason = (en) => {
         return season;
     } else {
         let date = new Date();
-        season = date.getFullYear();
+        season = date.getFullYear().toString();
        // message("Sezóna: " + season + "\nDate: " + date);
         return season;
     }
 }
 
 // generuje nové číslo záznamu
-const newNumberV2 = (entry, withPrefix, sliceNum) => {
-    var db = lib().title;
-    var sezona = getSeason(entry).toString();
-    var prefix = 0;
-    var lastNum = 0;
-    var reservedNum = 0;
-    var dbID = 0;
-    var cislo = 0;
-    var attr = "";
+const newNumberV2 = (en, withPrefix, sliceNum) => {
+    var sezona = en.field(SEASON);
     var filteredDB = findAppDB(sezona);
-    //message("Filtrovaných databáz: " + filteredDB.field("Názov"));
-            var test = isTest(sezona, filteredDB);
-            attr = test ? "číslo testu" : "posledné číslo";
-            reservedNum = filteredDB.attr("rezervované číslo");
-            lastNum = filteredDB.attr(attr);
-            if (lastNum == reservedNum) {
-                lastNum += 1;
-            }
-            filteredDB.setAttr("rezervované číslo", lastNum)
-           // filteredDB.setAttr(attr, lastNum + 1);
-            prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
-            dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
-            cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
-            // message("generujem prefix: " + withPrefix ? prefix : dbID);
+    var test = isTest(sezona, filteredDB);
+    var dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
+    var prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
+    var lastNum = filteredDB.attr(attr);
+    var attr = test ? "číslo testu" : "posledné číslo";
+    var reservedNum = filteredDB.attr("rezervované číslo");
+    if (lastNum == reservedNum) {
+        lastNum += 1;
+    }
+    filteredDB.setAttr("rezervované číslo", lastNum)
+    // filteredDB.setAttr(attr, lastNum + 1);
+    var cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
+    // message("generujem prefix: " + withPrefix ? prefix : dbID);
     return [cislo, lastNum];
 };
 
