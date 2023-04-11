@@ -11,11 +11,10 @@ const verziaKrajinkaLib = () => {
     return result;
 }
 
-const setNumber = en => {
+const getNumber = en => {
     // vygenerovať nové číslo
-    var number = en.field(NUMBER) || newNumberV2(en, 0, 3);
-    en.set(NUMBER, number[0]);
-    en.set(LAST_NUM, number[1]);
+
+    return number;
 }
 
 
@@ -137,6 +136,17 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
     return [cislo, lastNum];
 };
+
+const setNewEntry = en =>{
+    setView(en, "E");
+    let season = getSeason(en);
+    let number = en.field(NUMBER) || newNumberV2(en, 0, 3);
+    // nastav základné polia
+    en.set(SEASON, season);
+    en.set(NUMBER, number[0]);
+    en.set(LAST_NUM, number[1]);
+}
+
 
 const findAppDB = sezona => {
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
