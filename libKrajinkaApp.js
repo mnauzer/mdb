@@ -178,7 +178,7 @@ const findAppDBbyName = (season, name) => {
     var entry = libByName(DB_ASSISTENT).find(season)[0];
     var databazy = entry.field("Databázy");
     //message("Databáz 2: " + databazy.length);
-    var filteredDB = databazy.filter(fltrDb(value, name))[0];
+    var filteredDB = databazy.filter(fltrDb(name))[0];
     return filteredDB;
 }
 
