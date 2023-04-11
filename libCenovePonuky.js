@@ -139,31 +139,31 @@ const generujZakazku = cp => {
 }
 
 // vygeneruj nový záznam zákazky
-const ponukaNovaZakazka = cp => {
+const ponukaNovaZakazka = en => {
     // nastaviť sezónu
-    cp.set(SEASON, cp.field("Dátum").getFullYear());
-    var sezona = cp.field(SEASON);
+    en.set(SEASON, en.field("Dátum").getFullYear());
+    var sezona = en.field(SEASON);
     var lib = libByName(DB_ZAKAZKY);
     // inicializácia
     var novaZakazka = new Object();
     var datum = new Date();
     var typZakazky = ""; //harcoded
 
-    var cislo = noveCislo(sezona, DB_ZAKAZKY, 1, 2);
-    var klient = cp.field("Klient")[0];
-    var miesto = cp.field("Miesto realizácie")[0];
-    var nazovZakazky = cp.field("Popis cenovej ponuky");
-    var typ = cp.field("Typ cenovej ponuky");
+    var cislo = newNumber(lib, sezona, true, 2);
+    var klient = en.field("Klient")[0];
+    var miesto = en.field("Miesto realizácie")[0];
+    var nazovZakazky = en.field("Popis cenovej ponuky");
+    var typ = en.field("Typ cenovej ponuky");
     // vyber diely zákazky podľa typu cp
     if (typ == "Hodinovka") {
-        var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
+        var dielyZakazky = en.field("Diely cenovej ponuky hzs");
         if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
             typZakazky = "Servis AZS";
         } else {
             typZakazky = "Údržba";
         }
     } else {
-        var dielyZakazky = cp.field("Diely cenovej ponuky");
+        var dielyZakazky = en.field("Diely cenovej ponuky");
         typZakazky = "Realizácia";
     }
     var uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
@@ -184,7 +184,7 @@ const ponukaNovaZakazka = cp => {
     novaZakazka["Účtovanie zákazky"] = typ;
     lib.create(novaZakazka);
 
-    var zakazka = cp.linksFrom("Zákazky", "Cenová ponuka")[0];
+    var zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
     return zakazka;
 }
 // VÝDAJKY
