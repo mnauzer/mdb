@@ -36,7 +36,7 @@ function fltrDbByName(value, name) {
 
 
 const setID = entries => {
-
+    message("set id v.1");
     entries.sort((a,b)=> parseInt(b.field(DATE).getTime()) - parseInt(a.field(DATE).getTime()));
     for (var e in entries) {
         entries[e].set("ID", e + 1);
