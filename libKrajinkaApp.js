@@ -35,8 +35,8 @@ function fltrDbByName(value, name) {
 }
 
 
-const setID = lib => {
-    let entries = lib().entries();
+const setID = entries => {
+
     entries.sort((a,b)=> a.field(DATE).getTime() - b.field(DATE).getTime())
     for (var e in entries) {
         entries[e].set("ID", e + 1);
