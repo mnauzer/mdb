@@ -128,7 +128,7 @@ const newNumberV2 = (en, dv, withPrefix, sliceNum) => {
     return [cislo, lastNum];
 };
 
-const setNewEntry = en =>{
+const setEntry = en =>{
     setView(en, "E");
     let season = getSeason(en);
     let db = findAppDB(season);
