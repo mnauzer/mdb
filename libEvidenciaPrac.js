@@ -38,6 +38,7 @@ const prepocetZaznamuEvidencie = en => {
     // inicializácia
     var typ = en.field("Typ zákazky");
     if (typ == "Hodinovka") {
+        //TODO opraviť chybu keď nie je zadaná zákazka
         en.set(FIELD_ZAKAZKA, en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
     } else if (typ == "Položky") {
         //message("Práce na zákazke " + evidencia.field("Zákazka")[0].field("Názov"));

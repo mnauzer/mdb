@@ -8,17 +8,14 @@ const verziaCenovePonuky = () => {
     return nazov + " " + verzia;
 }
 
-const prepocetPonuky = ponuka => {
-    // verzia
-    message("CENOVÁ PONUKA " + verziaCenovePonuky()
-        + "\n" + verziaKrajinkaLib());
-    //
+const prepocetPonuky = en => {
+
     message("Prepočítavam...")
     // inicializácia
-    var typ = ponuka.field("Typ cenovej ponuky");
-    var uctoDopravy = ponuka.field("Účtovanie dopravy");
+    var typ = en.field("Typ cenovej ponuky");
+    var uctoDopravy = en.field("Účtovanie dopravy");
     //spôsob účtovania dopravy
-    var cislo = ponuka.field(NUMBER);
+    var cislo = en.field(NUMBER);
     var pracaCelkom = 0;
     var strojeCelkom = 0;
     var materialCelkom = 0;
@@ -26,27 +23,22 @@ const prepocetPonuky = ponuka => {
     var cenaSDPH = 0;
     var dph = 0;
 
-    // nastaviť sezónu
-    ponuka.set(SEASON, ponuka.field(FIELD_DATUM).getFullYear());
-    var sezona = ponuka.field(SEASON);
+
     var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
 
     // nastaviť splatnosť
-    var datum = new Date(ponuka.field(FIELD_DATUM));
-    var platnost = new Date(ponuka.field("Platnosť do"));
-    var platnost30 = new Date(moment(datum).add(ponuka.field("Platnosť ponuky"), "Days"));
-    ponuka.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
+    var datum = new Date(en.field(FIELD_DATUM));
+    var platnost = new Date(en.field("Platnosť do"));
+    var platnost30 = new Date(moment(datum).add(en.field("Platnosť ponuky"), "Days"));
+    en.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
 
     // doplň adresu klienta do Krycieho listu
-    var klient = ponuka.field("Miesto realizácie")[0].field("Klient")[0];
-    ponuka.set("Klient", klient);
+    var klient = en.field("Miesto realizácie")[0].field("Klient")[0];
+    en.set("Klient", klient);
     if (klient) {
-        ponuka.set("Odberateľ", pullAddress(klient));
+        en.set("Odberateľ", pullAddress(klient));
     }
 
-    // generuj nové číslo
-    cislo = cislo ? cislo : noveCislo(sezona, DB_CENOVE_PONUKY, 1, 2);
-    ponuka.set(NUMBER, cislo);
 
     // prepočet podľa typu cenovej ponuky
     switch (typ) {
