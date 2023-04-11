@@ -21,8 +21,16 @@ const getNumber = en => {
 function fltrDb(value) {
     var arr = [0];
     if (value.field("Názov") == lib().title) {
-        arr.push(value)
-        return arr
+        arr.push(value);
+        return arr;
+    }
+}
+
+function fltrDbByName(value, name) {
+    var arr = [0];
+    if (value.field("Názov") == name) {
+        arr.push(value);
+        return arr;
     }
 }
 
@@ -165,6 +173,15 @@ const findAppDB = season => {
     var filteredDB = databazy.filter(fltrDb)[0];
     return filteredDB;
 }
+
+const findAppDBbyName = (season, name) => {
+    var entry = libByName(DB_ASSISTENT).find(season)[0];
+    var databazy = entry.field("Databázy");
+    //message("Databáz 2: " + databazy.length);
+    var filteredDB = databazy.filter(fltrDb(value, name))[0];
+    return filteredDB;
+}
+
 
 const pullAddress = klient => {
     if (klient.field("Firma/Osoba") == "Osoba") {

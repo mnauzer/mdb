@@ -144,12 +144,12 @@ const ponukaNovaZakazka = en => {
     en.set(SEASON, en.field("Dátum").getFullYear());
     var sezona = en.field(SEASON);
     var lib = libByName(DB_ZAKAZKY);
+    var db = findAppDBbyName(szona, lib.title);
     // inicializácia
-    var novaZakazka = new Object();
     var datum = new Date();
     var typZakazky = ""; //harcoded
 
-    var cislo = newNumber(lib, sezona, true, 2);
+    var cislo = newNumber(db, sezona, true, 2);
     var klient = en.field("Klient")[0];
     var miesto = en.field("Miesto realizácie")[0];
     var nazovZakazky = en.field("Popis cenovej ponuky");
@@ -170,6 +170,7 @@ const ponukaNovaZakazka = en => {
 
 
     // hlavička a základné nastavenia
+    var novaZakazka = new Object();
     novaZakazka["Dátum"] = datum;
     novaZakazka["Typ zákazky"] = typZakazky;
     novaZakazka[NUMBER] = cislo;
