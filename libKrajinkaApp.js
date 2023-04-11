@@ -121,7 +121,6 @@ const newNumberV2 = (en, db, withPrefix, sliceNum) => {
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
-    db.setAttr("rezervované číslo", lastNum)
     // filteredDB.setAttr(attr, lastNum + 1);
     var cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
     // message("generujem prefix: " + withPrefix ? prefix : dbID);
@@ -146,6 +145,7 @@ const saveEntry = en => {
     setView(en, "T");
     let season = getSeason(en);
     let db = findAppDB(season);
+    db.setAttr("posledné číslo", number[1])
     db.setAttr("rezervované číslo", null)
 
 }
