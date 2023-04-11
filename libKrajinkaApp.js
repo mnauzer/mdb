@@ -138,7 +138,7 @@ const setEntry = en =>{
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
     db.setAttr("rezervované číslo", number[1])
-    en.set(LAST_NUM, number[0]);
+    en.set(LAST_NUM, number[1]);
 }
 
 const saveEntry = en => {
