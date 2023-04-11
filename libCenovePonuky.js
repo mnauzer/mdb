@@ -144,7 +144,7 @@ const ponukaNovaZakazka = en => {
     en.set(SEASON, en.field("Dátum").getFullYear());
     var sezona = en.field(SEASON);
     var lib = libByName(DB_ZAKAZKY);
-    var db = findAppDBbyName(szona, lib.title);
+    var db = findAppDBbyName(sezona, lib.title);
     // inicializácia
     var datum = new Date();
     var typZakazky = ""; //harcoded
