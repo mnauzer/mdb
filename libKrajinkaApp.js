@@ -111,7 +111,6 @@ const getSeason = en => {
 
 // generuje nové číslo záznamu
 const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
-    message("Generujem nové číslo");
     var test = db.attr("test");
 
     let dbID =  db.field("ID");
@@ -129,7 +128,7 @@ const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
         lastNum += 1;
     }
     var number = withPrefix ? prefix + season.slice(sliceNum) + pad(lastNum, 3) : dbID + season.slice(sliceNum) + pad(lastNum, 3);
-    message("Nové číslo: " + number);
+    message("Vygenerované nové číslo: " + number);
     return [number, lastNum];
 };
 
@@ -144,10 +143,8 @@ const setEntry = en =>{
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
         return false;
     } else {
-        message(db.field("Názov") + ", "+ season);
-
+        //message(db.field("Názov") + ", "+ season);
         var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
-        message(number);
         // nastav základné polia
         en.set(SEASON, season);
         en.set(NUMBER, number[0]);
@@ -155,6 +152,7 @@ const setEntry = en =>{
         db.setAttr("locked", true);
         db.setAttr("locked reason", "editácia užívateľom ");
         en.set(LAST_NUM, number[1]);
+        message(number);
     }
 }
 
