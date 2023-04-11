@@ -16,7 +16,8 @@ const setNumber = en => {
     // var cislo = en.field("Číslo");
     //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
     var number = en.field(NUMBER) || newNumberV2(en, 0, 3);
-    en.set(NUMBER, number);
+    en.set(NUMBER, number[0]);
+    en.set(LAST_NUM, number[1]);
 }
 
 
@@ -83,14 +84,14 @@ const newNumber = (sezona, db, withPrefix, sliceNum) => {
     var databazy = rok.field("Databázy");
 
     for (var d = 0; d < databazy.length; d++) {
-        if (fDb.field("Názov") === db) {
-            //  message("Cyklus " + d + "Databáza ..." + fDb.field("Názov"));
-            var test = isTest(sezona, fDb);
+        if (filteredDB.field("Názov") === db) {
+            //  message("Cyklus " + d + "Databáza ..." + filteredDB.field("Názov"));
+            var test = isTest(sezona, filteredDB);
             attr = test ? "číslo testu" : "posledné číslo";
-            lastNum = fDb.attr(attr);
-            fDb.setAttr(attr, lastNum + 1);
-            prefix = test ? "T!" + fDb.field("Prefix") : fDb.field("Prefix");
-            dbID = test ? "T!" + fDb.field("ID") : fDb.field("ID");
+            lastNum = filteredDB.attr(attr);
+            filteredDB.setAttr(attr, lastNum + 1);
+            prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
+            dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
             cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
         }
@@ -122,18 +123,18 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var attr = "";
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
-    message("Databáz 2: " + databazy.length);
-    var fDb = databazy.filter(fltrDb)[0];
-    message("Filtrovaných databáz: " + fDb.field("Názov"));
-            var test = isTest(sezona, fDb);
+    //message("Databáz 2: " + databazy.length);
+    var filteredDB = databazy.filter(fltrDb)[0];
+    //message("Filtrovaných databáz: " + filteredDB.field("Názov"));
+            var test = isTest(sezona, filteredDB);
             attr = test ? "číslo testu" : "posledné číslo";
-            lastNum = fDb.attr(attr);
-            fDb.setAttr(attr, lastNum + 1);
-            prefix = test ? "T!" + fDb.field("Prefix") : fDb.field("Prefix");
-            dbID = test ? "T!" + fDb.field("ID") : fDb.field("ID");
+            lastNum = filteredDB.attr(attr);
+            filteredDB.setAttr(attr, lastNum + 1);
+            prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
+            dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
             cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
-    return cislo;
+    return [cislo, lastNum];
 };
 
 const pullAddress = klient => {
