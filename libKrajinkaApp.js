@@ -110,7 +110,7 @@ const getSeason = en => {
 }
 
 // generuje nové číslo záznamu
-const newNumberV2 = (en, db, season, withPrefix, sliceNum) => {
+const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
     message("Generujem nové číslo");
     var test = db.attr("test");
     var locked = db.attr("locked");
@@ -127,8 +127,8 @@ const newNumberV2 = (en, db, season, withPrefix, sliceNum) => {
         attr =  "číslo testu";
     };
 
-    var lastNum = db.attr(attr);
-    var reservedNum = db.attr("rezervované číslo");
+    let lastNum = db.attr(attr);
+    let reservedNum = db.attr("rezervované číslo");
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
@@ -147,7 +147,7 @@ const setEntry = en =>{
     let db = findAppDB(season);
     message(db.field("Názov"));
 
-    let number = en.field(NUMBER) || newNumberV2(en, db, season, false, 3);
+    let number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
     // nastav základné polia
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
