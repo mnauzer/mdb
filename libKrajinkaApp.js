@@ -162,7 +162,7 @@ const saveEntry = en => {
     setView(en, "T");
     let season = getSeason(en);
     let db = findAppDB(season);
-    db.setAttr("posledné číslo", number[1])
+    db.setAttr("posledné číslo", db.attr("rezervované číslo"))
     unlockDB(en);
 
 }
