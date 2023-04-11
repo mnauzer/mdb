@@ -131,7 +131,7 @@ const setEntry = en =>{
     setView(en, "E");
     let season = getSeason(en);
     let db = findAppDB(season);
-    let number = en.field(NUMBER) || newNumberV2(en, db, season, 0, 3);
+    let number = en.field(NUMBER) || newNumberV2(en, db, season, false, 3);
     // nastav základné polia
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
@@ -150,7 +150,7 @@ const saveEntry = en => {
 }
 
 const findAppDB = season => {
-    var entry = libByName(DB_ASSISTENT).find(sezona)[0];
+    var entry = libByName(DB_ASSISTENT).find(season)[0];
     var databazy = entry.field("Databázy");
     //message("Databáz 2: " + databazy.length);
     var filteredDB = databazy.filter(fltrDb)[0];
