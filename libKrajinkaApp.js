@@ -139,7 +139,6 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
 };
 
 const findAppDB = sezona => {
-    filteredDB = null;
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
     //message("Databáz 2: " + databazy.length);
