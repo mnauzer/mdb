@@ -144,7 +144,13 @@ const setEntry = en =>{
         return false;
     } else {
         //message(db.field("Názov") + ", "+ season);
-        var number = number.push(en.field(NUMBER)) || newNumberV2( db, season, false, 3);
+        let number = [];
+        var isNumber = en.field(NUMBER);
+        if (isNumber > null) {
+            number.push(en.field(NUMBER));
+        } else {
+            number = newNumberV2( db, season, false, 3);
+        }
         // nastav základné polia
         en.set(SEASON, season);
         en.set(NUMBER, number[0]);
@@ -152,7 +158,6 @@ const setEntry = en =>{
         db.setAttr("locked", true);
         db.setAttr("locked reason", "editácia užívateľom ");
         en.set(LAST_NUM, number[1]);
-        message(number);
     }
 }
 
