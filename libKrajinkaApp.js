@@ -129,6 +129,7 @@ const newNumberV2 = (en, dv, withPrefix, sliceNum) => {
 };
 
 const setEntry = en =>{
+    message("Nastavujem záznam");
     setView(en, "E");
     let season = getSeason(en);
     let db = findAppDB(season);
@@ -141,7 +142,7 @@ const setEntry = en =>{
 }
 
 const saveEntry = en => {
-
+    message("Ukladám záznam");
 
 }
 
