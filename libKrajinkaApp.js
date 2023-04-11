@@ -143,6 +143,10 @@ const setEntry = en =>{
 
 const saveEntry = en => {
     message("Ukladám záznam");
+    setView(en, "T");
+    let season = getSeason(en);
+    let db = findAppDB(season);
+    db.setAttr("rezervované číslo", null)
 
 }
 
