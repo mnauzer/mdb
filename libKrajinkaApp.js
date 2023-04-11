@@ -106,8 +106,10 @@ const newNumber = ( db, season, isPrefix, trailingNum) => {
     return [number, lastNum];
 };
 
-const setEntry = (en, prefix = false, num = 3) => {
+const setEntry = (en, prefix,  num ) => {
     message("Nastavujem záznam");
+    var prfx = prefix || false;
+    var trNum = num || 3;
     setView(en, "E");
     var season = getSeason(en);
 
@@ -123,7 +125,7 @@ const setEntry = (en, prefix = false, num = 3) => {
         if (isNumber > null) {
             number.push(en.field(NUMBER));
         } else {
-            number = newNumber( db, season, prefix, num);
+            number = newNumber( db, season, prfx, trNum);
         }
         // nastav základné polia
         en.set(SEASON, season);
