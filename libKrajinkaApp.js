@@ -146,6 +146,7 @@ const setEntry = en =>{
     message(db.field("Názov"));
 
     let number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
+    message(number);
     // nastav základné polia
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
