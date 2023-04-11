@@ -118,7 +118,7 @@ const prepocetZakazky = (zakazka) => {
     var txtNakupMaterialu = "✘...žiadny nákup materiálu";
     var txtOdvodDPHMaterial = "✘...žiadny odvod DPH z materiálu";
     // prepočet výdajok materiálu
-    var vydajkyMaterialu = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, W_ZAKAZKA);
+    var vydajkyMaterialu = zakazka.linksFrom(DB_VYKAZY_MATERIALU, W_ZAKAZKA);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     // prepočet nákladov materiálu
     var nakupMaterialu = 0;
@@ -476,7 +476,7 @@ const zakazkaMzdy = zakazka => {
 };
 
 const zakazkaMaterialDPH = zakazka => {
-    var links = zakazka.linksFrom(DB_VYDAJKY_MATERIALU, "Zákazka");
+    var links = zakazka.linksFrom(DB_VYKAZY_MATERIALU, "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {

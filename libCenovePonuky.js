@@ -231,7 +231,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
     var cp = zakazka.field("Cenová ponuka")[0];
     var datum = zakazka.field("Dátum");
     var sezona = zakazka.field(SEASON);
-    var cislo = noveCislo(sezona, "Výdajky", 0, 3);
+    var cislo = noveCislo(sezona, DB_VYKAZY_MATERIALU, 0, 3);
     // vytvoriť novú výdajku
     var novaVydajka = new Object();
     novaVydajka[NUMBER] = cislo;

@@ -11,7 +11,7 @@ const DB_SKLAD = "Sklad Semiramis";
 const DB_PLAN_PRAC = "Plán prác";
 // administratíva
 const DB_VYKAZY_PRAC = "Výkaz prác Semiramis";
-const DB_VYDAJKY_MATERIALU = "Výdajky Semiramis";
+const DB_VYKAZY_MATERIALU = "Výdajky Semiramis";
 const DB_VYKAZY_STROJOV = "Výkaz strojov";
 const DB_INVENTURY = "Invenúry";
 const DB_PRIJEMKY = "Príjemky Semiramis";

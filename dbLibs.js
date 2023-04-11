@@ -11,8 +11,9 @@ const DB_SKLAD = "Sklad";
 const DB_PLAN_PRAC = "Plán prác";
 // administratíva
 const DB_VYKAZY_PRAC = "Výkaz prác";
-const DB_VYDAJKY_MATERIALU = "Výdajky";
+const DB_VYKAZY_MATERIALU = "Výkaz materiálu";
 const DB_VYKAZY_STROJOV = "Výkaz strojov";
+const DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
 const DB_INVENTURY = "Invenúry";
 const DB_PRIJEMKY = "Príjemky";
 const DB_REZERVACIE = "Rezervácie";
