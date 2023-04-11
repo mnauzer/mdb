@@ -116,8 +116,8 @@ const newNumberV2 = (en, withPrefix, sliceNum) => {
     var test = isTest(sezona, filteredDB);
     var dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
     var prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
-    var lastNum = filteredDB.attr(attr);
     var attr = test ? "číslo testu" : "posledné číslo";
+    var lastNum = filteredDB.attr(attr);
     var reservedNum = filteredDB.attr("rezervované číslo");
     if (lastNum == reservedNum) {
         lastNum += 1;
