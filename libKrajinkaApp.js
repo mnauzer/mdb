@@ -13,8 +13,6 @@ const verziaKrajinkaLib = () => {
 
 const setNumber = en => {
     // vygenerovať nové číslo
-    // var cislo = en.field("Číslo");
-    //cislo = cislo ? cislo : noveCislo(sezona, "Pokladňa", 0, 3);
     var number = en.field(NUMBER) || newNumberV2(en, 0, 3);
     en.set(NUMBER, number[0]);
     en.set(LAST_NUM, number[1]);
@@ -118,17 +116,20 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
     var sezona = getSeason(entry).toString();
     var prefix = 0;
     var lastNum = 0;
+    var reservedNum = 0;
     var dbID = 0;
     var cislo = 0;
     var attr = "";
-    var entry = libByName(DB_ASSISTENT).find(sezona)[0];
-    var databazy = entry.field("Databázy");
-    //message("Databáz 2: " + databazy.length);
-    var filteredDB = databazy.filter(fltrDb)[0];
+    var filteredDB = findAppDB(sezona);
     //message("Filtrovaných databáz: " + filteredDB.field("Názov"));
             var test = isTest(sezona, filteredDB);
             attr = test ? "číslo testu" : "posledné číslo";
+            reservedNum = filteredDB.attr("rezervované číslo");
             lastNum = filteredDB.attr(attr);
+            if (lastNum == reservedNum) {
+                lastNum += 1;
+            }
+            filteredDB.setAttr("rezervované číslo", lastNum)
             filteredDB.setAttr(attr, lastNum + 1);
             prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
             dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
@@ -136,6 +137,15 @@ const newNumberV2 = (entry, withPrefix, sliceNum) => {
             // message("generujem prefix: " + withPrefix ? prefix : dbID);
     return [cislo, lastNum];
 };
+
+const findAppDB = sezona => {
+    filteredDB = null;
+    var entry = libByName(DB_ASSISTENT).find(sezona)[0];
+    var databazy = entry.field("Databázy");
+    //message("Databáz 2: " + databazy.length);
+    var filteredDB = databazy.filter(fltrDb)[0];
+    return filteredDB;
+}
 
 const pullAddress = klient => {
     if (klient.field("Firma/Osoba") == "Osoba") {
