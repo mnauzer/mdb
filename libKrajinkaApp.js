@@ -144,14 +144,14 @@ const setEntry = en =>{
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
         return false;
     } else {
-        message(db.field("Názov") + " ,"+ season);
+        message(db.field("Názov") + ", "+ season);
 
         var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
         message(number);
         // nastav základné polia
         en.set(SEASON, season);
         en.set(NUMBER, number[0]);
-        db.setAttr("rezervované číslo", number[1])
+        db.setAttr("rezervované číslo", number[1]);
         db.setAttr("locked", true);
         db.setAttr("locked reason", "editácia užívateľom ");
         en.set(LAST_NUM, number[1]);
@@ -175,6 +175,7 @@ const unlockDB = en => {
     db.setAttr("rezervované číslo", null)
     db.setAttr("locked", false)
     db.setAttr("locked reason", null)
+    return true;
 }
 
 const findAppDB = season => {
