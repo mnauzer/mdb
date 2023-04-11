@@ -140,13 +140,13 @@ const newNumberV2 = ( db, season, withPrefix, sliceNum) => {
 const setEntry = en =>{
     message("Nastavujem záznam");
     setView(en, "E");
-    let season = getSeason(en);
+    var season = getSeason(en);
     message(season);
 
-    let db = findAppDB(season);
+    var db = findAppDB(season);
     message(db.field("Názov"));
 
-    let number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
+    var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
     message(number);
     // nastav základné polia
     en.set(SEASON, season);
