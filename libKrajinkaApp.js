@@ -110,15 +110,15 @@ const getSeason = (en) => {
 }
 
 // generuje nové číslo záznamu
-const newNumberV2 = (en, withPrefix, sliceNum) => {
+const newNumberV2 = (en, dv, withPrefix, sliceNum) => {
     var sezona = en.field(SEASON);
-    var filteredDB = findAppDB(sezona);
-    var test = isTest(sezona, filteredDB);
-    var dbID = test ? "T!" + filteredDB.field("ID") : filteredDB.field("ID");
-    var prefix = test ? "T!" + filteredDB.field("Prefix") : filteredDB.field("Prefix");
+
+    var test = isTest(sezona, db);
+    var dbID = test ? "T!" + db.field("ID") : db.field("ID");
+    var prefix = test ? "T!" + db.field("Prefix") : db.field("Prefix");
     var attr = test ? "číslo testu" : "posledné číslo";
-    var lastNum = filteredDB.attr(attr);
-    var reservedNum = filteredDB.attr("rezervované číslo");
+    var lastNum = db.attr(attr);
+    var reservedNum = db.attr("rezervované číslo");
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
@@ -132,11 +132,13 @@ const newNumberV2 = (en, withPrefix, sliceNum) => {
 const setNewEntry = en =>{
     setView(en, "E");
     let season = getSeason(en);
-    let number = en.field(NUMBER) || newNumberV2(en, 0, 3);
+    let db = findAppDB(sezona);
+    let number = en.field(NUMBER) || newNumberV2(en, db, 0, 3);
     // nastav základné polia
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
-    en.set(LAST_NUM, number[1]);
+    db.setAttr("rezervované číslo", number[1])
+    en.set(LAST_NUM, number[0]);
 }
 
 
