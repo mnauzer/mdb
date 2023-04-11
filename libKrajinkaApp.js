@@ -110,9 +110,8 @@ const getSeason = (en) => {
 }
 
 // generuje nové číslo záznamu
-const newNumberV2 = (en, db, withPrefix, sliceNum) => {
-    var sezona = en.field(SEASON);
-    var test = isTest(sezona, db);
+const newNumberV2 = (en, db, season, withPrefix, sliceNum) => {
+    var test = isTest(season, db);
     var dbID = test ? "T!" + db.field("ID") : db.field("ID");
     var prefix = test ? "T!" + db.field("Prefix") : db.field("Prefix");
     var attr = test ? "číslo testu" : "posledné číslo";
@@ -122,7 +121,7 @@ const newNumberV2 = (en, db, withPrefix, sliceNum) => {
         lastNum += 1;
     }
     // filteredDB.setAttr(attr, lastNum + 1);
-    var cislo = withPrefix ? prefix + sezona.slice(sliceNum) + pad(lastNum, 3) : dbID + sezona.slice(sliceNum) + pad(lastNum, 3);
+    var cislo = withPrefix ? prefix + season.slice(sliceNum) + pad(lastNum, 3) : dbID + season.slice(sliceNum) + pad(lastNum, 3);
     // message("generujem prefix: " + withPrefix ? prefix : dbID);
     return [cislo, lastNum];
 };
@@ -132,7 +131,7 @@ const setEntry = en =>{
     setView(en, "E");
     let season = getSeason(en);
     let db = findAppDB(season);
-    let number = en.field(NUMBER) || newNumberV2(en, db, 0, 3);
+    let number = en.field(NUMBER) || newNumberV2(en, db, season, 0, 3);
     // nastav základné polia
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
@@ -150,7 +149,7 @@ const saveEntry = en => {
 
 }
 
-const findAppDB = sezona => {
+const findAppDB = season => {
     var entry = libByName(DB_ASSISTENT).find(sezona)[0];
     var databazy = entry.field("Databázy");
     //message("Databáz 2: " + databazy.length);
