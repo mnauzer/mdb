@@ -40,8 +40,8 @@ const DB_PLANTS = "Databáza rastlín";
 const DB_RCPTS = "Príjemky";
 
 // aGroup
-const DBA_OBL = "aZáväzky";
+//const DBA_OBL = "aZáväzky";
 const DBA_SAL= "aMzdy";
-const DBA_POHLADAVKY = "aPohľadávky";
-const DBA_DOCHADZKA = "aDochádzka";
+//const DBA_POHLADAVKY = "aPohľadávky";
+//const DBA_DOCHADZKA = "aDochádzka";
 //const DBA_WORK = "aPráce";
