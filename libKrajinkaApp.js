@@ -115,12 +115,16 @@ const newNumberV2 = (en, db, season, withPrefix, sliceNum) => {
     var test = db.attr("test");
     var locked = db.attr("locked");
     if (locked) {
-        message("Databáza je zamknutá \nDôvod:"+ db.attr("locked reason"));
+        message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
         return;
-    }
+    };
+    let dbID =  db.field("ID");
+    let prefix = db.field("Prefix");
+    if (test) {
+        var dbID = "T!" + db.field("ID");
+        var prefix = "T!" + db.field("Prefix");
+    };
 
-    var dbID = test ? "T!" + db.field("ID") : db.field("ID");
-    var prefix = test ? "T!" + db.field("Prefix") : db.field("Prefix");
     var attr = test ? "číslo testu" : "posledné číslo";
     var lastNum = db.attr(attr);
     var reservedNum = db.attr("rezervované číslo");
