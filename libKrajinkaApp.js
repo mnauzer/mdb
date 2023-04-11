@@ -152,6 +152,8 @@ const setEntry = en =>{
     en.set(SEASON, season);
     en.set(NUMBER, number[0]);
     db.setAttr("rezervované číslo", number[1])
+    db.setAttr("locked", true);
+    db.setAttr("locked reason", "editácia užívateľom ");
     en.set(LAST_NUM, number[1]);
 }
 
