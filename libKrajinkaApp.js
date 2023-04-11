@@ -144,7 +144,7 @@ const setEntry = en =>{
         return false;
     } else {
         //message(db.field("Názov") + ", "+ season);
-        var number = en.field(NUMBER) || newNumberV2( db, season, false, 3);
+        var number = number.push(en.field(NUMBER)) || newNumberV2( db, season, false, 3);
         // nastav základné polia
         en.set(SEASON, season);
         en.set(NUMBER, number[0]);
