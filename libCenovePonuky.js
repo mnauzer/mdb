@@ -3,9 +3,11 @@
 // Dátum:                   27.03.2023
 // Popis:
 const verziaCenovePonuky = () => {
-    var nazov = "cpLibrary";
-    var verzia = "0.3.02";
-    return nazov + " " + verzia;
+    var result = "";
+    var nazov = "libCenovePonuky";
+    var verzia = "0.23.01";
+    result = nazov + " " + verzia;
+    return result;
 }
 
 const prepocetPonuky = en => {
