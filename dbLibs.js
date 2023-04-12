@@ -38,13 +38,10 @@ let DB_STROJE = "Stroje";
 let DB_VOZIDLA = "Vozidlá";
 let DB_PLANTS = "Databáza rastlín";
 let DB_RCPTS = "Príjemky";
-let e = entry();
-message("Set letants");
-
 
 // aGroup
-//let DBA_OBL = "aZáväzky";
-//let DBA_SAL= "aMzdy";
-//let DBA_POHLADAVKY = "aPohľadávky";
-//let DBA_DOCHADZKA = "aDochádzka";
-//let DBA_WORK = "aPráce";
+let DBA_OBL = "aZáväzky";
+let DBA_SAL= "aMzdy";
+let DBA_POHLADAVKY = "aPohľadávky";
+let DBA_DOCHADZKA = "aDochádzka";
+let DBA_WORK = "aPráce";
