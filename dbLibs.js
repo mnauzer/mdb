@@ -1,50 +1,50 @@
 // libraries
 // app
-const DB_ASSISTENT = "KRAJINKA APP";
-const DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
+let DB_ASSISTENT = "KRAJINKA APP";
+let DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
 // projekty
-const DB_CENOVE_PONUKY = "Cenové ponuky";
-const DB_ZAKAZKY = "Zákazky";
-const DB_VYUCTOVANIA = "Vyúčtovania";
-const DB_CENNIK_PRAC = "Cenník prác";
-const DB_SKLAD = "Sklad";
-const DB_PLAN_PRAC = "Plán prác";
+let DB_CENOVE_PONUKY = "Cenové ponuky";
+let DB_ZAKAZKY = "Zákazky";
+let DB_VYUCTOVANIA = "Vyúčtovania";
+let DB_CENNIK_PRAC = "Cenník prác";
+let DB_SKLAD = "Sklad";
+let DB_PLAN_PRAC = "Plán prác";
 // administratíva
-const DB_VYKAZY_PRAC = "Výkaz prác";
-const DB_VYKAZY_MATERIALU = "Výkaz materiálu";
-const DB_VYKAZY_STROJOV = "Výkaz strojov";
-const DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
-const DB_INVENTURY = "Invenúry";
-const DB_PRIJEMKY = "Príjemky";
-const DB_REZERVACIE = "Rezervácie";
-const DB_OBJEDNAVKY = "Objednávky";
-const DB_DOFA = "Faktúry prijaté";
-const DB_ODFA = "Faktúry odoslané";
+let DB_VYKAZY_PRAC = "Výkaz prác";
+let DB_VYKAZY_MATERIALU = "Výkaz materiálu";
+let DB_VYKAZY_STROJOV = "Výkaz strojov";
+let DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
+let DB_INVENTURY = "Invenúry";
+let DB_PRIJEMKY = "Príjemky";
+let DB_REZERVACIE = "Rezervácie";
+let DB_OBJEDNAVKY = "Objednávky";
+let DB_DOFA = "Faktúry prijaté";
+let DB_ODFA = "Faktúry odoslané";
 
 // evidencia
-const DB_POKLADNA = "Pokladňa";
-const DB_EVIDENCIA_PRAC = "Evidencia prác";
-const DB_DOCHADZKA = "Dochádzka";
-const DB_KNIHA_JAZD = "Kniha jázd";
-const DB_ZASTAVKY = "Zastávky";
+let DB_POKLADNA = "Pokladňa";
+let DB_EVIDENCIA_PRAC = "Evidencia prác";
+let DB_DOCHADZKA = "Dochádzka";
+let DB_KNIHA_JAZD = "Kniha jázd";
+let DB_ZASTAVKY = "Zastávky";
 // databázy
-const DB_ZAMESTNANCI = "Zamestnanci";
-const DB_KLIENTI = "Klienti";
-const DB_DODAVATELIA = "Dodávatelia";
-const DB_PARTNERI = "Partneri";
-const DB_MIESTA = "Miesta";
-const DB_UCTY = "Účty";
-const DB_STROJE = "Stroje";
-const DB_VOZIDLA = "Vozidlá";
-const DB_PLANTS = "Databáza rastlín";
-const DB_RCPTS = "Príjemky";
+let DB_ZAMESTNANCI = "Zamestnanci";
+let DB_KLIENTI = "Klienti";
+let DB_DODAVATELIA = "Dodávatelia";
+let DB_PARTNERI = "Partneri";
+let DB_MIESTA = "Miesta";
+let DB_UCTY = "Účty";
+let DB_STROJE = "Stroje";
+let DB_VOZIDLA = "Vozidlá";
+let DB_PLANTS = "Databáza rastlín";
+let DB_RCPTS = "Príjemky";
 let e = entry();
-message("Set constants");
+message("Set letants");
 
 
 // aGroup
-//const DBA_OBL = "aZáväzky";
-//const DBA_SAL= "aMzdy";
-//const DBA_POHLADAVKY = "aPohľadávky";
-//const DBA_DOCHADZKA = "aDochádzka";
-//const DBA_WORK = "aPráce";
+//let DBA_OBL = "aZáväzky";
+//let DBA_SAL= "aMzdy";
+//let DBA_POHLADAVKY = "aPohľadávky";
+//let DBA_DOCHADZKA = "aDochádzka";
+//let DBA_WORK = "aPráce";
