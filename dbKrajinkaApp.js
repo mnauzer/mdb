@@ -324,15 +324,16 @@ var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").g
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
+    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od").getTime()/1000 < date.getTime()/1000);
     // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(filterPlatnost);
     if (links.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
     //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
         //links.sort((a, b) => a.field("Platnosť od") - b.field("Platnosť od")).reverse();
-        // lastValid(links, date, "Sadzba", "Platnosť od")
         links.sort(orderPlatnost);
+        // lastValid(links, date, "Sadzba", "Platnosť od")
+        links.reverse();
     }
     //vyberie a vráti sadzbu z prvého záznamu
     var sadzba = links[0].field("Sadzba");
