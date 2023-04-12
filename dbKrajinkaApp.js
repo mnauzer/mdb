@@ -34,6 +34,8 @@ function fltrDbByName(value, name) {
     }
 }
 
+var dateSort = {compare:function(a,b){return a.field("Dátum").getTime() - b.field("Dátum").getTime()}};
+
 const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
     var tmp = date2 - date1;
