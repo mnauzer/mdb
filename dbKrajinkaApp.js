@@ -75,7 +75,14 @@ const setID = entries => {
     }
 }
 
-
+const setView = (en, view) => {
+    if (view === "E") {
+        en.set(VIEW, "Editácia");
+    } else {
+        en.set(VIEW, "Tlač");
+        en.set(DBG, false);
+    }
+}
 
 const pad = (number, length) => {
     let str = '' + number;
@@ -160,7 +167,6 @@ const setEntry = (en, prefix,  num ) => {
     var locked = db.attr("locked");
     if (locked) {
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-        en.close();
         cancel();
     } else {
         //message(db.field("Názov") + ", "+ season);
