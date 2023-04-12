@@ -310,7 +310,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
 
 var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
-var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < b }}
+var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
 // example:
 // var entries = lib().entries();
 // var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
@@ -320,7 +320,8 @@ var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").g
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
+    // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od") < date);
+    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(filterPlatnost);
     if (links.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
