@@ -356,7 +356,7 @@ const lastValid = (links, date, valueField, dateField) => {
 
     // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
     links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000);
-    links.sort(orderDate);
+    links.sort(orderPlatnost);
     links.reverse();
     message("Links: " + links.length + "\nDátum: " + date);
     return links[0].field(valueField);
