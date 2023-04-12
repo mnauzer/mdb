@@ -133,12 +133,14 @@ const getSeason = en => {
 }
 
 // generuje nové číslo záznamu
-const newNumber = ( db, season, isPrefix, trailingNum) => {
+const newNumber = ( db, season, isPrefix) => {
     var test = db.attr("test");
 
     let dbID =  db.field("ID");
     let prefix = db.field("Prefix");
     let attr = "posledné číslo";
+    let attrTrailing = db.attr("trailing digit");
+    let attrSeasonTrim = db.attr("season trim");
     if (test) {
         dbID = "T!" + db.field("ID");
         prefix = "T!" + db.field("Prefix");
@@ -150,8 +152,8 @@ const newNumber = ( db, season, isPrefix, trailingNum) => {
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
-    var number = isPrefix ? prefix + season.slice(trailingNum
-    ) + pad(lastNum, 3) : dbID + season.slice(trailingNum) + pad(lastNum, 3);
+    var number = isPrefix ? prefix + season.slice(attrSeasonTrim
+    ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
     message("Vygenerované nové číslo: " + number);
     return [number, lastNum];
 };
@@ -159,7 +161,6 @@ const newNumber = ( db, season, isPrefix, trailingNum) => {
 const setEntry = (en, prefix,  num ) => {
     message("Nastavujem záznam");
     var prfx = prefix || false;
-    var trNum = num || 3;
     setView(en, "E");
     var season = getSeason(en);
 
@@ -175,7 +176,7 @@ const setEntry = (en, prefix,  num ) => {
         if (isNumber > null) {
             number.push(en.field(NUMBER));
         } else {
-            number = newNumber( db, season, prfx, trNum);
+            number = newNumber( db, season, prfx);
         }
         // nastav základné polia
         en.set(SEASON, season);
