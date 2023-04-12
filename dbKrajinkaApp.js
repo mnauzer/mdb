@@ -339,7 +339,9 @@ const lastSadzba = (employee, date) => {
 }
 const employeeTariffValidToDate = (employee, date) => {
     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+    message("záznamov " + links.length);
     links.filter(e => e.field("Platnosť od").getTime()/1000 < date.getTime()/1000);
+    message("filtrovaných záznamov " + links.length);
     if (links.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
