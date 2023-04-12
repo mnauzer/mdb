@@ -160,6 +160,7 @@ const setEntry = (en, prefix,  num ) => {
     var locked = db.attr("locked");
     if (locked) {
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
+        en.close();
         cancel();
     } else {
         //message(db.field("Názov") + ", "+ season);
