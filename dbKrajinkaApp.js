@@ -34,7 +34,7 @@ function fltrDbByName(value, name) {
     }
 }
 
-var dateSort = {compare:function(a,b){return a.field("Dátum").getTime() - b.field("Dátum").getTime()}};
+
 
 const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
@@ -308,6 +308,15 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 
+var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
+var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
+var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < b }}
+// example:
+// var entries = lib().entries();
+// var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
+// entries.sort(order);
+// entryDefault().set("previous", entries[0].field("current"));
+
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
@@ -316,8 +325,9 @@ const lastSadzba = (employee, date) => {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
     //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
-        links.sort((a, b) => a.field("Platnosť od") - b.field("Platnosť od")).reverse();
+        //links.sort((a, b) => a.field("Platnosť od") - b.field("Platnosť od")).reverse();
         // lastValid(links, date, "Sadzba", "Platnosť od")
+        links.sort(orderPlatnost);
     }
     //vyberie a vráti sadzbu z prvého záznamu
     var sadzba = links[0].field("Sadzba");
