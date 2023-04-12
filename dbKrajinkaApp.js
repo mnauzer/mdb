@@ -70,8 +70,9 @@ const dateDiff = (date1, date2) => {
 }
 
 const setID = entries => {
-    message("set id v.5");
-  //  entries.sort((a,b)=> dateDiff(new Date(b.field(DATE)), new Date(a.field(DATE))));
+    message("set id v.6");
+    entries.sort(orderDate);
+    entries.reverse();
     for (var e in entries) {
         entries[e].set("ID", e + 1);
     }
