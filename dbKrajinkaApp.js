@@ -75,7 +75,7 @@ const setID = entries => {
     entries.sort(orderDate);
     message(entries.length + " sort záznamov")
     entries.reverse();
-    message(entries.length + " revers záznamov")
+    message(entries.length + " reverse záznamov")
     for (var e in entries) {
         entries[e].set("ID", e + 1);
     }
