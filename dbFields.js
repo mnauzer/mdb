@@ -1,110 +1,110 @@
 // fields
 // spolocne
-const FIELD_CENOVA_PONUKA = "Cenová ponuka"; // link to entry
-const FIELD_ZAKAZKA = "Zákazka";
-const FIELD_VYUCTOVANIE = "Vyúčtovanie";
-const FIELD_TYP_VYKAZU = "Typ výkazu";
-const FIELD_POPIS = "Popis";
+let FIELD_CENOVA_PONUKA = "Cenová ponuka"; // link to entry
+let FIELD_ZAKAZKA = "Zákazka";
+let FIELD_VYUCTOVANIE = "Vyúčtovanie";
+let FIELD_TYP_VYKAZU = "Typ výkazu";
+let FIELD_POPIS = "Popis";
 
 
 
 //
-const FIELD_PRACE = "Práce";
-const FIELD_MATERIAL = "Materiál";
-const FIELD_STROJE = "Stroje";
-const FIELD_DOPRAVA = "Doprava";
+let FIELD_PRACE = "Práce";
+let FIELD_MATERIAL = "Materiál";
+let FIELD_STROJE = "Stroje";
+let FIELD_DOPRAVA = "Doprava";
 // diely polozky
-const FIELD_TRAVNIK = "Trávnik";
-const FIELD_VYSADBY = "Výsadby";
-const FIELD_RASTLINY = "Rastliny";
-const FIELD_ZAVLAZOVANIE = "Zavlažovanie";
-const FIELD_JAZIERKO = "Jazierko";
-const FIELD_KAMEN = "Kameň";
-const FIELD_NESTANDARDNE = "Neštandardné";
-const FIELD_SUBDODAVKY = "Subdodávky";
+let FIELD_TRAVNIK = "Trávnik";
+let FIELD_VYSADBY = "Výsadby";
+let FIELD_RASTLINY = "Rastliny";
+let FIELD_ZAVLAZOVANIE = "Zavlažovanie";
+let FIELD_JAZIERKO = "Jazierko";
+let FIELD_KAMEN = "Kameň";
+let FIELD_NESTANDARDNE = "Neštandardné";
+let FIELD_SUBDODAVKY = "Subdodávky";
 // diely hzs
-const FIELD_ZAHRADNICKE_PRACE = "Záhradnícke práce";
-const FIELD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania";
-const FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
-const FIELD_PRACE_NAVYSE = "Práce navyše";
+let FIELD_ZAHRADNICKE_PRACE = "Záhradnícke práce";
+let FIELD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania";
+let FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
+let FIELD_PRACE_NAVYSE = "Práce navyše";
 // zamestnanci
-const FIELD_ZAMESTNANCI = "Zamestnanci";
-const FLD_ZAMESTNANCI = 'field("Zamestnanci")';
-const FIELD_HODINOVKA = "Hodinovka";
-const FLD_HODINOVKA = 'field("Hodinovka")';
+let FIELD_ZAMESTNANCI = "Zamestnanci";
+let FLD_ZAMESTNANCI = 'field("Zamestnanci")';
+let FIELD_HODINOVKA = "Hodinovka";
+let FLD_HODINOVKA = 'field("Hodinovka")';
 // zakazky
-const FIELD_UCTOVANIE_DPH = "Účtovanie DPH";
+let FIELD_UCTOVANIE_DPH = "Účtovanie DPH";
 
 // words
-const W_ZAKAZKA = "Zákazka";
-const W_PRACE = "Práce";
-const W_PRACE_NAVYSE = "Práce navyše";
-const W_DOPRAVA = "Doprava";
-const W_MATERIAL = "Materiál";
-const W_STROJE = "Stroje";
-const W_HODINOVKA = "Hodinovka";
-const W_POLOZKY = "Položky";
+let W_ZAKAZKA = "Zákazka";
+let W_PRACE = "Práce";
+let W_PRACE_NAVYSE = "Práce navyše";
+let W_DOPRAVA = "Doprava";
+let W_MATERIAL = "Materiál";
+let W_STROJE = "Stroje";
+let W_HODINOVKA = "Hodinovka";
+let W_POLOZKY = "Položky";
 
 // Knižnica Faktúry prijaté
 // DB_DOFA
-const DOFA_SUP = "Dodávateľ";
-const DOFA_SUP_NUMBER = "Číslo faktúry";
-const DOFA_SUP_VS = "VS"; // variabilný symbol
-const DOFA_DATE = "Dátum vystavenia";
-const DOFA_DUE_DATE = "Dátum splatnosti";
-const DOFA_PAY_DATE = "Dátum úhrady";
-const DOFA_SUM = "Suma bez DPH";
-const DOFA_SUM_DPH = "DPH";
-const DOFA_SUM_TOTAL = "Suma s DPH";
-const DOFA_PAYED = "Uhradená";
+let DOFA_SUP = "Dodávateľ";
+let DOFA_SUP_NUMBER = "Číslo faktúry";
+let DOFA_SUP_VS = "VS"; // variabilný symbol
+let DOFA_DATE = "Dátum vystavenia";
+let DOFA_DUE_DATE = "Dátum splatnosti";
+let DOFA_PAY_DATE = "Dátum úhrady";
+let DOFA_SUM = "Suma bez DPH";
+let DOFA_SUM_DPH = "DPH";
+let DOFA_SUM_TOTAL = "Suma s DPH";
+let DOFA_PAYED = "Uhradená";
 
 // aZáväzky
-const A_OBL_TYPE = "Typ záväzku";
-const A_OBL_SUM = "Suma";
-const A_OBL_DUE_DATE = "Dátum splatnosti";
-const A_OBL_PAY_DATE = "Dátum úhrady";
-const A_OBL_INVC = "Faktúry prijaté";
-const A_OBL_PAYED = "Uhradené";
+let A_OBL_TYPE = "Typ záväzku";
+let A_OBL_SUM = "Suma";
+let A_OBL_DUE_DATE = "Dátum splatnosti";
+let A_OBL_PAY_DATE = "Dátum úhrady";
+let A_OBL_INVC = "Faktúry prijaté";
+let A_OBL_PAYED = "Uhradené";
 
 // Príjemky
 // DB_RCPTS
-const RCPTS_INVC = "Faktúry prijaté"
+let RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
 // Pokladňa/bi
 // DB_POKLADNA
 // Polia
-const POK_POHYB = "Pohyb"; //Select
-const POK_U_PREVOD = "Účel prevodu"; //Select
-const POK_DOKLAD = "Doklad"; //Multiple choice
-const POK_S_DPH = "s DPH"; //Checklist
-const POK_SADZBA_DPH = "sadzba DPH"; //Real Number
-const POK_ = "%DPH"; //Real number
+let POK_POHYB = "Pohyb"; //Select
+let POK_U_PREVOD = "Účel prevodu"; //Select
+let POK_DOKLAD = "Doklad"; //Multiple choice
+let POK_S_DPH = "s DPH"; //Checklist
+let POK_SADZBA_DPH = "sadzba DPH"; //Real Number
+let POK_ = "%DPH"; //Real number
 
 
 // Dochádzka/Attendance
 // DB_ATTDC
-const ATTENDANCE = "Dochádzka";
-const ATTDC_ARRIVAL = "Príchod;";
-const ATTDC_DEPARTURE = "Odchod";
-const ATTDC_WORKS = "Práce"; // Link to Entry
-const ATTDC_EMPLOYEES = "Zamestnanci";
+let ATTENDANCE = "Dochádzka";
+let ATTDC_ARRIVAL = "Príchod;";
+let ATTDC_DEPARTURE = "Odchod";
+let ATTDC_WORKS = "Práce"; // Link to Entry
+let ATTDC_EMPLOYEES = "Zamestnanci";
 
 
 // # SPOLOČNÉ POLIA
-const NUMBER = "Číslo"
-const DATE = "Dátum"
-const NICK = "Nick"
-const VIEW = "view";
-const STATUS = "Stav";
-const DBG = "debug";
-const SEASON = "sezóna"
-const LAST_NUM = "lastnum";
-const APP_SEASON = "Sezóna"; // linked field
-const CR = "zapísal";
-const CR_DATE = "dátum zápisu";
-const MOD = "upravil";
-const MOD_DATE = "dátum úpravy";
-const ENT_COLOR = "farba záznamu";
-const BKG_COLOR = "farba pozadia";
+let NUMBER = "Číslo"
+let DATE = "Dátum"
+let NICK = "Nick"
+let VIEW = "view";
+let STATUS = "Stav";
+let DBG = "debug";
+let SEASON = "sezóna"
+let LAST_NUM = "lastnum";
+let APP_SEASON = "Sezóna"; // linked field
+let CR = "zapísal";
+let CR_DATE = "dátum zápisu";
+let MOD = "upravil";
+let MOD_DATE = "dátum úpravy";
+let ENT_COLOR = "farba záznamu";
+let BKG_COLOR = "farba pozadia";
 
