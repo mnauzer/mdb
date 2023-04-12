@@ -76,7 +76,7 @@ const setID = entries => {
     message(entries.length + " sort záznamov")
     entries.reverse();
     message(entries.length + " reverse záznamov")
-    for (var e in entries) {
+    for (var e = 0; e < entries.length; e++) {
         entries[e].set("ID", e + 1);
     }
 }
