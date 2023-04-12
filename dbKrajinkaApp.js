@@ -337,6 +337,17 @@ const lastSadzba = (employee, date) => {
     var sadzba = links[0].field("Sadzba");
     return sadzba;
 }
+const employeeTariffValidToDate = (employee, date) => {
+    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec").filter(e => e.field("Platnosť od").getTime()/1000 < date.getTime()/1000);
+    if (links.length < 0) {
+        message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
+    } else {
+        links.sort(orderPlatnost);
+    }
+    var sadzba = links[0].field("Sadzba");
+    message("Sadzba platná k dátumu: " + date + " je " + sadzba + " €");
+    return sadzba;
+}
 
 // const lastSadzba = (employee, date) => {
 //     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
