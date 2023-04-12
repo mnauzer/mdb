@@ -70,9 +70,12 @@ const dateDiff = (date1, date2) => {
 }
 
 const setID = entries => {
-    message("set id v.6");
+    message("set id v.7");
+    message(entries + " záznamov")
     entries.sort(orderDate);
+    message(entries + " sort záznamov")
     entries.reverse();
+    message(entries + " revers záznamov")
     for (var e in entries) {
         entries[e].set("ID", e + 1);
     }
