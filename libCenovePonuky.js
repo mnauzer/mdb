@@ -15,7 +15,8 @@ const prepocetPonuky = en => {
     message("Prepočítavam...")
     // inicializácia
     var typ = en.field("Typ cenovej ponuky");
-    //spôsob účtovania dopravy
+    //spôsob účtovania doprav
+    y
     var uctoDopravy = en.field("Účtovanie dopravy");
     var cislo = en.field(NUMBER);
     var pracaCelkom = 0;
@@ -42,7 +43,7 @@ const prepocetPonuky = en => {
     // prepočet podľa typu cenovej ponuky
     switch (typ) {
         case "Položky":
-            var diely = ponuka.field("Diely cenovej ponuky");
+            var diely = en.field("Diely cenovej ponuky");
             // prejsť všetky diely a spočítať práce a materiál
             if (diely) {
                 for (var d = 0; d < diely.length; d++) {
@@ -51,24 +52,24 @@ const prepocetPonuky = en => {
             }
             break;
         case "Hodinovka":
-            var diely = ponuka.field("Diely cenovej ponuky hzs");
+            var diely = en.field("Diely cenovej ponuky hzs");
             if (diely) {
                 for (var d = 0; d < diely.length; d++) {
                     pracaCelkom += prepocetDielHZS(ponuka, diely[d]);
                 }
-                if (ponuka.field("+Materiál")) {
+                if (en.field("+Materiál")) {
                     // spočítať  materiál
-                    var material = ponuka.field("Materiál");
+                    var material = en.field("Materiál");
                     materialCelkom = polozkaMaterial(material);
-                    ponuka.set("Materiál hzs", materialCelkom);
-                    ponuka.set("Materiál celkom bez DPH", materialCelkom);
+                    en.set("Materiál hzs", materialCelkom);
+                    en.set("Materiál celkom bez DPH", materialCelkom);
                 }
-                if (ponuka.field("+Mechanizácia")) {
+                if (en.field("+Mechanizácia")) {
                     // spočítať mechanizácie
-                    var stroje = ponuka.field(FIELD_STROJE);
+                    var stroje = en.field(FIELD_STROJE);
                     strojeCelkom = prepocetDielStroje(stroje);
-                    ponuka.set("Využitie mechanizácie", strojeCelkom);
-                    ponuka.set("Stroje celkom bez DPH", strojeCelkom);
+                    en.set("Využitie mechanizácie", strojeCelkom);
+                    en.set("Stroje celkom bez DPH", strojeCelkom);
                 }
                 cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
 
@@ -86,12 +87,12 @@ const prepocetPonuky = en => {
     cenaCelkomBezDPH += dopravaCelkom;
     dph = cenaCelkomBezDPH * sadzbaDPH;
     cenaSDPH += cenaCelkomBezDPH + dph;
-    ponuka.set("Práca celkom bez DPH", pracaCelkom);
-    ponuka.set("Práce hzs", pracaCelkom);
-    ponuka.set("Doprava", dopravaCelkom);
-    ponuka.set("Celkom (bez DPH)", cenaCelkomBezDPH);
-    ponuka.set("DPH 20%", dph);
-    ponuka.set("Cena celkom (s DPH)", cenaSDPH);
+    en.set("Práca celkom bez DPH", pracaCelkom);
+    en.set("Práce hzs", pracaCelkom);
+    en.set("Doprava", dopravaCelkom);
+    en.set("Celkom (bez DPH)", cenaCelkomBezDPH);
+    en.set("DPH 20%", dph);
+    en.set("Cena celkom (s DPH)", cenaSDPH);
     message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
 }
 
