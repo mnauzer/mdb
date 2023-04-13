@@ -108,3 +108,4 @@ let MOD_DATE = "dátum úpravy";
 let ENT_COLOR = "farba záznamu";
 let BKG_COLOR = "farba pozadia";
 
+

@@ -275,7 +275,12 @@ const setID = entries => {
 // ACTIONS entry
 const setDEBUG = en => {
     message("Set DEBUG v.0.23.01")
-    en.set(DEBUG, !en.field(DEBUG));
+    en.set(DEBUG, !en.field(DBG));
+    if (en.field(DBG)) {
+        en.set(BKG_COLOR, MEM_LIGHT_BLUE);
+    } else {
+        en.set(BKG_COLOR, MEM_LIGHT_GREEN);
+    }
 }
 //
 // Price functions
