@@ -376,7 +376,7 @@ const filterByDatePlatnost = (entries, maxDate) => {
     message("filterByDate v.0.23.01");
     var links = [];
     for(var e = 0; e < entries.length; e++) {
-        if (entries[e].field(DATE).getTime()/1000 <= maxDate.getTime()/1000) {
+        if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
             links.push(entries[e])
         } else {
             return false;
