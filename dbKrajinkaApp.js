@@ -373,13 +373,11 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 const filterByDatePlatnost = (entries, maxDate) => {
-    message("filterByDate v.0.23.02");
+    message("filterByDate v.0.23.03");
     var links = [];
     for(var e = 0; e < entries.length; e++) {
         if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
             links.push(entries[e])
-        } else {
-            return false;
         }
         return links;
     }
