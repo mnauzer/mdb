@@ -81,7 +81,7 @@ const prepocetPonuky = en => {
     }
 
     // Doprava každopádne
-    var dopravaCelkom = ponukaDoprava(ponuka, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
+    var dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
 
     // dph
     cenaCelkomBezDPH += dopravaCelkom;
