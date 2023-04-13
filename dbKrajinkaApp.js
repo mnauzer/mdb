@@ -373,7 +373,7 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 const filterByDatePlatnost = (entries, maxDate) => {
-    message("filterByDate v.0.23.01");
+    message("filterByDate v.0.23.02");
     var links = [];
     for(var e = 0; e < entries.length; e++) {
         if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
@@ -388,17 +388,17 @@ const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
     message("Links: " + links.length);
-    links = filterByDatePlatnost(links, date);
-    message("Filtered links: " + links.length);
-    if (links.length < 0) {
+    filtered = filterByDatePlatnost(links, date);
+    message("Filtered filtered: " + filtered.length);
+    if (filtered.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
     //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
-        links.sort(orderPlatnost);
-        links.reverse();
+        filtered.sort(orderPlatnost);
+        filtered.reverse();
     }
     //vyberie a vráti sadzbu z prvého záznamu
-    var sadzba = links[0].field("Sadzba");
+    var sadzba = filtered[0].field("Sadzba");
     return sadzba;
 }
 // const lastSadzba = (employee, date) => {
@@ -411,26 +411,6 @@ const lastSadzba = (employee, date) => {
 //         return 0;
 //     }
 // }
-const employeeTariffValidToDate = (employee, date) => {
-    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    var filtered = [];
-    message("záznamov " + links.length);
-    // links.filter(e => e.field("Platnosť od").getTime()/1000 <= date.getTime()/1000);
-    for (var e = 0; e < links.length; e++) {
-        if (links[e].field("Platnosť od").getTime()/1000 <= date.getTime()/1000) {
-            filtered.push(links[e]);
-        }
-    };
-    message("filtrovaných záznamov " + links.length);
-    if (links.length < 0) {
-        message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
-    } else {
-        links.sort(orderPlatnost);
-    }
-    var sadzba = links[0].field("Sadzba");
-    message("Sadzba platná k dátumu: " + date + " je " + sadzba + " €");
-    return sadzba;
-}
 
 
 
