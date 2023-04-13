@@ -281,7 +281,7 @@ const setTEST = en => {
         en.set(BKG_COLOR, MEM_LIGHT_YELLOW);
         message("Databáza v testovacom režime");
     } else {
-        en.set(BKG_COLOR, MEM_LIGHT_GREEN);
+        en.set(BKG_COLOR, MEM_DEFAULT);
         message("Databáza v normálnom režime");
     }
     return true;
@@ -294,7 +294,7 @@ const setDEBUG = en => {
     if (en.field(DBG)) {
         en.set(BKG_COLOR, MEM_LIGHT_BLUE);
     } else {
-        en.set(BKG_COLOR, MEM_LIGHT_GREEN);
+        en.set(BKG_COLOR, MEM_DEFAULT);
     }
 }
 //
