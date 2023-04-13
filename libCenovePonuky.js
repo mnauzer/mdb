@@ -16,7 +16,7 @@ const prepocetPonuky = en => {
     // inicializácia
     var typ = en.field("Typ cenovej ponuky");
     //spôsob účtovania doprav
-    y
+
     var uctoDopravy = en.field("Účtovanie dopravy");
     var cislo = en.field(NUMBER);
     var pracaCelkom = 0;
