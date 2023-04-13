@@ -47,7 +47,7 @@ const prepocetPonuky = en => {
             // prejsť všetky diely a spočítať práce a materiál
             if (diely) {
                 for (var d = 0; d < diely.length; d++) {
-                    cenaCelkomBezDPH += prepocetDielPolozky(ponuka, diely[d]);
+                    cenaCelkomBezDPH += prepocetDielPolozky(en, diely[d]);
                 }
             }
             break;
@@ -55,7 +55,7 @@ const prepocetPonuky = en => {
             var diely = en.field("Diely cenovej ponuky hzs");
             if (diely) {
                 for (var d = 0; d < diely.length; d++) {
-                    pracaCelkom += prepocetDielHZS(ponuka, diely[d]);
+                    pracaCelkom += prepocetDielHZS(en, diely[d]);
                 }
                 if (en.field("+Materiál")) {
                     // spočítať  materiál
