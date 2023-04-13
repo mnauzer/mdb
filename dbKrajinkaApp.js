@@ -13,11 +13,8 @@ const verziaKrajinkaLib = () => {
 
 const getNumber = en => {
     // vygenerovať nové číslo
-
     return number;
 }
-
-
 function fltrDb(value) {
     var arr = [0];
     if (value.field("Názov") == lib().title) {
@@ -25,7 +22,6 @@ function fltrDb(value) {
         return arr;
     }
 }
-
 function fltrDbByName(value, name) {
     var arr = [0];
     if (value.field("Názov") == name) {
@@ -33,9 +29,6 @@ function fltrDbByName(value, name) {
         return arr;
     }
 }
-
-
-
 const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
     var tmp = date2 - date1;
@@ -68,26 +61,6 @@ const dateDiff = (date1, date2) => {
 
     return diff;
 }
-
-const setID = entries => {
-    message("set id v.0.23.08");
-    message(entries.length + " záznamov")
-    entries.sort(orderDate);
-    entries.reverse();
-    for (var e = 0; e < entries.length; e++) {
-        entries[e].set("ID", e + 1);
-    }
-}
-
-const setView = (en, view) => {
-    if (view === "E") {
-        en.set(VIEW, "Editácia");
-    } else {
-        en.set(VIEW, "Tlač");
-        en.set(DBG, false);
-    }
-}
-
 const pad = (number, length) => {
     let str = '' + number;
     while (str.length < length) {
@@ -95,7 +68,6 @@ const pad = (number, length) => {
     }
     return str;
 };
-
 // zaokrúhľovanie času na 1/4 hodiny
 const roundTimeQ = time => {
     var timeToReturn = new Date(time);
@@ -104,25 +76,54 @@ const roundTimeQ = time => {
     timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
     return timeToReturn;
 };
-
-// kontrola či je databáza v móde testovania
-const isTest = (sezona, db) => {
-    //message("zisťujem stav app a databázy...");
-    var entry = libByName(DB_ASSISTENT).find(sezona)[0];
-    var appStatus = entry.field("Prevádzka appky");
-    if (db && db.field("Testovanie")) {
-        var test = true;
-        // message("databáza " + db.field("Názov") + " je v testovacom režime...");
-    } else if (appStatus == "Testovanie") {
-        var test = true;;
-        // message("aplikácia je v testovacom režime...");
-    } else {
-        var test = false;
+const mclCheck = (mcl, value) => {
+    result = false;
+    for (var m = 0; m < mcl.length; m++) {
+        if (value === mcl[m]) {
+            result = true;
+        }
     }
-    return test;
+    return result;
+}
+const lteClear = (lte) => {
+    if (lte.length > 0) {
+        for (var l = 0; l < lte.length; l++) {
+            lte[l].unlink(lte[l]);
+        }
+    }
+}
+// get db from APP library
+const findAppDB = season => {
+    var entry = libByName(DB_ASSISTENT).find(season)[0];
+    var databazy = entry.field("Databázy");
+    //message("Databáz 2: " + databazy.length);
+    var filteredDB = databazy.filter(fltrDb)[0];
+    return filteredDB;
+}
+// get db from APP library
+const findAppDBbyName = (season, libTitle) => {
+    var entry = libByName(DB_ASSISTENT).find(season)[0];
+    var databazy = entry.field("Databázy");
+    //message("Databáz 2: " + databazy.length);
+    var filteredDB = databazy.filter(fltrDb(libTitle))[0];
+    return filteredDB;
+}
+// fill customer address field
+const pullAddress = klient => {
+    if (klient.field("Firma/Osoba") == "Osoba") {
+        var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim();
+        var ulica = klient.field("Ulica");
+        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
+        var adresa = meno + "\n" + ulica + "\n" + mesto + "\n";
+    } else {
+        var firma = klient.field("Názov firmy");
+        var ulica = klient.field("Ulica");
+        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
+        var adresa = firma + "\n" + ulica + "\n" + mesto + "\n";
+    }
+    return adresa;
 };
-
-
+// get entryDefault season from creation date
 const getSeason = en => {
     var season = en.field(SEASON);
     if (season < 0) {
@@ -135,39 +136,54 @@ const getSeason = en => {
         return season;
     }
 }
+const lastValid = (links, date, valueField, dateField) => {
+    message(new Date(links[0].field(dateField)).getTime());
 
+    // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
+    links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000);
+    links.sort(orderPlatnost);
+    links.reverse();
+    message("Links: " + links.length + "\nDátum: " + date);
+    return links[0].field(valueField);
+}
 // generuje nové číslo záznamu
-const newNumber = ( db, season, isPrefix) => {
-    var test = db.attr("test");
-
-    let dbID =  db.field("ID");
-    let prefix = db.field("Prefix");
+const newNumber = (lib, season, isPrefix) => {
+    var test = lib.attr("test");
+    let dbID =  lib.field("ID");
+    let prefix = lib.field("Prefix");
     let attr = "posledné číslo";
-    let attrTrailing = db.attr("trailing digit");
-    let attrSeasonTrim = db.attr("season trim");
+    let attrTrailing = lib.attr("trailing digit");
+    let attrSeasonTrim = lib.attr("season trim");
     if (test) {
-        dbID = "T!" + db.field("ID");
-        prefix = "T!" + db.field("Prefix");
+        dbID = "T!" + lib.field("ID");
+        prefix = "T!" + lib.field("Prefix");
         attr =  "číslo testu";
     };
 
-    let lastNum = db.attr(attr);
-    let reservedNum = db.attr("rezervované číslo");
+    let lastNum = lib.attr(attr);
+    let reservedNum = lib.attr("rezervované číslo");
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
     var number = isPrefix ? prefix + season.slice(attrSeasonTrim
     ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-    message("Vygenerované nové číslo: " + number);
+    message("Záznam číslo: " + number);
     return [number, lastNum];
 };
-
-const setEntry = (en, prefix,  num ) => {
-    message("Nastavujem záznam");
-    var prfx = prefix || false;
-    setView(en, "E");
+// TRIGGERS open and save entry
+const setView = (en, view) => {
+    if (view === "Editácia") {
+        en.set(VIEW, "Editácia");
+    } else if (view ==="Tlač") {
+        en.set(VIEW, "Tlač");
+        en.set(DBG, false);
+    }
+}
+const setEntry = (en, isPrefix) => {
+    message("Nastavujem záznam...");
+    setView(en, "Editácia");
+    var prfx = isPrefix || false;
     var season = getSeason(en);
-
     var db = findAppDB(season);
     var locked = db.attr("locked");
     if (locked) {
@@ -191,18 +207,17 @@ const setEntry = (en, prefix,  num ) => {
         en.set(LAST_NUM, number[1]);
     }
 }
-
 const saveEntry = en => {
-
-    message("Ukladám záznam");
-    setView(en, "T");
+    message("Ukladám záznam...");
+    setView(en, "Tlač");
     let season = getSeason(en);
     let db = findAppDB(season);
     db.setAttr("posledné číslo", db.attr("rezervované číslo"))
     unlockDB(en);
 
 }
-
+//
+// ACTIONS
 const unlockDB = en => {
     let season = getSeason(en);
     let db = findAppDB(season);
@@ -211,67 +226,40 @@ const unlockDB = en => {
     db.setAttr("locked reason", null)
     return true;
 }
-
-const findAppDB = season => {
-    var entry = libByName(DB_ASSISTENT).find(season)[0];
-    var databazy = entry.field("Databázy");
-    //message("Databáz 2: " + databazy.length);
-    var filteredDB = databazy.filter(fltrDb)[0];
-    return filteredDB;
-}
-
-const findAppDBbyName = (season, name) => {
-    var entry = libByName(DB_ASSISTENT).find(season)[0];
-    var databazy = entry.field("Databázy");
-    //message("Databáz 2: " + databazy.length);
-    var filteredDB = databazy.filter(fltrDb(name))[0];
-    return filteredDB;
-}
-
-
-const pullAddress = klient => {
-    if (klient.field("Firma/Osoba") == "Osoba") {
-        var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim();
-        var ulica = klient.field("Ulica");
-        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
-        var adresa = meno + "\n" + ulica + "\n" + mesto + "\n";
-    } else {
-        var firma = klient.field("Názov firmy");
-        var ulica = klient.field("Ulica");
-        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
-        var adresa = firma + "\n" + ulica + "\n" + mesto + "\n";
+const setID = entries => {
+    message("set id v.0.23.08");
+    message(entries.length + " záznamov")
+    entries.sort(orderDate);
+    entries.reverse();
+    for (var e = 0; e < entries.length; e++) {
+        entries[e].set("ID", e + 1);
     }
-    return adresa;
-};
+}
 
+// Price functions
 const marzaPercento = (pc, nc) => {
     var result = (((pc - nc) / pc) * 100).toFixed(2);
     return result;
 }
-
 const ziskSuma = (pc, nc, dph) => {
     var result = (pc - nc) - ((pc - nc) * dph);
     return result;
 }
-
 // zistiť aké je percento rabatu z nc
 const rabatPercento = (euro, pc) => {
     var result = euro / pc * 100;
     return result;
 }
-
 // aké ja suma v eurách z percenta rabatu a predajnej ceny
 const rabatSuma = (percento, pc) => {
     var result = percento / 100 * pc;
     return result;
 }
-
 // aké je percento prirážky z nákupnej a predajnej ceny
 const prirazkaSuma = (pc, nc) => {
     var result = (pc - nc) / nc * 100;
     return result;
 }
-
 const getPCTovaru = (nc, prirazka, sadzbaDPH) => {
     // vypočíta predajnú cenu bez dph z nákupnej ceny a prirážky
     //
@@ -283,7 +271,6 @@ const getPCTovaru = (nc, prirazka, sadzbaDPH) => {
     pcBezDPH = pcSDPH / koefDPH;
     return pcBezDPH;
 }
-
 const getNCTovaru = (pc, prirazka, sadzbaDPH) => {
     // vypočítať nákupnú cenu bez dph z predajnej ceny a prirážky
     //
@@ -295,30 +282,34 @@ const getNCTovaru = (pc, prirazka, sadzbaDPH) => {
     pcBezDPH = pcSDPH / koefDPH;
     return pcBezDPH;
 };
+const getSumaBezDPH = (sumaSDPH, sadzbaDPH) => {
+    result = 0;
+    result = sumaSDPH / (sadzbaDPH + 1);
+    return result;
+}
+const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
+    result = 0;
+    result = sumaBezDPH * (sadzbaDPH + 1);
+    return result;
+}
+const getSadzbaDPH = season => {
 
+
+}
+
+// EMPLOYEES functions
 const sadzbaZamestnanca2 = (zamestnanec, datum) => {
     var sadzba = 0;
     //zatial len zo zaznnamu
     sadzba = zamestnanec.field(FIELD_HODINOVKA);
     return sadzba;
 };
-
 const sadzbaZamestnanca = (zamestnanec, datum) => {
     var sadzba = 0;
     //zatial len zo zaznnamu
     sadzba = zamestnanec.field(FIELD_HODINOVKA);
     return sadzba;
 };
-
-var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
-var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
-var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
-// example:
-// var entries = lib().entries();
-// var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
-// entries.sort(order);
-// entryDefault().set("previous", entries[0].field("current"));
-
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     // var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
@@ -357,7 +348,6 @@ const employeeTariffValidToDate = (employee, date) => {
     message("Sadzba platná k dátumu: " + date + " je " + sadzba + " €");
     return sadzba;
 }
-
 // const lastSadzba = (employee, date) => {
 //     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
 //     if (links.length > 0) {
@@ -369,34 +359,19 @@ const employeeTariffValidToDate = (employee, date) => {
 //     }
 // }
 
-const lastValid = (links, date, valueField, dateField) => {
-    message(new Date(links[0].field(dateField)).getTime());
+// HELPERS
+var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
+var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
+var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
+// example:
+// var entries = lib().entries();
+// var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
+// entries.sort(order);
+// entryDefault().set("previous", entries[0].field("current"));
 
-    // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
-    links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000);
-    links.sort(orderPlatnost);
-    links.reverse();
-    message("Links: " + links.length + "\nDátum: " + date);
-    return links[0].field(valueField);
-}
 
-const mclCheck = (mcl, value) => {
-    result = false;up
-    for (var m = 0; m < mcl.length; m++) {
-        if (value === mcl[m]) {
-            result = true;
-        }
-    }
-    return result;
-}
 
-const lteClear = (lte) => {
-    if (lte.length > 0) {
-        for (var l = 0; l < lte.length; l++) {
-            lte[l].unlink(lte[l]);
-        }
-    }
-}
+
 
 const lteCheck = (lte, entry) => {
     result = false;
@@ -424,20 +399,7 @@ const zistiIndexLinku = (link, remoteLinks) => {
 }
 
 
-const getSumaBezDPH = (sumaSDPH, sadzbaDPH) => {
-    result = 0;
-    result = sumaSDPH / (sadzbaDPH + 1);
-    return result;
-}
-
-const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
-    result = 0;
-    result = sumaBezDPH * (sadzbaDPH + 1);
-    return result;
-}
-
-const getSadzbaDPH = season => {
 
 
-}
+
 // End of file: 25.03.2022, 16:16

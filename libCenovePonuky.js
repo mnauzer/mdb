@@ -15,8 +15,8 @@ const prepocetPonuky = en => {
     message("Prepočítavam...")
     // inicializácia
     var typ = en.field("Typ cenovej ponuky");
-    var uctoDopravy = en.field("Účtovanie dopravy");
     //spôsob účtovania dopravy
+    var uctoDopravy = en.field("Účtovanie dopravy");
     var cislo = en.field(NUMBER);
     var pracaCelkom = 0;
     var strojeCelkom = 0;
@@ -25,9 +25,7 @@ const prepocetPonuky = en => {
     var cenaSDPH = 0;
     var dph = 0;
     var season = getSeason(en);
-
     var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
-
     // nastaviť splatnosť
     var datum = new Date(en.field(DATE));
     var platnost = new Date(en.field("Platnosť do"));
@@ -40,7 +38,6 @@ const prepocetPonuky = en => {
     if (klient) {
         en.set("Odberateľ", pullAddress(klient));
     }
-
 
     // prepočet podľa typu cenovej ponuky
     switch (typ) {
@@ -99,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-      var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
+    var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
 
     if (cp.field("Stav cenovej ponuky") == "Schválená") {
 
