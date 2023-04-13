@@ -252,7 +252,7 @@ const saveEntry = en => {
 
 }
 //
-// ACTIONS
+// ACTIONS library
 const unlockDB = en => {
     message("Unlock DB v.0.23.01");
     let season = getSeason(en);
@@ -271,6 +271,8 @@ const setID = entries => {
         entries[e].set("ID", e + 1);
     }
 }
+//
+// ACTIONS entry
 const setDEBUG = en => {
     message("Set DEBUG v.0.23.01")
     en.set(DEBUG, !en.field(DEBUG));
