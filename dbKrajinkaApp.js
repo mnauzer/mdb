@@ -254,21 +254,26 @@ const saveEntry = en => {
 //
 // ACTIONS
 const unlockDB = en => {
+    message("Unlock DB v.0.23.01");
     let season = getSeason(en);
     let db = findAppDB(season);
-    db.setAttr("rezervované číslo", null)
-    db.setAttr("locked", false)
-    db.setAttr("locked reason", null)
+    db.setAttr("rezervované číslo", null);
+    db.setAttr("locked", false);
+    db.setAttr("locked reason", null);
     return true;
 }
 const setID = entries => {
-    message("set id v.0.23.08");
+    message("Set ID v.0.23.08");
     message(entries.length + " záznamov")
     entries.sort(orderDate);
     entries.reverse();
     for (var e = 0; e < entries.length; e++) {
         entries[e].set("ID", e + 1);
     }
+}
+const setDEBUG = en => {
+    message("Set DEBUG v.0.23.01")
+    en.set(DEBUG, !en.field(DEBUG));
 }
 //
 // Price functions
