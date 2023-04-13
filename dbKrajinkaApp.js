@@ -271,6 +271,21 @@ const setID = entries => {
         entries[e].set("ID", e + 1);
     }
 }
+const setTEST = en => {
+    message("Set TEST v.0.23.01");
+    let season = getSeason(en);
+    let db = findAppDB(season);
+    let test = db.attr("test");
+    db.setAttr("test", !test);
+    if (test) {
+        en.set(BKG_COLOR, MEM_LIGHT_YELLOW);
+        message("Databáza v testovacom režime");
+    } else {
+        en.set(BKG_COLOR, MEM_LIGHT_GREEN);
+        message("Databáza v normálnom režime");
+    }
+    return true;
+}
 //
 // ACTIONS entry
 const setDEBUG = en => {
