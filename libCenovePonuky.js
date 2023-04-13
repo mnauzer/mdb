@@ -146,7 +146,7 @@ const ponukaNovaZakazka = en => {
     var datum = new Date();
     var typZakazky = ""; //harcoded
 
-    var cislo = newNumber(db, sezona, true, 2);
+    var cislo = getNewNumber(db, sezona, true, 2);
     var klient = en.field("Klient")[0];
     var miesto = en.field("Miesto realizácie")[0];
     var nazovZakazky = en.field("Popis cenovej ponuky");

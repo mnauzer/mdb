@@ -11,10 +11,15 @@ const verziaKrajinkaLib = () => {
     return result;
 }
 
-const getNumber = en => {
-    // vygenerovať nové číslo
-    return number;
-}
+// HELPERS
+var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
+var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
+var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
+// example:
+// var entries = lib().entries();
+// var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
+// entries.sort(order);
+// entryDefault().set("previous", entries[0].field("current"));
 function fltrDb(value) {
     var arr = [0];
     if (value.field("Názov") == lib().title) {
@@ -29,6 +34,12 @@ function fltrDbByName(value, name) {
         return arr;
     }
 }
+
+
+
+
+
+
 const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
     var tmp = date2 - date1;
@@ -146,8 +157,32 @@ const lastValid = (links, date, valueField, dateField) => {
     message("Links: " + links.length + "\nDátum: " + date);
     return links[0].field(valueField);
 }
+const lteCheck = (lte, entry) => {
+    result = false;
+    if (lte.length > 0) {
+        for (var index = 0; index < lte.length; index++) {
+            if (entry.id === lte[index].id) {
+                result = true;
+                break;
+            }
+        }
+        return index;
+    } else {
+        return -1;
+    }
+}
+// get index of link from links.linkFrom(lib, field)
+const getLinkIndex = (link, remoteLinks) => {
+    var indexy = [];
+    for (var r = 0; r < remoteLinks.length; r++) {
+        indexy.push(remoteLinks[r].id);
+    }
+    var index = indexy.indexOf(link.id);
+    // message(index);
+    return index;
+}
 // generuje nové číslo záznamu
-const newNumber = (lib, season, isPrefix) => {
+const getNewNumber = (lib, season, isPrefix) => {
     var test = lib.attr("test");
     let dbID =  lib.field("ID");
     let prefix = lib.field("Prefix");
@@ -159,17 +194,17 @@ const newNumber = (lib, season, isPrefix) => {
         prefix = "T!" + lib.field("Prefix");
         attr =  "číslo testu";
     };
-
     let lastNum = lib.attr(attr);
     let reservedNum = lib.attr("rezervované číslo");
     if (lastNum == reservedNum) {
         lastNum += 1;
     }
-    var number = isPrefix ? prefix + season.slice(attrSeasonTrim
+    let number = isPrefix ? prefix + season.slice(attrSeasonTrim
     ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
     message("Záznam číslo: " + number);
     return [number, lastNum];
 };
+//
 // TRIGGERS open and save entry
 const setView = (en, view) => {
     if (view === "Editácia") {
@@ -196,7 +231,7 @@ const setEntry = (en, isPrefix) => {
         if (isNumber > null) {
             number.push(en.field(NUMBER));
         } else {
-            number = newNumber( db, season, prfx);
+            number = getNewNumber( db, season, prfx);
         }
         // nastav základné polia
         en.set(SEASON, season);
@@ -235,7 +270,7 @@ const setID = entries => {
         entries[e].set("ID", e + 1);
     }
 }
-
+//
 // Price functions
 const marzaPercento = (pc, nc) => {
     var result = (((pc - nc) / pc) * 100).toFixed(2);
@@ -328,6 +363,16 @@ const lastSadzba = (employee, date) => {
     var sadzba = links[0].field("Sadzba");
     return sadzba;
 }
+// const lastSadzba = (employee, date) => {
+//     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+//     if (links.length > 0) {
+//         var sadzba = lastValid(links, date, "Sadzba", "Platnosť od");
+//         return sadzba;
+//     } else {
+//         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu");
+//         return 0;
+//     }
+// }
 const employeeTariffValidToDate = (employee, date) => {
     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
     var filtered = [];
@@ -348,55 +393,8 @@ const employeeTariffValidToDate = (employee, date) => {
     message("Sadzba platná k dátumu: " + date + " je " + sadzba + " €");
     return sadzba;
 }
-// const lastSadzba = (employee, date) => {
-//     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-//     if (links.length > 0) {
-//         var sadzba = lastValid(links, date, "Sadzba", "Platnosť od");
-//         return sadzba;
-//     } else {
-//         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu");
-//         return 0;
-//     }
-// }
-
-// HELPERS
-var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
-var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
-var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
-// example:
-// var entries = lib().entries();
-// var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
-// entries.sort(order);
-// entryDefault().set("previous", entries[0].field("current"));
 
 
-
-
-
-const lteCheck = (lte, entry) => {
-    result = false;
-    if (lte.length > 0) {
-        for (var index = 0; index < lte.length; index++) {
-            if (entry.id === lte[index].id) {
-                result = true;
-                break;
-            }
-        }
-        return index;
-    } else {
-        return -1;
-    }
-}
-
-const zistiIndexLinku = (link, remoteLinks) => {
-    var indexy = [];
-    for (var r = 0; r < remoteLinks.length; r++) {
-        indexy.push(remoteLinks[r].id);
-    }
-    var index = indexy.indexOf(link.id);
-    // message(index);
-    return index;
-}
 
 
 

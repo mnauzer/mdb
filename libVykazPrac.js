@@ -31,7 +31,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                     for (var el = 0; el < evidenciaLinks.length; el++) {
                         var rVykazy = evidenciaLinks[el].field("Výkaz prác");
                         // nájde index výkazu v linkToEntry evidencie prác
-                        var index = zistiIndexLinku(vykaz, rVykazy);
+                        var index = getLinkIndex(vykaz, rVykazy);
                         // rVykaz - remote link v evidencii na tento výkaz
                         var rVykaz = evidenciaLinks[el].field("Výkaz prác")[index];
                         // počet hodín z atribútu alebo celkový počet hodín zo záznamu
@@ -53,7 +53,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                 } else {
                     for (var el = 0; el < evidenciaLinks.length; el++) {
                         var rVykazy = evidenciaLinks[el].field("Výkaz prác");
-                        var index = zistiIndexLinku(vykaz, rVykazy);
+                        var index = getLinkIndex(vykaz, rVykazy);
                         var rVykaz = evidenciaLinks[el].field("Výkaz prác")[index];
                         hodinyCelkom += evidenciaLinks[el].field("Odpracované");
                         vykaz.link("Rozpis", evidenciaLinks[el]);
