@@ -275,9 +275,8 @@ const setTEST = en => {
     message("Set TEST v.0.23.01");
     let season = getSeason(en);
     let db = findAppDB(season);
-    let test = db.attr("test");
-    db.setAttr("test", !test);
-    if (test) {
+    db.setAttr("test", !db.attr("test"));
+    if (db.attr("test")) {
         en.set(BKG_COLOR, MEM_LIGHT_YELLOW);
         message("Databáza v testovacom režime");
     } else {
