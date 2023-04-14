@@ -103,7 +103,7 @@ const findAppDB = season => {
     var databazy = entry.field("Databázy");
     //message("Databáz 2: " + databazy.length);
     // var filteredDB = databazy.filter(fltrDb)[0];
-    var filteredDB = databazy.find(lib().title);
+    var filteredDB = databazy.find(lib().title)[0];
     return filteredDB;
 }
 // get db from APP library
