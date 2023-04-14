@@ -109,6 +109,7 @@ const generujZakazku = cp => {
 
         if (typ == "Hodinovka") {
             generujVykazyPrac(en);
+            //generujVykazDopravy(en)
             if (cp.field("+Materiál")) {
                 generujVydajkyMaterialu(en);
             }
