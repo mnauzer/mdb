@@ -34,12 +34,6 @@ function fltrDbByName(value, name) {
         return arr;
     }
 }
-
-
-
-
-
-
 const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
     var tmp = date2 - date1;
@@ -108,7 +102,8 @@ const findAppDB = season => {
     var entry = libByName(DB_ASSISTENT).find(season)[0];
     var databazy = entry.field("Databázy");
     //message("Databáz 2: " + databazy.length);
-    var filteredDB = databazy.filter(fltrDb)[0];
+    // var filteredDB = databazy.filter(fltrDb)[0];
+    var filteredDB = databazy.find(lib().title);
     return filteredDB;
 }
 // get db from APP library
