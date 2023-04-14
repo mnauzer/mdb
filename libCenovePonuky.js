@@ -522,7 +522,7 @@ const polozkaMaterial = material => {
             material[p].setAttr("cena", pc);
         }
         material[p].setAttr("cena celkom", pc * mnozstvo);
-        material[p].set(VIEW, "Tlač"); //nastaví príznak Tlač v položke skladu
+        material[p].set(VIEW, "Tlač"); //nastaví príznak view v položke skladu
         celkom += mnozstvo * pc;
     }
     return celkom;
