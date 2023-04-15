@@ -101,9 +101,10 @@ const lteClear = (lte) => {
 const findAppDB = season => {
     var entry = libByName(DB_ASSISTENT).find(season)[0];
     var databazy = entry.field("Databázy");
+    var name =lib().title
     //message("Databáz 2: " + databazy.length);
     // var filteredDB = databazy.filter(fltrDb)[0];
-    var filteredDB = databazy.find(lib().title)[0];
+    var filteredDB = databazy.find(fltrDbByName)[0];
     return filteredDB;
 }
 // get db from APP library
