@@ -106,8 +106,8 @@ const findAppDB = season => {
     // var filteredDB = databazy.filter(fltrDb)[0];
     var arr = [0];
     for (var v in databazy) {
-        if (value[v].field("Názov") == name) {
-            arr.push(value[v]);
+        if (databazy[v].field("Názov") == name) {
+            arr.push(databazy[v]);
         }
     }
     return arr;
