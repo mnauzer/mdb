@@ -101,18 +101,17 @@ const lteClear = (lte) => {
 const findAppDB = season => {
     var entry = libByName(DB_ASSISTENT).find(season)[0];
     var databazy = entry.field("Databázy");
-    var name =lib().title
+    var name = lib().title;
     //message("Databáz 2: " + databazy.length);
     // var filteredDB = databazy.filter(fltrDb)[0];
-    for (var v in databazy) {
+    for (var v = 0;v < databazy.length; v++) {
         if (databazy[v].field("Názov") == name) {
             return databazy[v];
-        } else {
-            return 0;
         }
-
     }
-}
+    message("Databáza nenájdená v APP");
+    return 0;
+    }
 // get db from APP library
 const findAppDBbyName = (season, libTitle) => {
     var entry = libByName(DB_ASSISTENT).find(season)[0];
@@ -254,9 +253,10 @@ const saveEntry = en => {
     setView(en, "Tlač");
     let season = getSeason(en);
     let db = findAppDB(season);
-    db.setAttr("posledné číslo", db.attr("rezervované číslo"))
+    if (db) {
+        db.setAttr("posledné číslo", db.attr("rezervované číslo"))
+    }
     unlockDB(en);
-
 }
 //
 // ACTIONS library
