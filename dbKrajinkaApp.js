@@ -104,13 +104,14 @@ const findAppDB = season => {
     var name =lib().title
     //message("Databáz 2: " + databazy.length);
     // var filteredDB = databazy.filter(fltrDb)[0];
-    var arr = [0];
     for (var v in databazy) {
         if (databazy[v].field("Názov") == name) {
-            arr.push(databazy[v]);
+            return databazy[v];
+        } else {
+            return 0;
         }
+
     }
-    return arr;
 }
 // get db from APP library
 const findAppDBbyName = (season, libTitle) => {
@@ -222,7 +223,8 @@ const setEntry = (en, isPrefix) => {
     var prfx = isPrefix || false;
     var season = getSeason(en);
     var db = findAppDB(season);
-    var locked = db.attr("locked");
+    if (db){
+        var locked = db.attr("locked");
     if (locked) {
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
         cancel();
@@ -242,6 +244,9 @@ const setEntry = (en, isPrefix) => {
         db.setAttr("locked", true);
         db.setAttr("locked reason", "editácia užívateľom ");
         en.set(LAST_NUM, number[1]);
+    }
+    } else {
+        message("Databáza nenájdená v APP")
     }
 }
 const saveEntry = en => {
