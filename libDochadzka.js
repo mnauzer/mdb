@@ -14,6 +14,22 @@ const newEntry = en => {
 const updateEntry = en => {
 
 }
+const lastSadzba = (employee, date) => {
+    // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+    message("Links: " + links.length);
+    filtered = filterByDatePlatnost(links, date);
+    message("Filtered filtered: " + filtered.length);
+    if (filtered.length < 0) {
+        message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
+    } else {
+
+        filtered.reverse();
+    }
+    //vyberie a vráti sadzbu z prvého záznamu
+    var sadzba = filtered[0].field("Sadzba");
+    return sadzba;
+}
 
 const prepocitatZaznamDochadzky = en => {
     message("Prepočítavám záznam...\nKnižnica: " + verziaKniznice());

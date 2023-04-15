@@ -365,19 +365,6 @@ const getSadzbaDPH = season => {
 
 }
 
-// EMPLOYEES functions
-const sadzbaZamestnanca2 = (zamestnanec, datum) => {
-    var sadzba = 0;
-    //zatial len zo zaznnamu
-    sadzba = zamestnanec.field(FIELD_HODINOVKA);
-    return sadzba;
-};
-const sadzbaZamestnanca = (zamestnanec, datum) => {
-    var sadzba = 0;
-    //zatial len zo zaznnamu
-    sadzba = zamestnanec.field(FIELD_HODINOVKA);
-    return sadzba;
-};
 const filterByDatePlatnost = (entries, maxDate) => {
     message("filterByDate v.0.23.04");
     var links = [];
@@ -388,22 +375,7 @@ const filterByDatePlatnost = (entries, maxDate) => {
     }
     return links.sort();
 }
-const lastSadzba = (employee, date) => {
-    // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    message("Links: " + links.length);
-    filtered = filterByDatePlatnost(links, date);
-    message("Filtered filtered: " + filtered.length);
-    if (filtered.length < 0) {
-        message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
-    } else {
 
-        filtered.reverse();
-    }
-    //vyberie a vráti sadzbu z prvého záznamu
-    var sadzba = filtered[0].field("Sadzba");
-    return sadzba;
-}
 // const lastSadzba = (employee, date) => {
 //     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
 //     if (links.length > 0) {
