@@ -105,11 +105,12 @@ const findAppDB = season => {
     //message("Databáz 2: " + databazy.length);
     // var filteredDB = databazy.filter(fltrDb)[0];
     var arr = [0];
-    if (value.field("Názov") == name) {
-        arr.push(value);
-        return arr;
+    for (var v in databazy) {
+        if (value[v].field("Názov") == name) {
+            arr.push(value[v]);
+        }
     }
-    return 0;
+    return arr;
 }
 // get db from APP library
 const findAppDBbyName = (season, libTitle) => {
