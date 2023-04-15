@@ -379,14 +379,14 @@ const sadzbaZamestnanca = (zamestnanec, datum) => {
     return sadzba;
 };
 const filterByDatePlatnost = (entries, maxDate) => {
-    message("filterByDate v.0.23.03");
+    message("filterByDate v.0.23.04");
     var links = [];
     for(var e = 0; e < entries.length; e++) {
         if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
             links.push(entries[e])
         }
-        return links;
     }
+    return links.sort();
 }
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
@@ -397,8 +397,7 @@ const lastSadzba = (employee, date) => {
     if (filtered.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {
-    //zotriedi záznamy sadzby od najvyššieho dátumu platnosti
-        filtered.sort(orderPlatnost);
+
         filtered.reverse();
     }
     //vyberie a vráti sadzbu z prvého záznamu
