@@ -375,22 +375,4 @@ const filterByDatePlatnost = (entries, maxDate) => {
     }
     return links.sort();
 }
-
-// const lastSadzba = (employee, date) => {
-//     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-//     if (links.length > 0) {
-//         var sadzba = lastValid(links, date, "Sadzba", "Platnosť od");
-//         return sadzba;
-//     } else {
-//         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu");
-//         return 0;
-//     }
-// }
-
-
-
-
-
-
-
 // End of file: 25.03.2022, 16:16
