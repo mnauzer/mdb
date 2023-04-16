@@ -178,7 +178,7 @@ const ponukaNovaZakazka = en => {
     novaZakazka["Stav zákazky"] = "Čakajúca";
     novaZakazka["Názov zákazky"] = nazovZakazky;
     novaZakazka["Diely zákazky"] = dielyZakazky.join();
-    novaZakazka["Cenová ponuka"] = cp;
+    novaZakazka["Cenová ponuka"] = en;
     novaZakazka[SEASON] = sezona;
     novaZakazka["Účtovanie DPH"] = uctovanieDPH;
     novaZakazka["Účtovanie zákazky"] = typ;
