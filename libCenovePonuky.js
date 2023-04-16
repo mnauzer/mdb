@@ -98,15 +98,11 @@ const prepocetPonuky = en => {
 
 const generujZakazku = cp => {
     var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
-
-    if (cp.field("Stav cenovej ponuky") == "Schválená") {
-
-        var stav = cp.field("Stav cenovej ponuky");
-        var typ = cp.field("Typ cenovej ponuky");
-
+    var stav = cp.field("Stav cenovej ponuky");
+    var typ = cp.field("Typ cenovej ponuky");
+    if (stav == "Schválená") {
         // vygenerovať novú zákazku
         en = ponukaNovaZakazka(cp);
-
         if (typ == "Hodinovka") {
             generujVykazyPrac(en);
             //generujVykazDopravy(en)
@@ -140,15 +136,15 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
-    en.set(SEASON, en.field("Dátum").getFullYear());
-    var sezona = en.field(SEASON);
+    var sezona = en.field(SEASON) || getSeason(en);
+    en.set(SEASON, season);
     var lib = libByName(DB_ZAKAZKY);
-    var db = findAppDBbyName(sezona, lib.title);
+    var db = findAppDB(sezona, lib.title);
     // inicializácia
     var datum = new Date();
     var typZakazky = ""; //harcoded
 
-    var cislo = getNewNumber(db, sezona, true, 2);
+    var cislo = getNewNumber(db, sezona, true);
     var klient = en.field("Klient")[0];
     var miesto = en.field("Miesto realizácie")[0];
     var nazovZakazky = en.field("Popis cenovej ponuky");
