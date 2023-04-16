@@ -19,7 +19,7 @@ const lastSadzba = (employee, date) => {
     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
     message("Links: " + links.length);
     filtered = filterByDatePlatnost(links, date);
-    message("Filtered filtered: " + filtered.length);
+    message("Filtered links: " + filtered.length);
     if (filtered.length < 0) {
         message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
     } else {

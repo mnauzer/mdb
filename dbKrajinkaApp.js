@@ -226,7 +226,7 @@ const setEntry = (en, isPrefix) => {
         var locked = db.attr("locked");
     if (locked) {
         message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-        cancel();
+        exit();
     } else {
         //message(db.field("Názov") + ", "+ season);
         let number = [];
@@ -373,6 +373,6 @@ const filterByDatePlatnost = (entries, maxDate) => {
             links.push(entries[e])
         }
     }
-    return links.sort();
+    return links;
 }
 // End of file: 25.03.2022, 16:16
