@@ -265,7 +265,7 @@ const novyVykazPrac = (zakazka, popis) => {
     var typVykazu = cp.field("Typ cenovej ponuky");
     var datum = zakazka.field("Dátum");
     var sezona = zakazka.field(SEASON);
-    var cislo = noveCislo(sezona, "Výkaz prác", 0, 3);
+    var cislo = getNewNumber(lib, sezona, true);
     // vytvoriť novú výdajku
     var novyVykaz = new Object();
     novyVykaz[NUMBER] = cislo;
