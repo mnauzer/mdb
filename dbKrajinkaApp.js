@@ -129,7 +129,7 @@ const pullAddress = klient => {
         var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
         var adresa = meno + "\n" + ulica + "\n" + mesto + "\n";
     } else {
-        var firma = klient.field("Názov firmy");
+        var firma = klient.field("Firma");
         var ulica = klient.field("Ulica");
         var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim();
         var adresa = firma + "\n" + ulica + "\n" + mesto + "\n";
