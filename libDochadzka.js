@@ -8,7 +8,7 @@ function verziaKniznice() {
 }
 
 const newEntry = en => {
-
+    message("New Entry");
 }
 
 const updateEntry = en => {
