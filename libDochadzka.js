@@ -2,7 +2,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "libDochadzka.js";
-    var verzia = "0.23.05";
+    var verzia = "0.23.06";
     result = nazov + " " + verzia;
     return result;
 }
@@ -12,8 +12,9 @@ const newEntry = en => {
 }
 
 const updateEntry = en => {
-
+    message("Update Entry");
 }
+
 const lastSadzba = (employee, date) => {
     // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
     var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
@@ -103,17 +104,21 @@ const prepocitatZaznamDochadzky = en => {
     message("Hotovo...");
 }
 
-const aSalary = en => {
+const aSalary = (en, NEW_ENTRY) => {
     message("Evidujem mzdy v.9");
     var salaries = libByName(DBA_SAL);
     var employees = en.field(ATTDC_EMPLOYEES);
-    var links = en.linksFrom(DBA_SAL, ATTENDANCE)
-    // skontrolovať či je už záznam nalinkovaný
-    if (links.length > 0){
-        //vymaž nalinkované záznamy
-        message("Mažem už nalinkované záznamy");
-        for (var l = 0; l < links.length; l++){
-            links[l].trash();
+    if (NEW_ENTRY) {
+
+    } else {
+        var links = en.linksFrom(DBA_SAL, ATTENDANCE)
+        // skontrolovať či je už záznam nalinkovaný
+        if (links.length > 0){
+            //vymaž nalinkované záznamy
+            message("Mažem už nalinkované záznamy");
+            for (var l = 0; l < links.length; l++){
+                links[l].trash();
+            }
         }
     }
     for (var z = 0; z < employees.length; z++) {
