@@ -137,7 +137,6 @@ const generujZakazku = cp => {
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
     try {
-        
         var sezona = en.field(SEASON) || getSeason(en);
         en.set(SEASON, sezona);
         var lib = libByName(DB_ZAKAZKY);
@@ -145,7 +144,6 @@ const ponukaNovaZakazka = en => {
         // inicializácia
         var datum = new Date();
         var typZakazky = ""; //harcoded
-    
         var cislo = getNewNumber(db, sezona, true);
         var klient = en.field("Klient")[0];
         var miesto = en.field("Miesto realizácie")[0];
@@ -164,8 +162,6 @@ const ponukaNovaZakazka = en => {
             typZakazky = "Realizácia";
         }
         var uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
-    
-    
         // hlavička a základné nastavenia
         var novaZakazka = new Object();
         novaZakazka["Dátum"] = datum;
@@ -185,7 +181,7 @@ const ponukaNovaZakazka = en => {
         var zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
         return zakazka;
     } catch (error) {
-        message(error)
+        message("Chyba\n" + error)
     }
 }
 // VÝDAJKY
