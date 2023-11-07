@@ -2,7 +2,7 @@
 function verziaKniznice() {
     var result = "";
     var nazov = "libDochadzka.js";
-    var verzia = "0.23.06";
+    var verzia = "0.23.07 ";
     result = nazov + " " + verzia;
     return result;
 }

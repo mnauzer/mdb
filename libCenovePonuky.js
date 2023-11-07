@@ -137,7 +137,7 @@ const generujZakazku = cp => {
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
     var sezona = en.field(SEASON) || getSeason(en);
-    en.set(SEASON, season);
+    en.set(SEASON, sezona);
     var lib = libByName(DB_ZAKAZKY);
     var db = findAppDB(sezona, lib.title);
     // inicializácia
