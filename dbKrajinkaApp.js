@@ -245,9 +245,9 @@ const errorGen = (library, script, error, variables) => {
     + error  );
     let errorLib = libByName("APP Errors");
     let newError = new Object();
-    newError["date"] = datum;
+    newError["date"] = new Date();
     newError["library"] = library;
-    newError["script"] = scriptName;
+    newError["script"] = script;
     newError["error"] = error;
     newError["line"] = error.lineNumber;
     newError["variables"] = variables;
