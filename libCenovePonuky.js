@@ -158,7 +158,7 @@ const novaZakazka = en => {
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
-        let db = findAppDB(sezona, "Zákazky");
+        let db = getAppSeasonDB(sezona, "Zákazky");
         let lib = libByName("Zákazky");
         en.set(SEASON, sezona);
         // inicializácia

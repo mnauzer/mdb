@@ -89,6 +89,85 @@ const lteClear = (lte) => {
         }
     }
 }
+
+const getAppSeason = season =>{
+    let scriptName = "getAppSeason 0.23.01"
+    try {
+        message (scriptName);
+        let entry = libByName(DB_ASSISTENT).find(season)[0];
+        return entry;
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "dbKrajinkaApp.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "line: " + error.line + "\n"
+        errorLib.create(newError);
+    }
+}
+
+const checkDebug = appSeason => {
+    let scriptName = "checkDebug 0.23.01"
+    try {
+        return appSeason.field("debug");
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "dbKrajinkaApp.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "line: " + error.line + "\n"
+        errorLib.create(newError); 
+    }
+}
+
+const getAppSeasonDatabases = season => {
+    let scriptName = "getAppSeasonDatabases 0.23.01"
+    try {
+        return appSeason(season).field("Databázy")
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "dbKrajinkaApp.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "line: " + error.line + "\n"
+        errorLib.create(newError);
+    }
+}
+
+const getAppSeasonDB = (season, dbName) => {
+    let scriptName = "getAppSeasonDB 0.23.01"
+    try {
+        return getAppSeasonDatabases(season).find(dbName)[0]
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "dbKrajinkaApp.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "line: " + error.line + "\n"
+        errorLib.create(newError);
+    }
+}
+
 // get db from APP library
 const findAppDB = (season, name) => {
     let scriptName = "findAppDB 0.23.04"
