@@ -212,7 +212,7 @@ const ponukaNovaZakazka = en => {
         newError["variables"] = 
         "en: " + en.name + "\n"
         + "season: " + sezona + "\n"
-        + "db: " + db + "\n"
+        + "db: " + db.name + "\n"
         + "lib: " + lib.tilte ; 
         errorLib.create(newError);
     }
