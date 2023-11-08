@@ -106,11 +106,8 @@ const getAppSeason = season =>{
 }
 
 const checkDebug = season => {
-    let scriptName = "checkDebug 0.23.04"
+    let scriptName = "checkDebug 0.23.05"
     try {
-        if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
-        } 
         return getAppSeason(season).field("debug");
     } catch (error) {
         let variables = ""
