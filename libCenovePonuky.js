@@ -11,7 +11,7 @@ const verziaCenovePonuky = () => {
 }
 
 const prepocetPonuky = en => {
-
+try {
     message("Prepočítavam...")
     // inicializácia
     var typ = en.field("Typ cenovej ponuky");
@@ -94,6 +94,10 @@ const prepocetPonuky = en => {
     en.set("DPH 20%", dph);
     en.set("Cena celkom (s DPH)", cenaSDPH);
     message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
+    
+    } catch (error) {
+    
+    }
 }
 
 const generujZakazku = cp => {
@@ -141,10 +145,10 @@ const generujZakazku = cp => {
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
     try {
-        message("ponukaNovaZakazka v 23.01...");
+        message("ponukaNovaZakazka v 23.01");
         var sezona = en.field(SEASON) || getSeason(en);
         en.set(SEASON, sezona);
-        var lib = libByName(DB_ZAKAZKY);
+        var lib = libByName("Zákazky");
         var db = findAppDB(sezona, lib.title);
         // inicializácia
         var datum = new Date();
