@@ -96,7 +96,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.11";
+    var scriptName ="generujZakazku 0.23.12";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
@@ -110,11 +110,11 @@ const generujZakazku = cp => {
             var appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
             var lib = libByName(DB_ZAKAZKY);
             if (checkDebug(sezona)){
-                message("DBGMSG: " + scriptName + "\n" + appDB.name + " | " + lib.title);
+                message("DBGMSG: " + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
-                var dielyZakazky = en.field("Diely cenovej ponuky hzs");
+                var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
                 if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
                     typZakazky = "Servis AZS";
                 } else {
