@@ -144,16 +144,14 @@ const generujZakazku = cp => {
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
     try {
-        message("i am trying...");
+        message("ponukaNovaZakazka v 23.11...");
         var sezona = en.field(SEASON) || getSeason(en);
         en.set(SEASON, sezona);
         var lib = libByName(DB_ZAKAZKY);
-        message("findAppDb.. .");
         var db = findAppDB(sezona, lib.title);
         // inicializácia
         var datum = new Date();
         var typZakazky = ""; //harcoded
-        message("getNewNumber...");
         var cislo = getNewNumber(db, sezona, true);
         var klient = en.field("Klient")[0];
         var miesto = en.field("Miesto realizácie")[0];

@@ -185,26 +185,32 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
-    var test = lib.attr("test");
-    let dbID =  lib.field("ID");
-    let prefix = lib.field("Prefix");
-    let attr = "posledné číslo";
-    let attrTrailing = lib.attr("trailing digit");
-    let attrSeasonTrim = lib.attr("season trim");
-    if (test) {
-        dbID = "T!" + lib.field("ID");
-        prefix = "T!" + lib.field("Prefix");
-        attr =  "číslo testu";
-    };
-    let lastNum = lib.attr(attr);
-    let reservedNum = lib.attr("rezervované číslo");
-    if (lastNum == reservedNum) {
-        lastNum += 1;
+    try {
+        message("getNewNumber v.0.23.11");
+        var test = lib.attr("test");
+        let dbID =  lib.field("ID");
+        let prefix = lib.field("Prefix");
+        let attr = "posledné číslo";
+        let attrTrailing = lib.attr("trailing digit");
+        let attrSeasonTrim = lib.attr("season trim");
+        if (test) {
+            dbID = "T!" + lib.field("ID");
+            prefix = "T!" + lib.field("Prefix");
+            attr =  "číslo testu";
+        };
+        let lastNum = lib.attr(attr);
+        let reservedNum = lib.attr("rezervované číslo");
+        if (lastNum == reservedNum) {
+            lastNum += 1;
+        }
+        let number = isPrefix ? prefix + season.slice(attrSeasonTrim
+            ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
+            message("Záznam číslo: " + number);
+            return [number, lastNum];
+            
+        } catch (error) {
+            message("getNewNumber v.0.23.11 error");
     }
-    let number = isPrefix ? prefix + season.slice(attrSeasonTrim
-    ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-    message("Záznam číslo: " + number);
-    return [number, lastNum];
 };
 //
 // TRIGGERS open and save entry
