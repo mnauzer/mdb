@@ -154,7 +154,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.14";
+    let scriptName ="novaZakazka 0.23.15";
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
@@ -162,28 +162,28 @@ const novaZakazka = en => {
         let lib = libByName("Zákazky");
         en.set(SEASON, sezona);
         // inicializácia
-        var datum = new Date();
-        var typZakazky = ""; //harcoded
-        var cislo = getNewNumber(db.name, sezona, true);
-        var klient = en.field("Klient")[0];
-        var miesto = en.field("Miesto realizácie")[0];
-        var nazovZakazky = en.field("Popis cenovej ponuky");
-        var typ = en.field("Typ cenovej ponuky");
+        let datum = new Date();
+        let typZakazky = ""; //harcoded
+        let cislo = getNewNumber(db.name, sezona, true);
+        let klient = en.field("Klient")[0];
+        let miesto = en.field("Miesto realizácie")[0];
+        let nazovZakazky = en.field("Popis cenovej ponuky");
+        let typ = en.field("Typ cenovej ponuky");
         // vyber diely zákazky podľa typu cp
         if (typ == "Hodinovka") {
-            var dielyZakazky = en.field("Diely cenovej ponuky hzs");
+            let dielyZakazky = en.field("Diely cenovej ponuky hzs");
             if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
                 typZakazky = "Servis AZS";
             } else {
                 typZakazky = "Údržba";
             }
         } else {
-            var dielyZakazky = en.field("Diely cenovej ponuky");
+            let dielyZakazky = en.field("Diely cenovej ponuky");
             typZakazky = "Realizácia";
         }
-        var uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
+        let uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
         // hlavička a základné nastavenia
-        var novaZakazka = new Object();
+        let novaZakazka = new Object();
         novaZakazka["Dátum"] = datum;
         novaZakazka["Typ zákazky"] = typZakazky;
         novaZakazka[NUMBER] = cislo;
@@ -198,7 +198,7 @@ const novaZakazka = en => {
         novaZakazka["Účtovanie zákazky"] = typ;
         lib.create(novaZakazka);
     
-        var zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
+        let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
         return zakazka;
     } catch (error) {
         message("ERROR: " + scriptName + "\n" 
