@@ -185,10 +185,11 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
+    let scriptName = "getNewNumber v.0.23.03"
     try {
-        message("getNewNumber v.0.23.02\n" 
-        + "lib: " + lib.title + ", "
-        + "season: " + season + ", "
+        message( scriptName + "\n" 
+        + "lib: " + lib.title + "|"
+        + "season: " + season + "|"
         + "isPrefix: " + isPrefix  
         );
         var test = lib.attr("test");
@@ -213,7 +214,8 @@ const getNewNumber = (lib, season, isPrefix) => {
             return [number, lastNum];
             
         } catch (error) {
-            message("getNewNumber v.0.23.11 error");
+            message("ERROR: \n" 
+            + scriptName);
     }
 };
 //
