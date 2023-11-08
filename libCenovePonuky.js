@@ -214,6 +214,7 @@ const novaZakazka = en => {
         + "season: " + sezona + "\n"
         + "db: " + db.name + "\n"
         + "lib: " + lib.tilte ; 
+        + "zakazka: " + zakazka.name ; 
         + "line: " + error.line ; 
         errorLib.create(newError);
     }
