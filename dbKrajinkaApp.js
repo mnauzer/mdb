@@ -131,9 +131,9 @@ const checkDebug = appSeason => {
 }
 
 const getAppSeasonDatabases = season => {
-    let scriptName = "getAppSeasonDatabases 0.23.01"
+    let scriptName = "getAppSeasonDatabases 0.23.02"
     try {
-        return appSeason(season).field("Databázy")
+        return getAppSeason(season).field("Databázy")
     } catch (error) {
         message("ERROR: " + scriptName + "\n" 
         + error  );
