@@ -154,7 +154,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.10";
+    let scriptName ="novaZakazka 0.23.11";
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
@@ -214,6 +214,7 @@ const novaZakazka = en => {
         + "season: " + sezona + "\n"
         + "db: " + db.name + "\n"
         + "lib: " + lib.tilte ; 
+        + "line: " + error.line ; 
         errorLib.create(newError);
     }
 }
@@ -289,30 +290,46 @@ const nalinkujPolozkyPonukyMaterial = (vydajkaMaterialu, polozky) => {
 // VÝKAZY PRÁC
 // vytvorí nový záznam
 const novyVykazPrac = (zakazka, popis) => {
-    // inicializácia
-    var lib = libByName("Výkaz prác");
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var typVykazu = cp.field("Typ cenovej ponuky");
-    var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field(SEASON);
-    var cislo = getNewNumber(lib, sezona, true);
-    // vytvoriť novú výdajku
-    var novyVykaz = new Object();
-    novyVykaz[NUMBER] = cislo;
-    novyVykaz["Dátum"] = datum;
-    novyVykaz["Popis"] = popis;
-    novyVykaz["Typ výkazu"] = typVykazu;
-    novyVykaz["s DPH"] = true; //harcoded
-    novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
-    novyVykaz["Vydané"] = "Zákazka";
-    novyVykaz["Zákazka"] = zakazka;
-    novyVykaz["Cenová ponuka"] = cp;
-
-    novyVykaz[SEASON] = sezona;
-    lib.create(novyVykaz);
-    var vykazPrac = lib.find(cislo)[0];
-
-    return vykazPrac;
+    let scriptName = "novyVykazPrac 0.23.01";
+    try {
+        // inicializácia
+        var lib = libByName("Výkaz prác");
+        var cp = zakazka.field("Cenová ponuka")[0];
+        var typVykazu = cp.field("Typ cenovej ponuky");
+        var datum = zakazka.field("Dátum");
+        var sezona = zakazka.field(SEASON);
+        var cislo = getNewNumber(lib, sezona, true);
+        // vytvoriť novú výdajku
+        var novyVykaz = new Object();
+        novyVykaz[NUMBER] = cislo;
+        novyVykaz["Dátum"] = datum;
+        novyVykaz["Popis"] = popis;
+        novyVykaz["Typ výkazu"] = typVykazu;
+        novyVykaz["s DPH"] = true; //harcoded
+        novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
+        novyVykaz["Vydané"] = "Zákazka";
+        novyVykaz["Zákazka"] = zakazka;
+        novyVykaz["Cenová ponuka"] = cp;
+    
+        novyVykaz[SEASON] = sezona;
+        lib.create(novyVykaz);
+        var vykazPrac = lib.find(cislo)[0];
+        return vykazPrac;
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "libCenovePonuky.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "zakazka: " + zakazka;
+        "popis: " + popis;
+        "line: " + error.line;
+        errorLib.create(newError);
+    }
 }
 const generujVykazyPrac = zakazka => {
     let scriptName = "generujVykazyPrac 0.23.03";
@@ -376,6 +393,7 @@ const generujVykazyPrac = zakazka => {
         newError["error"] = error;
         newError["variables"] = 
         "zakazka: " + zakazka;
+        "line: " + error.line;
         errorLib.create(newError);
     }
 }

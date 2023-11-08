@@ -176,27 +176,27 @@ const getLinkIndex = (link, remoteLinks) => {
     return index;
 }
 // generuje nové číslo záznamu
-const getNewNumber = (lib, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.09"
+const getNewNumber = (db, season, isPrefix) => {
+    let scriptName = "getNewNumber 0.23.10"
     try {
         message( scriptName + "\n" 
-        +  lib + "|"
+        +  db + "|"
         +  season + "|"
         +  isPrefix  
         );
-        var test = lib.attr("test");
-        let dbID =  lib.field("ID");
-        let prefix = lib.field("Prefix");
+        var test = db.attr("test");
+        let dbID =  db.field("ID");
+        let prefix = db.field("Prefix");
         let attr = "posledné číslo";
-        let attrTrailing = lib.attr("trailing digit");
-        let attrSeasonTrim = lib.attr("season trim");
+        let attrTrailing = db.attr("trailing digit");
+        let attrSeasonTrim = db.attr("season trim");
         if (test) {
-            dbID = "T!" + lib.field("ID");
-            prefix = "T!" + lib.field("Prefix");
+            dbID = "T!" + db.field("ID");
+            prefix = "T!" + db.field("Prefix");
             attr =  "číslo testu";
         };
-        let lastNum = lib.attr(attr);
-        let reservedNum = lib.attr("rezervované číslo");
+        let lastNum = db.attr(attr);
+        let reservedNum = db.attr("rezervované číslo");
         if (lastNum == reservedNum) {
             lastNum += 1;
         }
@@ -215,7 +215,7 @@ const getNewNumber = (lib, season, isPrefix) => {
             newError["script"] = scriptName;
             newError["error"] = error;
             newError["variables"] = 
-            "lib: " + lib + "\n" 
+            "db: " + db + "\n" 
             + "season: " + season + "\n"
             + "isPrefix: " + isPrefix;
             errorLib.create(newError);
