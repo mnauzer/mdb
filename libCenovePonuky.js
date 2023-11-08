@@ -102,7 +102,7 @@ const generujZakazku = cp => {
         var typ = cp.field("Typ cenovej ponuky");
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            en = ponukaNovaZakazka(cp);
+            en = novaZakazka(cp);
             if (typ == "Hodinovka") {
                 generujVykazyPrac(en);
                 //generujVykazDopravy(en)
@@ -152,9 +152,9 @@ const generujZakazku = cp => {
 }
 
 // vygeneruj nový záznam zákazky
-const ponukaNovaZakazka = en => {
+const novaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="ponukaNovaZakazka 0.23.10";
+    let scriptName ="novaZakazka 0.23.10";
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
