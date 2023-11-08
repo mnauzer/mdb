@@ -150,9 +150,15 @@ const getAppSeasonDatabases = season => {
 }
 
 const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 0.23.01"
+    let scriptName = "getAppSeasonDB 0.23.02"
     try {
-        return getAppSeasonDatabases(season).find(dbName)[0]
+        let databases = getAppSeasonDatabases(season);
+        let db = null;
+        for (let i=0; i<databases.length; i++) {
+            if (databases[i].name == dbName){
+                return databases[i];
+            }
+        }
     } catch (error) {
         message("ERROR: " + scriptName + "\n" 
         + error  );
