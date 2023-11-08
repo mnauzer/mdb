@@ -137,7 +137,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="ponukaNovaZakazka 0.23.06";
+    let scriptName ="ponukaNovaZakazka 0.23.07";
     try {
         message(scriptName);
         var sezona = en.field(SEASON) || getSeason(en);
@@ -193,7 +193,9 @@ const ponukaNovaZakazka = en => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "en: " + en.name; 
+        "en: " + en.name + "\n"
+        + "db: " + db + "\n"
+        + "lib: " + lib.tilte ; 
         errorLib.create(newError);
     }
 }
