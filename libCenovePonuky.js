@@ -94,7 +94,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.01";
+    let scriptName ="generujZakazku 0.23.02";
     try {
         message(scriptName);
         var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
@@ -143,8 +143,8 @@ const generujZakazku = cp => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "cp: " + cp.name + "\n"
-        "en: " + en.name + "\n"
+        "cp: " + cp + "\n"
+        "en: " + en + "\n"
         errorLib.create(newError);
     }
 
