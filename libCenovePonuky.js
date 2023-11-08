@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-var thisLibName = "libCenovePonuky.js"
+let thisLibName = "libCenovePonuky.js"
 
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 0.23.01";
@@ -96,7 +96,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.09";
+    var scriptName ="generujZakazku 0.23.10";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
@@ -109,6 +109,7 @@ const generujZakazku = cp => {
             // vygenerovať novú zákazku
             var appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
             var lib = libByName(DB_ZAKAZKY);
+            var typ = cp.field("Typ cenovej ponuky");
             if (checkDebug(sezona)){
                 message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
