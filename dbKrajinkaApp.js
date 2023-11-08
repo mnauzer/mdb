@@ -7,7 +7,7 @@
 var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
 var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
-let thisLibName = "dbKrajinkaApp.js"
+var thisLibName = "dbKrajinkaApp.js"
 // example:
 // var entries = lib().entries();
 // var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
@@ -273,20 +273,8 @@ const getNewNumber = (db, season, isPrefix) => {
             return [number, lastNum];
             
         } catch (error) {
-            message("ERROR: " + scriptName + "\n" 
-            + error  );
-            let errorLib = libByName("APP Errors");
-            let newError = new Object();
-            newError["date"] = new Date();
-            newError["library"] = "dbKrajinka.js";
-            newError["script"] = scriptName;
-            newError["error"] = error;
-            newError["variables"] = 
-            "line: " + error.lineNumber + "\n";
-            + "db: " + db + "\n" 
-            + "season: " + season + "\n"
-            + "isPrefix: " + isPrefix + "\n"
-            errorLib.create(newError);
+            var variables = ""
+            errorGen(thisLibName, scriptName, error, variables);
         
         }
 };
