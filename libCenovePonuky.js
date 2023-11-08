@@ -102,21 +102,28 @@ const generujZakazku = cp => {
     var typ = cp.field("Typ cenovej ponuky");
     if (stav == "Schválená") {
         // vygenerovať novú zákazku
+        message("ponukaNovaZakazka...");
         en = ponukaNovaZakazka(cp);
         if (typ == "Hodinovka") {
+            message("generujVykazyPrac...");
             generujVykazyPrac(en);
             //generujVykazDopravy(en)
             if (cp.field("+Materiál")) {
+                message("generujVydajkyMaterialu...");
                 generujVydajkyMaterialu(en);
             }
             if (cp.field("+Mechanizácia")) {
+                message("generujVykazStrojov...");
                 generujVykazStrojov(en);
             }
             if (cp.field("+Položky")) {
+                message("generujVykazyPrac...");
                 generujVykazyPrac(en);
             }
         } else if (typ == "Položky") {
+            message("generujVykazyPrac2...");
             generujVykazyPrac(en);
+            message("generujVydajkyMaterialu...");
             generujVydajkyMaterialu(en);
         } else {
             message("Nie je jasný typ zákazky");
