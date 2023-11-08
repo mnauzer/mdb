@@ -105,16 +105,16 @@ const generujZakazku = cp => {
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
-            let lib = libByName(db.name);
+            let appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
+            let lib = libByName(appDB.name);
             if (checkDebug(sezona)){
-                message(scriptName + "\n" + db.name + " | " + lib.title);
+                message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
             en.set(SEASON, sezona);
             // inicializácia
             let datum = new Date();
             let typZakazky = ""; //harcoded
-            let cislo = getNewNumber(db, sezona, true);
+            let cislo = getNewNumber(appDB, sezona, true);
             let klient = en.field("Klient")[0];
             let miesto = en.field("Miesto realizácie")[0];
             let nazovZakazky = en.field("Popis cenovej ponuky");
