@@ -154,7 +154,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.13";
+    let scriptName ="novaZakazka 0.23.14";
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
