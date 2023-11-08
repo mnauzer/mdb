@@ -96,7 +96,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.13";
+    var scriptName ="generujZakazku 0.23.15";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
@@ -147,7 +147,7 @@ const generujZakazku = cp => {
             message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
             
             // generovanie výkazov
-            if (typ == "Hodinovka") {
+            if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 generujVykazyPrac(zakazka);
                 //generujVykazDopravy(zakazka)
                 if (cp.field("+Materiál")) {
@@ -161,7 +161,7 @@ const generujZakazku = cp => {
                     message("generujVykazyPrac...");
                     generujVykazyPrac(zakazka);
                 }
-            } else if (typ == "Položky") {
+            } else if (cp.field("Typ cenovej ponuky") == "Položky") {
                 message("generujVykazyPrac2...");
                 generujVykazyPrac(zakazka);
                 message("generujVydajkyMaterialu...");
