@@ -164,7 +164,7 @@ const novaZakazka = en => {
         // inicializácia
         let datum = new Date();
         let typZakazky = ""; //harcoded
-        let cislo = getNewNumber(db.name, sezona, true);
+        let cislo = getNewNumber(db, sezona, true);
         let klient = en.field("Klient")[0];
         let miesto = en.field("Miesto realizácie")[0];
         let nazovZakazky = en.field("Popis cenovej ponuky");

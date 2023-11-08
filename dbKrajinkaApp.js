@@ -280,13 +280,10 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.11"
+    let scriptName = "getNewNumber 0.23.12"
     try {
         message( scriptName + "\n" 
-        +  db + "|"
-        +  season + "|"
-        +  isPrefix  
-        );
+        +  db + " | " +  season + " | " +  isPrefix );
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
