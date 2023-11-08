@@ -94,7 +94,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.04";
+    let scriptName ="generujZakazku 0.23.05";
     try {
         let sezona = cp.field(SEASON) || getSeason(cp);
         var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
@@ -105,34 +105,75 @@ const generujZakazku = cp => {
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            en = novaZakazka(cp, sezona);
+            let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
+            let lib = libByName(db.name);
+            if (checkDebug(sezona)){
+                message(scriptName + "\n" + db.name + " | " + lib.title);
+            } 
+            en.set(SEASON, sezona);
+            // inicializácia
+            let datum = new Date();
+            let typZakazky = ""; //harcoded
+            let cislo = getNewNumber(db, sezona, true);
+            let klient = en.field("Klient")[0];
+            let miesto = en.field("Miesto realizácie")[0];
+            let nazovZakazky = en.field("Popis cenovej ponuky");
+            // vyber diely zákazky podľa typu cp
             if (typ == "Hodinovka") {
-                generujVykazyPrac(en);
-                //generujVykazDopravy(en)
+                let dielyZakazky = en.field("Diely cenovej ponuky hzs");
+                if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
+                    typZakazky = "Servis AZS";
+                } else {
+                    typZakazky = "Údržba";
+                }
+            } else {
+                let dielyZakazky = en.field("Diely cenovej ponuky");
+                typZakazky = "Realizácia";
+            }
+            let uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
+            // hlavička a základné nastavenia
+            let novaZakazka = new Object();
+            novaZakazka["Dátum"] = datum;
+            novaZakazka["Typ zákazky"] = typZakazky;
+            novaZakazka[NUMBER] = cislo;
+            novaZakazka["Klient"] = klient;
+            novaZakazka["Miesto"] = miesto;
+            novaZakazka["Stav zákazky"] = "Čakajúca";
+            novaZakazka["Názov zákazky"] = nazovZakazky;
+            novaZakazka["Diely zákazky"] = dielyZakazky.join();
+            novaZakazka["Cenová ponuka"] = en;
+            novaZakazka[SEASON] = sezona;
+            novaZakazka["Účtovanie DPH"] = uctovanieDPH;
+            novaZakazka["Účtovanie zákazky"] = typ;
+            lib.create(novaZakazka);
+            let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
+            if (typ == "Hodinovka") {
+                generujVykazyPrac(zakazka);
+                //generujVykazDopravy(zakazka)
                 if (cp.field("+Materiál")) {
-                    generujVydajkyMaterialu(en);
+                    generujVydajkyMaterialu(zakazka);
                 }
                 if (cp.field("+Mechanizácia")) {
                     message("generujVykazStrojov...");
-                    generujVykazStrojov(en);
+                    generujVykazStrojov(zakazka);
                 }
                 if (cp.field("+Položky")) {
                     message("generujVykazyPrac...");
-                    generujVykazyPrac(en);
+                    generujVykazyPrac(zakazka);
                 }
             } else if (typ == "Položky") {
                 message("generujVykazyPrac2...");
-                generujVykazyPrac(en);
+                generujVykazyPrac(zakazka);
                 message("generujVydajkyMaterialu...");
-                generujVydajkyMaterialu(en);
+                generujVydajkyMaterialu(zakazka);
             } else {
                 message("Nie je jasný typ zákazky");
             }
     
             cp.set("Stav cenovej ponuky", "Uzavretá");
-            message("Zákazka č." + en.field(NUMBER) + " bola vygenerovaná");
-        } else if (!en) {
-            message("Z cenovej ponuky už je vytvorená zákazk č." + en.field(NUMBER));
+            message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
+        } else if (!zakazka) {
+            message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(NUMBER));
         } else {
             message("Cenová ponuka musí byť schválená");
         }
