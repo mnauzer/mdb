@@ -187,7 +187,7 @@ const getLinkIndex = (link, remoteLinks) => {
 const getNewNumber = (lib, season, isPrefix) => {
     try {
         message("getNewNumber v.0.23.11\n" 
-        + "lib: " + lib + "\n"
+        + "lib: " + lib.title + "\n"
         + "season: " + season + "\n"
         + "isPrefix: " + isPrefix + "\n"
         );

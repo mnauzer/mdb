@@ -102,10 +102,9 @@ const generujZakazku = cp => {
     var typ = cp.field("Typ cenovej ponuky");
     if (stav == "Schválená") {
         // vygenerovať novú zákazku
-        message("ponukaNovaZakazka...");
         en = ponukaNovaZakazka(cp);
         if (typ == "Hodinovka") {
-            message("generujVykazyPrac...");
+           
             generujVykazyPrac(en);
             //generujVykazDopravy(en)
             if (cp.field("+Materiál")) {
@@ -290,52 +289,59 @@ const novyVykazPrac = (zakazka, popis) => {
     return vykazPrac;
 }
 const generujVykazyPrac = zakazka => {
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var typ = cp.field("Typ cenovej ponuky");
-    var popis = [];
-
-    if (typ == "Položky") {
-        popis.push("Práce navyše");                         // Práce navyše
-        var dielyPonuky = cp.field("Diely cenovej ponuky");
-        for (var i = 0; i < dielyPonuky.length; i++) {
-            popis.push(dielyPonuky[i] + " práce");                  // Závlaha, Trávnik, Výsadby, Jazierko, Kameň, Neštandardné, Subdodávky
-        }
-        for (var z = 0; z < popis.length; z++) {
-            var polozkyPonuky = cp.field(popis[z]);
-            if (popis[z] == "Práce navyše") {
-                var vykazPrac = novyVykazPrac(zakazka, popis[z]);
-                nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);
-                spocitajVykaz(vykazPrac, "Práce sadzby");
-            } else {
-                var vykazPrac = novyVykazPrac(zakazka, popis[z]);
-                nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);
+    try {
+        message("generujVykazyPrac 23.01");
+        var cp = zakazka.field("Cenová ponuka")[0];
+        var typ = cp.field("Typ cenovej ponuky");
+        var popis = [];
+        
+        if (typ == "Položky") {
+            popis.push("Práce navyše");                         // Práce navyše
+            var dielyPonuky = cp.field("Diely cenovej ponuky");
+            for (var i = 0; i < dielyPonuky.length; i++) {
+                popis.push(dielyPonuky[i] + " práce");                  // Závlaha, Trávnik, Výsadby, Jazierko, Kameň, Neštandardné, Subdodávky
+            }
+            for (var z = 0; z < popis.length; z++) {
+                var polozkyPonuky = cp.field(popis[z]);
+                if (popis[z] == "Práce navyše") {
+                    var vykazPrac = novyVykazPrac(zakazka, popis[z]);
+                    nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);
+                    spocitajVykaz(vykazPrac, "Práce sadzby");
+                } else {
+                    var vykazPrac = novyVykazPrac(zakazka, popis[z]);
+                    nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);
+                    spocitajVykaz(vykazPrac, "Práce");
+                }
+            }
+        } else if (typ == "Hodinovka") {
+            // to array
+            var dielyPonuky = cp.field("Diely cenovej ponuky hzs");
+            for (var d = 0; d < dielyPonuky.length; d++) {
+                popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
+            }
+            if (cp.field("+Položky")) {
+                var polozkyPonuky = cp.field("Práce");             // Položky ponuky: napr.field("Záhradnícke práce")
+                var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
+                nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce");
             }
+            // genruj jednotlivé výkazy diel = popis
+            for (var p = 0; p < popis.length; p++) {
+                var polozkyPonuky = cp.field(popis[p]);             // Položky ponuky: napr.field("Záhradnícke práce")
+                var vykazPrac = novyVykazPrac(zakazka, popis[p]); // vytvorí nový výkaz prác a skoíruje položky
+                
+                nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
+                spocitajVykaz(vykazPrac, "Práce sadzby");
+            }
+        } else {
+            message("Nie je jasný typ účtovania zákazky")
         }
-    } else if (typ == "Hodinovka") {
-        // to array
-        var dielyPonuky = cp.field("Diely cenovej ponuky hzs");
-        for (var d = 0; d < dielyPonuky.length; d++) {
-            popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
-        }
-        if (cp.field("+Položky")) {
-            var polozkyPonuky = cp.field("Práce");             // Položky ponuky: napr.field("Záhradnícke práce")
-            var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
-            nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
-            spocitajVykaz(vykazPrac, "Práce");
-        }
-        // genruj jednotlivé výkazy diel = popis
-        for (var p = 0; p < popis.length; p++) {
-            var polozkyPonuky = cp.field(popis[p]);             // Položky ponuky: napr.field("Záhradnícke práce")
-            var vykazPrac = novyVykazPrac(zakazka, popis[p]); // vytvorí nový výkaz prác a skoíruje položky
-
-            nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
-            spocitajVykaz(vykazPrac, "Práce sadzby");
-        }
-    } else {
-        message("Nie je jasný typ účtovania zákazky")
+        return vykazPrac; //suma
+        
+    } catch (error) {
+        message("generujVykazyPrac 23.01 error\n" + error);
+        
     }
-    return vykazPrac; //suma
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
     vykazPrac.set("Práce", null);
