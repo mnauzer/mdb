@@ -112,7 +112,7 @@ const getAppSeason = season =>{
 }
 
 const checkDebug = appSeason => {
-    let scriptName = "checkDebug 0.23.01"
+    let scriptName = "checkDebug 0.23.02"
     try {
         return getAppSeason.field("debug");
     } catch (error) {
