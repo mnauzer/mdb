@@ -147,7 +147,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = (en, sezona) => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.17";
+    let scriptName ="novaZakazka 0.23.18";
     try {
         let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
         let lib = libByName(db.name);
@@ -195,23 +195,8 @@ const novaZakazka = (en, sezona) => {
         let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
         return zakazka;
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = datum;
-        newError["library"] = "libCenovePonuky.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["line"] = error.lineNumber;
-
-        newError["variables"] = 
-        + "en: " + en.name + "\n"
-        + "season: " + sezona + "\n"
-        + "db: " + db.name + "\n"
-        + "lib: " + lib.tilte + "\n"
-        + "zakazka: " + zakazka.name ; 
-        errorLib.create(newError);
+        let variables = '"en: " + en.name + "\n" + "season: " + sezona + "\n" + "db: " + db.name + "\n" + "lib: " + lib.tilte + "\n" + "zakazka: " + zakazka.name"'
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 // VÝDAJKY
