@@ -154,12 +154,14 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.15";
+    let scriptName ="novaZakazka 0.23.16";
     try {
-        message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
-        let db = getAppSeasonDB(sezona, "Zákazky");
-        let lib = libByName("Zákazky");
+        let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
+        let lib = libByName(db.name);
+        if (checkDebug(sezona)){
+            message(scriptName);
+        } 
         en.set(SEASON, sezona);
         // inicializácia
         let datum = new Date();
@@ -209,12 +211,13 @@ const novaZakazka = en => {
         newError["library"] = "libCenovePonuky.js";
         newError["script"] = scriptName;
         newError["error"] = error;
+        newError["line"] = error.lineNumber;
+
         newError["variables"] = 
-        "line: " + error.lineNumber + "\n" ; 
         + "en: " + en.name + "\n"
         + "season: " + sezona + "\n"
         + "db: " + db.name + "\n"
-        + "lib: " + lib.tilte + "\n"; 
+        + "lib: " + lib.tilte + "\n"
         + "zakazka: " + zakazka.name ; 
         errorLib.create(newError);
     }
