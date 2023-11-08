@@ -185,7 +185,7 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
-    let scriptName = "getNewNumber v.0.23.06"
+    let scriptName = "getNewNumber v.0.23.07"
     try {
         message( scriptName + "\n" 
         +  lib.title + "|"
@@ -219,8 +219,13 @@ const getNewNumber = (lib, season, isPrefix) => {
             let errorLib = libByName("APP Errors");
             var newError = new Object();
             newError["date"] = new Date();
+            newError["library"] = "dbKrajinka.js";
             newError["script"] = scriptName;
             newError["error"] = error;
+            newError["variables"] = 
+            "lib: " + lib + "\n" 
+            + "season: " + season + "\n"
+            + "isPrefix: " + isPrefix;
             errorLib.create(newError);
         
     }
