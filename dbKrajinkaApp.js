@@ -186,7 +186,11 @@ const getLinkIndex = (link, remoteLinks) => {
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
     try {
-        message("getNewNumber v.0.23.11");
+        message("getNewNumber v.0.23.11\n" 
+        + "lib: " + lib + "\n"
+        + "season: " + season + "\n"
+        + "isPrefix: " + isPrefix + "\n"
+        );
         var test = lib.attr("test");
         let dbID =  lib.field("ID");
         let prefix = lib.field("Prefix");
