@@ -91,18 +91,35 @@ const lteClear = (lte) => {
 }
 // get db from APP library
 const findAppDB = season => {
-    var entry = libByName(DB_ASSISTENT).find(season)[0];
-    var databazy = entry.field("Databázy");
-    var name = lib().title;
-    //message("Databáz 2: " + databazy.length);
-    // var filteredDB = databazy.filter(fltrDb)[0];
-    for (var v = 0;v < databazy.length; v++) {
-        if (databazy[v].field("Názov") == name) {
-            return databazy[v];
+    let scriptName = "findAppDB 0.23.01"
+    try {
+        message(scriptName + "\n" )
+        var entry = libByName(DB_ASSISTENT).find(season)[0];
+        var databazy = entry.field("Databázy");
+        var name = lib.title;
+        //message("Databáz 2: " + databazy.length);
+        // var filteredDB = databazy.filter(fltrDb)[0];
+        for (var v = 0;v < databazy.length; v++) {
+            if (databazy[v].field("Názov") == name) {
+                return databazy[v];
+            }
         }
+        message("Databáza nenájdená v sezóne " + season);
+        return 0;
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        var newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "dbKrajinka.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "entry: " + entry.name + "\n" 
+        + "season: " + season + "\n"
+        errorLib.create(newError);
     }
-    message("Databáza nenájdená v sezóne " + season);
-    return 0;
     }
 // get db from APP library
 const findAppDBbyName = (season, libTitle) => {
