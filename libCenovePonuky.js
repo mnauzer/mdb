@@ -94,19 +94,19 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.05";
+    let scriptName ="generujZakazku 0.23.06";
     try {
         let sezona = cp.field(SEASON) || getSeason(cp);
-        var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
-        var stav = cp.field("Stav cenovej ponuky");
-        var typ = cp.field("Typ cenovej ponuky");
+        let en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
+        let stav = cp.field("Stav cenovej ponuky");
+        let typ = cp.field("Typ cenovej ponuky");
         if (checkDebug(sezona)){
             message(scriptName);
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
-            let lib = libByName(appDB.name);
+            let lib = libByName(DB_ZAKAZKY);
             if (checkDebug(sezona)){
                 message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
@@ -147,9 +147,10 @@ const generujZakazku = cp => {
             novaZakazka["Účtovanie DPH"] = uctovanieDPH;
             novaZakazka["Účtovanie zákazky"] = typ;
             lib.create(novaZakazka);
-            
+
             // inicializácia premennej z posledného záznamu
-            let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
+            let zakazka = en.linksFrom(DB_ZAKAZKY, "Cenová ponuka")[0];
+            message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
             
             // generovanie výkazov
             if (typ == "Hodinovka") {
@@ -176,7 +177,6 @@ const generujZakazku = cp => {
             }
     
             cp.set("Stav cenovej ponuky", "Uzavretá");
-            message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
         } else if (!zakazka) {
             message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(NUMBER));
         } else {
