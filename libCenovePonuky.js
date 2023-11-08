@@ -2,8 +2,10 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-const thisLibName = "libCenovePonuky.js"
+let thisLibName = "libCenovePonuky.js"
+
 const prepocetPonuky = en => {
+    let scriptName ="prepocetPonuky 0.23.01";
 try {
     message("Prepočítavam...")
     // inicializácia
@@ -89,43 +91,45 @@ try {
     message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
     
     } catch (error) {
-    
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.07";
+    let scriptName ="generujZakazku 0.23.08";
     try {
-        let sezona = cp.field(SEASON) || getSeason(cp);
+        var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
-        let en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
-        let stav = cp.field("Stav cenovej ponuky");
+        var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
+        var stav = cp.field("Stav cenovej ponuky");
         if (checkDebug(sezona)){
             message(scriptName);
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            let appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
-            let lib = libByName(DB_ZAKAZKY);
+            var appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
+            var lib = libByName(DB_ZAKAZKY);
             if (checkDebug(sezona)){
                 message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
             if (typ == "Hodinovka") {
-                let dielyZakazky = en.field("Diely cenovej ponuky hzs");
+                var dielyZakazky = en.field("Diely cenovej ponuky hzs");
                 if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
                     typZakazky = "Servis AZS";
                 } else {
                     typZakazky = "Údržba";
                 }
             } else {
-                let dielyZakazky = en.field("Diely cenovej ponuky");
+                var dielyZakazky = en.field("Diely cenovej ponuky");
                 typZakazky = "Realizácia";
             }
             // vytvorenie nového objektu
+            message("Generujem novú zákazku...")
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
-            novaZakazka["Typ zákazky"] = ""; // hardcoded
+            novaZakazka["Typ zákazky"] = typZakazky; 
             novaZakazka[NUMBER] = getNewNumber(appDB, sezona, true);
             novaZakazka["Klient"] = cp.field("Klient")[0];
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
