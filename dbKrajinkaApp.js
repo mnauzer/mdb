@@ -273,7 +273,7 @@ const getNewNumber = (db, season, isPrefix) => {
             return number;
             
         } catch (error) {
-            var variables = ""
+            var variables = ``
             errorGen(thisLibName, scriptName, error, variables);
         
         }
