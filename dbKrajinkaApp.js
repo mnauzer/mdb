@@ -244,10 +244,10 @@ const errorGen = (library, script, error, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.16"
+    let scriptName = "getNewNumber 0.23.17"
     try {
         if (checkDebug(season)){
-            message( scriptName + "\n" 
+            message("DBGMSG: " + scriptName + "\n" 
             +  db.name + " | " +  season + " | " +  isPrefix );
         } 
         let test = db.attr("test");
@@ -268,9 +268,9 @@ const getNewNumber = (db, season, isPrefix) => {
         }
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-            message("Záznam číslo: " + number);
+            message("Vygenerované číslo: " + number);
             db.setAttr(lastNumAttr, lastNum + 1);
-            return [number];
+            return number;
             
         } catch (error) {
             var variables = ""
