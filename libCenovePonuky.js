@@ -109,12 +109,11 @@ const generujZakazku = cp => {
             // vygenerovať novú zákazku
             var appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
             var lib = libByName(DB_ZAKAZKY);
-            var typ = cp.field("Typ cenovej ponuky");
             if (checkDebug(sezona)){
                 message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
-            if (typ == "Hodinovka") {
+            if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 var dielyZakazky = en.field("Diely cenovej ponuky hzs");
                 if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
                     typZakazky = "Servis AZS";
