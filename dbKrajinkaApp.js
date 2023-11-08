@@ -185,7 +185,7 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
-    let scriptName = "getNewNumber v.0.23.04"
+    let scriptName = "getNewNumber v.0.23.05"
     try {
         message( scriptName + "\n" 
         +  lib.title + "|"
