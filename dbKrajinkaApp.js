@@ -185,12 +185,12 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
-    let scriptName = "getNewNumber v.0.23.03"
+    let scriptName = "getNewNumber v.0.23.04"
     try {
         message( scriptName + "\n" 
-        + "lib: " + lib.title + "|"
-        + "season: " + season + "|"
-        + "isPrefix: " + isPrefix  
+        +  lib.title + "|"
+        +  season + "|"
+        +  isPrefix  
         );
         var test = lib.attr("test");
         let dbID =  lib.field("ID");
