@@ -7,7 +7,7 @@
 var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
 var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
-let thisLibName = "dbKrajinkaApp.js"
+var thisLibName = "dbKrajinkaApp.js"
 // example:
 // var entries = lib().entries();
 // var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
@@ -100,7 +100,7 @@ const getAppSeason = season =>{
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
     } catch (error) {
-        let variables = ""
+        var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
 }
@@ -110,7 +110,7 @@ const checkDebug = season => {
     try {
         return getAppSeason(season).field("debug");
     } catch (error) {
-        let variables = ""
+        var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
 }
@@ -123,7 +123,7 @@ const getAppSeasonDatabases = season => {
         } 
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        let variables = ""
+        var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
 }
@@ -141,7 +141,7 @@ const getAppSeasonDB = (season, dbName) => {
             }
         }
     } catch (error) {
-        let variables = ""
+        var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
 }
@@ -163,7 +163,7 @@ const findAppDB = (season, name) => {
         message("Databáza " + name + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
-        let variables = ""
+        var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
     }
