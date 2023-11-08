@@ -153,7 +153,6 @@ const getAppSeasonDB = (season, dbName) => {
     let scriptName = "getAppSeasonDB 0.23.02"
     try {
         let databases = getAppSeasonDatabases(season);
-        let db = null;
         for (let i=0; i<databases.length; i++) {
             if (databases[i].name == dbName){
                 return databases[i];
@@ -281,14 +280,14 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.10"
+    let scriptName = "getNewNumber 0.23.11"
     try {
         message( scriptName + "\n" 
         +  db + "|"
         +  season + "|"
         +  isPrefix  
         );
-        var test = db.attr("test");
+        let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
         let attr = "posledné číslo";
@@ -313,15 +312,16 @@ const getNewNumber = (db, season, isPrefix) => {
             message("ERROR: " + scriptName + "\n" 
             + error  );
             let errorLib = libByName("APP Errors");
-            var newError = new Object();
+            let newError = new Object();
             newError["date"] = new Date();
             newError["library"] = "dbKrajinka.js";
             newError["script"] = scriptName;
             newError["error"] = error;
             newError["variables"] = 
-            "db: " + db + "\n" 
+            "line: " + error.lineNumber + "\n";
+            + "db: " + db + "\n" 
             + "season: " + season + "\n"
-            + "isPrefix: " + isPrefix;
+            + "isPrefix: " + isPrefix + "\n"
             errorLib.create(newError);
         
         }
