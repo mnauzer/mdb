@@ -184,69 +184,91 @@ const generujZakazku = cp => {
 // VÝDAJKY
 // generuj nové výdajky
 const generujVydajkyMaterialu = zakazka => {
-    //inicializácia
-
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var typ = cp.field("Typ cenovej ponuky");
-    var popis = [];
-    // ak je zákazka hodinovka
-    if (typ == "Hodinovka") {
-        if (cp.field("+Materiál")) {
-            popis.push("Materiál");
-        }
-        var materialPonuky = cp.field("Materiál");
-        var vydajka = novaVydajkaMaterialu(zakazka, popis);
-        nalinkujPolozkyPonukyMaterial(vydajka, materialPonuky);
-        spocitajVykaz(vydajka, "Materiál");
+    var scriptName ="generujVydajkyMaterialu 0.23.01";
+    try {
+        var sezona = zakazka.field(SEASON);
+        if (checkDebug(sezona)){
+            message("DBGMSG: " + scriptName);
+        } 
+        var cp = zakazka.field("Cenová ponuka")[0];
+        var popis = [];
+        // ak je zákazka hodinovka
+        if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
+            if (cp.field("+Materiál")) {
+                popis.push("Materiál");
+            }
+            var materialPonuky = cp.field("Materiál");
+            var vydajka = novaVydajkaMaterialu(zakazka, popis);
+            linkItems(vydajka, materialPonuky);
+            spocitajVykaz(vydajka, "Materiál");
 
         // ak je zákazka položky
-    } else if (typ == "Položky") {
-        var dielyPonuky = cp.field("Diely cenovej ponuky");
-        for (var d = 0; d < dielyPonuky.length; d++) {
-            popis.push(dielyPonuky[d] + " materiál");
-            if (dielyPonuky[d] == "Výsadby") {
-                popis.push("Rastliny");
-            }
+        } else (cp.field("Typ cenovej ponuky") == "Položky") {
+            var dielyPonuky = cp.field("Diely cenovej ponuky");
+            for (var d = 0; d < dielyPonuky.length; d++) {
+                popis.push(dielyPonuky[d] + " materiál")
+                if (dielyPouky[d] == "Výsadby") {
+                    popis.push("Rastliny");
+                }
+            };
+            for (var p = 0; p < popis.length; p++) {
+                var materialPonuky = cp.field(popis[p])
+                var vydajka = novaVydajkaMaterialu(zakazka, popis[p]);
+                linkItems(vydajka, materialPonuky);
+                spocitajVykaz(vydajka, "Materiál");
+            };
         }
-        for (var p = 0; p < popis.length; p++) {
-            var materialPonuky = cp.field(popis[p]);
-            var vydajka = novaVydajkaMaterialu(zakazka, popis[p]);
-            nalinkujPolozkyPonukyMaterial(vydajka, materialPonuky);
-            spocitajVykaz(vydajka, "Materiál");
-        }
-
-    } else { }
-    return vydajka;
+        return vydajka;
+    } catch (error) {
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
+    }
 }
 const novaVydajkaMaterialu = (zakazka, popis) => {
-    // inicializácia
-    var lib = libByName("Výdajky");
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field(SEASON);
-    var cislo = noveCislo(sezona, DB_VYKAZY_MATERIALU, 0, 3);
-    // vytvoriť novú výdajku
-    var novaVydajka = new Object();
-    novaVydajka[NUMBER] = cislo;
-    novaVydajka["Dátum"] = datum;
-    novaVydajka["Popis"] = popis;
-    novaVydajka["s DPH"] = true; // hardcoded
-    novaVydajka["Ceny počítať"] = "Z cenovej ponuky";
-    novaVydajka["Vydané"] = "Zákazka";
-    novaVydajka["Zákazka"] = zakazka;
-    novaVydajka["Cenová ponuka"] = cp;
-    novaVydajka[SEASON] = sezona;
-    lib.create(novaVydajka);
-    var vydajkaMaterialu = lib.find(cislo)[0];
-
-    return vydajkaMaterialu;
+    var scriptName ="novaVydajkaMaterialu 0.23.01";
+    try {
+        var sezona = zakazka.field(SEASON);
+        if (checkDebug(sezona)){
+            message("DBGMSG: " + scriptName);
+        } 
+        var lib = libByName(DB_VYKAZY_MATERIALU);
+        var appDB = getAppSeasonDB(sezona, DB_VYKAZY_MATERIALU);
+        // vytvoriť novú výdajku
+        var novaVydajka = new Object();
+        novaVydajka[NUMBER] = getNewNumber(appDB, sezona, false);
+        novaVydajka["Dátum"] = zakazka.field("Dátum");
+        novaVydajka["Popis"] = popis;
+        novaVydajka["s DPH"] = true; // hardcoded
+        novaVydajka["Ceny počítať"] = "Z cenovej ponuky";
+        novaVydajka["Vydané"] = "Zákazka";
+        novaVydajka["Zákazka"] = zakazka;
+        novaVydajka["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
+        novaVydajka[SEASON] = sezona;
+        lib.create(novaVydajka);
+        var vydajkaMaterialu = lib.find(cislo)[0];
+        return vydajkaMaterialu; 
+    } catch (error) {
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
+    }
 }
-const nalinkujPolozkyPonukyMaterial = (vydajkaMaterialu, polozky) => {
-    vydajkaMaterialu.set("Materiál", null);
-    for (var p = 0; p < polozky.length; p++) {
-        vydajkaMaterialu.link("Materiál", polozky[p]);
-        vydajkaMaterialu.field("Materiál")[p].setAttr("množstvo z cp", polozky[p].attr("množstvo"));
-        vydajkaMaterialu.field("Materiál")[p].setAttr("cena", polozky[p].attr("cena"));
+
+const linkItems = (vydajkaMaterialu, polozky) => {
+    var scriptName ="linkItems 0.23.01";
+    try {
+        var sezona = zakazka.field(SEASON);
+        if (checkDebug(sezona)){
+            message("DBGMSG: " + scriptName);
+        } 
+        vydajkaMaterialu.set("Materiál", null);
+        for (var p = 0; p < polozky.length; p++) {
+            vydajkaMaterialu.link("Materiál", polozky[p]);
+            vydajkaMaterialu.field("Materiál")[p].setAttr("množstvo z cp", polozky[p].attr("množstvo"));
+            vydajkaMaterialu.field("Materiál")[p].setAttr("cena", polozky[p].attr("cena"));
+        }
+    } catch (error) {
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 
