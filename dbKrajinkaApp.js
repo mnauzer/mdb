@@ -109,7 +109,7 @@ const findAppDB = season => {
             return databazy[v];
         }
     }
-    message("Databáza nenájdená v APP");
+    message("Databáza nenájdená v sezóne " + season);
     return 0;
     }
 // get db from APP library
@@ -185,10 +185,10 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.08"
+    let scriptName = "getNewNumber 0.23.09"
     try {
         message( scriptName + "\n" 
-        +  lib.title + "|"
+        +  lib + "|"
         +  season + "|"
         +  isPrefix  
         );

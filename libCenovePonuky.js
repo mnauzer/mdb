@@ -144,7 +144,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="ponukaNovaZakazka  23.05";
+    let scriptName ="ponukaNovaZakazka 0.23.05";
     try {
         message(scriptName);
         var sezona = en.field(SEASON) || getSeason(en);
@@ -304,7 +304,7 @@ const novyVykazPrac = (zakazka, popis) => {
     return vykazPrac;
 }
 const generujVykazyPrac = zakazka => {
-    let scriptName = "generujVykazyPrac 23.02";
+    let scriptName = "generujVykazyPrac 0.23.02";
     try {
         message(scriptName);
         var cp = zakazka.field("Cenová ponuka")[0];
