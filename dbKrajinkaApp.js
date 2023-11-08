@@ -7,6 +7,7 @@
 var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
 var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
+let thisLibName = "dbKrajinkaApp.js"
 // example:
 // var entries = lib().entries();
 // var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
@@ -91,67 +92,51 @@ const lteClear = (lte) => {
 }
 
 const getAppSeason = season =>{
-    let scriptName = "getAppSeason 0.23.01"
+    let scriptName = "getAppSeason 0.23.02"
     try {
-        message (scriptName);
+        if (checkDebug(season)){
+            message("DBGMSG: " + scriptName);
+        } 
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "dbKrajinkaApp.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "line: " + error.lineNumber + "\n"
-        errorLib.create(newError);
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 
 const checkDebug = season => {
-    let scriptName = "checkDebug 0.23.03"
+    let scriptName = "checkDebug 0.23.04"
     try {
+        if (checkDebug(season)){
+            message("DBGMSG: " + scriptName);
+        } 
         return getAppSeason(season).field("debug");
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "dbKrajinkaApp.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "line: " + error.lineNumber + "\n"
-        errorLib.create(newError); 
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 
 const getAppSeasonDatabases = season => {
-    let scriptName = "getAppSeasonDatabases 0.23.02"
+    let scriptName = "getAppSeasonDatabases 0.23.03"
     try {
+        if (checkDebug(season)){
+            message("DBGMSG: " + scriptName);
+        } 
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "dbKrajinkaApp.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "line: " + error.lineNumber + "\n"
-        errorLib.create(newError);
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 
 const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 0.23.02"
+    let scriptName = "getAppSeasonDB 0.23.03"
     try {
+        if (checkDebug(season)){
+            message("DBGMSG: " + scriptName);
+        } 
         let databases = getAppSeasonDatabases(season);
         for (let i=0; i<databases.length; i++) {
             if (databases[i].name == dbName){
@@ -159,30 +144,20 @@ const getAppSeasonDB = (season, dbName) => {
             }
         }
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "dbKrajinkaApp.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "line: " + error.lineNumber + "\n"
-        errorLib.create(newError);
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 
 // get db from APP library
 const findAppDB = (season, name) => {
-    let scriptName = "findAppDB 0.23.04"
+    let scriptName = "findAppDB 0.23.05"
     try {
-        message(scriptName)
+        if (checkDebug(season)){
+            message("DBGMSG: " + scriptName);
+        } 
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         let databazy = entry.field("Databázy");
-        message(entry.name)
-        //message("Databáz 2: " + databazy.length);
-        // var filteredDB = databazy.filter(fltrDb)[0];
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") === name) {
                 return databazy[v];
@@ -191,20 +166,8 @@ const findAppDB = (season, name) => {
         message("Databáza " + name + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        var newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "dbKrajinka.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "entry: " + entry.name + "\n" 
-        + "season: " + season + "\n"
-        + "name: " + name + "\n"
-        + "line: " + error.lineNumber + "\n"
-        errorLib.create(newError);
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
     }
 // get db from APP library

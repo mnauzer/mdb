@@ -96,14 +96,14 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.08";
+    var scriptName ="generujZakazku 0.23.09";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
         var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
         if (checkDebug(sezona)){
-            message(scriptName);
+            message("DBGMSG: " + scriptName);
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
