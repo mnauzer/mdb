@@ -94,12 +94,12 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.06";
+    let scriptName ="generujZakazku 0.23.07";
     try {
         let sezona = cp.field(SEASON) || getSeason(cp);
+        cp.set(SEASON, sezona);
         let en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         let stav = cp.field("Stav cenovej ponuky");
-        let typ = cp.field("Typ cenovej ponuky");
         if (checkDebug(sezona)){
             message(scriptName);
         } 
@@ -110,14 +110,6 @@ const generujZakazku = cp => {
             if (checkDebug(sezona)){
                 message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
-            en.set(SEASON, sezona);
-            // inicializácia polí
-            let datum = new Date();
-            let typZakazky = ""; //harcoded
-            let cislo = getNewNumber(appDB, sezona, true);
-            let klient = en.field("Klient")[0];
-            let miesto = en.field("Miesto realizácie")[0];
-            let nazovZakazky = en.field("Popis cenovej ponuky");
             // vyber diely zákazky podľa typu cp
             if (typ == "Hodinovka") {
                 let dielyZakazky = en.field("Diely cenovej ponuky hzs");
@@ -130,26 +122,24 @@ const generujZakazku = cp => {
                 let dielyZakazky = en.field("Diely cenovej ponuky");
                 typZakazky = "Realizácia";
             }
-            let uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
-            // hlavička a základné nastavenia
             // vytvorenie nového objektu
-            let novaZakazka = new Object();
-            novaZakazka["Dátum"] = datum;
-            novaZakazka["Typ zákazky"] = typZakazky;
-            novaZakazka[NUMBER] = cislo;
-            novaZakazka["Klient"] = klient;
-            novaZakazka["Miesto"] = miesto;
-            novaZakazka["Stav zákazky"] = "Čakajúca";
-            novaZakazka["Názov zákazky"] = nazovZakazky;
+            var novaZakazka = new Object();
+            novaZakazka[DATE] = new Date();
+            novaZakazka["Typ zákazky"] = ""; // hardcoded
+            novaZakazka[NUMBER] = getNewNumber(appDB, sezona, true);
+            novaZakazka["Klient"] = cp.field("Klient")[0];
+            novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
+            novaZakazka["Stav zákazky"] = "Čakajúca"; // hardcoded
+            novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky");
             novaZakazka["Diely zákazky"] = dielyZakazky.join();
-            novaZakazka["Cenová ponuka"] = en;
+            novaZakazka["Cenová ponuka"] = cp;
             novaZakazka[SEASON] = sezona;
-            novaZakazka["Účtovanie DPH"] = uctovanieDPH;
-            novaZakazka["Účtovanie zákazky"] = typ;
+            novaZakazka["Účtovanie DPH"] = ["Práce", "Materiál", "Doprava", "Mechanizácia"]; // hardcoded
+            novaZakazka["Účtovanie zákazky"] = cp.field("Typ cenovej ponuky");
             lib.create(novaZakazka);
 
             // inicializácia premennej z posledného záznamu
-            let zakazka = en.linksFrom(DB_ZAKAZKY, "Cenová ponuka")[0];
+            var zakazka = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka")[0];
             message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
             
             // generovanie výkazov
