@@ -296,9 +296,9 @@ const errorGen = (library, script, error, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.15"
+    let scriptName = "getNewNumber 0.23.16"
     try {
-        if (checkDebug(sezona)){
+        if (checkDebug(season)){
             message( scriptName + "\n" 
             +  db.name + " | " +  season + " | " +  isPrefix );
         } 
