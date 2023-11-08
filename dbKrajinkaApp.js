@@ -91,12 +91,13 @@ const lteClear = (lte) => {
 }
 // get db from APP library
 const findAppDB = season => {
-    let scriptName = "findAppDB 0.23.01"
+    let scriptName = "findAppDB 0.23.02"
     try {
-        message(scriptName + "\n" )
+        message(scriptName)
         var entry = libByName(DB_ASSISTENT).find(season)[0];
         var databazy = entry.field("Databázy");
         var name = lib.title;
+        message(entry.name)
         //message("Databáz 2: " + databazy.length);
         // var filteredDB = databazy.filter(fltrDb)[0];
         for (var v = 0;v < databazy.length; v++) {
@@ -104,7 +105,7 @@ const findAppDB = season => {
                 return databazy[v];
             }
         }
-        message("Databáza nenájdená v sezóne " + season);
+        message("Databáza " + name + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
         message("ERROR: " + scriptName + "\n" 
