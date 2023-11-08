@@ -94,9 +94,6 @@ const lteClear = (lte) => {
 const getAppSeason = season =>{
     let scriptName = "getAppSeason 0.23.02"
     try {
-        if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
-        } 
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
     } catch (error) {
@@ -118,9 +115,6 @@ const checkDebug = season => {
 const getAppSeasonDatabases = season => {
     let scriptName = "getAppSeasonDatabases 0.23.03"
     try {
-        if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
-        } 
         return getAppSeason(season).field("Databázy")
     } catch (error) {
         var variables = ""
@@ -131,9 +125,6 @@ const getAppSeasonDatabases = season => {
 const getAppSeasonDB = (season, dbName) => {
     let scriptName = "getAppSeasonDB 0.23.03"
     try {
-        if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
-        } 
         let databases = getAppSeasonDatabases(season);
         for (let i=0; i<databases.length; i++) {
             if (databases[i].name == dbName){
@@ -150,9 +141,6 @@ const getAppSeasonDB = (season, dbName) => {
 const findAppDB = (season, name) => {
     let scriptName = "findAppDB 0.23.05"
     try {
-        if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
-        } 
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
