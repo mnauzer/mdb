@@ -94,41 +94,58 @@ try {
 }
 
 const generujZakazku = cp => {
-    var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
-    var stav = cp.field("Stav cenovej ponuky");
-    var typ = cp.field("Typ cenovej ponuky");
-    if (stav == "Schválená") {
-        // vygenerovať novú zákazku
-        en = ponukaNovaZakazka(cp);
-        if (typ == "Hodinovka") {
-            generujVykazyPrac(en);
-            //generujVykazDopravy(en)
-            if (cp.field("+Materiál")) {
-                generujVydajkyMaterialu(en);
-            }
-            if (cp.field("+Mechanizácia")) {
-                message("generujVykazStrojov...");
-                generujVykazStrojov(en);
-            }
-            if (cp.field("+Položky")) {
-                message("generujVykazyPrac...");
+    let scriptName ="generujZakazku 0.23.01";
+    try {
+        message(scriptName);
+        var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
+        var stav = cp.field("Stav cenovej ponuky");
+        var typ = cp.field("Typ cenovej ponuky");
+        if (stav == "Schválená") {
+            // vygenerovať novú zákazku
+            en = ponukaNovaZakazka(cp);
+            if (typ == "Hodinovka") {
                 generujVykazyPrac(en);
+                //generujVykazDopravy(en)
+                if (cp.field("+Materiál")) {
+                    generujVydajkyMaterialu(en);
+                }
+                if (cp.field("+Mechanizácia")) {
+                    message("generujVykazStrojov...");
+                    generujVykazStrojov(en);
+                }
+                if (cp.field("+Položky")) {
+                    message("generujVykazyPrac...");
+                    generujVykazyPrac(en);
+                }
+            } else if (typ == "Položky") {
+                message("generujVykazyPrac2...");
+                generujVykazyPrac(en);
+                message("generujVydajkyMaterialu...");
+                generujVydajkyMaterialu(en);
+            } else {
+                message("Nie je jasný typ zákazky");
             }
-        } else if (typ == "Položky") {
-            message("generujVykazyPrac2...");
-            generujVykazyPrac(en);
-            message("generujVydajkyMaterialu...");
-            generujVydajkyMaterialu(en);
+    
+            cp.set("Stav cenovej ponuky", "Uzavretá");
+            message("Zákazka č." + en.field(NUMBER) + " bola vygenerovaná");
+        } else if (!en) {
+            message("Z cenovej ponuky už je vytvorená zákazk č." + en.field(NUMBER));
         } else {
-            message("Nie je jasný typ zákazky");
+            message("Cenová ponuka musí byť schválená");
         }
-
-        cp.set("Stav cenovej ponuky", "Uzavretá");
-        message("Zákazka č." + en.field(NUMBER) + " bola vygenerovaná");
-    } else if (!en) {
-        message("Z cenovej ponuky už je vytvorená zákazk č." + en.field(NUMBER));
-    } else {
-        message("Cenová ponuka musí byť schválená");
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = datum;
+        newError["library"] = "libCenovePonuky.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "cp: " + cp.name + "\n"
+        "en: " + en.name + "\n"
+        errorLib.create(newError);
     }
 
     // End of file: 08.03.2022, 08:01
