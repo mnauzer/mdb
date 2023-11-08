@@ -111,7 +111,7 @@ const generujZakazku = cp => {
                 message(scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
             en.set(SEASON, sezona);
-            // inicializácia
+            // inicializácia polí
             let datum = new Date();
             let typZakazky = ""; //harcoded
             let cislo = getNewNumber(appDB, sezona, true);
@@ -132,6 +132,7 @@ const generujZakazku = cp => {
             }
             let uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
             // hlavička a základné nastavenia
+            // vytvorenie nového objektu
             let novaZakazka = new Object();
             novaZakazka["Dátum"] = datum;
             novaZakazka["Typ zákazky"] = typZakazky;
@@ -146,7 +147,11 @@ const generujZakazku = cp => {
             novaZakazka["Účtovanie DPH"] = uctovanieDPH;
             novaZakazka["Účtovanie zákazky"] = typ;
             lib.create(novaZakazka);
+            
+            // inicializácia premennej z posledného záznamu
             let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
+            
+            // generovanie výkazov
             if (typ == "Hodinovka") {
                 generujVykazyPrac(zakazka);
                 //generujVykazDopravy(zakazka)
