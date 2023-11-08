@@ -90,13 +90,12 @@ const lteClear = (lte) => {
     }
 }
 // get db from APP library
-const findAppDB = season => {
-    let scriptName = "findAppDB 0.23.02"
+const findAppDB = (season, name) => {
+    let scriptName = "findAppDB 0.23.04"
     try {
         message(scriptName)
-        var entry = libByName(DB_ASSISTENT).find(season)[0];
-        var databazy = entry.field("Databázy");
-        var name = lib.title;
+        let entry = libByName(DB_ASSISTENT).find(season)[0];
+        let databazy = entry.field("Databázy");
         message(entry.name)
         //message("Databáz 2: " + databazy.length);
         // var filteredDB = databazy.filter(fltrDb)[0];
@@ -119,6 +118,8 @@ const findAppDB = season => {
         newError["variables"] = 
         "entry: " + entry.name + "\n" 
         + "season: " + season + "\n"
+        + "name: " + name + "\n"
+        + "line: " + error.line + "\n"
         errorLib.create(newError);
     }
     }
