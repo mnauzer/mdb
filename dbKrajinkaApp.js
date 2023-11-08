@@ -106,7 +106,7 @@ const getAppSeason = season =>{
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "line: " + error.line + "\n"
+        "line: " + error.lineNumber + "\n"
         errorLib.create(newError);
     }
 }
@@ -125,7 +125,7 @@ const checkDebug = appSeason => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "line: " + error.line + "\n"
+        "line: " + error.lineNumber + "\n"
         errorLib.create(newError); 
     }
 }
@@ -144,7 +144,7 @@ const getAppSeasonDatabases = season => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "line: " + error.line + "\n"
+        "line: " + error.lineNumber + "\n"
         errorLib.create(newError);
     }
 }
@@ -163,7 +163,7 @@ const getAppSeasonDB = (season, dbName) => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "line: " + error.line + "\n"
+        "line: " + error.lineNumber + "\n"
         errorLib.create(newError);
     }
 }
@@ -198,7 +198,7 @@ const findAppDB = (season, name) => {
         "entry: " + entry.name + "\n" 
         + "season: " + season + "\n"
         + "name: " + name + "\n"
-        + "line: " + error.line + "\n"
+        + "line: " + error.lineNumber + "\n"
         errorLib.create(newError);
     }
     }
