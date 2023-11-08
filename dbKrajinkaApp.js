@@ -296,14 +296,16 @@ const errorGen = (library, script, error, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.13"
+    let scriptName = "getNewNumber 0.23.15"
     try {
-        message( scriptName + "\n" 
-        +  db.name + " | " +  season + " | " +  isPrefix );
+        if (checkDebug(sezona)){
+            message( scriptName + "\n" 
+            +  db.name + " | " +  season + " | " +  isPrefix );
+        } 
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
-        let attr = "posledné číslo";
+        let lastNumAttr = "posledné číslo";
         let attrTrailing = db.attr("trailing digit");
         let attrSeasonTrim = db.attr("season trim");
         if (test) {
@@ -311,7 +313,7 @@ const getNewNumber = (db, season, isPrefix) => {
             prefix = "T!" + db.field("Prefix");
             attr =  "číslo testu";
         };
-        let lastNum = db.attr(attr);
+        let lastNum = db.attr(lastNumAttr);
         let reservedNum = db.attr("rezervované číslo");
         if (lastNum == reservedNum) {
             lastNum += 1;
@@ -319,6 +321,7 @@ const getNewNumber = (db, season, isPrefix) => {
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
             message("Záznam číslo: " + number);
+            db.setAttr(lastNumAttr, lastNum + 1);
             return [number, lastNum];
             
         } catch (error) {

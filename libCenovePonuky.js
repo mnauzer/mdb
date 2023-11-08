@@ -147,12 +147,12 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = (en, sezona) => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.18";
+    let scriptName ="novaZakazka 0.23.19";
     try {
         let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
         let lib = libByName(db.name);
         if (checkDebug(sezona)){
-            message(scriptName);
+            message(scriptName + "\n" + db.name + " | " + lib.title);
         } 
         en.set(SEASON, sezona);
         // inicializácia
@@ -195,7 +195,7 @@ const novaZakazka = (en, sezona) => {
         let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
         return zakazka;
     } catch (error) {
-        let variables = '"en: " + en.name + "\n" + "season: " + sezona + "\n" + "db: " + db.name + "\n" + "lib: " + lib.tilte + "\n" + "zakazka: " + zakazka.name"'
+        let variables = `"en: " + en.name + "\n" + "season: " + sezona + "\n" + "db: " + db.name + "\n" + "lib: " + lib.tilte + "\n" + "zakazka: " + zakazka.name"`
         errorGen(thisLibName, scriptName, error, variables);
     }
 }
