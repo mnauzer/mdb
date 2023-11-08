@@ -3,14 +3,6 @@
 // Dátum:                   06.03.2022
 // Popis:                   knižnica krajinkaLib
 
-const verziaKrajinkaLib = () => {
-    var result = "";
-    var nazov = "libKrajinkaApp";
-    var verzia = "0.23.05";
-    result = nazov + " " + verzia;
-    return result;
-}
-
 // HELPERS
 var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
