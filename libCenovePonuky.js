@@ -154,12 +154,12 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="ponukaNovaZakazka 0.23.09";
+    let scriptName ="ponukaNovaZakazka 0.23.10";
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
         let db = findAppDB(sezona);
-        let lib = libByName(db);
+        let lib = libByName(db.name);
         en.set(SEASON, sezona);
         // inicializácia
         var datum = new Date();
