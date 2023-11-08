@@ -210,12 +210,12 @@ const novaZakazka = en => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "en: " + en.name + "\n"
+        "line: " + error.lineNumber + "\n" ; 
+        + "en: " + en.name + "\n"
         + "season: " + sezona + "\n"
         + "db: " + db.name + "\n"
-        + "lib: " + lib.tilte ; 
+        + "lib: " + lib.tilte + "\n"; 
         + "zakazka: " + zakazka.name ; 
-        + "line: " + error.line ; 
         errorLib.create(newError);
     }
 }
@@ -328,7 +328,7 @@ const novyVykazPrac = (zakazka, popis) => {
         newError["variables"] = 
         "zakazka: " + zakazka;
         "popis: " + popis;
-        "line: " + error.line;
+        "line: " + error.lineNumber;
         errorLib.create(newError);
     }
 }
@@ -394,7 +394,7 @@ const generujVykazyPrac = zakazka => {
         newError["error"] = error;
         newError["variables"] = 
         "zakazka: " + zakazka;
-        "line: " + error.line;
+        "line: " + error.lineNumber;
         errorLib.create(newError);
     }
 }
