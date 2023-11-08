@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-
+const thisLibName = "libCenovePonuky.js"
 const prepocetPonuky = en => {
 try {
     message("Prepočítavam...")
@@ -94,7 +94,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.03";
+    let scriptName ="generujZakazku 0.23.04";
     try {
         let sezona = cp.field(SEASON) || getSeason(cp);
         var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
@@ -137,19 +137,8 @@ const generujZakazku = cp => {
             message("Cenová ponuka musí byť schválená");
         }
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = datum;
-        newError["library"] = "libCenovePonuky.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["line"] = error.lineNumber;
-        newError["variables"] = 
-        "cp: " + cp.name + "\n"
-        "en: " + en.name + "\n"
-        errorLib.create(newError);
+        let variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 
     // End of file: 08.03.2022, 08:01

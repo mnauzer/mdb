@@ -278,6 +278,22 @@ const getLinkIndex = (link, remoteLinks) => {
     // message(index);
     return index;
 }
+
+// generátor chyby
+const errorGen = (library, script, error, variables) => {
+    message("ERROR: " + script + "\n" 
+    + error  );
+    let errorLib = libByName("APP Errors");
+    let newError = new Object();
+    newError["date"] = datum;
+    newError["library"] = library;
+    newError["script"] = scriptName;
+    newError["error"] = error;
+    newError["line"] = error.lineNumber;
+    newError["variables"] = variables;
+    errorLib.create(newError);
+}
+
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
     let scriptName = "getNewNumber 0.23.13"
