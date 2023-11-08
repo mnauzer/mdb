@@ -96,7 +96,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.10";
+    var scriptName ="generujZakazku 0.23.11";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
@@ -110,7 +110,7 @@ const generujZakazku = cp => {
             var appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
             var lib = libByName(DB_ZAKAZKY);
             if (checkDebug(sezona)){
-                message(scriptName + "\n" + appDB.name + " | " + lib.title);
+                message("DBGMSG: " + scriptName + "\n" + appDB.name + " | " + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
