@@ -216,6 +216,13 @@ const getNewNumber = (lib, season, isPrefix) => {
         } catch (error) {
             message("ERROR: " + scriptName + "\n" 
             + error  );
+            let errorLib = libByName("APP Errors");
+            var newError = new Object();
+            newError["date"] = new Date();
+            newError["script"] = scriptName;
+            newError["error"] = error;
+            errorLib.create(newError);
+        
     }
 };
 //
