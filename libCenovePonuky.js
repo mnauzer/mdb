@@ -203,7 +203,7 @@ const generujVydajkyMaterialu = zakazka => {
             spocitajVykaz(vydajka, "Materiál");
 
         // ak je zákazka položky
-        } else (cp.field("Typ cenovej ponuky") == "Položky") {
+        } else if (cp.field("Typ cenovej ponuky") == "Položky") {
             var dielyPonuky = cp.field("Diely cenovej ponuky");
             for (var d = 0; d < dielyPonuky.length; d++) {
                 popis.push(dielyPonuky[d] + " materiál")
