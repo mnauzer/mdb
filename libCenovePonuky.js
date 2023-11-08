@@ -104,11 +104,9 @@ const generujZakazku = cp => {
         // vygenerovať novú zákazku
         en = ponukaNovaZakazka(cp);
         if (typ == "Hodinovka") {
-           
             generujVykazyPrac(en);
             //generujVykazDopravy(en)
             if (cp.field("+Materiál")) {
-                message("generujVydajkyMaterialu...");
                 generujVydajkyMaterialu(en);
             }
             if (cp.field("+Mechanizácia")) {
@@ -143,7 +141,7 @@ const generujZakazku = cp => {
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
     try {
-        message("ponukaNovaZakazka v 23.11...");
+        message("ponukaNovaZakazka v 23.01...");
         var sezona = en.field(SEASON) || getSeason(en);
         en.set(SEASON, sezona);
         var lib = libByName(DB_ZAKAZKY);
@@ -364,21 +362,27 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
 // vytvorí nový záznam
 
 const generujVykazStrojov = zakazka => {
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var strojePolozky = cp.field(FIELD_STROJE);
-    // vytvoriť nový výkaz
-    var vykazStrojov = novyVykazStrojov(zakazka);
-    nalinkujPolozkyStrojov(vykazStrojov, strojePolozky);          // nalinkuje atribúty na položky
-    spocitajVykaz(vykazStrojov, FIELD_STROJE);                      // výkaz , názov poľa položiek
-
-    return vykazStrojov;
-}
-const nalinkujPolozkyStrojov = (vykaz, polozky) => {
-    vykaz.set(FIELD_STROJE, null);
-    for (var m = 0; m < polozky.length; m++) {
-        vykaz.link(FIELD_STROJE, polozky[m]);
-        vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
-        vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+    try {
+        message("generujVykazStrojov 23.01");
+    } catch (error) {
+        message("generujVykazStrojov 23.01\n" + error);
+        
+        var cp = zakazka.field("Cenová ponuka")[0];
+        var strojePolozky = cp.field(FIELD_STROJE);
+        // vytvoriť nový výkaz
+        var vykazStrojov = novyVykazStrojov(zakazka);
+        nalinkujPolozkyStrojov(vykazStrojov, strojePolozky);          // nalinkuje atribúty na položky
+        spocitajVykaz(vykazStrojov, FIELD_STROJE);                      // výkaz , názov poľa položiek
+        
+        return vykazStrojov;
+    }
+    const nalinkujPolozkyStrojov = (vykaz, polozky) => {
+        vykaz.set(FIELD_STROJE, null);
+        for (var m = 0; m < polozky.length; m++) {
+            vykaz.link(FIELD_STROJE, polozky[m]);
+            vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
+            vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+        }
     }
 }
 
