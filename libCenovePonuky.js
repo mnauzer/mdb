@@ -144,15 +144,17 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
+    let scriptName ="ponukaNovaZakazka  23.05";
     try {
-        message("ponukaNovaZakazka v 23.03");
+        message(scriptName);
         var sezona = en.field(SEASON) || getSeason(en);
+        let db = findAppDB(sezona);
         en.set(SEASON, sezona);
         var lib = libByName("Zákazky");
         // inicializácia
         var datum = new Date();
         var typZakazky = ""; //harcoded
-        var cislo = getNewNumber(lib, sezona, true);
+        var cislo = getNewNumber(db, sezona, true);
         var klient = en.field("Klient")[0];
         var miesto = en.field("Miesto realizácie")[0];
         var nazovZakazky = en.field("Popis cenovej ponuky");
@@ -189,7 +191,19 @@ const ponukaNovaZakazka = en => {
         var zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
         return zakazka;
     } catch (error) {
-        message("Chyba\n" + error)
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "libCenovePonuky.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "lib: " + lib + "\n" 
+        + "season: " + season + "\n"
+        + "isPrefix: " + isPrefix;
+        errorLib.create(newError);
     }
 }
 // VÝDAJKY
@@ -290,8 +304,9 @@ const novyVykazPrac = (zakazka, popis) => {
     return vykazPrac;
 }
 const generujVykazyPrac = zakazka => {
+    let scriptName = "generujVykazyPrac 23.02";
     try {
-        message("generujVykazyPrac 23.01");
+        message(scriptName);
         var cp = zakazka.field("Cenová ponuka")[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
@@ -340,8 +355,19 @@ const generujVykazyPrac = zakazka => {
         return vykazPrac; //suma
         
     } catch (error) {
-        message("generujVykazyPrac 23.01 error\n" + error);
-        
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "libCenovePonuky.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+        newError["variables"] = 
+        "lib: " + lib + "\n" 
+        + "season: " + season + "\n"
+        + "isPrefix: " + isPrefix;
+        errorLib.create(newError);
     }
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {

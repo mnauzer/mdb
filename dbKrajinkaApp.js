@@ -185,7 +185,7 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 // generuje nové číslo záznamu
 const getNewNumber = (lib, season, isPrefix) => {
-    let scriptName = "getNewNumber v.0.23.07"
+    let scriptName = "getNewNumber 0.23.08"
     try {
         message( scriptName + "\n" 
         +  lib.title + "|"
@@ -228,7 +228,7 @@ const getNewNumber = (lib, season, isPrefix) => {
             + "isPrefix: " + isPrefix;
             errorLib.create(newError);
         
-    }
+        }
 };
 //
 // TRIGGERS open and save entry
@@ -248,10 +248,10 @@ const setEntry = (en, isPrefix) => {
     var db = findAppDB(season);
     if (db){
         var locked = db.attr("locked");
-    if (locked) {
-        message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-        exit();
-    } else {
+        if (locked) {
+            message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
+            exit();
+        } else {
         //message(db.field("Názov") + ", "+ season);
         let number = [];
         var isNumber = en.field(NUMBER);
@@ -285,13 +285,30 @@ const saveEntry = en => {
 //
 // ACTIONS library
 const unlockDB = en => {
-    message("Unlock DB v.0.23.01");
-    let season = getSeason(en);
-    let db = findAppDB(season);
-    db.setAttr("rezervované číslo", null);
-    db.setAttr("locked", false);
-    db.setAttr("locked reason", null);
-    return true;
+    let scriptName = "unlockDB 0.23.02";
+    try {
+        message(scriptName);
+        let season = getSeason(en);
+        let db = findAppDB(season);
+        db.setAttr("rezervované číslo", null);
+        db.setAttr("locked", false);
+        db.setAttr("locked reason", null);
+        return true;
+    } catch (error) {
+        message("ERROR: " + scriptName + "\n" 
+        + error  );
+        let errorLib = libByName("APP Errors");
+        let newError = new Object();
+        newError["date"] = new Date();
+        newError["library"] = "dbKrajinka.js";
+        newError["script"] = scriptName;
+        newError["error"] = error;
+    // newError["variables"] = 
+    // "lib: " + lib + "\n" 
+    // + "season: " + season + "\n"
+    // + "isPrefix: " + isPrefix;
+        errorLib.create(newError);
+    }
 }
 const setID = entries => {
     message("Set ID v.0.23.08");
