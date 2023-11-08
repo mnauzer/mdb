@@ -13,7 +13,6 @@ try {
     //spôsob účtovania doprav
 
     var uctoDopravy = en.field("Účtovanie dopravy");
-    var cislo = en.field(NUMBER);
     var pracaCelkom = 0;
     var strojeCelkom = 0;
     var materialCelkom = 0;
@@ -169,10 +168,9 @@ const generujZakazku = cp => {
             } else {
                 message("Nie je jasný typ zákazky");
             }
-    
             cp.set("Stav cenovej ponuky", "Uzavretá");
         } else if (!zakazka) {
-            message("Z cenovej ponuky už je vytvorená zákazk č." + zakazka.field(NUMBER));
+            message("Z cenovej ponuky už je vytvorená zákazka č." + zakazka.field(NUMBER));
         } else {
             message("Cenová ponuka musí byť schválená");
         }
@@ -180,65 +178,8 @@ const generujZakazku = cp => {
         let variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
-
-    // End of file: 08.03.2022, 08:01
 }
 
-// vygeneruj nový záznam zákazky
-const novaZakazka = (en, sezona) => {
-    // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.19";
-    try {
-        let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
-        let lib = libByName(db.name);
-        if (checkDebug(sezona)){
-            message(scriptName + "\n" + db.name + " | " + lib.title);
-        } 
-        en.set(SEASON, sezona);
-        // inicializácia
-        let datum = new Date();
-        let typZakazky = ""; //harcoded
-        let cislo = getNewNumber(db, sezona, true);
-        let klient = en.field("Klient")[0];
-        let miesto = en.field("Miesto realizácie")[0];
-        let nazovZakazky = en.field("Popis cenovej ponuky");
-        let typ = en.field("Typ cenovej ponuky");
-        // vyber diely zákazky podľa typu cp
-        if (typ == "Hodinovka") {
-            let dielyZakazky = en.field("Diely cenovej ponuky hzs");
-            if (mclCheck(dielyZakazky, "Servis zavlažovania")) {
-                typZakazky = "Servis AZS";
-            } else {
-                typZakazky = "Údržba";
-            }
-        } else {
-            let dielyZakazky = en.field("Diely cenovej ponuky");
-            typZakazky = "Realizácia";
-        }
-        let uctovanieDPH = ["Práce", "Materiál", "Doprava", "Mechanizácia"];
-        // hlavička a základné nastavenia
-        let novaZakazka = new Object();
-        novaZakazka["Dátum"] = datum;
-        novaZakazka["Typ zákazky"] = typZakazky;
-        novaZakazka[NUMBER] = cislo;
-        novaZakazka["Klient"] = klient;
-        novaZakazka["Miesto"] = miesto;
-        novaZakazka["Stav zákazky"] = "Čakajúca";
-        novaZakazka["Názov zákazky"] = nazovZakazky;
-        novaZakazka["Diely zákazky"] = dielyZakazky.join();
-        novaZakazka["Cenová ponuka"] = en;
-        novaZakazka[SEASON] = sezona;
-        novaZakazka["Účtovanie DPH"] = uctovanieDPH;
-        novaZakazka["Účtovanie zákazky"] = typ;
-        lib.create(novaZakazka);
-    
-        let zakazka = en.linksFrom("Zákazky", "Cenová ponuka")[0];
-        return zakazka;
-    } catch (error) {
-        let variables = `"en: " + en.name + "\n" + "season: " + sezona + "\n" + "db: " + db.name + "\n" + "lib: " + lib.tilte + "\n" + "zakazka: " + zakazka.name"`
-        errorGen(thisLibName, scriptName, error, variables);
-    }
-}
 // VÝDAJKY
 // generuj nové výdajky
 const generujVydajkyMaterialu = zakazka => {
