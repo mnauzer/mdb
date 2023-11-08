@@ -137,7 +137,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const ponukaNovaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="ponukaNovaZakazka 0.23.05";
+    let scriptName ="ponukaNovaZakazka 0.23.06";
     try {
         message(scriptName);
         var sezona = en.field(SEASON) || getSeason(en);
@@ -193,9 +193,7 @@ const ponukaNovaZakazka = en => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "lib: " + db + "\n" 
-        + "season: " + sezona + "\n"
-        + "isPrefix: " + isPrefix;
+        "en: " + en.name; 
         errorLib.create(newError);
     }
 }
@@ -297,7 +295,7 @@ const novyVykazPrac = (zakazka, popis) => {
     return vykazPrac;
 }
 const generujVykazyPrac = zakazka => {
-    let scriptName = "generujVykazyPrac 0.23.02";
+    let scriptName = "generujVykazyPrac 0.23.03";
     try {
         message(scriptName);
         var cp = zakazka.field("Cenová ponuka")[0];
@@ -357,9 +355,7 @@ const generujVykazyPrac = zakazka => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "lib: " + lib + "\n" 
-        + "season: " + season + "\n"
-        + "isPrefix: " + isPrefix;
+        "zakazka: " + zakazka;
         errorLib.create(newError);
     }
 }
