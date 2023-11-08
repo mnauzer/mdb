@@ -94,15 +94,18 @@ try {
 }
 
 const generujZakazku = cp => {
-    let scriptName ="generujZakazku 0.23.02";
+    let scriptName ="generujZakazku 0.23.03";
     try {
-        message(scriptName);
+        let sezona = cp.field(SEASON) || getSeason(cp);
         var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
         var typ = cp.field("Typ cenovej ponuky");
+        if (checkDebug(sezona)){
+            message(scriptName);
+        } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            en = novaZakazka(cp);
+            en = novaZakazka(cp, sezona);
             if (typ == "Hodinovka") {
                 generujVykazyPrac(en);
                 //generujVykazDopravy(en)
@@ -142,9 +145,10 @@ const generujZakazku = cp => {
         newError["library"] = "libCenovePonuky.js";
         newError["script"] = scriptName;
         newError["error"] = error;
+        newError["line"] = error.lineNumber;
         newError["variables"] = 
-        "cp: " + cp + "\n"
-        "en: " + en + "\n"
+        "cp: " + cp.name + "\n"
+        "en: " + en.name + "\n"
         errorLib.create(newError);
     }
 
@@ -152,11 +156,10 @@ const generujZakazku = cp => {
 }
 
 // vygeneruj nový záznam zákazky
-const novaZakazka = en => {
+const novaZakazka = (en, sezona) => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.16";
+    let scriptName ="novaZakazka 0.23.17";
     try {
-        let sezona = en.field(SEASON) || getSeason(en);
         let db = getAppSeasonDB(sezona, DB_ZAKAZKY);
         let lib = libByName(db.name);
         if (checkDebug(sezona)){
