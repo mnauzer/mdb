@@ -96,7 +96,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.12";
+    var scriptName ="generujZakazku 0.23.13";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
@@ -131,6 +131,7 @@ const generujZakazku = cp => {
             novaZakazka["Typ zákazky"] = typZakazky; 
             novaZakazka[NUMBER] = getNewNumber(appDB, sezona, true);
             novaZakazka["Klient"] = cp.field("Klient")[0];
+            novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ' - ' + cp.field("Miesto realizácie")[0].field("Lokalita");
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
             novaZakazka["Stav zákazky"] = "Čakajúca"; // hardcoded
             novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky");

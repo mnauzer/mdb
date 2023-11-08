@@ -270,7 +270,7 @@ const getNewNumber = (db, season, isPrefix) => {
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
             message("Záznam číslo: " + number);
             db.setAttr(lastNumAttr, lastNum + 1);
-            return [number, lastNum];
+            return [number];
             
         } catch (error) {
             var variables = ""
