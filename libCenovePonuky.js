@@ -154,7 +154,7 @@ const generujZakazku = cp => {
 // vygeneruj nový záznam zákazky
 const novaZakazka = en => {
     // nastaviť sezónu
-    let scriptName ="novaZakazka 0.23.12";
+    let scriptName ="novaZakazka 0.23.13";
     try {
         message(scriptName);
         let sezona = en.field(SEASON) || getSeason(en);
@@ -164,7 +164,7 @@ const novaZakazka = en => {
         // inicializácia
         var datum = new Date();
         var typZakazky = ""; //harcoded
-        var cislo = getNewNumber(db, sezona, true);
+        var cislo = getNewNumber(db.name, sezona, true);
         var klient = en.field("Klient")[0];
         var miesto = en.field("Miesto realizácie")[0];
         var nazovZakazky = en.field("Popis cenovej ponuky");
