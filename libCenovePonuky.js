@@ -2,13 +2,6 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-const verziaCenovePonuky = () => {
-    var result = "";
-    var nazov = "libCenovePonuky";
-    var verzia = "0.23.01";
-    result = nazov + " " + verzia;
-    return result;
-}
 
 const prepocetPonuky = en => {
 try {
@@ -149,8 +142,8 @@ const ponukaNovaZakazka = en => {
         message(scriptName);
         var sezona = en.field(SEASON) || getSeason(en);
         let db = findAppDB(sezona);
+        let lib = libByName(db);
         en.set(SEASON, sezona);
-        var lib = libByName("Zákazky");
         // inicializácia
         var datum = new Date();
         var typZakazky = ""; //harcoded
@@ -200,8 +193,8 @@ const ponukaNovaZakazka = en => {
         newError["script"] = scriptName;
         newError["error"] = error;
         newError["variables"] = 
-        "lib: " + lib + "\n" 
-        + "season: " + season + "\n"
+        "lib: " + db + "\n" 
+        + "season: " + sezona + "\n"
         + "isPrefix: " + isPrefix;
         errorLib.create(newError);
     }
