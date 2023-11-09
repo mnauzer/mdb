@@ -96,8 +96,9 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.27";
+    var scriptName ="generujZakazku 23.0.29";
     let variables = "Záznam: " + cp.name + "\n"
+    let parameters = "cp: " + cp.name + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
         cancel();
@@ -113,10 +114,6 @@ const generujZakazku = cp => {
             let zakazky = libByName(DB_ZAKAZKY);
             let appDB = getAppSeasonDB(season, zakazky.title, DB_CENOVE_PONUKY);
             let newNumber = getNewNumber(appDB, season, true);
-            //DEBUG
-            if (checkDebug(season)){
-                message("DBG: " + scriptName + "\n" + zakazky.title);
-            } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
@@ -185,7 +182,9 @@ const generujZakazku = cp => {
             exit();
         }
     } catch (error) {
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        cancel();
+        exit();
     }
 }
 
@@ -329,9 +328,6 @@ const generujVykazyPrac = zakazka => {
     }
     try {
         var season = zakazka.field(SEASON);
-        if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
-        } 
         var cp = zakazka.field("Cenová ponuka")[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];

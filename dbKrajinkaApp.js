@@ -308,18 +308,16 @@ const logGen = (database, library, script, log, variables, parameters) => {
 }
 
 // generuje nové číslo záznamu
-const getNewNumber = (db, season, isPrefix) => {
+const getNewNumber = (db, season, isPrefix, database) => {
     let scriptName = "getNewNumber 23.0.25"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
+    let parameters = "db: " + db.name + "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + database;
     if(db == undefined || db == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters );
         cancel();
         exit();
     }
     try {
-        if (checkDebug(season)){
-            message("DBG: " + scriptName + "\n" + db.name + "|" + season +" | " + isPrefix);
-        } 
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
@@ -343,7 +341,7 @@ const getNewNumber = (db, season, isPrefix) => {
             return number;
             
         } catch (error) {
-            errorGen(db.name, "dbKrajinkaApp.js", scriptName, error, variables);
+            errorGen(db.name, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
         }
 };
 //
