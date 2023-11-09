@@ -8,6 +8,7 @@ let FIELD_POPIS = "Popis";
 
 
 
+
 //
 let FIELD_PRACE = "Práce";
 let FIELD_MATERIAL = "Materiál";
@@ -92,20 +93,23 @@ let ATTDC_EMPLOYEES = "Zamestnanci";
 
 
 // # SPOLOČNÉ POLIA
-let NUMBER = "Číslo"
-let DATE = "Dátum"
-let NICK = "Nick"
-let VIEW = "view";
-let STATUS = "Stav";
-let DBG = "debug";
-let SEASON = "sezóna"
-let LAST_NUM = "lastnum";
-let APP_SEASON = "Sezóna"; // linked field
-let CR = "zapísal";
-let CR_DATE = "dátum zápisu";
-let MOD = "upravil";
-let MOD_DATE = "dátum úpravy";
-let ENT_COLOR = "farba záznamu";
-let BKG_COLOR = "farba pozadia";
+const NUMBER = "Číslo"
+const DATE = "Dátum"
+const NICK = "Nick"
+const VIEW = "view";
+const STATUS = "Stav";
+const DBG = "debug";
+const SEASON = "sezóna"
+const LAST_NUM = "lastnum";
+const APP_SEASON = "Sezóna"; // linked field
+const CR = "zapísal";
+const CR_DATE = "dátum zápisu";
+const MOD = "upravil";
+const MOD_DATE = "dátum úpravy";
+const ENT_COLOR = "farba záznamu";
+const BKG_COLOR = "farba pozadia";
+const FIELD_VIEW_EDIT= "Editácia";
+const FIELD_VIEW_PRINT= "Tlač";
+const FIELD_VIEW_DEBUG= "Debug";
 
 

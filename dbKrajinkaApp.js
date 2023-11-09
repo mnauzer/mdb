@@ -281,43 +281,56 @@ const getNewNumber = (db, season, isPrefix) => {
 //
 // TRIGGERS open and save entry
 const setView = (en, view) => {
-    if (view === "Editácia") {
-        en.set(VIEW, "Editácia");
-    } else if (view ==="Tlač") {
-        en.set(VIEW, "Tlač");
-        en.set(DBG, false);
+    let scriptName = "setView 0.23.01"
+    try {
+        if (view === FIELD_VIEW_EDIT) {
+            en.set(VIEW, FIELD_VIEW_EDIT);
+        } else if (view === FIELD_VIEW_PRINT) {
+            en.set(VIEW, FIELD_VIEW_PRINT);
+            en.set(DBG, false);
+        }
+        
+    } catch (error) {
+        var variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 const setEntry = (en, isPrefix) => {
-    message("Nastavujem záznam...");
-    setView(en, "Editácia");
-    var prfx = isPrefix || false;
-    var season = getSeason(en);
-    var db = findAppDB(season);
-    if (db){
-        var locked = db.attr("locked");
-        if (locked) {
-            message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-            exit();
-        } else {
-        //message(db.field("Názov") + ", "+ season);
-        let number = [];
-        var isNumber = en.field(NUMBER);
-        if (isNumber > null) {
-            number.push(en.field(NUMBER));
-        } else {
-            number = getNewNumber( db, season, prfx);
+   
+    try {
+        message("Nastavujem záznam...");
+        setView(en, FIELD_VIEW_EDIT);
+        var prfx = isPrefix || false;
+        var season = getSeason(en);
+        var db = findAppDB(season);
+        if (db){
+            var locked = db.attr("locked");
+            if (locked) {
+                message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
+                exit();
+            } else {
+            //message(db.field("Názov") + ", "+ season);
+            let number = [];
+            var isNumber = en.field(NUMBER);
+            if (isNumber > null) {
+                number.push(en.field(NUMBER));
+            } else {
+                number = getNewNumber( db, season, prfx);
+            }
+            // nastav základné polia
+            en.set(SEASON, season);
+            en.set(NUMBER, number[0]);
+            db.setAttr("rezervované číslo", number[1]);
+            db.setAttr("locked", true);
+            db.setAttr("locked reason", "editácia užívateľom ");
+            en.set(LAST_NUM, number[1]);
         }
-        // nastav základné polia
-        en.set(SEASON, season);
-        en.set(NUMBER, number[0]);
-        db.setAttr("rezervované číslo", number[1]);
-        db.setAttr("locked", true);
-        db.setAttr("locked reason", "editácia užívateľom ");
-        en.set(LAST_NUM, number[1]);
-    }
-    } else {
-        message("Databáza nenájdená v APP")
+        } else {
+            message("Databáza nenájdená v APP")
+        }
+    } catch (error) {
+        var variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 const saveEntry = en => {

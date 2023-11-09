@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-let thisLibName = "libCenovePonuky.js"
+var thisLibName = "libCenovePonuky.js"
 
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 0.23.01";
@@ -131,7 +131,7 @@ const generujZakazku = cp => {
             novaZakazka["Typ zákazky"] = typZakazky; 
             novaZakazka[NUMBER] = getNewNumber(appDB, sezona, true);
             novaZakazka["Klient"] = cp.field("Klient")[0];
-            novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ' - ' + cp.field("Miesto realizácie")[0].field("Lokalita");
+            novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita");
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
             novaZakazka["Stav zákazky"] = "Čakajúca"; // hardcoded
             novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky");
