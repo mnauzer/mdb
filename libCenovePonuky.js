@@ -314,9 +314,9 @@ const novyVykazPrac = (zakazka, popis) => {
     }
 }
 const generujVykazyPrac = zakazka => { 
-    let scriptName = "generujVykazyPrac 23.0.08";
+    let scriptName = "generujVykazyPrac 23.0.09";
     let variables = "Zákazka: " +  zakazka.name + "\n"
-    let parameters = "zakazka: " +  zakazka.name + "\n"
+    let parameters = "zakazka: " +  zakazka + "\n"
     if(zakazka === undefined){
         msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables, parameters );
         cancel();
@@ -353,9 +353,7 @@ const generujVykazyPrac = zakazka => {
                 popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
             }
             if (cp.field("+Položky")) {
-                if (cp.field("Práce") != undefined) {
-                    var polozkyPonuky = cp.field("Práce") 
-                }           // Položky ponuky: napr.field("Záhradnícke práce")
+                    var polozkyPonuky = cp.field("Položky") 
                 var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
                 nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce");

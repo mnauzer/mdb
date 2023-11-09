@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, database) => {
 }
 
 const getAppSeasonDB = (season, dbName, database, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.15"
+    let scriptName = "getAppSeasonDB 23.1.01"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
     let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database + "\ninputScript: " + inputScript; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
@@ -210,7 +210,7 @@ const pullAddress = klient => {
 
 const getSeason = (en, database, inputScript) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.11 / " + inputScript;
+    let scriptName = "getSeason 23.1.01";
     let variables = "Záznam: " + en.name;
     let parameters = "en: " + en.name + "\ndatabase: " + database + "\ninputScript: " + inputScript;
     if(en == undefined || en == null){
