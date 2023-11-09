@@ -254,7 +254,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
 }
 
 const linkItems = (vydajkaMaterialu, polozky) => {
-    var scriptName ="linkItems 0.23.01";
+    var scriptName ="linkItems 23.0.02";
     try {
         var season = vydajkaMaterialu.field(SEASON);
         if (checkDebug(sezona)){
