@@ -96,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.25";
+    var scriptName ="generujZakazku 23.0.27";
     let variables = "Záznam: " + cp.name + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
@@ -108,14 +108,10 @@ const generujZakazku = cp => {
         var season = getSeason(cp, DB_CENOVE_PONUKY);
       //  var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
-        //DEBUG
-        if (checkDebug(season)){
-            message("DBG: " + scriptName);
-        } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let zakazky = libByName(DB_ZAKAZKY);
-            let appDB = getAppSeasonDB(season, zakazky.title);
+            let appDB = getAppSeasonDB(season, zakazky.title, DB_CENOVE_PONUKY);
             let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
             if (checkDebug(season)){
@@ -149,7 +145,7 @@ const generujZakazku = cp => {
             novaZakazka[SEASON] = season;
             novaZakazka["Účtovanie DPH"] = ["Práce", "Materiál", "Doprava", "Mechanizácia"]; // hardcoded
             novaZakazka["Účtovanie zákazky"] = cp.field("Typ cenovej ponuky");
-            lib.create(novaZakazka);
+            zakazky.create(novaZakazka);
 
             // inicializácia premennej z posledného záznamu
             var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];

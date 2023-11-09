@@ -131,11 +131,11 @@ const getAppSeasonDatabases = season => {
     }
 }
 
-const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 23.0.08"
+const getAppSeasonDB = (season, dbName, database) => {
+    let scriptName = "getAppSeasonDB 23.0.09"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables );
         cancel();
         exit();
     }
@@ -146,11 +146,11 @@ const getAppSeasonDB = (season, dbName) => {
             if (databases[i].name == dbName){
                 return databases[i];
             }
-        message("Databáza " + dbName + " nenájdená v sezóne " + season);
+        msgGen(database, "dbKrajinkaApp.js", scriptName, '"Databáza " + dbName + " nenájdená v sezóne " + season', variables );
         return 0;
         }
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
