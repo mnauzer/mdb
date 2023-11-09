@@ -99,12 +99,12 @@ const checkDebug = season => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
-const getAppSeason = (season, database) => {
+const getAppSeason = (season, mementoLibrary) => {
     let scriptName = "getAppSeason 23.0.05"
     let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\ndatabase: " + database
+    let parameters = "season: " + season +  "\ndatabase: " + mementoLibrary
     if(season === undefined || season == null){
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
+        msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
         cancel();
         exit();
     }
@@ -112,32 +112,32 @@ const getAppSeason = (season, database) => {
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 
-const getAppSeasonDatabases = (season, database) => {
+const getAppSeasonDatabases = (season, mementoLibrary) => {
     let scriptName = "getAppSeasonDatabases 23.0.04"
     let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\ndatabase: " + database
+    let parameters = "season: " + season +  "\ndatabase: " + mementoLibrary
     try {
         if(season == undefined){
-            msgGen(database, "dbKrajinkaApp.js", scriptName, "", variables, parameters );
+            msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "", variables, parameters );
             cancel();
             exit();
         }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 
-const getAppSeasonDB = (season, dbName, database, inputScript) => {
+const getAppSeasonDB = (season, dbName, mementoLibrary, inputScript) => {
     let scriptName = "getAppSeasonDB 23.1.01"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
-    let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database + "\ninputScript: " + inputScript; 
+    let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + mementoLibrary + "\ninputScript: " + inputScript; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables, parameters );
+        msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables, parameters );
         cancel();
         exit();
     }
@@ -147,30 +147,30 @@ const getAppSeasonDB = (season, dbName, database, inputScript) => {
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == dbName) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
-                logGen(database, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
+                logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
                 return databazy[v];
             }
         }
         let logTxt = "Databáza " + dbName +" nenájdená v sezóne " + season
-        logGen(database, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
+        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
         return 0;
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 
 // get db from APP library
-const findAppDB = (season, dbName, database) => {
+const findAppDB = (season, dbName, mementoLibrary) => {
     let scriptName = "findAppDB 23.0.08"
     let variables = "Záznam: " + en.name  + "\n"
-    let parameters = "season: " + season  + "\ndbName: " + dbName + "\ndatabase: " + database
+    let parameters = "season: " + season  + "\ndbName: " + dbName + "\ndatabase: " + mementoLibrary
     if(season === undefined || season == null){
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
+        msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
         cancel();
         exit();
     }
     try {
-        let entry = libByName(database).find(season)[0];
+        let entry = libByName(mementoLibrary).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == dbName) {
@@ -180,7 +180,7 @@ const findAppDB = (season, dbName, database) => {
         message("Databáza " + dbName + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 // get db from APP library
@@ -208,13 +208,13 @@ const pullAddress = klient => {
     return adresa;
 };
 
-const getSeason = (en, database, inputScript) => {
+const getSeason = (en, mementoLibrary, inputScript) => {
     // get entryDefault season from creation date
     let scriptName = "getSeason 23.1.02";
     let variables = "Záznam: " + en.name;
-    let parameters = "en: " + en + "\ndatabase: " + database + "\ninputScript: " + inputScript;
+    let parameters = "en: " + en + "\ndatabase: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(en == undefined || en == null){
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters );
+        msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters );
         cancel();
         exit();
     }
@@ -223,10 +223,10 @@ const getSeason = (en, database, inputScript) => {
         en.set(SEASON, season)
         variables += "\nSezóna: " + season + "\n";
      //   let logMsg = "Setting season field to " + season;
-     //  logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
+     //  logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
         return season;
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 const lastValid = (links, date, valueField, dateField) => {
@@ -265,14 +265,14 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 
 // generátor chyby
-const errorGen = (database, library, script, error, variables, parameters) => {
+const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
     message("ERR: " + script + "\n" + error);
     let errorLib = libByName("APP Errors");
     let newError = new Object();
     newError["type"] = "error";
     newError["date"] = new Date();
     newError["library"] = library;
-    newError["database"] = database;
+    newError["memento library"] = mementoLibrary;
     newError["script"] = script;
     newError["text"] = error;
     newError["line"] = error.lineNumber;
@@ -281,14 +281,14 @@ const errorGen = (database, library, script, error, variables, parameters) => {
     errorLib.create(newError);
 }
 // generátor message
-const msgGen = (database, library, script, msg, variables, parameters) => {
+const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => {
     message("MSG: " + script + "\n" + msg);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
     newMsg["type"] = "message";
     newMsg["date"] = new Date();
     newMsg["library"] = library;
-    newMsg["database"] = database;
+    newMsg["memento library"] = mementoLibrary;
     newMsg["script"] = script;
     newMsg["text"] = msg;
     newMsg["variables"] = variables;
@@ -296,14 +296,14 @@ const msgGen = (database, library, script, msg, variables, parameters) => {
     errorLib.create(newMsg);
 }
 // generátor log
-const logGen = (database, library, script, log, variables, parameters) => {
+const logGen = (mementoLibrary, library, script, log, variables, parameters) => {
    // message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
     newLog["type"] = "log";
     newLog["date"] = new Date();
     newLog["library"] = library;
-    newLog["database"] = database;
+    newLog["memento library"] = mementoLibrary;
     newLog["script"] = script;
     newLog["text"] = log;
     newLog["variables"] = variables;
@@ -312,10 +312,10 @@ const logGen = (database, library, script, log, variables, parameters) => {
 }
 
 // generuje nové číslo záznamu
-const getNewNumber = (db, season, isPrefix, database, inputScript) => {
+const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
     let scriptName = "getNewNumber 23.1.04"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
-    let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + database + "\ninputScript: " + inputScript;
+    let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters );
         cancel();
@@ -344,11 +344,11 @@ const getNewNumber = (db, season, isPrefix, database, inputScript) => {
             
             variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr(lastNumAttr);
           //  let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
-          //  logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
+          //  logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
             return number;
             
         } catch (error) {
-            errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+            errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
         }
 };
 //
@@ -371,39 +371,41 @@ const setView = (en, view) => {
 const setEntry = (en, isPrefix) => {
     let scriptName = "setEntry 23.0.01"
     let variables = ""
+    let parameters = "en: " + en +  "\nisPrefix: " + isPrefix 
     try {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
         var prfx = isPrefix || false;
         var season = getSeason(en);
-        var db = getAppSeasonDB(season, lib.name);
-        if (db){
-            var locked = db.attr("locked");
+        let appDB = getAppSeasonDB(season, lib().title, mementoLibrary, scriptName);
+        if (appDB){
+            var locked = appDB.attr("locked");
             if (locked) {
-                message("Databáza je zamknutá \nDôvod: "+ db.attr("locked reason"));
-                exit();
+                message("Databáza je zamknutá \nDôvod: "+ appDB.attr("locked reason"))
+                cancel()
+                exit()
             } else {
-            //message(db.field("Názov") + ", "+ season);
+            //message(appDB.field("Názov") + ", "+ season);
             let number = [];
             var isNumber = en.field(NUMBER);
             if (isNumber > null) {
                 number.push(en.field(NUMBER));
             } else {
-                number = getNewNumber( db, season, prfx);
+                number = getNewNumber(appDB, season, false, mementoLibrary, scriptName);
             }
             // nastav základné polia
             en.set(SEASON, season);
             en.set(NUMBER, number[0]);
-            db.setAttr("rezervované číslo", number[1]);
-            db.setAttr("locked", true);
-            db.setAttr("locked reason", "editácia užívateľom ");
+            appDB.setAttr("rezervované číslo", number[1]);
+            appDB.setAttr("locked", true);
+            appDB.setAttr("locked reason", "editácia užívateľom ");
             en.set(LAST_NUM, number[1]);
         }
         } else {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 const saveEntry = en => {
@@ -418,9 +420,9 @@ const saveEntry = en => {
 }
 //
 // ACTIONS library
-const unlockDB = (en, database) => {
+const unlockDB = (en, mementoLibrary) => {
     let scriptName = "unlockDB 23.0.04";
-    let variables = "Záznam: " + en.name + "\nDatabáza: " + database;
+    let variables = "Záznam: " + en.name + "\nDatabáza: " + mementoLibrary;
     try {
         let season = getSeason(en);
         let db = getAppSeasonDB(season, lib.name);
@@ -429,7 +431,7 @@ const unlockDB = (en, database) => {
         db.setAttr("locked reason", null);
         return true;
     } catch (error) {
-        errorGen(database  , "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(mementoLibrary  , "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
