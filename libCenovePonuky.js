@@ -120,7 +120,7 @@ const generujZakazku = cp => {
             let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
             if (checkDebug(season)){
-                message("DBG: " + lib.title);
+                message("DBG: " + scriptName + "\n" + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
