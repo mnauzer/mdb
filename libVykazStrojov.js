@@ -1,12 +1,43 @@
-const verziaVykazStrojov = () => {
-    var result = "";
-    var nazov = "vykazStrojovLibrary";
-    var verzia = "0.2.35";
-    result = nazov + " " + verzia;
-    return result;
+const novyVykazStrojov = (zakazka, popis) => {
+    let scriptName = "novyVykazStrojov 23.0.01";
+    let variables = "Zákazka: " +  zakazka.name + "\n"
+    let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
+    try {
+        // inicializácia
+        let season = getSeason(zakazka, DB_VYKAZY_STROJOV, scriptName);
+        let vykazy = libByName(DB_VYKAZY_STROJOV);
+        let appDB = getAppSeasonDB(season, vykazy.title, DB_VYKAZY_STROJOV, scriptName);
+        let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+        let typVykazu = cp.field("Typ cenovej ponuky");
+        let datum = zakazka.field(DATE);
+        let newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_STROJOV, scriptName);
+        // vytvoriť novú výdajku
+        let novyVykaz = new Object();
+        novyVykaz[NUMBER] = cislo;
+    novyVykaz[DATE] = datum;
+    novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
+    novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
+    novyVykaz["s DPH"] = true; //harcoded
+    novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
+    novyVykaz["Vydané"] = "Zákazka";
+    novyVykaz["Zákazka"] = zakazka;
+    novyVykaz["Cenová ponuka"] = cp;
+    novyVykaz[SEASON] = sezona;
+        vykazy.create(novyVykaz);
+        let vykazPrac = vykazy.find(newNumber)[0];
+        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
+        message(msgTxt)
+        msgGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
+        return vykazPrac;
+    } catch (error) {
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+    }
 }
 
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
+    let scriptName = "prepocitatVykazStrojov 23.0.01";
+    let variables = "Záznam: " +  vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
+    let parameters = "vykaz: " +  vykaz + "\nuctovatDPH: " + ucnuctovatDPH
     try {
         var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz strojov");
         var sumaBezDPH = 0;
@@ -74,33 +105,9 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         vykaz.set("Suma s DPH", sumaCelkom);
         setTlac(vykaz);
         return [sumaBezDPH, sumaDPH, sumaCelkom];
-    } catch (err) {
-        message("Chyba skriptu: vykazStrojovLibrary/prepocitatVykazyStrojov\nRiadok: " + err.lineNumber + "\n-------------------------\n" + err);
+    } catch (error) {
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+
     }
 }
 
-const novyVykazStrojov = (zakazka) => {
-    // inicializácia
-    var lib = libByName("Výkaz strojov");
-    var cp = zakazka.field("Cenová ponuka")[0];
-    var typVykazu = cp.field("Typ cenovej ponuky");
-    var datum = zakazka.field("Dátum");
-    var sezona = zakazka.field(SEASON);
-    var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
-    // vytvoriť novú výdajku
-    var novyVykaz = new Object();
-    novyVykaz[NUMBER] = cislo;
-    novyVykaz["Dátum"] = datum;
-    novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
-    novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
-    novyVykaz["s DPH"] = true; //harcoded
-    novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
-    novyVykaz["Vydané"] = "Zákazka";
-    novyVykaz["Zákazka"] = zakazka;
-    novyVykaz["Cenová ponuka"] = cp;
-    novyVykaz[SEASON] = sezona;
-    lib.create(novyVykaz);
-    var vykazStrojov = lib.find(cislo)[0];
-
-    return vykazStrojov;
-}

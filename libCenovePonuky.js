@@ -155,7 +155,7 @@ const generujZakazku = cp => {
                 generujVykazyPrac(zakazka);
                 //generujVykazDopravy(zakazka)
                 if (cp.field("+Materiál")) {
-                    generujVydajkyMaterialu(zakazka);
+                    generujVykazyMaterialu(zakazka);
                 }
                 if (cp.field("+Mechanizácia")) {
                     message("generujVykazStrojov...");
@@ -168,8 +168,8 @@ const generujZakazku = cp => {
             } else if (cp.field("Typ cenovej ponuky") == "Položky") {
                 message("generujVykazyPrac2...");
                 generujVykazyPrac(zakazka);
-                message("generujVydajkyMaterialu...");
-                generujVydajkyMaterialu(zakazka);
+                message("generujVykazyMaterialu...");
+                generujVykazyMaterialu(zakazka);
             } else {
                 message("Nie je jasný typ zákazky");
             }
@@ -196,43 +196,9 @@ const generujZakazku = cp => {
 
 // VÝDAJKY
 // generuj nové výdajky
-const novaVydajkaMaterialu = (zakazka, popis) => {
-    let scriptName = "novaVydajkaMaterialu 23.1.01";
-    let variables = "Zákazka: " + zakazka.name + "\n"
-    let parameters = "zakazka: " + zakazka + "\npopis: "+ popis
-    if(zakazka === undefined ){
-        msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables, parameters);
-        cancel();
-        exit();
-    }
-    try {
-        var lib = libByName(DB_VYKAZY_MATERIALU);
-        var season = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName)
-        var appDB = getAppSeasonDB(season, lib.title, DB_CENOVE_PONUKY, scriptName);
-        var newNumber = getNewNumber(appDB, season, false, DB_CENOVE_PONUKY,  scriptName);
-        // vytvoriť novú výdajku
-        var novaVydajka = new Object();
-        novaVydajka[NUMBER] = newNumber;
-        novaVydajka["Dátum"] = zakazka.field("Dátum");
-        novaVydajka["Popis"] = popis;
-        novaVydajka["s DPH"] = true; // hardcoded
-        novaVydajka["Ceny počítať"] = "Z cenovej ponuky";
-        novaVydajka["Vydané"] = "Zákazka";
-        novaVydajka["Zákazka"] = zakazka;
-        novaVydajka["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
-        novaVydajka[SEASON] = season;
-        lib.create(novaVydajka);
-        var vydajkaMaterialu = lib.find(newNumber)[0];
-        let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber
-        message(msgTxt)
-        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
-        return vydajkaMaterialu; 
-    } catch (error) {
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
-    }
-}
-const generujVydajkyMaterialu = zakazka => {
-    let scriptName ="generujVydajkyMaterialu 23.0.03";
+
+const generujVykazyMaterialu = zakazka => {
+    let scriptName ="generujVykazyMaterialu 23.0.03";
     let variables = "Zákazka: " + zakazka.name;
     let parameters = "zakazka: " + zakazka
     try {
@@ -244,7 +210,7 @@ const generujVydajkyMaterialu = zakazka => {
                 popis.push("Materiál");
             }
             var materialPonuky = cp.field("Materiál");
-            var vydajka = novaVydajkaMaterialu(zakazka, popis);
+            var vydajka = novyVykazMaterialu(zakazka, popis);
             linkItems(vydajka, materialPonuky);
             spocitajVykaz(vydajka, "Materiál");
 
@@ -259,7 +225,7 @@ const generujVydajkyMaterialu = zakazka => {
             };
             for (var p = 0; p < popis.length; p++) {
                 var materialPonuky = cp.field(popis[p])
-                var vydajka = novaVydajkaMaterialu(zakazka, popis[p]);
+                var vydajka = novyVykazMaterialu(zakazka, popis[p]);
                 linkItems(vydajka, materialPonuky);
                 spocitajVykaz(vydajka, "Materiál");
             };
@@ -287,42 +253,7 @@ const linkItems = (vydajkaMaterialu, polozky) => {
 
 // VÝKAZY PRÁC
 // vytvorí nový záznam
-const novyVykazPrac = (zakazka, popis) => {
-    let scriptName = "novyVykazPrac 23.1.01";
-    let variables = "Zákazka: " +  zakazka.name + "\n"
-    let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
-    try {
-        // inicializácia
-        let season = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName);
-        let vykazy = libByName(DB_VYKAZY_PRAC);
-        let appDB = getAppSeasonDB(season, vykazy.title, DB_CENOVE_PONUKY, scriptName);
-        let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-        let typVykazu = cp.field("Typ cenovej ponuky");
-        let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, false, DB_CENOVE_PONUKY, scriptName);
-        // vytvoriť novú výdajku
-        let novyVykaz = new Object();
-        novyVykaz[NUMBER] = newNumber;
-        novyVykaz[DATE] = datum;
-        novyVykaz["Popis"] = popis;
-        novyVykaz["Typ výkazu"] = typVykazu;
-        novyVykaz["s DPH"] = true; //harcoded
-        novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
-        novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz["Zákazka"] = zakazka;
-        novyVykaz["Cenová ponuka"] = cp;
-    
-        novyVykaz[SEASON] = season;
-        vykazy.create(novyVykaz);
-        let vykazPrac = vykazy.find(newNumber)[0];
-        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
-        message(msgTxt)
-        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters )
-        return vykazPrac;
-    } catch (error) {
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
-    }
-}
+
 const generujVykazyPrac = zakazka => { 
     let scriptName = "generujVykazyPrac 23.0.09";
     let variables = "Zákazka: " +  zakazka.name + "\n"
@@ -417,42 +348,32 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
 
 // STROJE
 // vytvorí nový záznam
-const novyVykazStrojov = (zakazka, popis) => {
-    let scriptName = "novyVykazStrojov 23.0.01";
-    let variables = "Zákazka: " +  zakazka.name + "\n"
-    let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
-    try {
-        // inicializácia
-        let season = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName);
-        let vykazy = libByName(DB_VYKAZY_STROJOV);
-        let appDB = getAppSeasonDB(season, vykazy.title, DB_CENOVE_PONUKY, scriptName);
-        let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-        let typVykazu = cp.field("Typ cenovej ponuky");
-        let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, false, DB_CENOVE_PONUKY, scriptName);
-        // vytvoriť novú výdajku
-        let novyVykaz = new Object();
-        novyVykaz[NUMBER] = newNumber;
-        novyVykaz[DATE] = datum;
-        novyVykaz["Popis"] = popis;
-        novyVykaz["Typ výkazu"] = typVykazu;
-        novyVykaz["s DPH"] = true; //harcoded
-        novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
-        novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz["Zákazka"] = zakazka;
-        novyVykaz["Cenová ponuka"] = cp;
-    
-        novyVykaz[SEASON] = season;
-        vykazy.create(novyVykaz);
-        let vykazPrac = vykazy.find(newNumber)[0];
-        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
-        message(msgTxt)
-        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters )
-        return vykazPrac;
-    } catch (error) {
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
-    }
-}
+
+// const novyVykazStrojov = (zakazka) => {
+//     // inicializácia
+//     var lib = libByName("Výkaz strojov");
+//     var cp = zakazka.field("Cenová ponuka")[0];
+//     var typVykazu = cp.field("Typ cenovej ponuky");
+//     var datum = zakazka.field("Dátum");
+//     var sezona = zakazka.field(SEASON);
+//     var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
+//     // vytvoriť novú výdajku
+//     var novyVykaz = new Object();
+//     novyVykaz[NUMBER] = cislo;
+//     novyVykaz["Dátum"] = datum;
+//     novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
+//     novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
+//     novyVykaz["s DPH"] = true; //harcoded
+//     novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
+//     novyVykaz["Vydané"] = "Zákazka";
+//     novyVykaz["Zákazka"] = zakazka;
+//     novyVykaz["Cenová ponuka"] = cp;
+//     novyVykaz[SEASON] = sezona;
+//     lib.create(novyVykaz);
+//     var vykazStrojov = lib.find(cislo)[0];
+
+//     return vykazStrojov;
+// }
 const generujVykazStrojov = zakazka => {
     let scriptName = "generujVykazStrojov 23.0.01";
     let variables = "Zákazka: " +  zakazka.name + "\n"
