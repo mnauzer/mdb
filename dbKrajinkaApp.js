@@ -338,7 +338,7 @@ const setEntry = (en, isPrefix) => {
         setView(en, FIELD_VIEW_EDIT);
         var prfx = isPrefix || false;
         var season = getSeason(en);
-        var db = getAppSeasonDB(season, lib.title);
+        var db = getAppSeasonDB(season, lib.name);
         if (db){
             var locked = db.attr("locked");
             if (locked) {
