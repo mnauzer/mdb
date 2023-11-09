@@ -184,7 +184,7 @@ const generujZakazku = cp => {
                 message("Nie je jasný typ zákazky");
             }
             cp.set("Stav cenovej ponuky", "Uzavretá");
-        } else if (!zakazka) {
+        } else if (cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]) {
             message("Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]);
             cancel();
             exit();
