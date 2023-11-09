@@ -96,41 +96,46 @@ const checkDebug = season => {
         return getAppSeason(season).field("debug");
     } catch (error) {
         var variables = ""
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const getAppSeason = season =>{
-    let scriptName = "getAppSeason 23.0.03"
+    let scriptName = "getAppSeason 23.0.04"
+    if(season === undefined || season == null){
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
+        cancel();
+        exit();
+    }
     try {
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
     } catch (error) {
         var variables = ""
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
 const getAppSeasonDatabases = season => {
     let scriptName = "getAppSeasonDatabases 23.0.03"
-    let variables = ""
+    let variables = "Sezóna: " + season +  "\n"
     try {
         if(season == undefined){
-            msgGen("dbKrajinkaApp.js", scriptName, "", variables );
+            msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "", variables );
             cancel();
             exit();
         }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        variables = "season: " + season + "\n ";
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        variables = "Sezóna: " + season + "\n ";
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
 const getAppSeasonDB = (season, dbName) => {
     let scriptName = "getAppSeasonDB 23.0.07"
-    let variables = `Sezóna: ${season} \n Knižnica: ${dbName} \n`; 
+    let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
     if(season == undefined || dbName == undefined){
-        msgGen("dbKrajinkaApp.js", scriptName, `season or dbName are undefined`, variables );
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, `season or dbName are undefined`, variables );
         cancel();
         exit();
     }
@@ -144,16 +149,16 @@ const getAppSeasonDB = (season, dbName) => {
         return 0;
         }
     } catch (error) {
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
 // get db from APP library
 const findAppDB = (season, dbName) => {
     let scriptName = "findAppDB 23.0.08"
-    let variables = `Záznam: ${en.name} \n`
+    let variables = "Záznam: " + en.name  + "\n"
     if(season === undefined || season == null){
-        msgGen("dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
         cancel();
         exit();
     }
@@ -169,7 +174,7 @@ const findAppDB = (season, dbName) => {
         return 0;
     } catch (error) {
         variables = 'Sezóna: ${season} \n Knižnica: ${dbName} \n'
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 // get db from APP library
@@ -202,7 +207,7 @@ const getSeason = en => {
     let scriptName = "getSeason 23.0.08";
     let variables = "Záznam: " + en.name + "\n";
     if(en == undefined || en == null){
-        msgGen("dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
         cancel();
         exit();
     }
@@ -213,7 +218,7 @@ const getSeason = en => {
         logGen("dbKrajinkaApp.js", scriptName, logMsg, variables);
         return season;
     } catch (error) {
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const lastValid = (links, date, valueField, dateField) => {
@@ -297,10 +302,10 @@ const logGen = (database, library, script, log, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 23.0.23"
+    let scriptName = "getNewNumber 23.0.24"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     if(db === undefined || db == null){
-        msgGen("dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
         cancel();
         exit();
     }
@@ -331,7 +336,7 @@ const getNewNumber = (db, season, isPrefix) => {
             return number;
             
         } catch (error) {
-            errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+            errorGen(db.name, "dbKrajinkaApp.js", scriptName, error, variables);
         }
 };
 //
@@ -348,7 +353,7 @@ const setView = (en, view) => {
         
     } catch (error) {
         var variables = ""
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const setEntry = (en, isPrefix) => {
@@ -386,7 +391,7 @@ const setEntry = (en, isPrefix) => {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const saveEntry = en => {
@@ -401,11 +406,10 @@ const saveEntry = en => {
 }
 //
 // ACTIONS library
-const unlockDB = en => {
-    let scriptName = "unlockDB 23.0.03";
-    let variables = ""
+const unlockDB = (en, database) => {
+    let scriptName = "unlockDB 23.0.04";
+    let variables = "Záznam: " + en.name + "\nDatabáza: " + database;
     try {
-        message(scriptName);
         let season = getSeason(en);
         let db = getAppSeasonDB(season, lib.name);
         db.setAttr("rezervované číslo", null);
@@ -413,7 +417,7 @@ const unlockDB = en => {
         db.setAttr("locked reason", null);
         return true;
     } catch (error) {
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database  , "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 

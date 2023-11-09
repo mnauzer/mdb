@@ -121,7 +121,8 @@ const generujZakazku = cp => {
                 message("DBG: " + lib.title);
             } 
             
-            var appDB = getAppSeasonDB(season, lib.title);
+            let appDB = getAppSeasonDB(season, lib.title);
+            let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
             if (checkDebug(season)){
                 message("DBG: " + lib.title);
@@ -143,7 +144,7 @@ const generujZakazku = cp => {
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
             novaZakazka["Typ zákazky"] = typZakazky; 
-            novaZakazka[NUMBER] = getNewNumber(appDB, season, true);
+            novaZakazka[NUMBER] = newNumber;
             novaZakazka["Klient"] = cp.field("Klient")[0];
             novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita");
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
@@ -327,8 +328,8 @@ const novyVykazPrac = (zakazka, popis) => {
     }
 }
 const generujVykazyPrac = zakazka => { 
-    let scriptName = "generujVykazyPrac 23.0.06";
-    let variables = `Zákazka:  ${zakazka.name} \n`
+    let scriptName = "generujVykazyPrac 23.0.07";
+    let variables = "Zákazka: " +  zakazka.name + "\n"
     if(zakazka === undefined){
         msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
         cancel();
@@ -368,7 +369,9 @@ const generujVykazyPrac = zakazka => {
                 popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
             }
             if (cp.field("+Položky")) {
-                var polozkyPonuky = cp.field("Práce") ? cp.field("Práce") : null ;             // Položky ponuky: napr.field("Záhradnícke práce")
+                if (cp.field("Práce")) {
+                    var polozkyPonuky = cp.field("Práce") 
+                }           // Položky ponuky: napr.field("Záhradnícke práce")
                 var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
                 nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce");
