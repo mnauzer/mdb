@@ -291,10 +291,10 @@ const logGen = (library, script, log, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 0.23.19"
+    let scriptName = "getNewNumber 23.0.20"
     let variables = ``
     try {
-        if(db == undefined || season == undefined || isPrefix == undefined){
+        if(db === undefined || season === undefined || isPrefix === undefined){
             msgGen("dbKrajinkaApp.js", scriptName, "one or all of parameter are undefined", variables );
             cancel();
             exit();
