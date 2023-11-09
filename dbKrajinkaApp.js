@@ -199,20 +199,17 @@ const pullAddress = klient => {
 
 const getSeason = en => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.06"
-    let variables = `Záznam: ${en.name} \n`
-    if(en === undefined || en == null){
-        msgGen("dbKrajinkaApp.js", scriptName, "", variables );
+    let scriptName = "getSeason 23.0.08";
+    let variables = `Záznam: ${en.name} \n`;
+    if(en == undefined || en == null){
+        msgGen("dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
         cancel();
         exit();
     }
     try {
-        var season = en.field(SEASON);
-        if (!season) {
-            season = en.field(DATE).getFullYear().toString();
-        }
-        variables = `Záznam: ${en.name}\n Sezóna:${season}\n`
-        let logMsg = `setting season field to ${season}`
+        var season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString();
+        variables = `Záznam: ${en.name} \n Sezóna: ${season} \n`;
+        let logMsg = `Setting season field to ${season}`;
         logGen("dbKrajinkaApp.js", scriptName, logMsg, variables);
         return season;
     } catch (error) {
