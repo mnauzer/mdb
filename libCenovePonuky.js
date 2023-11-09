@@ -96,20 +96,20 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.17";
+    var scriptName ="generujZakazku 23.0.19";
     try {
-        var sezona = cp.field(SEASON) || getSeason(cp);
-        cp.set(SEASON, sezona);
+        var season = getSeason(cp);
+        cp.set(SEASON, season);
         var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
-        if (checkDebug(sezona)){
+        if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            var appDB = getAppSeasonDB(sezona, DB_ZAKAZKY);
             var lib = libByName(DB_ZAKAZKY);
-            if (checkDebug(sezona)){
+            var appDB = getAppSeasonDB(season, lib.title);
+            if (checkDebug(season)){
                 message("DBGMSG: " + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
@@ -129,7 +129,7 @@ const generujZakazku = cp => {
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
             novaZakazka["Typ zákazky"] = typZakazky; 
-            novaZakazka[NUMBER] = getNewNumber(appDB, sezona, true);
+            novaZakazka[NUMBER] = getNewNumber(appDB, season, true);
             novaZakazka["Klient"] = cp.field("Klient")[0];
             novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita");
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
@@ -137,7 +137,7 @@ const generujZakazku = cp => {
             novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky");
             novaZakazka["Diely zákazky"] = dielyZakazky.join();
             novaZakazka["Cenová ponuka"] = cp;
-            novaZakazka[SEASON] = sezona;
+            novaZakazka[SEASON] = season;
             novaZakazka["Účtovanie DPH"] = ["Práce", "Materiál", "Doprava", "Mechanizácia"]; // hardcoded
             novaZakazka["Účtovanie zákazky"] = cp.field("Typ cenovej ponuky");
             lib.create(novaZakazka);
@@ -227,12 +227,12 @@ const generujVydajkyMaterialu = zakazka => {
 const novaVydajkaMaterialu = (zakazka, popis) => {
     let scriptName ="novaVydajkaMaterialu 23.0.04";
     let variables = `Zákazka: ${zakazka.name} \n`
+    if(zakazka === undefined ){
+        msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
+        cancel();
+        exit();
+    }
     try {
-        if(zakazka === undefined ){
-            msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
-            cancel();
-            exit();
-        }
         var season = zakazka.field(SEASON);
         if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
@@ -259,7 +259,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
 }
 
 const linkItems = (vydajkaMaterialu, polozky) => {
-    var scriptName ="linkItems 23.0.03";
+    var scriptName ="linkItems 23.0.04";
     try {
         var season = vydajkaMaterialu.field(SEASON);
         if (checkDebug(season)){
@@ -272,7 +272,6 @@ const linkItems = (vydajkaMaterialu, polozky) => {
             vydajkaMaterialu.field("Materiál")[p].setAttr("cena", polozky[p].attr("cena"));
         }
     } catch (error) {
-        let variables = ""
         errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
