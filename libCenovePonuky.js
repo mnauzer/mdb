@@ -191,11 +191,10 @@ const generujZakazku = cp => {
 // VÝDAJKY
 // generuj nové výdajky
 const generujVydajkyMaterialu = zakazka => {
-    let scriptName ="generujVydajkyMaterialu 0.23.02";
+    let scriptName ="generujVydajkyMaterialu 23.0.03";
     let variables = "Zákazka: " + zakazka.name;
-    let parameters = "zakazka: " + zakazka.name
+    let parameters = "zakazka: " + zakazka
     try {
-      
         var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         var popis = [];
         // ak je zákazka hodinovka
@@ -233,7 +232,7 @@ const generujVydajkyMaterialu = zakazka => {
 const novaVydajkaMaterialu = (zakazka, popis) => {
     let scriptName = "novaVydajkaMaterialu 23.0.05";
     let variables = "Zákazka: " + zakazka.name + "\n"
-    let parameters = "zakazka: " + zakazka.name + "\npopis: "+ popis
+    let parameters = "zakazka: " + zakazka + "\npopis: "+ popis
     if(zakazka === undefined ){
         msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables, parameters);
         cancel();
@@ -266,7 +265,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
 const linkItems = (vydajkaMaterialu, polozky) => {
     let scriptName ="linkItems 23.0.05";
     let variables = "Záznam: " + vydajkaMaterialu.name + "\n"
-    let parameters = "vydajkaMaterialu: " + vydajkaMaterialu.name + "\npolozky: " + polozky
+    let parameters = "vydajkaMaterialu: " + vydajkaMaterialu + "\npolozky: " + polozky
     try {
         vydajkaMaterialu.set("Materiál", null);
         for (var p = 0; p < polozky.length; p++) {
@@ -284,7 +283,7 @@ const linkItems = (vydajkaMaterialu, polozky) => {
 const novyVykazPrac = (zakazka, popis) => {
     let scriptName = "novyVykazPrac 23.0.02";
     let variables = "Zákazka: " +  zakazka.name + "\n"
-    let parameters = "zakazka: " +  zakazka.name + "\npopis: " + popis
+    let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
         var lib = libByName("Výkaz prác");
@@ -367,29 +366,41 @@ const generujVykazyPrac = zakazka => {
                 spocitajVykaz(vykazPrac, "Práce sadzby");
             }
         } else {
-        
             message("Nie je jasný typ účtovania zákazky")
         }
         return vykazPrac; //suma
-        
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
-    vykazPrac.set("Práce", null);
-    for (var p = 0; p < polozky.length; p++) {
-        vykazPrac.link("Práce", polozky[p]);
-        vykazPrac.field("Práce")[p].setAttr("množstvo z cp", polozky[p].attr("množstvo"));
-        vykazPrac.field("Práce")[p].setAttr("cena", polozky[p].attr("cena"));
+    let scriptName = "nalinkujPolozkyPonukyPrace 23.0.01";
+    let variables = "Výkaz prác: " +  vykazPrac.name 
+    let parameters = "vykazPrac: " +  vykazPrac + "\npolozky: " + polozky
+    try {
+        vykazPrac.set("Práce", null);
+        for (var p = 0; p < polozky.length; p++) {
+            vykazPrac.link("Práce", polozky[p]);
+            vykazPrac.field("Práce")[p].setAttr("množstvo z cp", polozky[p].attr("množstvo"));
+            vykazPrac.field("Práce")[p].setAttr("cena", polozky[p].attr("cena"));
+        }
+    } catch (error) {
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
-    vykazPrac.set("Práce sadzby", null);
-    for (var p = 0; p < polozky.length; p++) {
-        vykazPrac.link("Práce sadzby", polozky[p]);
-        vykazPrac.field("Práce sadzby")[p].setAttr("množstvo z cp", polozky[p].attr("odhadovaný počet hodín"));
-        vykazPrac.field("Práce sadzby")[p].setAttr("základná sadzba", polozky[p].attr("sadzba"));
+    let scriptName = "nalinkujPolozkyPonukyPraceHZS 23.0.01";
+    let variables = "Výkaz prác: " +  vykazPrac.name
+    let parameters = "vykazPrac: " +  vykazPrac + "\npolozky: " + polozky
+    try {
+        vykazPrac.set("Práce sadzby", null);
+        for (var p = 0; p < polozky.length; p++) {
+            vykazPrac.link("Práce sadzby", polozky[p]);
+            vykazPrac.field("Práce sadzby")[p].setAttr("množstvo z cp", polozky[p].attr("odhadovaný počet hodín"));
+            vykazPrac.field("Práce sadzby")[p].setAttr("základná sadzba", polozky[p].attr("sadzba"));
+        }
+    } catch (error) {
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -397,11 +408,10 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
 // vytvorí nový záznam
 
 const generujVykazStrojov = zakazka => {
+    let scriptName = "generujVykazStrojov 23.0.01";
+    let variables = "Zákazka: " +  zakazka.name + "\n"
+    let parameters = "zakazka: " +  zakazka 
     try {
-        message("generujVykazStrojov 23.01");
-    } catch (error) {
-        message("generujVykazStrojov 23.01\n" + error);
-        
         var cp = zakazka.field("Cenová ponuka")[0];
         var strojePolozky = cp.field(FIELD_STROJE);
         // vytvoriť nový výkaz
@@ -410,13 +420,23 @@ const generujVykazStrojov = zakazka => {
         spocitajVykaz(vykazStrojov, FIELD_STROJE);                      // výkaz , názov poľa položiek
         
         return vykazStrojov;
+    } catch (error) {
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
-    const nalinkujPolozkyStrojov = (vykaz, polozky) => {
-        vykaz.set(FIELD_STROJE, null);
-        for (var m = 0; m < polozky.length; m++) {
-            vykaz.link(FIELD_STROJE, polozky[m]);
-            vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
-            vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+    
+const nalinkujPolozkyStrojov = (vykaz, polozky) => {
+        let scriptName = "nalinkujPolozkyStrojov 23.0.01";
+        let variables = "Výkaz : " +  vykazc.name
+        let parameters = "vykaz: " +  vykaz + "\npolozky: " + polozky
+        try {
+            vykaz.set(FIELD_STROJE, null);
+            for (var m = 0; m < polozky.length; m++) {
+                vykaz.link(FIELD_STROJE, polozky[m]);
+                vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
+                vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+            }
+        } catch (error) {
+            errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
         }
     }
 }
