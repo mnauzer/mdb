@@ -96,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.23";
+    var scriptName ="generujZakazku 23.0.24";
     let variables = "Záznam: " + cp.name + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
@@ -116,7 +116,7 @@ const generujZakazku = cp => {
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let lib = libByName(DB_ZAKAZKY);
-            let appDB = getAppSeasonDB(season, lib);
+            let appDB = getAppSeasonDB(season, DB_ZAKAZKY);
             let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
             if (checkDebug(season)){
@@ -197,10 +197,12 @@ const generujZakazku = cp => {
 // VÝDAJKY
 // generuj nové výdajky
 const generujVydajkyMaterialu = zakazka => {
-    var scriptName ="generujVydajkyMaterialu 0.23.01";
+    let scriptName ="generujVydajkyMaterialu 0.23.02";
+    let variables = "Zákazka: " + zakazka.name;
+
     try {
-        var sezona = zakazka.field(SEASON);
-        if (checkDebug(sezona)){
+        var season = getSeason(zakazka);
+        if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
         } 
         var cp = zakazka.field("Cenová ponuka")[0];
@@ -233,8 +235,7 @@ const generujVydajkyMaterialu = zakazka => {
         }
         return vydajka;
     } catch (error) {
-        let variables = ""
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 const novaVydajkaMaterialu = (zakazka, popis) => {
