@@ -132,7 +132,7 @@ const getAppSeasonDatabases = season => {
 }
 
 const getAppSeasonDB = (season, dbName, database) => {
-    let scriptName = "getAppSeasonDB 23.0.11"
+    let scriptName = "getAppSeasonDB 23.0.12"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
     let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
@@ -144,8 +144,7 @@ const getAppSeasonDB = (season, dbName, database) => {
         let databases = getAppSeasonDatabases(season);
         message("Database: " + dbName + ", Length: " + databases.length)
         for (let i = 0; i < databases.length; i++) {
-            message("Database: " + database[i].name)
-            if (databases[i].name == dbName){
+            if (databases[i].field("Názov") == dbName){
                 return databases[i];
             }
         msgGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nenájdená", variables, parameters );
