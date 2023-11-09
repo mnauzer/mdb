@@ -313,9 +313,9 @@ const logGen = (database, library, script, log, variables, parameters) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix, database, inputScript) => {
-    let scriptName = "getNewNumber 23.1.01 / " + inputScript
+    let scriptName = "getNewNumber 23.1.02"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
-    let parameters = "db: " + db.name + "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + database;
+    let parameters = "db: " + db.name + "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + database + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters );
         cancel();

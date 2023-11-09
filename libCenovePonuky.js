@@ -281,21 +281,22 @@ const linkItems = (vydajkaMaterialu, polozky) => {
 // VÝKAZY PRÁC
 // vytvorí nový záznam
 const novyVykazPrac = (zakazka, popis) => {
-    let scriptName = "novyVykazPrac 23.0.02";
+    let scriptName = "novyVykazPrac 23.0.03";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
-        var lib = libByName("Výkaz prác");
-        var cp = zakazka.field("Cenová ponuka")[0];
-        var typVykazu = cp.field("Typ cenovej ponuky");
-        var datum = zakazka.field("Dátum");
-        var sezona = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName);
-        var cislo = getNewNumber(lib, sezona, true, scriptName);
+        let season = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName);
+        let vykazy = libByName(DB_VYKAZY_PRAC);
+        let appDB = getAppSeasonDB(season, vykazy.title, DB_CENOVE_PONUKY, scriptName);
+        let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+        let typVykazu = cp.field("Typ cenovej ponuky");
+        let datum = zakazka.field(DATE);
+        let cislo = getNewNumber(appDB, season, true, scriptName);
         // vytvoriť novú výdajku
-        var novyVykaz = new Object();
+        let novyVykaz = new Object();
         novyVykaz[NUMBER] = cislo;
-        novyVykaz["Dátum"] = datum;
+        novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = popis;
         novyVykaz["Typ výkazu"] = typVykazu;
         novyVykaz["s DPH"] = true; //harcoded
@@ -304,9 +305,9 @@ const novyVykazPrac = (zakazka, popis) => {
         novyVykaz["Zákazka"] = zakazka;
         novyVykaz["Cenová ponuka"] = cp;
     
-        novyVykaz[SEASON] = sezona;
-        lib.create(novyVykaz);
-        var vykazPrac = lib.find(cislo)[0];
+        novyVykaz[SEASON] = season;
+        vykazy.create(novyVykaz);
+        let vykazPrac = vykazy.find(cislo)[0];
         return vykazPrac;
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
