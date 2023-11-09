@@ -115,8 +115,9 @@ const getAppSeasonDatabases = season => {
     let variables = ""
     try {
         if(season == undefined){
-            msgGen("dbKrajinkaApp.js", scriptName, "", variables )
-            break;
+            msgGen("dbKrajinkaApp.js", scriptName, "", variables );
+            cancel();
+            exit();
         }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
