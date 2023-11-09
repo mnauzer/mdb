@@ -118,10 +118,10 @@ const generujZakazku = cp => {
             var lib = libByName(DB_ZAKAZKY);
             //DEBUG
             if (checkDebug(season)){
-                message("DBG: " + lib.title);
+                message("DBG: " + lib.name);
             } 
             
-            let appDB = getAppSeasonDB(season, lib.title);
+            let appDB = getAppSeasonDB(season, lib.name);
             let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
             if (checkDebug(season)){
