@@ -1,12 +1,4 @@
 
-function verziaKniznice() {
-    var result = "";
-    var nazov = "libDochadzka.js";
-    var verzia = "0.23.07";
-    result = nazov + " " + verzia;
-    return result;
-}
-
 const newEntry = en => {
     message("New Entry");
 }
@@ -16,92 +8,113 @@ const updateEntry = en => {
 }
 
 const lastSadzba = (employee, date) => {
-    // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-    var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-    message("Links: " + links.length);
-    filtered = filterByDatePlatnost(links, date);
-    message("Filtered links: " + filtered.length);
-    if (filtered.length < 0) {
-        message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
-    } else {
-
-        filtered.reverse();
+    let scriptName = "lastSadzba 23.0.01"
+    try {
+        var sezona = getSeason(entry());
+        if (checkDebug(sezona)){
+            message("DBGMSG: " + scriptName);
+        } 
+        // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+        var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+        message("Links: " + links.length);
+        filtered = filterByDatePlatnost(links, date);
+        message("Filtered links: " + filtered.length);
+        if (filtered.length < 0) {
+            message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
+        } else {
+    
+            filtered.reverse();
+        }
+        //vyberie a vráti sadzbu z prvého záznamu
+        var sadzba = filtered[0].field("Sadzba");
+        return sadzba;
+        
+    } catch (error) {
+        var variables = ""
+        errorGen("libDochadzka.js", scriptName, error, variables);
     }
-    //vyberie a vráti sadzbu z prvého záznamu
-    var sadzba = filtered[0].field("Sadzba");
-    return sadzba;
 }
 
 const prepocitatZaznamDochadzky = en => {
-    message("Prepočítavám záznam...\nKnižnica: " + verziaKniznice());
-    // výpočet pracovnej doby
-    var datum = en.field(DATE);
-    var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
-    var odchod = roundTimeQ(en.field("Odchod"));
-    var pracovnaDoba = (odchod - prichod) / 3600000;
-    en.set("Príchod", prichod); //uloženie upravených časov
-    en.set("Odchod", odchod);
-    var mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
-    var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
-    var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
-    var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-    var employees = en.field("Zamestnanci");
-    var evidenciaPrac = en.field("Práce");
-    if (employees.length > 0) {
-        for (var z = 0; z < employees.length; z++) {
-            //var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
-            var links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-            var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
-            // var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
-            var hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
-            var dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
-            // premenné z knižnice employees
-            var libZarobene = employees[z].field("Zarobené") - dennaMzda;
-            var libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-            var libVyplatene = employees[z].field("Vyplatené");
-            var libHodnotenieD = employees[z].field(ATTENDANCE);
-
-            employees[z].setAttr("hodinovka", hodinovka);
-            dennaMzda = (pracovnaDoba * (hodinovka
-                + employees[z].attr("+príplatok (€/h)")))
-                + employees[z].attr("+prémia (€)")
-                - employees[z].attr("-pokuta (€)");
-            employees[z].setAttr("denná mzda", dennaMzda);
-            employees[z].setAttr("hodnotenie", hodnotenie);
-            // nastavenie v knižnici employees
-            libZarobene += dennaMzda;
-            libOdrobene += pracovnaDoba;
-            libHodnotenieD += hodnotenie;
-            var libNedoplatok = libZarobene - libVyplatene;
-
-            employees[z].set("Zarobené", libZarobene);
-            employees[z].set("Odpracované", libOdrobene);
-            employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
-            employees[z].set(ATTENDANCE, libHodnotenieD);
-
-            mzdyCelkom += dennaMzda;
-            odpracovaneCelkom += pracovnaDoba;
-            //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-            if (evidenciaPrac) {
-                for (var ep in evidenciaPrac) {
-                    var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                    var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
-                    for (var znz in zamNaZakazke) {
-                        if (employees[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
-                            evidenciaCelkom += naZakazke;
+    let scriptName = "prepocitatZaznamDochadzky 23.0.01"
+    try {
+        var sezona = getSeason(en);
+        if (checkDebug(sezona)){
+            message("DBGMSG: " + scriptName);
+        } 
+        message("Prepočítavám záznam...\nKnižnica: " + verziaKniznice());
+        // výpočet pracovnej doby
+        var datum = en.field(DATE);
+        var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
+        var odchod = roundTimeQ(en.field("Odchod"));
+        var pracovnaDoba = (odchod - prichod) / 3600000;
+        en.set("Príchod", prichod); //uloženie upravených časov
+        en.set("Odchod", odchod);
+        var mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
+        var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
+        var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
+        var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
+        var employees = en.field("Zamestnanci");
+        var evidenciaPrac = en.field("Práce");
+        if (employees.length > 0) {
+            for (var z = 0; z < employees.length; z++) {
+                //var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
+                var links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+                var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
+                // var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
+                var hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
+                var dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
+                // premenné z knižnice employees
+                var libZarobene = employees[z].field("Zarobené") - dennaMzda;
+                var libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
+                var libVyplatene = employees[z].field("Vyplatené");
+                var libHodnotenieD = employees[z].field(ATTENDANCE);
+    
+                employees[z].setAttr("hodinovka", hodinovka);
+                dennaMzda = (pracovnaDoba * (hodinovka
+                    + employees[z].attr("+príplatok (€/h)")))
+                    + employees[z].attr("+prémia (€)")
+                    - employees[z].attr("-pokuta (€)");
+                employees[z].setAttr("denná mzda", dennaMzda);
+                employees[z].setAttr("hodnotenie", hodnotenie);
+                // nastavenie v knižnici employees
+                libZarobene += dennaMzda;
+                libOdrobene += pracovnaDoba;
+                libHodnotenieD += hodnotenie;
+                var libNedoplatok = libZarobene - libVyplatene;
+    
+                employees[z].set("Zarobené", libZarobene);
+                employees[z].set("Odpracované", libOdrobene);
+                employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
+                employees[z].set(ATTENDANCE, libHodnotenieD);
+    
+                mzdyCelkom += dennaMzda;
+                odpracovaneCelkom += pracovnaDoba;
+                //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
+                if (evidenciaPrac) {
+                    for (var ep in evidenciaPrac) {
+                        var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
+                        var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
+                        for (var znz in zamNaZakazke) {
+                            if (employees[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
+                                evidenciaCelkom += naZakazke;
+                            }
                         }
                     }
                 }
             }
         }
+        prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
+        en.set("Mzdové náklady", mzdyCelkom);
+        en.set("Pracovná doba", pracovnaDoba);
+        en.set("Odpracované", odpracovaneCelkom);
+        en.set("Na zákazkách", evidenciaCelkom);
+        en.set("Prestoje", prestojeCelkom);
+        message("Hotovo...");
+    } catch (error) {
+        var variables = ""
+        errorGen("libDochadzka.js", scriptName, error, variables);
     }
-    prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
-    en.set("Mzdové náklady", mzdyCelkom);
-    en.set("Pracovná doba", pracovnaDoba);
-    en.set("Odpracované", odpracovaneCelkom);
-    en.set("Na zákazkách", evidenciaCelkom);
-    en.set("Prestoje", prestojeCelkom);
-    message("Hotovo...");
 }
 
 const aSalary = (en, NEW_ENTRY) => {
