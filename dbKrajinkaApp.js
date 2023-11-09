@@ -128,7 +128,7 @@ const getAppSeasonDB = (season, dbName) => {
             if (databases[i].name == dbName){
                 return databases[i];
             }
-        message("Databáza " + name + " nenájdená v sezóne " + season);
+        message("Databáza " + dbName + " nenájdená v sezóne " + season);
         return 0;
         }
     } catch (error) {

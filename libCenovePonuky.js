@@ -428,6 +428,7 @@ const generujVykazStrojov = zakazka => {
 
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
+    let scriptName = "spocitajVykaz 23.0.01"
     try {
         var sezona = doklad.field(SEASON);
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
