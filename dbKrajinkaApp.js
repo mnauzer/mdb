@@ -150,7 +150,7 @@ const getAppSeasonDB = (season, dbName) => {
 
 // get db from APP library
 const findAppDB = (season, dbName) => {
-    let scriptName = "findAppDB 23.0.07"
+    let scriptName = "findAppDB 23.0.08"
     let variables = `Záznam: ${en.name} \n`
     if(season === undefined || season == null){
         msgGen("dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
@@ -168,7 +168,7 @@ const findAppDB = (season, dbName) => {
         message("Databáza " + dbName + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
-        variables = "season: " + season + "\n " + "knižnica: " + dbName + "\n"
+        variables = 'Sezóna: ${season} \n Knižnica: ${dbName} \n'
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
@@ -255,8 +255,7 @@ const getLinkIndex = (link, remoteLinks) => {
 
 // generátor chyby
 const errorGen = (library, script, error, variables) => {
-    message("ERROR: " + script + "\n" 
-    + error  );
+    message(`ERR: ${script}\n ${error}`);
     let errorLib = libByName("APP Errors");
     let newError = new Object();
     newError["type"] = "error";
@@ -270,8 +269,7 @@ const errorGen = (library, script, error, variables) => {
 }
 // generátor message
 const msgGen = (library, script, msg, variables) => {
-    message("ERROR: " + script + "\n" 
-    + msg  );
+    message(`MSG: ${script}\n ${msg}`);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
     newMsg["type"] = "message";
@@ -284,8 +282,7 @@ const msgGen = (library, script, msg, variables) => {
 }
 // generátor chyby
 const logGen = (library, script, log, variables) => {
-    message("ERROR: " + script + "\n" 
-    + log  );
+    message(`LOG: ${script}\n ${log}`);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
     newLog["type"] = "log";

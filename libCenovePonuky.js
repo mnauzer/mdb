@@ -225,23 +225,23 @@ const generujVydajkyMaterialu = zakazka => {
     }
 }
 const novaVydajkaMaterialu = (zakazka, popis) => {
-    let scriptName ="novaVydajkaMaterialu 23.0.02";
-    let variables = "zákazka: " + zakazka.name + "\n"
+    let scriptName ="novaVydajkaMaterialu 23.0.04";
+    let variables = `Zákazka: ${zakazka.name} \n`
     try {
         if(zakazka === undefined ){
             msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
             cancel();
             exit();
         }
-        var sezona = zakazka.field(SEASON);
-        if (checkDebug(sezona)){
+        var season = zakazka.field(SEASON);
+        if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
         } 
         var lib = libByName(DB_VYKAZY_MATERIALU);
-        var appDB = getAppSeasonDB(sezona, DB_VYKAZY_MATERIALU);
+        var appDB = getAppSeasonDB(season, lib.title);
         // vytvoriť novú výdajku
         var novaVydajka = new Object();
-        novaVydajka[NUMBER] = getNewNumber(appDB, sezona, false);
+        novaVydajka[NUMBER] = getNewNumber(appDB, season, false);
         novaVydajka["Dátum"] = zakazka.field("Dátum");
         novaVydajka["Popis"] = popis;
         novaVydajka["s DPH"] = true; // hardcoded
@@ -249,7 +249,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
         novaVydajka["Vydané"] = "Zákazka";
         novaVydajka["Zákazka"] = zakazka;
         novaVydajka["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
-        novaVydajka[SEASON] = sezona;
+        novaVydajka[SEASON] = season;
         lib.create(novaVydajka);
         var vydajkaMaterialu = lib.find(cislo)[0];
         return vydajkaMaterialu; 
@@ -322,18 +322,18 @@ const novyVykazPrac = (zakazka, popis) => {
     }
 }
 const generujVykazyPrac = zakazka => { 
-    let scriptName = "generujVykazyPrac 23.0.05";
-    let variables = "zákazka: " + zakazka.name + "\n"
+    let scriptName = "generujVykazyPrac 23.0.06";
+    let variables = `Zákazka:  ${zakazka.name} \n`
+    if(zakazka === undefined){
+        msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
+        cancel();
+        exit();
+    }
     try {
         var season = zakazka.field(SEASON);
         if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
         } 
-        if(zakazka === undefined){
-            msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
-            cancel();
-            exit();
-        }
         var cp = zakazka.field("Cenová ponuka")[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
@@ -363,7 +363,7 @@ const generujVykazyPrac = zakazka => {
                 popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
             }
             if (cp.field("+Položky")) {
-                var polozkyPonuky = cp.field("Práce");             // Položky ponuky: napr.field("Záhradnícke práce")
+                var polozkyPonuky = cp.field("Práce") ? cp.field("Práce") : null ;             // Položky ponuky: napr.field("Záhradnícke práce")
                 var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
                 nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce");
