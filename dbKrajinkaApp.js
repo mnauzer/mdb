@@ -102,7 +102,7 @@ const checkDebug = season => {
 const getAppSeason = (season, mementoLibrary) => {
     let scriptName = "getAppSeason 23.0.05"
     let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\ndatabase: " + mementoLibrary
+    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary
     if(season === undefined || season == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
         cancel();
@@ -119,7 +119,7 @@ const getAppSeason = (season, mementoLibrary) => {
 const getAppSeasonDatabases = (season, mementoLibrary) => {
     let scriptName = "getAppSeasonDatabases 23.0.04"
     let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\ndatabase: " + mementoLibrary
+    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary
     try {
         if(season == undefined){
             msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "", variables, parameters );
@@ -135,7 +135,7 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 const getAppSeasonDB = (season, dbName, mementoLibrary, inputScript) => {
     let scriptName = "getAppSeasonDB 23.1.01"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
-    let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + mementoLibrary + "\ninputScript: " + inputScript; 
+    let parameters = "season: " + season +  "\ndbName: " + dbName + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables, parameters );
         cancel();
@@ -163,7 +163,7 @@ const getAppSeasonDB = (season, dbName, mementoLibrary, inputScript) => {
 const findAppDB = (season, dbName, mementoLibrary) => {
     let scriptName = "findAppDB 23.0.08"
     let variables = "Záznam: " + en.name  + "\n"
-    let parameters = "season: " + season  + "\ndbName: " + dbName + "\ndatabase: " + mementoLibrary
+    let parameters = "season: " + season  + "\ndbName: " + dbName + "\nmementoLibrary: " + mementoLibrary
     if(season === undefined || season == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
         cancel();
@@ -212,7 +212,7 @@ const getSeason = (en, mementoLibrary, inputScript) => {
     // get entryDefault season from creation date
     let scriptName = "getSeason 23.1.02";
     let variables = "Záznam: " + en.name;
-    let parameters = "en: " + en + "\ndatabase: " + mementoLibrary + "\ninputScript: " + inputScript;
+    let parameters = "en: " + en + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(en == undefined || en == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters );
         cancel();
@@ -282,7 +282,7 @@ const errorGen = (mementoLibrary, library, script, error, variables, parameters)
 }
 // generátor message
 const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => {
-    message("MSG: " + script + "\n" + msg);
+  //  message("MSG: " + script + "\n" + msg);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
     newMsg["type"] = "message";
@@ -315,7 +315,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters) => 
 const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
     let scriptName = "getNewNumber 23.1.04"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
-    let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + mementoLibrary + "\ninputScript: " + inputScript;
+    let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters );
         cancel();
@@ -368,10 +368,10 @@ const setView = (en, view) => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
-const setEntry = (en, isPrefix) => {
-    let scriptName = "setEntry 23.0.01"
-    let variables = ""
-    let parameters = "en: " + en +  "\nisPrefix: " + isPrefix 
+const setEntry = (en, mementoLibrary, isPrefix) => {
+    let scriptName = "setEntry 23.0.02"
+    let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary + "Prefix: " + isPrefix
+    let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary + "\nisPrefix: " + isPrefix 
     try {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
