@@ -316,10 +316,18 @@ const novyVykazPrac = (zakazka, popis) => {
         errorLib.create(newError);
     }
 }
-const generujVykazyPrac = zakazka => {
-    let scriptName = "generujVykazyPrac 0.23.03";
+const generujVykazyPrac = zakazka => { 
+    let scriptName = "generujVykazyPrac 23.0.04";
+    let variables = "zákazka: " + zakazka.name + "\n"
     try {
-        message(scriptName);
+        if (checkDebug(sezona)){
+            message("DBGMSG: " + scriptName);
+        } 
+        if(zakazka === undefined){
+            msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
+            cancel();
+            exit();
+        }
         var cp = zakazka.field("Cenová ponuka")[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
@@ -354,7 +362,7 @@ const generujVykazyPrac = zakazka => {
                 nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce");
             }
-            // genruj jednotlivé výkazy diel = popis
+            // generuj jednotlivé výkazy diel = popis
             for (var p = 0; p < popis.length; p++) {
                 var polozkyPonuky = cp.field(popis[p]);             // Položky ponuky: napr.field("Záhradnícke práce")
                 var vykazPrac = novyVykazPrac(zakazka, popis[p]); // vytvorí nový výkaz prác a skoíruje položky
@@ -363,23 +371,13 @@ const generujVykazyPrac = zakazka => {
                 spocitajVykaz(vykazPrac, "Práce sadzby");
             }
         } else {
+        
             message("Nie je jasný typ účtovania zákazky")
         }
         return vykazPrac; //suma
         
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "libCenovePonuky.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "zakazka: " + zakazka;
-        "line: " + error.lineNumber;
-        errorLib.create(newError);
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {

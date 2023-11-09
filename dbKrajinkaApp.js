@@ -295,11 +295,11 @@ const logGen = (library, script, log, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 23.0.20"
+    let scriptName = "getNewNumber 23.0.21"
     let variables = ``
     try {
         if(db === undefined || season === undefined || isPrefix === undefined){
-            msgGen("dbKrajinkaApp.js", scriptName, "one or all of parameter are undefined", variables );
+            msgGen("dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
             cancel();
             exit();
         }
@@ -330,6 +330,7 @@ const getNewNumber = (db, season, isPrefix) => {
             return number;
             
         } catch (error) {
+            variables = "knižnica: " + db.name + "\n" + "sezóna: " + season + "\n"
             errorGen("dbKrajinkaApp.js", scriptName, error, variables);
         }
 };
