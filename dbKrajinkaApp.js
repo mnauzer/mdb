@@ -132,10 +132,10 @@ const getAppSeasonDatabases = (season, database) => {
     }
 }
 
-const getAppSeasonDB = (season, dbName, database) => {
-    let scriptName = "getAppSeasonDB 23.1.14"
+const getAppSeasonDB = (season, dbName, database, inputScript) => {
+    let scriptName = "getAppSeasonDB 23.1.15"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
-    let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database; 
+    let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database + "\ninputScript: " + inputScript; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
         msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables, parameters );
         cancel();
@@ -146,7 +146,7 @@ const getAppSeasonDB = (season, dbName, database) => {
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == dbName) {
-                let logTxt = "Databáza " + databazy[v] +" nájdená"
+                let logTxt = "Databáza " + databazy[v].name +" nájdená"
                 logGen(database, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
                 return databazy[v];
             }
@@ -210,11 +210,11 @@ const pullAddress = klient => {
 
 const getSeason = (en, database, inputScript) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.10 / " + inputScript;
-    let variables = "Záznam: " + en.name + "\n";
-    let parameters = "en: " + en.name + "\ndatabase: " + database;
+    let scriptName = "getSeason 23.0.11 / " + inputScript;
+    let variables = "Záznam: " + en.name;
+    let parameters = "en: " + en.name + "\ndatabase: " + database + "\ninputScript: " + inputScript;
     if(en == undefined || en == null){
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters );
         cancel();
         exit();
     }
@@ -307,7 +307,7 @@ const logGen = (database, library, script, log, variables, parameters) => {
     newLog["script"] = script;
     newLog["text"] = log;
     newLog["variables"] = variables;
-    newLog["parameters"] = variables;
+    newLog["parameters"] = parameters;
     errorLib.create(newLog);
 }
 

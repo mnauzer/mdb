@@ -100,19 +100,19 @@ const generujZakazku = cp => {
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp.name + "\n"
     if(cp == undefined){
-        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
+        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables, parameters );
         cancel();
         exit();
     }
 
     try {
-        var season = getSeason(cp, DB_CENOVE_PONUKY, scriptName), scriptName;
+        var season = getSeason(cp, DB_CENOVE_PONUKY, scriptName);
       //  var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let zakazky = libByName(DB_ZAKAZKY);
-            let appDB = getAppSeasonDB(season, zakazky.title, DB_CENOVE_PONUKY);
+            let appDB = getAppSeasonDB(season, zakazky.title, DB_CENOVE_PONUKY, scriptName);
             let newNumber = getNewNumber(appDB, season, true, scriptName);
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
@@ -241,7 +241,8 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
     }
     try {
         var lib = libByName(DB_VYKAZY_MATERIALU);
-        var appDB = getAppSeasonDB(season, lib.title, DB_CENOVE_PONUKY);
+        var season = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName)
+        var appDB = getAppSeasonDB(season, lib.title, DB_CENOVE_PONUKY, scriptName);
         var newNumber = getNewNumber(appDB, season, false, scriptName);
         // vytvoriť novú výdajku
         var novaVydajka = new Object();
