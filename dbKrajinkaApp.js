@@ -278,7 +278,7 @@ const msgGen = (library, script, msg, variables) => {
     newMsg["variables"] = variables;
     errorLib.create(newMsg);
 }
-// generátor chyby
+// generátor log
 const logGen = (library, script, log, variables) => {
     message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
@@ -303,7 +303,7 @@ const getNewNumber = (db, season, isPrefix) => {
     }
     try {
         if (checkDebug(season)){
-            message(`DBG: ${scriptName}\n ${db.name} | ${season} | ${isPrefix}`);
+            message("DBG: " + scriptName + "\n" + db.name + "|" + season +" | " + isPrefix);
         } 
         let test = db.attr("test");
         let dbID =  db.field("ID");
