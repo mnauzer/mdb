@@ -1,4 +1,4 @@
-// Library/Event/Script:    Projekty\Cenové ponuky\shared\cpLibrary_w.js
+// zakazky/Event/Script:    Projekty\Cenové ponuky\shared\cpzakazky_w.js
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
@@ -96,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.24";
+    var scriptName ="generujZakazku 23.0.25";
     let variables = "Záznam: " + cp.name + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
@@ -105,8 +105,7 @@ const generujZakazku = cp => {
     }
 
     try {
-        var season = getSeason(cp);
-        cp.set(SEASON, season);
+        var season = getSeason(cp, DB_CENOVE_PONUKY);
       //  var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
         //DEBUG
@@ -115,12 +114,12 @@ const generujZakazku = cp => {
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            let lib = libByName(DB_ZAKAZKY);
-            let appDB = getAppSeasonDB(season, DB_ZAKAZKY);
+            let zakazky = libByName(DB_ZAKAZKY);
+            let appDB = getAppSeasonDB(season, zakazky.title);
             let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
             if (checkDebug(season)){
-                message("DBG: " + scriptName + "\n" + lib.title);
+                message("DBG: " + scriptName + "\n" + zakazky.title);
             } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {

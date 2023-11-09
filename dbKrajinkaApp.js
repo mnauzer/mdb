@@ -203,23 +203,24 @@ const pullAddress = klient => {
     return adresa;
 };
 
-const getSeason = en => {
+const getSeason = (en, database) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.08";
+    let scriptName = "getSeason 23.0.09";
     let variables = "Záznam: " + en.name + "\n";
     if(en == undefined || en == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
         cancel();
         exit();
     }
     try {
-        var season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString();
-        variables = "Záznam: "+  en.name + "\nSezóna: " + season + "\n";
+        let season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString();
+        en.set(SEASON, season)
+        variables += "\nSezóna: " + season + "\n";
         let logMsg = "Setting season field to " + season;
-        logGen("dbKrajinkaApp.js", scriptName, logMsg, variables);
+        logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables);
         return season;
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const lastValid = (links, date, valueField, dateField) => {
