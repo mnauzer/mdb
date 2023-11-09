@@ -421,15 +421,15 @@ const saveEntry = en => {
 //
 // ACTIONS library
 const unlockDB = (en, mementoLibrary) => {
-    let scriptName = "unlockDB 23.0.05";
+    let scriptName = "unlockDB 23.0.06";
     let variables = "Záznam: " + en.name + "\nDatabáza: " + mementoLibrary;
     let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary  
     try {
         let season = getSeason(en, mementoLibrary, scriptName);
-        let db = getAppSeasonDB(season, lib().title, mementoLibrary, scriptName);
-        db.setAttr("rezervované číslo", null);
-        db.setAttr("locked", false);
-        db.setAttr("locked reason", null);
+        let appDB = getAppSeasonDB(season, lib().title, mementoLibrary, scriptName);
+        appDB.setAttr("rezervované číslo", null);
+        appDB.setAttr("locked", false);
+        appDB.setAttr("locked reason", null);
         return true;
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
