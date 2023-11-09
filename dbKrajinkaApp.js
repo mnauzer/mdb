@@ -127,8 +127,8 @@ const getAppSeasonDatabases = season => {
 }
 
 const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 23.0.05"
-    let variables = ""
+    let scriptName = "getAppSeasonDB 23.0.06"
+    let variables = "sezóna: " + season + "\n" + "knižnica: " + dbName + "\n"; 
     try {
         if(season == undefined || dbName == undefined){
             msgGen("dbKrajinkaApp.js", scriptName, "", variables );
@@ -144,7 +144,6 @@ const getAppSeasonDB = (season, dbName) => {
         return 0;
         }
     } catch (error) {
-        variables = "season: " + season + "\n " + "knižnica: " + dbName + "\n"
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
