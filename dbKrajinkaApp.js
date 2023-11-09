@@ -313,7 +313,7 @@ const logGen = (database, library, script, log, variables, parameters) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix, database, inputScript) => {
-    let scriptName = "getNewNumber 23.0.25 / " + inputScript
+    let scriptName = "getNewNumber 23.1.01 / " + inputScript
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     let parameters = "db: " + db.name + "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + database;
     if(db == undefined || db == null){
@@ -340,12 +340,12 @@ const getNewNumber = (db, season, isPrefix, database, inputScript) => {
         }
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-            message(`Nové číslo ${number}`);
+            message("Nové číslo " + number);
             db.setAttr(lastNumAttr, lastNum + 1);
             return number;
             
         } catch (error) {
-            errorGen(databasee, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+            errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
         }
 };
 //
