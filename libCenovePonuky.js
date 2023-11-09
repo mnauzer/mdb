@@ -157,7 +157,7 @@ const generujZakazku = cp => {
             lib.create(novaZakazka);
 
             // inicializácia premennej z posledného záznamu
-            var zakazka = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka")[0];
+            var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
             message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
             
             // generovanie výkazov
@@ -185,7 +185,7 @@ const generujZakazku = cp => {
             }
             cp.set("Stav cenovej ponuky", "Uzavretá");
         } else if (!zakazka) {
-            message("Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka")[0]);
+            message("Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]);
             cancel();
             exit();
         } else {
