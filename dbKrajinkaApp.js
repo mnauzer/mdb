@@ -100,7 +100,7 @@ const checkDebug = season => {
     }
 }
 const getAppSeason = season =>{
-    let scriptName = "getAppSeason 0.23.02"
+    let scriptName = "getAppSeason 23.0.03"
     try {
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
@@ -127,14 +127,14 @@ const getAppSeasonDatabases = season => {
 }
 
 const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 23.0.06"
-    let variables = "sezóna: " + season + "\n" + "knižnica: " + dbName + "\n"; 
+    let scriptName = "getAppSeasonDB 23.0.07"
+    let variables = `Sezóna: ${season} \n Knižnica: ${dbName} \n`; 
+    if(season == undefined || dbName == undefined){
+        msgGen("dbKrajinkaApp.js", scriptName, `season or dbName are undefined`, variables );
+        cancel();
+        exit();
+    }
     try {
-        if(season == undefined || dbName == undefined){
-            msgGen("dbKrajinkaApp.js", scriptName, "", variables );
-            cancel();
-            exit();
-        }
         let databases = getAppSeasonDatabases(season);
         for (let i=0; i<databases.length; i++) {
             if (databases[i].name == dbName){
@@ -151,13 +151,13 @@ const getAppSeasonDB = (season, dbName) => {
 // get db from APP library
 const findAppDB = (season, dbName) => {
     let scriptName = "findAppDB 23.0.07"
-    let variables = ""
+    let variables = `Záznam: ${en.name} \n`
+    if(season === undefined || season == null){
+        msgGen("dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
+        cancel();
+        exit();
+    }
     try {
-        if(season == undefined || dbName == undefined){
-            msgGen("dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
-            cancel();
-            exit();
-        }
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
@@ -199,15 +199,20 @@ const pullAddress = klient => {
 
 const getSeason = en => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.04"
-    let variables = ""
+    let scriptName = "getSeason 23.0.05"
+    let variables = `Záznam: ${en.name} \n`
+    if(en === undefined || en == null){
+        msgGen("dbKrajinkaApp.js", scriptName, "", variables );
+        cancel();
+        exit();
+    }
     try {
         var season = en.field(SEASON);
         if (!season) {
             season = en.field(DATE).getFullYear().toString();
         }
         variables = "záznam: " + en.name + "\n" + "sezóna: " + season + "\n"
-        logGen("dbKrajinkaApp.js", scriptName, "setting season field", variables);
+        logGen("dbKrajinkaApp.js", scriptName, `setting season field to ${season}`, variables);
         return season;
     } catch (error) {
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
@@ -294,14 +299,14 @@ const logGen = (library, script, log, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 23.0.21"
-    let variables = ``
+    let scriptName = "getNewNumber 23.0.22"
+    let variables = `Knižnica: ${db} \n Sezóna: ${season} \n Prefix: ${isPrefix} \n`
+    if(db === undefined || db == null){
+        msgGen("dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
+        cancel();
+        exit();
+    }
     try {
-        if(db === undefined || season === undefined || isPrefix === undefined){
-            msgGen("dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
-            cancel();
-            exit();
-        }
         if (checkDebug(season)){
             message("DBGMSG: " + scriptName + "\n" 
             +  db.name + " | " +  season + " | " +  isPrefix );
