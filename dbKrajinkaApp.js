@@ -132,10 +132,11 @@ const getAppSeasonDatabases = season => {
 }
 
 const getAppSeasonDB = (season, dbName, database) => {
-    let scriptName = "getAppSeasonDB 23.0.09"
+    let scriptName = "getAppSeasonDB 23.0.10"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
+    let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase" + database; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables, parameters );
         cancel();
         exit();
     }
@@ -146,25 +147,26 @@ const getAppSeasonDB = (season, dbName, database) => {
             if (databases[i].name == dbName){
                 return databases[i];
             }
-        msgGen(database, "dbKrajinkaApp.js", scriptName, '"Databáza " + dbName + " nenájdená v sezóne " + season', variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, '"Databáza " + dbName + " nenájdená v sezóne " + season', variables, parameters );
         return 0;
         }
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 
 // get db from APP library
-const findAppDB = (season, dbName) => {
+const findAppDB = (season, dbName, database) => {
     let scriptName = "findAppDB 23.0.08"
     let variables = "Záznam: " + en.name  + "\n"
+    let parameters = "season: " + season  + "\ndbName: " + dbName + "\ndatabase: " + database
     if(season === undefined || season == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
         cancel();
         exit();
     }
     try {
-        let entry = libByName(DB_ASSISTENT).find(season)[0];
+        let entry = libByName(database).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == dbName) {
@@ -175,7 +177,7 @@ const findAppDB = (season, dbName) => {
         return 0;
     } catch (error) {
         variables = 'Sezóna: ${season} \n Knižnica: ${dbName} \n'
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 // get db from APP library
@@ -259,7 +261,7 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 
 // generátor chyby
-const errorGen = (database, library, script, error, variables) => {
+const errorGen = (database, library, script, error, variables, parameters) => {
     message("ERR: " + script + "\n" + error);
     let errorLib = libByName("APP Errors");
     let newError = new Object();
@@ -271,10 +273,11 @@ const errorGen = (database, library, script, error, variables) => {
     newError["text"] = error;
     newError["line"] = error.lineNumber;
     newError["variables"] = variables;
+    newError["parameters"] = parameters;
     errorLib.create(newError);
 }
 // generátor message
-const msgGen = (database, library, script, msg, variables) => {
+const msgGen = (database, library, script, msg, variables, parameters) => {
     message("MSG: " + script + "\n" + msg);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
@@ -285,10 +288,11 @@ const msgGen = (database, library, script, msg, variables) => {
     newMsg["script"] = script;
     newMsg["message"] = msg;
     newMsg["variables"] = variables;
+    newMsg["parameters"] = parameters;
     errorLib.create(newMsg);
 }
 // generátor log
-const logGen = (database, library, script, log, variables) => {
+const logGen = (database, library, script, log, variables, parameters) => {
     message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
@@ -299,6 +303,7 @@ const logGen = (database, library, script, log, variables) => {
     newLog["script"] = script;
     newLog["text"] = log;
     newLog["variables"] = variables;
+    newLog["parameters"] = variables;
     errorLib.create(newLog);
 }
 
