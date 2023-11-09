@@ -287,7 +287,7 @@ const setView = (en, view) => {
             en.set(VIEW, FIELD_VIEW_EDIT);
         } else if (view === FIELD_VIEW_PRINT) {
             en.set(VIEW, FIELD_VIEW_PRINT);
-            en.set(DBG, false);
+         //   en.set(DBG, false);
         }
         
     } catch (error) {
@@ -296,13 +296,13 @@ const setView = (en, view) => {
     }
 }
 const setEntry = (en, isPrefix) => {
-   
+    let scriptName = "setEntry 0.23.01"
     try {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
         var prfx = isPrefix || false;
         var season = getSeason(en);
-        var db = findAppDB(season);
+        var db = getAppSeasonDB(season, lib.title);
         if (db){
             var locked = db.attr("locked");
             if (locked) {
