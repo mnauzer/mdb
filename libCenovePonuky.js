@@ -225,8 +225,14 @@ const generujVydajkyMaterialu = zakazka => {
     }
 }
 const novaVydajkaMaterialu = (zakazka, popis) => {
-    var scriptName ="novaVydajkaMaterialu 0.23.01";
+    let scriptName ="novaVydajkaMaterialu 23.0.02";
+    let variables = "zákazka: " + zakazka.name + "\n"
     try {
+        if(zakazka === undefined ){
+            msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
+            cancel();
+            exit();
+        }
         var sezona = zakazka.field(SEASON);
         if (checkDebug(sezona)){
             message("DBGMSG: " + scriptName);
@@ -248,7 +254,6 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
         var vydajkaMaterialu = lib.find(cislo)[0];
         return vydajkaMaterialu; 
     } catch (error) {
-        let variables = ""
         errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
