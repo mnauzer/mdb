@@ -267,7 +267,7 @@ const errorGen = (library, script, error, variables) => {
 }
 // generátor message
 const msgGen = (library, script, msg, variables) => {
-    message(`MSG: ${script}\n ${msg}`);
+    message(`MSG: ${script} \n ${msg}`);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
     newMsg["type"] = "message";
@@ -280,7 +280,7 @@ const msgGen = (library, script, msg, variables) => {
 }
 // generátor chyby
 const logGen = (library, script, log, variables) => {
-    message(`LOG: ${script}\n ${log}`);
+    message(`LOG: ${script} \n ${log}`);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
     newLog["type"] = "log";
