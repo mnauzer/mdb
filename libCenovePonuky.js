@@ -2,7 +2,7 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-var thisLibName = "libCenovePonuky.js"
+var "libCenovePonuky.js" = "libCenovePonuky.js"
 
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 0.23.01";
@@ -91,7 +91,7 @@ try {
     
     } catch (error) {
         let variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -177,7 +177,7 @@ const generujZakazku = cp => {
         }
     } catch (error) {
         let variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -221,7 +221,7 @@ const generujVydajkyMaterialu = zakazka => {
         return vydajka;
     } catch (error) {
         let variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 const novaVydajkaMaterialu = (zakazka, popis) => {
@@ -249,7 +249,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
         return vydajkaMaterialu; 
     } catch (error) {
         let variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -268,7 +268,7 @@ const linkItems = (vydajkaMaterialu, polozky) => {
         }
     } catch (error) {
         let variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -429,27 +429,32 @@ const generujVykazStrojov = zakazka => {
 
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
-    // inicializácia
-    var sezona = doklad.field(SEASON);
-    var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
-    var sumaBezDPH = 0;
-    var sumaDPH = 0;
-    var sumaCelkomSDPH = 0
-    var polozky = doklad.field(field);
-    for (var p = 0; p < polozky.length; p++) {
-        var mnozstvo = polozky[p].attr("množstvo z cp");
-        if (field == "Práce sadzby" || field == FIELD_STROJE) {
-            var cena = polozky[p].attr("základná sadzba");
-        } else if (field == "Práce" || field == "Materiál")
-            var cena = polozky[p].attr("cena");
-        var cenaCelkom = mnozstvo * cena;
-        sumaBezDPH += cenaCelkom;
+    try {
+        var sezona = doklad.field(SEASON);
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+        var sumaBezDPH = 0;
+        var sumaDPH = 0;
+        var sumaCelkomSDPH = 0
+        var polozky = doklad.field(field);
+        for (var p = 0; p < polozky.length; p++) {
+            var mnozstvo = polozky[p].attr("množstvo z cp");
+            if (field == "Práce sadzby" || field == FIELD_STROJE) {
+                var cena = polozky[p].attr("základná sadzba");
+            } else if (field == "Práce" || field == "Materiál")
+                var cena = polozky[p].attr("cena");
+            var cenaCelkom = mnozstvo * cena;
+            sumaBezDPH += cenaCelkom;
+        }
+        sumaDPH = sumaBezDPH * sadzbaDPH;
+        sumaCelkomSDPH = sumaBezDPH + sumaDPH;
+        doklad.set("CP Suma bez DPH", sumaBezDPH)
+        doklad.set("CP DPH", sumaDPH)
+        doklad.set("CP Suma s DPH", sumaCelkomSDPH)
+        
+    } catch (error) {
+        let variables = ""
+        errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
-    sumaDPH = sumaBezDPH * sadzbaDPH;
-    sumaCelkomSDPH = sumaBezDPH + sumaDPH;
-    doklad.set("CP Suma bez DPH", sumaBezDPH)
-    doklad.set("CP DPH", sumaDPH)
-    doklad.set("CP Suma s DPH", sumaCelkomSDPH)
 }
 //
 

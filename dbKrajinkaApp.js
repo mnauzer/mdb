@@ -7,7 +7,7 @@
 var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 - a.field(DATE).getTime()/1000; }}
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000; }}
 var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
-var thisLibName = "dbKrajinkaApp.js"
+var "dbKrajinkaApp.js" = "dbKrajinkaApp.js"
 // example:
 // var entries = lib().entries();
 // var order = { compare: function(a,b) { return b.field("date").getTime()/1000 - a.field("date").getTime()/1000; }}
@@ -96,7 +96,7 @@ const checkDebug = season => {
         return getAppSeason(season).field("debug");
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const getAppSeason = season =>{
@@ -106,7 +106,7 @@ const getAppSeason = season =>{
         return entry;
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
@@ -116,7 +116,7 @@ const getAppSeasonDatabases = season => {
         return getAppSeason(season).field("Databázy")
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
@@ -133,7 +133,7 @@ const getAppSeasonDB = (season, dbName) => {
         }
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
@@ -152,7 +152,7 @@ const findAppDB = (season, name) => {
         return 0;
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
     }
 // get db from APP library
@@ -195,7 +195,7 @@ const getSeason = en => {
         }
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const lastValid = (links, date, valueField, dateField) => {
@@ -280,7 +280,7 @@ const getNewNumber = (db, season, isPrefix) => {
             
         } catch (error) {
             var variables = ``
-            errorGen(thisLibName, scriptName, error, variables);
+            errorGen("dbKrajinkaApp.js", scriptName, error, variables);
         
         }
 };
@@ -298,7 +298,7 @@ const setView = (en, view) => {
         
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const setEntry = (en, isPrefix) => {
@@ -336,7 +336,7 @@ const setEntry = (en, isPrefix) => {
         }
     } catch (error) {
         var variables = ""
-        errorGen(thisLibName, scriptName, error, variables);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const saveEntry = en => {
