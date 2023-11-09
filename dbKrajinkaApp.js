@@ -381,29 +381,18 @@ const saveEntry = en => {
 //
 // ACTIONS library
 const unlockDB = en => {
-    let scriptName = "unlockDB 0.23.02";
+    let scriptName = "unlockDB 0.23.03";
+    let variables = ""
     try {
         message(scriptName);
         let season = getSeason(en);
-        let db = findAppDB(season);
+        let db = getAppSeasonDB(season, lib.name);
         db.setAttr("rezervované číslo", null);
         db.setAttr("locked", false);
         db.setAttr("locked reason", null);
         return true;
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "dbKrajinka.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-    // newError["variables"] = 
-    // "lib: " + lib + "\n" 
-    // + "season: " + season + "\n"
-    // + "isPrefix: " + isPrefix;
-        errorLib.create(newError);
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 const setID = entries => {
