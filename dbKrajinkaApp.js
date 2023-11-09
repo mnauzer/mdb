@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, database) => {
 }
 
 const getAppSeasonDB = (season, dbName, database) => {
-    let scriptName = "getAppSeasonDB 23.0.12"
+    let scriptName = "getAppSeasonDB 23.0.13"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
     let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
@@ -142,17 +142,23 @@ const getAppSeasonDB = (season, dbName, database) => {
         exit();
     }
     try {
-        let databases = getAppSeasonDatabases(season, database);
-        message("Database: " + dbName + ", Length: " + databases.length)
-        for (let i = 0; i < databases.length; i++) {
-            if (databases[i].field("Názov") == dbName){
-                message(databases[i].field("Názov"))
+       // let databases = getAppSeasonDatabases(season, database);
+       // message("Database: " + dbName + ", Length: " + databases.length)
+        let entry = libByName(DB_ASSISTENT).find(season)[0];
+        let databazy = entry.field("Databázy");
+        for (var v = 0;v < databazy.length; v++) {
+            if (databazy[v].field("Názov") == dbName) {
                 logGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nájdená", variables, parameters );
-                return databases[i];
+                return databazy[v];
             }
+        }
         msgGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nenájdená", variables, parameters );
         return 0;
-        }
+        // for (let i = 0; i < databases.length; i++) {
+        //     if (databases[i].field("Názov") == dbName){
+        //         message(databases[i].field("Názov"))
+        //         return databases[i];
+        //     }
     } catch (error) {
         errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
