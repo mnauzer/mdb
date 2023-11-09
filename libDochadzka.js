@@ -9,6 +9,7 @@ const updateEntry = en => {
 
 const lastSadzba = (employee, date) => {
     let scriptName = "lastSadzba 23.0.01"
+    let variables = ""
     try {
         var sezona = getSeason(entry());
         if (checkDebug(sezona)){
@@ -16,11 +17,11 @@ const lastSadzba = (employee, date) => {
         } 
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-        message("Links: " + links.length);
+        msgGen("libDochadzka", scriptName, 'Links: " + links.length', variables);
         filtered = filterByDatePlatnost(links, date);
-        message("Filtered links: " + filtered.length);
+        msgGen("libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables);
         if (filtered.length < 0) {
-            message("Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu")
+            msgGen("libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables);
         } else {
     
             filtered.reverse();
@@ -30,7 +31,6 @@ const lastSadzba = (employee, date) => {
         return sadzba;
         
     } catch (error) {
-        var variables = ""
         errorGen("libDochadzka.js", scriptName, error, variables);
     }
 }

@@ -239,13 +239,42 @@ const errorGen = (library, script, error, variables) => {
     + error  );
     let errorLib = libByName("APP Errors");
     let newError = new Object();
+    newError["type"] = "error";
     newError["date"] = new Date();
     newError["library"] = library;
     newError["script"] = script;
-    newError["error"] = error;
+    newError["text"] = error;
     newError["line"] = error.lineNumber;
     newError["variables"] = variables;
     errorLib.create(newError);
+}
+// generátor message
+const msgGen = (library, script, msg, variables) => {
+    message("ERROR: " + script + "\n" 
+    + msg  );
+    let errorLib = libByName("APP Errors");
+    let newMsg = new Object();
+    newMsg["type"] = "message";
+    newMsg["date"] = new Date();
+    newMsg["library"] = library;
+    newMsg["script"] = script;
+    newMsg["message"] = msg;
+    newMsg["variables"] = variables;
+    errorLib.create(newMsg);
+}
+// generátor chyby
+const logGen = (library, script, log, variables) => {
+    message("ERROR: " + script + "\n" 
+    + log  );
+    let errorLib = libByName("APP Errors");
+    let newLog = new Object();
+    newLog["type"] = "log";
+    newLog["date"] = new Date();
+    newLog["library"] = library;
+    newLog["script"] = script;
+    newLog["text"] = log;
+    newLog["variables"] = variables;
+    errorLib.create(newLog);
 }
 
 // generuje nové číslo záznamu
