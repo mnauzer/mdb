@@ -146,6 +146,8 @@ const getAppSeasonDB = (season, dbName, database) => {
         message("Database: " + dbName + ", Length: " + databases.length)
         for (let i = 0; i < databases.length; i++) {
             if (databases[i].field("Názov") == dbName){
+                message(databases[i].field("Názov"))
+                logGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nájdená", variables, parameters );
                 return databases[i];
             }
         msgGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nenájdená", variables, parameters );
@@ -287,7 +289,7 @@ const msgGen = (database, library, script, msg, variables, parameters) => {
     newMsg["library"] = library;
     newMsg["database"] = database;
     newMsg["script"] = script;
-    newMsg["message"] = msg;
+    newMsg["text"] = msg;
     newMsg["variables"] = variables;
     newMsg["parameters"] = parameters;
     errorLib.create(newMsg);
@@ -342,7 +344,7 @@ const getNewNumber = (db, season, isPrefix, database) => {
             return number;
             
         } catch (error) {
-            errorGen(db.name, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+            errorGen(databasee, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
         }
 };
 //
