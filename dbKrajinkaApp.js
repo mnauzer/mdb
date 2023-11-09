@@ -90,22 +90,20 @@ const lteClear = (lte) => {
         }
     }
 }
-
-const getAppSeason = season =>{
-    let scriptName = "getAppSeason 0.23.02"
+const checkDebug = season => {
+    let scriptName = "checkDebug 0.23.05"
     try {
-        let entry = libByName(DB_ASSISTENT).find(season)[0];
-        return entry;
+        return getAppSeason(season).field("debug");
     } catch (error) {
         var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
     }
 }
-
-const checkDebug = season => {
-    let scriptName = "checkDebug 0.23.05"
+const getAppSeason = season =>{
+    let scriptName = "getAppSeason 0.23.02"
     try {
-        return getAppSeason(season).field("debug");
+        let entry = libByName(DB_ASSISTENT).find(season)[0];
+        return entry;
     } catch (error) {
         var variables = ""
         errorGen(thisLibName, scriptName, error, variables);
@@ -130,6 +128,8 @@ const getAppSeasonDB = (season, dbName) => {
             if (databases[i].name == dbName){
                 return databases[i];
             }
+        message("Databáza " + name + " nenájdená v sezóne " + season);
+        return 0;
         }
     } catch (error) {
         var variables = ""
@@ -181,15 +181,21 @@ const pullAddress = klient => {
 };
 // get entryDefault season from creation date
 const getSeason = en => {
-    var season = en.field(SEASON);
-    if (season < 0) {
-       // message("getSeason: " + season);
-        return season;
-    } else {
-        let date = new Date();
-        season = date.getFullYear().toString();
-       // message("Sezóna: " + season + "\nDate: " + date);
-        return season;
+    let scriptName = "getSeason 0.23.01"
+    try {
+        var season = en.field(SEASON);
+        if (season < 0) {
+           // message("getSeason: " + season);
+            return season;
+        } else {
+            let date = new Date();
+            season = date.getFullYear().toString();
+           // message("Sezóna: " + season + "\nDate: " + date);
+            return season;
+        }
+    } catch (error) {
+        var variables = ""
+        errorGen(thisLibName, scriptName, error, variables);
     }
 }
 const lastValid = (links, date, valueField, dateField) => {
@@ -463,8 +469,6 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
     return result;
 }
 const getSadzbaDPH = season => {
-
-
 }
 
 const filterByDatePlatnost = (entries, maxDate) => {
