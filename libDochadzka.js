@@ -9,7 +9,7 @@ const updateEntry = en => {
 
 const lastSadzba = (employee, date) => {
     let scriptName = "lastSadzba 23.0.01"
-    let variables = ""
+    let variables = "Záznam: " + employee.name + "\n";
     try {
         var sezona = getSeason(entry());
         if (checkDebug(sezona)){
@@ -17,11 +17,11 @@ const lastSadzba = (employee, date) => {
         } 
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-        msgGen("libDochadzka", scriptName, 'Links: " + links.length', variables);
+        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Links: " + links.length', variables);
         filtered = filterByDatePlatnost(links, date);
-        msgGen("libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables);
+        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables);
         if (filtered.length < 0) {
-            msgGen("libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables);
+            msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables);
         } else {
     
             filtered.reverse();
@@ -31,7 +31,7 @@ const lastSadzba = (employee, date) => {
         return sadzba;
         
     } catch (error) {
-        errorGen("libDochadzka.js", scriptName, error, variables);
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables);
     }
 }
 
@@ -113,7 +113,7 @@ const prepocitatZaznamDochadzky = en => {
         message("Hotovo...");
     } catch (error) {
         var variables = ""
-        errorGen("libDochadzka.js", scriptName, error, variables);
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables);
     }
 }
 

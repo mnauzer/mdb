@@ -6,100 +6,100 @@
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 23.0.01";
     let variables = ""
-try {
-    message("Prepočítavam...")
-    // inicializácia
-    var typ = en.field("Typ cenovej ponuky");
-    //spôsob účtovania doprav
+    try {
+        message("Prepočítavam...")
+        // inicializácia
+        var typ = en.field("Typ cenovej ponuky");
+        //spôsob účtovania doprav
 
-    var uctoDopravy = en.field("Účtovanie dopravy");
-    var pracaCelkom = 0;
-    var strojeCelkom = 0;
-    var materialCelkom = 0;
-    var cenaCelkomBezDPH = 0;
-    var cenaSDPH = 0;
-    var dph = 0;
-    var season = getSeason(en);
-    var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
-    // nastaviť splatnosť
-    var datum = new Date(en.field(DATE));
-    var platnost = new Date(en.field("Platnosť do"));
-    var platnost30 = new Date(moment(datum).add(en.field("Platnosť ponuky"), "Days"));
-    en.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
+        var uctoDopravy = en.field("Účtovanie dopravy");
+        var pracaCelkom = 0;
+        var strojeCelkom = 0;
+        var materialCelkom = 0;
+        var cenaCelkomBezDPH = 0;
+        var cenaSDPH = 0;
+        var dph = 0;
+        var season = getSeason(en);
+        var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
+        // nastaviť splatnosť
+        var datum = new Date(en.field(DATE));
+        var platnost = new Date(en.field("Platnosť do"));
+        var platnost30 = new Date(moment(datum).add(en.field("Platnosť ponuky"), "Days"));
+        en.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
 
-    // doplň adresu klienta do Krycieho listu
-    var klient = en.field("Miesto realizácie")[0].field("Klient")[0];
-    en.set("Klient", klient);
-    if (klient) {
-        en.set("Odberateľ", pullAddress(klient));
-    }
+        // doplň adresu klienta do Krycieho listu
+        var klient = en.field("Miesto realizácie")[0].field("Klient")[0];
+        en.set("Klient", klient);
+        if (klient) {
+            en.set("Odberateľ", pullAddress(klient));
+        }
 
-    // prepočet podľa typu cenovej ponuky
-    switch (typ) {
-        case "Položky":
-            var diely = en.field("Diely cenovej ponuky");
-            // prejsť všetky diely a spočítať práce a materiál
-            if (diely) {
-                for (var d = 0; d < diely.length; d++) {
-                    cenaCelkomBezDPH += prepocetDielPolozky(en, diely[d]);
+        // prepočet podľa typu cenovej ponuky
+        switch (typ) {
+            case "Položky":
+                var diely = en.field("Diely cenovej ponuky");
+                // prejsť všetky diely a spočítať práce a materiál
+                if (diely) {
+                    for (var d = 0; d < diely.length; d++) {
+                        cenaCelkomBezDPH += prepocetDielPolozky(en, diely[d]);
+                    }
                 }
-            }
-            break;
-        case "Hodinovka":
-            var diely = en.field("Diely cenovej ponuky hzs");
-            if (diely) {
-                for (var d = 0; d < diely.length; d++) {
-                    pracaCelkom += prepocetDielHZS(en, diely[d]);
-                }
-                if (en.field("+Materiál")) {
-                    // spočítať  materiál
-                    var material = en.field("Materiál");
-                    materialCelkom = polozkaMaterial(material);
-                    en.set("Materiál hzs", materialCelkom);
-                    en.set("Materiál celkom bez DPH", materialCelkom);
-                }
-                if (en.field("+Mechanizácia")) {
-                    // spočítať mechanizácie
-                    var stroje = en.field(FIELD_STROJE);
-                    strojeCelkom = prepocetDielStroje(stroje);
-                    en.set("Využitie mechanizácie", strojeCelkom);
-                    en.set("Stroje celkom bez DPH", strojeCelkom);
-                }
-                cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
+                break;
+            case "Hodinovka":
+                var diely = en.field("Diely cenovej ponuky hzs");
+                if (diely) {
+                    for (var d = 0; d < diely.length; d++) {
+                        pracaCelkom += prepocetDielHZS(en, diely[d]);
+                    }
+                    if (en.field("+Materiál")) {
+                        // spočítať  materiál
+                        var material = en.field("Materiál");
+                        materialCelkom = polozkaMaterial(material);
+                        en.set("Materiál hzs", materialCelkom);
+                        en.set("Materiál celkom bez DPH", materialCelkom);
+                    }
+                    if (en.field("+Mechanizácia")) {
+                        // spočítať mechanizácie
+                        var stroje = en.field(FIELD_STROJE);
+                        strojeCelkom = prepocetDielStroje(stroje);
+                        en.set("Využitie mechanizácie", strojeCelkom);
+                        en.set("Stroje celkom bez DPH", strojeCelkom);
+                    }
+                    cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
 
-            }
-            break;
-        case "Ad Hoc":
-            message("I'am thinking about it!");
-            break;
-    }
+                }
+                break;
+            case "Ad Hoc":
+                message("I'am thinking about it!");
+                break;
+        }
 
-    // Doprava každopádne
-    var dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
+        // Doprava každopádne
+        var dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
 
-    // dph
-    cenaCelkomBezDPH += dopravaCelkom;
-    dph = cenaCelkomBezDPH * sadzbaDPH;
-    cenaSDPH += cenaCelkomBezDPH + dph;
-    en.set("Práca celkom bez DPH", pracaCelkom);
-    en.set("Práce hzs", pracaCelkom);
-    en.set("Doprava", dopravaCelkom);
-    en.set("Celkom (bez DPH)", cenaCelkomBezDPH);
-    en.set("DPH 20%", dph);
-    en.set("Cena celkom (s DPH)", cenaSDPH);
-    message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
-    
+        // dph
+        cenaCelkomBezDPH += dopravaCelkom;
+        dph = cenaCelkomBezDPH * sadzbaDPH;
+        cenaSDPH += cenaCelkomBezDPH + dph;
+        en.set("Práca celkom bez DPH", pracaCelkom);
+        en.set("Práce hzs", pracaCelkom);
+        en.set("Doprava", dopravaCelkom);
+        en.set("Celkom (bez DPH)", cenaCelkomBezDPH);
+        en.set("DPH 20%", dph);
+        en.set("Cena celkom (s DPH)", cenaSDPH);
+        message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
+        
     } catch (error) {
         variables = "záznam: " + en.name + "\n"
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.20";
-    let variables = `Záznam: ${cp.name} \n`
-    if(cp === undefined){
-        msgGen("libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
+    var scriptName ="generujZakazku 23.0.21";
+    let variables = "Záznam: " + cp.name + "\n"
+    if(cp == undefined){
+        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
         cancel();
         exit();
     }
@@ -111,20 +111,20 @@ const generujZakazku = cp => {
         var stav = cp.field("Stav cenovej ponuky");
         //DEBUG
         if (checkDebug(season)){
-            message(`DBG: ${scriptName}`);
+            message("DBG: " + scriptName);
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             var lib = libByName(DB_ZAKAZKY);
             //DEBUG
             if (checkDebug(season)){
-                message(`DBG: ${lib.title}`);
+                message("DBG: " + lib.title);
             } 
             
             var appDB = getAppSeasonDB(season, lib.title);
             //DEBUG
             if (checkDebug(season)){
-                message(`DBG: ${lib.title}`);
+                message("DBG: " + lib.title);
             } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
@@ -139,7 +139,7 @@ const generujZakazku = cp => {
                 typZakazky = "Realizácia";
             }
             // vytvorenie nového objektu
-            message(`Generujem novú zákazku...`)
+            message("Generujem novú zákazku...")
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
             novaZakazka["Typ zákazky"] = typZakazky; 
@@ -186,11 +186,15 @@ const generujZakazku = cp => {
             cp.set("Stav cenovej ponuky", "Uzavretá");
         } else if (!zakazka) {
             message("Z cenovej ponuky už je vytvorená zákazka č." + zakazka.field(NUMBER));
+            cancel();
+            exit();
         } else {
             message("Cenová ponuka musí byť schválená");
+            cancel();
+            exit();
         }
     } catch (error) {
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -268,7 +272,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
         var vydajkaMaterialu = lib.find(newNumber)[0];
         return vydajkaMaterialu; 
     } catch (error) {
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -286,7 +290,7 @@ const linkItems = (vydajkaMaterialu, polozky) => {
             vydajkaMaterialu.field("Materiál")[p].setAttr("cena", polozky[p].attr("cena"));
         }
     } catch (error) {
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
@@ -319,19 +323,7 @@ const novyVykazPrac = (zakazka, popis) => {
         var vykazPrac = lib.find(cislo)[0];
         return vykazPrac;
     } catch (error) {
-        message("ERROR: " + scriptName + "\n" 
-        + error  );
-        let errorLib = libByName("APP Errors");
-        let newError = new Object();
-        newError["date"] = new Date();
-        newError["library"] = "libCenovePonuky.js";
-        newError["script"] = scriptName;
-        newError["error"] = error;
-        newError["variables"] = 
-        "zakazka: " + zakazka;
-        "popis: " + popis;
-        "line: " + error.lineNumber;
-        errorLib.create(newError);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 const generujVykazyPrac = zakazka => { 
@@ -396,7 +388,7 @@ const generujVykazyPrac = zakazka => {
         return vykazPrac; //suma
         
     } catch (error) {
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables);
     }
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {

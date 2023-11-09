@@ -252,13 +252,14 @@ const getLinkIndex = (link, remoteLinks) => {
 }
 
 // generátor chyby
-const errorGen = (library, script, error, variables) => {
+const errorGen = (database, library, script, error, variables) => {
     message("ERR: " + script + "\n" + error);
     let errorLib = libByName("APP Errors");
     let newError = new Object();
     newError["type"] = "error";
     newError["date"] = new Date();
     newError["library"] = library;
+    newError["database"] = database;
     newError["script"] = script;
     newError["text"] = error;
     newError["line"] = error.lineNumber;
@@ -266,26 +267,28 @@ const errorGen = (library, script, error, variables) => {
     errorLib.create(newError);
 }
 // generátor message
-const msgGen = (library, script, msg, variables) => {
+const msgGen = (database, library, script, msg, variables) => {
     message("MSG: " + script + "\n" + msg);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
     newMsg["type"] = "message";
     newMsg["date"] = new Date();
     newMsg["library"] = library;
+    newMsg["database"] = database;
     newMsg["script"] = script;
     newMsg["message"] = msg;
     newMsg["variables"] = variables;
     errorLib.create(newMsg);
 }
 // generátor log
-const logGen = (library, script, log, variables) => {
+const logGen = (database, library, script, log, variables) => {
     message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
     newLog["type"] = "log";
     newLog["date"] = new Date();
     newLog["library"] = library;
+    newLog["database"] = database;
     newLog["script"] = script;
     newLog["text"] = log;
     newLog["variables"] = variables;
