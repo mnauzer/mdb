@@ -256,7 +256,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
 const linkItems = (vydajkaMaterialu, polozky) => {
     var scriptName ="linkItems 0.23.01";
     try {
-        var sezona = zakazka.field(SEASON);
+        var season = vydajkaMaterialu.field(SEASON);
         if (checkDebug(sezona)){
             message("DBGMSG: " + scriptName);
         } 
