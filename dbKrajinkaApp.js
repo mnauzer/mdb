@@ -148,17 +148,22 @@ const getAppSeasonDB = (season, dbName) => {
 }
 
 // get db from APP library
-const findAppDB = (season, name) => {
-    let scriptName = "findAppDB 0.23.05"
+const findAppDB = (season, dbName) => {
+    let scriptName = "findAppDB 0.23.06"
     try {
+        if(season == undefined || dbName == undefined){
+            msgGen("dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
+            cancel();
+            exit();
+        }
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
-            if (databazy[v].field("Názov") === name) {
+            if (databazy[v].field("Názov") === dbName) {
                 return databazy[v];
             }
         }
-        message("Databáza " + name + " nenájdená v sezóne " + season);
+        message("Databáza " + dbName + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
         var variables = ""
