@@ -96,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.21";
+    var scriptName ="generujZakazku 23.0.22";
     let variables = "Záznam: " + cp.name + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
@@ -185,7 +185,7 @@ const generujZakazku = cp => {
             }
             cp.set("Stav cenovej ponuky", "Uzavretá");
         } else if (!zakazka) {
-            message("Z cenovej ponuky už je vytvorená zákazka č." + zakazka.field(NUMBER));
+            message("Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka")[0]);
             cancel();
             exit();
         } else {
