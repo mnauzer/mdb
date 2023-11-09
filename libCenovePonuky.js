@@ -269,11 +269,12 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
 }
 
 const linkItems = (vydajkaMaterialu, polozky) => {
-    var scriptName ="linkItems 23.0.04";
+    let scriptName ="linkItems 23.0.05";
+    let variables = "Záznam: " + vydajkaMaterialu.name + "\n"
     try {
-        var season = vydajkaMaterialu.field(SEASON);
+        var season = getSeason(vydajkaMaterialu, DB_CENOVE_PONUKY)
         if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
+            message("DBG: " + scriptName + "\n");
         } 
         vydajkaMaterialu.set("Materiál", null);
         for (var p = 0; p < polozky.length; p++) {
@@ -319,7 +320,7 @@ const novyVykazPrac = (zakazka, popis) => {
     }
 }
 const generujVykazyPrac = zakazka => { 
-    let scriptName = "generujVykazyPrac 23.0.07";
+    let scriptName = "generujVykazyPrac 23.0.08";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     if(zakazka === undefined){
         msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables );
@@ -360,7 +361,7 @@ const generujVykazyPrac = zakazka => {
                 popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
             }
             if (cp.field("+Položky")) {
-                if (cp.field("Práce")) {
+                if (cp.field("Práce") != undefined) {
                     var polozkyPonuky = cp.field("Práce") 
                 }           // Položky ponuky: napr.field("Záhradnícke práce")
                 var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
