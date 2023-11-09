@@ -199,7 +199,7 @@ const pullAddress = klient => {
 
 const getSeason = en => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.05"
+    let scriptName = "getSeason 23.0.06"
     let variables = `Záznam: ${en.name} \n`
     if(en === undefined || en == null){
         msgGen("dbKrajinkaApp.js", scriptName, "", variables );
@@ -211,8 +211,9 @@ const getSeason = en => {
         if (!season) {
             season = en.field(DATE).getFullYear().toString();
         }
-        variables = "záznam: " + en.name + "\n" + "sezóna: " + season + "\n"
-        logGen("dbKrajinkaApp.js", scriptName, `setting season field to ${season}`, variables);
+        variables = `Záznam: ${en.name}\n Sezóna:${season}\n`
+        let logMsg = `setting season field to ${season}`
+        logGen("dbKrajinkaApp.js", scriptName, logMsg, variables);
         return season;
     } catch (error) {
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
@@ -296,8 +297,8 @@ const logGen = (library, script, log, variables) => {
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
-    let scriptName = "getNewNumber 23.0.22"
-    let variables = `Knižnica: ${db} \n Sezóna: ${season} \n Prefix: ${isPrefix} \n`
+    let scriptName = "getNewNumber 23.0.23"
+    let variables = `Knižnica: ${db.name} \n Sezóna: ${season} \n Prefix: ${isPrefix} \n`
     if(db === undefined || db == null){
         msgGen("dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
         cancel();
@@ -305,8 +306,7 @@ const getNewNumber = (db, season, isPrefix) => {
     }
     try {
         if (checkDebug(season)){
-            message("DBGMSG: " + scriptName + "\n" 
-            +  db.name + " | " +  season + " | " +  isPrefix );
+            message(`DBG: ${scriptName}\n ${db.name} | ${season} | ${isPrefix}`);
         } 
         let test = db.attr("test");
         let dbID =  db.field("ID");
@@ -326,12 +326,11 @@ const getNewNumber = (db, season, isPrefix) => {
         }
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-            message("Vygenerované číslo: " + number);
+            message(`Nové číslo ${number}`);
             db.setAttr(lastNumAttr, lastNum + 1);
             return number;
             
         } catch (error) {
-            variables = "knižnica: " + db.name + "\n" + "sezóna: " + season + "\n"
             errorGen("dbKrajinkaApp.js", scriptName, error, variables);
         }
 };

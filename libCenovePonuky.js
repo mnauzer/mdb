@@ -96,21 +96,30 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.19";
+    var scriptName ="generujZakazku 23.0.20";
+    let variables = `Záznam: ${cp.name} \n`
+    if(cp === undefined){
+        msgGen("libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
+        cancel();
+        exit();
+    }
+
     try {
         var season = getSeason(cp);
         cp.set(SEASON, season);
-        var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
+      //  var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
+        //DEBUG
         if (checkDebug(season)){
-            message("DBGMSG: " + scriptName);
+            message(`DBG: ${scriptName}`);
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             var lib = libByName(DB_ZAKAZKY);
-            var appDB = getAppSeasonDB(season, lib.title);
+            var appDB = getAppSeasonDB(season, lib().title);
+            //DEBUG
             if (checkDebug(season)){
-                message("DBGMSG: " + lib.title);
+                message(`DBG: ${lib.title}`);
             } 
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
@@ -121,11 +130,11 @@ const generujZakazku = cp => {
                     typZakazky = "Údržba";
                 }
             } else {
-                var dielyZakazky = en.field("Diely cenovej ponuky");
+                var dielyZakazky = cp.field("Diely cenovej ponuky");
                 typZakazky = "Realizácia";
             }
             // vytvorenie nového objektu
-            message("Generujem novú zákazku...")
+            message(`Generujem novú zákazku...`)
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
             novaZakazka["Typ zákazky"] = typZakazky; 
@@ -176,7 +185,6 @@ const generujZakazku = cp => {
             message("Cenová ponuka musí byť schválená");
         }
     } catch (error) {
-        let variables = ""
         errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
