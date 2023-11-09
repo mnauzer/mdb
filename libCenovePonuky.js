@@ -95,7 +95,7 @@ try {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.15";
+    var scriptName ="generujZakazku 0.23.16";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
