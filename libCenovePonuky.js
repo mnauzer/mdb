@@ -96,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.22";
+    var scriptName ="generujZakazku 23.0.23";
     let variables = "Záznam: " + cp.name + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables );
@@ -115,12 +115,7 @@ const generujZakazku = cp => {
         } 
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            var lib = libByName(DB_ZAKAZKY);
-            //DEBUG
-            if (checkDebug(season)){
-                message("DBG: " + lib.title);
-            } 
-            
+            let lib = libByName(DB_ZAKAZKY);
             let appDB = getAppSeasonDB(season, lib);
             let newNumber = getNewNumber(appDB, season, true);
             //DEBUG
