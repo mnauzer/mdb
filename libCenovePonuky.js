@@ -96,7 +96,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.01";
+    var scriptName ="generujZakazku 23.1.02";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -113,7 +113,7 @@ const generujZakazku = cp => {
             // vygenerovať novú zákazku
             let zakazky = libByName(DB_ZAKAZKY);
             let appDB = getAppSeasonDB(season, zakazky.title, DB_CENOVE_PONUKY, scriptName);
-            let newNumber = getNewNumber(appDB, season, true, scriptName);
+            let newNumber = getNewNumber(appDB, season, true, DB_CENOVE_PONUKY, scriptName);
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
@@ -148,7 +148,7 @@ const generujZakazku = cp => {
             var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
             let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná";
             message(msgTxt);
-            msgGenGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
+            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
             
             // generovanie výkazov
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
