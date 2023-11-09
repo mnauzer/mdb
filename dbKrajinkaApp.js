@@ -126,8 +126,13 @@ const getAppSeasonDatabases = season => {
 }
 
 const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 0.23.03"
+    let scriptName = "getAppSeasonDB 0.23.04"
     try {
+        if(season == undefined || dbName == undefined){
+            msgGen("dbKrajinkaApp.js", scriptName, "", variables );
+            cancel();
+            exit();
+        }
         let databases = getAppSeasonDatabases(season);
         for (let i=0; i<databases.length; i++) {
             if (databases[i].name == dbName){
