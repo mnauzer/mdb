@@ -222,8 +222,8 @@ const getSeason = (en, database, inputScript) => {
         let season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString();
         en.set(SEASON, season)
         variables += "\nSezóna: " + season + "\n";
-        let logMsg = "Setting season field to " + season;
-        logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
+     //   let logMsg = "Setting season field to " + season;
+     //  logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
         return season;
     } catch (error) {
         errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
@@ -343,8 +343,8 @@ const getNewNumber = (db, season, isPrefix, database, inputScript) => {
             db.setAttr(lastNumAttr, lastNum + 1);
             
             variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr(lastNumAttr);
-            let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
-            logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
+          //  let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
+          //  logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
             return number;
             
         } catch (error) {

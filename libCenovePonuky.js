@@ -389,7 +389,8 @@ const generujVykazStrojov = zakazka => {
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
-    
+}
+
 const nalinkujPolozkyStrojov = (vykaz, polozky) => {
     let scriptName = "nalinkujPolozkyStrojov 23.0.01";
     let variables = "Výkaz : " +  vykaz.name
@@ -404,8 +405,8 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
-    }
 }
+
 
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {

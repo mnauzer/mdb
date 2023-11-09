@@ -1,6 +1,6 @@
 const novyVykazStrojov = (zakazka, popis) => {
-    let scriptName = "novyVykazStrojov 23.0.01";
-    let variables = "Zákazka: " +  zakazka.name + "\n"
+    let scriptName = "novyVykazStrojov 23.0.02";
+    let variables = "Zákazka: " +  zakazka.name + "\nPopis: " + popis
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
@@ -13,16 +13,16 @@ const novyVykazStrojov = (zakazka, popis) => {
         let newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_STROJOV, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
-        novyVykaz[NUMBER] = cislo;
-    novyVykaz[DATE] = datum;
-    novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
-    novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
-    novyVykaz["s DPH"] = true; //harcoded
-    novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
-    novyVykaz["Vydané"] = "Zákazka";
-    novyVykaz["Zákazka"] = zakazka;
-    novyVykaz["Cenová ponuka"] = cp;
-    novyVykaz[SEASON] = sezona;
+        novyVykaz[NUMBER] = newNumber;
+        novyVykaz[DATE] = datum;
+        novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
+        novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
+        novyVykaz["s DPH"] = true; //harcoded
+        novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
+        novyVykaz["Vydané"] = "Zákazka";
+        novyVykaz["Zákazka"] = zakazka;
+        novyVykaz["Cenová ponuka"] = cp;
+        novyVykaz[SEASON] = season;
         vykazy.create(novyVykaz);
         let vykazPrac = vykazy.find(newNumber)[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
