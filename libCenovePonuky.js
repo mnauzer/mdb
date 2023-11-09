@@ -116,6 +116,11 @@ const generujZakazku = cp => {
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             var lib = libByName(DB_ZAKAZKY);
+            //DEBUG
+            if (checkDebug(season)){
+                message(`DBG: ${lib().title}`);
+            } 
+            
             var appDB = getAppSeasonDB(season, lib().title);
             //DEBUG
             if (checkDebug(season)){
