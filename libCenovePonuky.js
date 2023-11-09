@@ -2,7 +2,6 @@
 // JS Libraries:
 // Dátum:                   27.03.2023
 // Popis:
-var "libCenovePonuky.js" = "libCenovePonuky.js"
 
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 0.23.01";
