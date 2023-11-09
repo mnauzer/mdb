@@ -154,7 +154,7 @@ const findAppDB = (season, name) => {
         var variables = ""
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
-    }
+}
 // get db from APP library
 const findAppDBbyName = (season, libTitle) => {
     var entry = libByName(DB_ASSISTENT).find(season)[0];
@@ -179,22 +179,19 @@ const pullAddress = klient => {
     }
     return adresa;
 };
-// get entryDefault season from creation date
+
 const getSeason = en => {
-    let scriptName = "getSeason 0.23.01"
+    // get entryDefault season from creation date
+    let scriptName = "getSeason 23.0.02"
+    let variables = ""
     try {
         var season = en.field(SEASON);
-        if (season < 0) {
-           // message("getSeason: " + season);
-            return season;
-        } else {
-            let date = new Date();
+        if (!season) {
             season = date.getFullYear().toString();
-           // message("Sezóna: " + season + "\nDate: " + date);
-            return season;
         }
+        logGen("dbKrajinkaApp.js", scriptName, "setting season field", variables);
+        return season;
     } catch (error) {
-        var variables = ""
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
