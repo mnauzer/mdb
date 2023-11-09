@@ -331,7 +331,8 @@ const setView = (en, view) => {
     }
 }
 const setEntry = (en, isPrefix) => {
-    let scriptName = "setEntry 0.23.01"
+    let scriptName = "setEntry 23.0.01"
+    let variables = ""
     try {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
@@ -364,7 +365,6 @@ const setEntry = (en, isPrefix) => {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        var variables = ""
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
@@ -381,7 +381,7 @@ const saveEntry = en => {
 //
 // ACTIONS library
 const unlockDB = en => {
-    let scriptName = "unlockDB 0.23.03";
+    let scriptName = "unlockDB 23.0.03";
     let variables = ""
     try {
         message(scriptName);
@@ -395,14 +395,20 @@ const unlockDB = en => {
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
+
 const setID = entries => {
-    message("Set ID v.0.23.08");
-    message(entries.length + " záznamov")
+    let scriptName = "setID 23.0.01";
+    let variables = ""
+    try {
     entries.sort(orderDate);
     entries.reverse();
     for (var e = 0; e < entries.length; e++) {
         entries[e].set("ID", e + 1);
     }
+    } catch (error) {
+        errorGen("dbKrajinkaApp.js", scriptName, error, variables);
+    }
+    
 }
 const setTEST = en => {
     message("Set TEST v.0.23.01");
