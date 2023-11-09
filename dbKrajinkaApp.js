@@ -200,13 +200,14 @@ const pullAddress = klient => {
 
 const getSeason = en => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.03"
+    let scriptName = "getSeason 23.0.04"
     let variables = ""
     try {
         var season = en.field(SEASON);
         if (!season) {
             season = en.field(DATE).getFullYear().toString();
         }
+        variables = "záznam: " + en.name + "\n" + "sezóna: " + season + "\n"
         logGen("dbKrajinkaApp.js", scriptName, "setting season field", variables);
         return season;
     } catch (error) {

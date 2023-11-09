@@ -4,7 +4,8 @@
 // Popis:
 
 const prepocetPonuky = en => {
-    let scriptName ="prepocetPonuky 0.23.01";
+    let scriptName ="prepocetPonuky 23.0.01";
+    let variables = ""
 try {
     message("Prepočítavam...")
     // inicializácia
@@ -89,13 +90,13 @@ try {
     message("Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€");
     
     } catch (error) {
-        let variables = ""
+        variables = "záznam: " + en.name + "\n"
         errorGen("libCenovePonuky.js", scriptName, error, variables);
     }
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 0.23.16";
+    var scriptName ="generujZakazku 23.0.17";
     try {
         var sezona = cp.field(SEASON) || getSeason(cp);
         cp.set(SEASON, sezona);
