@@ -111,7 +111,7 @@ const getAppSeason = season =>{
 }
 
 const getAppSeasonDatabases = season => {
-    let scriptName = "getAppSeasonDatabases 0.23.03"
+    let scriptName = "getAppSeasonDatabases 23.0.03"
     let variables = ""
     try {
         if(season == undefined){
@@ -121,12 +121,14 @@ const getAppSeasonDatabases = season => {
         }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
+        variables = "season: " + season + "\n ";
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
 const getAppSeasonDB = (season, dbName) => {
-    let scriptName = "getAppSeasonDB 0.23.04"
+    let scriptName = "getAppSeasonDB 23.0.05"
+    let variables = ""
     try {
         if(season == undefined || dbName == undefined){
             msgGen("dbKrajinkaApp.js", scriptName, "", variables );
@@ -142,14 +144,15 @@ const getAppSeasonDB = (season, dbName) => {
         return 0;
         }
     } catch (error) {
-        var variables = ""
+        variables = "season: " + season + "\n " + "knižnica: " + dbName + "\n"
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
 
 // get db from APP library
 const findAppDB = (season, dbName) => {
-    let scriptName = "findAppDB 0.23.06"
+    let scriptName = "findAppDB 23.0.07"
+    let variables = ""
     try {
         if(season == undefined || dbName == undefined){
             msgGen("dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
@@ -159,14 +162,14 @@ const findAppDB = (season, dbName) => {
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
-            if (databazy[v].field("Názov") === dbName) {
+            if (databazy[v].field("Názov") == dbName) {
                 return databazy[v];
             }
         }
         message("Databáza " + dbName + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
-        var variables = ""
+        variables = "season: " + season + "\n " + "knižnica: " + dbName + "\n"
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
@@ -332,7 +335,7 @@ const getNewNumber = (db, season, isPrefix) => {
 //
 // TRIGGERS open and save entry
 const setView = (en, view) => {
-    let scriptName = "setView 0.23.01"
+    let scriptName = "setView 23.0.02"
     try {
         if (view === FIELD_VIEW_EDIT) {
             en.set(VIEW, FIELD_VIEW_EDIT);
