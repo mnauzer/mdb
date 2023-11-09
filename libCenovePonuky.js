@@ -96,9 +96,9 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.0.29";
+    var scriptName ="generujZakazku 23.1.01";
     let variables = "Záznam: " + cp.name + "\n"
-    let parameters = "cp: " + cp.name + "\n"
+    let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables, parameters );
         cancel();
@@ -146,7 +146,9 @@ const generujZakazku = cp => {
 
             // inicializácia premennej z posledného záznamu
             var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
-            message("Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná");
+            let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná";
+            message(msgTxt);
+            msgGenGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
             
             // generovanie výkazov
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
@@ -173,11 +175,15 @@ const generujZakazku = cp => {
             }
             cp.set("Stav cenovej ponuky", "Uzavretá");
         } else if (cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]) {
-            message("Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]);
+            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
+            message(msgTxt);
+            msgGenGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
             cancel();
             exit();
         } else {
-            message("Cenová ponuka musí byť schválená");
+            let msgTxt = "Cenová ponuka musí byť schválená";
+            msgGenGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
+            message(msgTxt);
             cancel();
             exit();
         }
@@ -317,7 +323,7 @@ const generujVykazyPrac = zakazka => {
     let scriptName = "generujVykazyPrac 23.0.09";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\n"
-    if(zakazka === undefined){
+    if(zakazka == undefined){
         msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables, parameters );
         cancel();
         exit();
@@ -426,25 +432,27 @@ const generujVykazStrojov = zakazka => {
     }
     
 const nalinkujPolozkyStrojov = (vykaz, polozky) => {
-        let scriptName = "nalinkujPolozkyStrojov 23.0.01";
-        let variables = "Výkaz : " +  vykazc.name
-        let parameters = "vykaz: " +  vykaz + "\npolozky: " + polozky
-        try {
-            vykaz.set(FIELD_STROJE, null);
-            for (var m = 0; m < polozky.length; m++) {
-                vykaz.link(FIELD_STROJE, polozky[m]);
-                vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
-                vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
-            }
-        } catch (error) {
-            errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+    let scriptName = "nalinkujPolozkyStrojov 23.0.01";
+    let variables = "Výkaz : " +  vykaz.name
+    let parameters = "vykaz: " +  vykaz + "\npolozky: " + polozky
+    try {
+        vykaz.set(FIELD_STROJE, null);
+        for (var m = 0; m < polozky.length; m++) {
+            vykaz.link(FIELD_STROJE, polozky[m]);
+            vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
+            vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
         }
+    } catch (error) {
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+    }
     }
 }
 
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
     let scriptName = "spocitajVykaz 23.0.01"
+    let variables = "Doklad : " +  doklad.name
+    let parameters = "doklad: " +  doklad + "\nfield: " + field
     try {
         var sezona = doklad.field(SEASON);
         var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
@@ -457,7 +465,7 @@ const spocitajVykaz = (doklad, field) => {
             if (field == "Práce sadzby" || field == FIELD_STROJE) {
                 var cena = polozky[p].attr("základná sadzba");
             } else if (field == "Práce" || field == "Materiál")
-                var cena = polozky[p].attr("cena");
+            var cena = polozky[p].attr("cena");
             var cenaCelkom = mnozstvo * cena;
             sumaBezDPH += cenaCelkom;
         }
@@ -468,8 +476,7 @@ const spocitajVykaz = (doklad, field) => {
         doklad.set("CP Suma s DPH", sumaCelkomSDPH)
         
     } catch (error) {
-        let variables = ""
-        errorGen("libCenovePonuky.js", scriptName, error, variables);
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 //
@@ -478,32 +485,39 @@ const spocitajVykaz = (doklad, field) => {
 
 // prepočet dielov cenovej ponuky - Položky
 const prepocetDielPolozky = (cp, diel) => {
-    // inicializácia
-    var materialCelkom = 0;
-    var praceCelkom = 0;
-    var rastlinyCelkom = 0;
-    var dielCelkom = 0;
-
-    var material = cp.field(diel + " materiál");
-    materialCelkom = polozkaMaterial(material);
-    cp.set(diel + " materiál celkom", materialCelkom);
-    dielCelkom += materialCelkom;
-
-    var prace = cp.field(diel + " práce");
-    praceCelkom = polozkaPrace(prace);
-    cp.set(diel + " práce celkom", praceCelkom);
-    dielCelkom += praceCelkom;
-
-    if (diel == "Výsadby") {
-        var rastliny = cp.field("Rastliny");
-        rastlinyCelkom = polozkaMaterial(rastliny);
-        cp.set("Rastliny celkom", rastlinyCelkom);
-        dielCelkom += rastlinyCelkom;
+    let scriptName = "prepocetDielPolozky 23.0.01"
+    let variables = "Cenová ponuka : " +  cp.name
+    let parameters = "cp: " +  cp + "\ndiel: " + diel
+    try {
+        // inicializácia
+        var materialCelkom = 0;
+        var praceCelkom = 0;
+        var rastlinyCelkom = 0;
+        var dielCelkom = 0;
+        
+        var material = cp.field(diel + " materiál");
+        materialCelkom = polozkaMaterial(material);
+        cp.set(diel + " materiál celkom", materialCelkom);
+        dielCelkom += materialCelkom;
+        
+        var prace = cp.field(diel + " práce");
+        praceCelkom = polozkaPrace(prace);
+        cp.set(diel + " práce celkom", praceCelkom);
+        dielCelkom += praceCelkom;
+        
+        if (diel == "Výsadby") {
+            var rastliny = cp.field("Rastliny");
+            rastlinyCelkom = polozkaMaterial(rastliny);
+            cp.set("Rastliny celkom", rastlinyCelkom);
+            dielCelkom += rastlinyCelkom;
+        }
+    
+        cp.set(diel + " celkom bez DPH", dielCelkom);
+        cp.set(diel, dielCelkom);
+        return dielCelkom;
+    } catch (error) {
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
-
-    cp.set(diel + " celkom bez DPH", dielCelkom);
-    cp.set(diel, dielCelkom);
-    return dielCelkom;
 };
 
 // prepočet dielov cenovej ponuky - Hodinovka
