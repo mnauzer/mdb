@@ -112,10 +112,14 @@ const getAppSeason = season =>{
 
 const getAppSeasonDatabases = season => {
     let scriptName = "getAppSeasonDatabases 0.23.03"
+    let variables = ""
     try {
+        if(season == undefined){
+            msgGen("dbKrajinkaApp.js", scriptName, "", variables )
+            break;
+        }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        var variables = ""
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
@@ -182,12 +186,12 @@ const pullAddress = klient => {
 
 const getSeason = en => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.02"
+    let scriptName = "getSeason 23.0.03"
     let variables = ""
     try {
         var season = en.field(SEASON);
         if (!season) {
-            season = date.getFullYear().toString();
+            season = en.field(DATE).getFullYear().toString();
         }
         logGen("dbKrajinkaApp.js", scriptName, "setting season field", variables);
         return season;
