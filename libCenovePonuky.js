@@ -259,10 +259,10 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
 }
 
 const linkItems = (vydajkaMaterialu, polozky) => {
-    var scriptName ="linkItems 23.0.02";
+    var scriptName ="linkItems 23.0.03";
     try {
         var season = vydajkaMaterialu.field(SEASON);
-        if (checkDebug(sezona)){
+        if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
         } 
         vydajkaMaterialu.set("Materiál", null);
@@ -322,10 +322,11 @@ const novyVykazPrac = (zakazka, popis) => {
     }
 }
 const generujVykazyPrac = zakazka => { 
-    let scriptName = "generujVykazyPrac 23.0.04";
+    let scriptName = "generujVykazyPrac 23.0.05";
     let variables = "zákazka: " + zakazka.name + "\n"
     try {
-        if (checkDebug(sezona)){
+        var season = zakazka.field(SEASON);
+        if (checkDebug(season)){
             message("DBGMSG: " + scriptName);
         } 
         if(zakazka === undefined){
