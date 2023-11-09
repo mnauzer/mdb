@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, database) => {
 }
 
 const getAppSeasonDB = (season, dbName, database) => {
-    let scriptName = "getAppSeasonDB 23.0.13"
+    let scriptName = "getAppSeasonDB 23.1.14"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
     let parameters = "season: " + season +  "\ndbName: " + dbName + "\ndatabase: " + database; 
     if(season == undefined || dbName == undefined || season == null || dbName == null){
@@ -142,23 +142,18 @@ const getAppSeasonDB = (season, dbName, database) => {
         exit();
     }
     try {
-       // let databases = getAppSeasonDatabases(season, database);
-       // message("Database: " + dbName + ", Length: " + databases.length)
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         let databazy = entry.field("Databázy");
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == dbName) {
-                logGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nájdená", variables, parameters );
+                let logTxt = "Databáza " + databazy[v] +" nájdená"
+                logGen(database, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
                 return databazy[v];
             }
         }
-        msgGen(database, "dbKrajinkaApp.js", scriptName, "Databáza nenájdená", variables, parameters );
+        let logTxt = "Databáza " + dbName +" nenájdená v sezóne " + season
+        logGen(database, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
         return 0;
-        // for (let i = 0; i < databases.length; i++) {
-        //     if (databases[i].field("Názov") == dbName){
-        //         message(databases[i].field("Názov"))
-        //         return databases[i];
-        //     }
     } catch (error) {
         errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
@@ -185,7 +180,6 @@ const findAppDB = (season, dbName, database) => {
         message("Databáza " + dbName + " nenájdená v sezóne " + season);
         return 0;
     } catch (error) {
-        variables = 'Sezóna: ${season} \n Knižnica: ${dbName} \n'
         errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
@@ -214,10 +208,11 @@ const pullAddress = klient => {
     return adresa;
 };
 
-const getSeason = (en, database) => {
+const getSeason = (en, database, inputScript) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.0.09";
+    let scriptName = "getSeason 23.0.10 / " + inputScript;
     let variables = "Záznam: " + en.name + "\n";
+    let parameters = "en: " + en.name + "\ndatabase: " + database;
     if(en == undefined || en == null){
         msgGen(database, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
         cancel();
@@ -228,10 +223,10 @@ const getSeason = (en, database) => {
         en.set(SEASON, season)
         variables += "\nSezóna: " + season + "\n";
         let logMsg = "Setting season field to " + season;
-        logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables);
+        logGen(database, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
         return season;
     } catch (error) {
-        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 const lastValid = (links, date, valueField, dateField) => {
@@ -317,8 +312,8 @@ const logGen = (database, library, script, log, variables, parameters) => {
 }
 
 // generuje nové číslo záznamu
-const getNewNumber = (db, season, isPrefix, database) => {
-    let scriptName = "getNewNumber 23.0.25"
+const getNewNumber = (db, season, isPrefix, database, inputScript) => {
+    let scriptName = "getNewNumber 23.0.25 / " + inputScript
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     let parameters = "db: " + db.name + "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\ndatabase: " + database;
     if(db == undefined || db == null){
