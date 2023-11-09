@@ -252,9 +252,10 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
         } 
         var lib = libByName(DB_VYKAZY_MATERIALU);
         var appDB = getAppSeasonDB(season, lib.title);
+        var newNumber = getNewNumber(appDB, season, false);
         // vytvoriť novú výdajku
         var novaVydajka = new Object();
-        novaVydajka[NUMBER] = getNewNumber(appDB, season, false);
+        novaVydajka[NUMBER] = newNumber;
         novaVydajka["Dátum"] = zakazka.field("Dátum");
         novaVydajka["Popis"] = popis;
         novaVydajka["s DPH"] = true; // hardcoded
@@ -264,7 +265,7 @@ const novaVydajkaMaterialu = (zakazka, popis) => {
         novaVydajka["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
         novaVydajka[SEASON] = season;
         lib.create(novaVydajka);
-        var vydajkaMaterialu = lib.find(cislo)[0];
+        var vydajkaMaterialu = lib.find(newNumber)[0];
         return vydajkaMaterialu; 
     } catch (error) {
         errorGen("libCenovePonuky.js", scriptName, error, variables);

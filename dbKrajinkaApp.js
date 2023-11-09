@@ -200,7 +200,7 @@ const pullAddress = klient => {
 const getSeason = en => {
     // get entryDefault season from creation date
     let scriptName = "getSeason 23.0.08";
-    let variables = `Záznam: ${en.name} \n`;
+    let variables = "Záznam: " + en.name + "\n";
     if(en == undefined || en == null){
         msgGen("dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables );
         cancel();
@@ -208,8 +208,8 @@ const getSeason = en => {
     }
     try {
         var season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString();
-        variables = `Záznam: ${en.name} \n Sezóna: ${season} \n`;
-        let logMsg = `Setting season field to ${season}`;
+        variables = "Záznam: "+  en.name + "\nSezóna: " + season + "\n";
+        let logMsg = "Setting season field to " + season;
         logGen("dbKrajinkaApp.js", scriptName, logMsg, variables);
         return season;
     } catch (error) {
@@ -253,7 +253,7 @@ const getLinkIndex = (link, remoteLinks) => {
 
 // generátor chyby
 const errorGen = (library, script, error, variables) => {
-    message(`ERR: ${script}\n ${error}`);
+    message("ERR: " + script + "\n" + error);
     let errorLib = libByName("APP Errors");
     let newError = new Object();
     newError["type"] = "error";
@@ -267,7 +267,7 @@ const errorGen = (library, script, error, variables) => {
 }
 // generátor message
 const msgGen = (library, script, msg, variables) => {
-    message(`MSG: ${script} \n ${msg}`);
+    message("MSG: " + script + "\n" + msg);
     let errorLib = libByName("APP Errors");
     let newMsg = new Object();
     newMsg["type"] = "message";
@@ -280,7 +280,7 @@ const msgGen = (library, script, msg, variables) => {
 }
 // generátor chyby
 const logGen = (library, script, log, variables) => {
-    message(`LOG: ${script} \n ${log}`);
+    message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
     newLog["type"] = "log";
@@ -295,7 +295,7 @@ const logGen = (library, script, log, variables) => {
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix) => {
     let scriptName = "getNewNumber 23.0.23"
-    let variables = `Knižnica: ${db.name} \n Sezóna: ${season} \n Prefix: ${isPrefix} \n`
+    let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     if(db === undefined || db == null){
         msgGen("dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables );
         cancel();
