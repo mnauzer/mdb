@@ -99,10 +99,12 @@ const checkDebug = season => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
-const getAppSeason = season =>{
-    let scriptName = "getAppSeason 23.0.04"
+const getAppSeason = (season, database) => {
+    let scriptName = "getAppSeason 23.0.05"
+    let variables = "Sezóna: " + season +  "\n"
+    let parameters = "season: " + season +  "\ndatabase: " + database
     if(season === undefined || season == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables );
+        msgGen(database, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters );
         cancel();
         exit();
     }
@@ -110,24 +112,23 @@ const getAppSeason = season =>{
         let entry = libByName(DB_ASSISTENT).find(season)[0];
         return entry;
     } catch (error) {
-        var variables = ""
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 
-const getAppSeasonDatabases = season => {
-    let scriptName = "getAppSeasonDatabases 23.0.03"
+const getAppSeasonDatabases = (season, database) => {
+    let scriptName = "getAppSeasonDatabases 23.0.04"
     let variables = "Sezóna: " + season +  "\n"
+    let parameters = "season: " + season +  "\ndatabase: " + database
     try {
         if(season == undefined){
-            msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "", variables );
+            msgGen(database, "dbKrajinkaApp.js", scriptName, "", variables, parameters );
             cancel();
             exit();
         }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        variables = "Sezóna: " + season + "\n ";
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(database, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -141,7 +142,7 @@ const getAppSeasonDB = (season, dbName, database) => {
         exit();
     }
     try {
-        let databases = getAppSeasonDatabases(season);
+        let databases = getAppSeasonDatabases(season, database);
         message("Database: " + dbName + ", Length: " + databases.length)
         for (let i = 0; i < databases.length; i++) {
             if (databases[i].field("Názov") == dbName){
