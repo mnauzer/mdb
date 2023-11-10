@@ -431,8 +431,8 @@ const saveEntry = (en, mementoLibrary) => {
 // ACTIONS library
 const unlockDB = (season, mementoLibrary) => {
     let scriptName = "unlockDB 23.0.02";
-    let variables = "Záznam: " + en.name + "\nDatabáza: " + mementoLibrary;
-    let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary
+    let variables = "Season: " + season + "\nDatabáza: " + mementoLibrary;
+    let parameters = "season: " + season +  "\nmementoLibrary" + mementoLibrary
     try {
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         appDB.setAttr("rezervované číslo", null);
