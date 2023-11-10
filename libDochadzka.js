@@ -50,22 +50,23 @@ const saveEntryDochadzka = en => {
 }
 
 const lastSadzba = (employee, date) => {
-    let scriptName = "lastSadzba 23.0.01"
-    let variables = "Zamestnanec: " + employee.name + "Dátum: " + date
+    let scriptName = "lastSadzba 23.0.02"
+    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
     let parameters = "employee: " + employee + "\ndate: " + date
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Links: " + links.length', variables);
+        variables += "\nZáznamov: " + links.length
         filtered = filterByDatePlatnost(links, date);
-        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables);
         if (filtered.length < 0) {
-            msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables);
+            msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
             filtered.reverse();
         }
         //vyberie a vráti sadzbu z prvého záznamu
         var sadzba = filtered[0].field("Sadzba");
+        variables += "\nSadzba: " + sadzba
+        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables, parameters);
         return sadzba;
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
