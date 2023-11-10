@@ -1,32 +1,32 @@
 
 const newEntryDochadzka = en => {
     let scriptName = "updateEntryDochadzka 23.0.05"
-    let mementoDatabase = lib().title
-    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
-    message("Nový záznam - " + mementoDatabase)
+    message("Nový záznam - " + mementoLibrary)
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, mementoDatabase, scriptName)
-        let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
-        let number = getNewNumber(appDB, season, mementoDatabase, scriptName)
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
         en.set(SEASON, season)
     } catch (error) {
-        unlockDB(season, mementoDatabase)
+        unlockDB(season, mementoLibrary)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
 const updateEntryDochadzka = en => {
     let scriptName = "updateEntryDochadzka 23.0.01"
-    let mementoDatabase = lib().title
-    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
-    message("Úprava záznamu - " + mementoDatabase);
+    message("Úprava záznamu - " + mementoLibrary);
     try {
 
     } catch (error) {
@@ -35,13 +35,15 @@ const updateEntryDochadzka = en => {
 }
 
 const saveEntryDochadzka = en => {
-    let scriptName = "saveEntryDochadzka 23.0.01"
-    let mementoDatabase = lib().title
-    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+    let scriptName = "saveEntryDochadzka 23.0.02"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
     try {
+        message("entry: "+ en.name)
+        message("mementoLibrary: " + mementoLibrary)
         prepocitatZaznamDochadzky(en)
-        saveEntry(en, mementoDatabase)
+        saveEntry(en, mementoLibrary)
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
