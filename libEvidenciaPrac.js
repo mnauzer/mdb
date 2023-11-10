@@ -91,7 +91,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         let typ = en.field("Typ zákazky");
         if (typ == "Hodinovka") {
             //TODO opraviť chybu keď nie je zadaná zákazka
-            let vykaz = undefined ? undefined : en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0]
+            let vykaz = undefined ? null : en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0]
             en.set(FIELD_ZAKAZKA, vykaz);
         } else if (typ == "Položky") {
         }
