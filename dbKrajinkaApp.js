@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 }
 
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.03"
+    let scriptName = "getAppSeasonDB 23.1.06"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n";
     let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
@@ -147,12 +147,23 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
-                logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
+                let attributes =
+                "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
+                "\nčíslo testu: " + databazy[v].attr("číslo testu") +
+                "\nrezervované číslo: " + databazy[v].attr("rezervované číslo") +
+                "\ndebug: " + databazy[v].attr("debug") +
+                "\nlocked: " + databazy[v].attr("locked") +
+                "\nlocked reason: " + databazy[v].attr("locked reason") +
+                "\ntest: " + databazy[v].attr("test") +
+                "\nprefix: " + databazy[v].attr("prefix") +
+                "\nseason trim: " + databazy[v].attr("season trim") +
+                "\ntrailing digit: " + databazy[v].attr("trailing digit")
+                logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
                 return databazy[v];
             }
         }
         let logTxt = "Databáza " + mementoLibrary +" nenájdená v sezóne " + season
-        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
+        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
         return 0;
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
@@ -298,7 +309,7 @@ const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => 
     errorLib.create(newMsg);
 }
 // generátor log
-const logGen = (mementoLibrary, library, script, log, variables, parameters) => {
+const logGen = (mementoLibrary, library, script, log, variables, parameters, attributes) => {
    // message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
@@ -310,6 +321,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters) => 
     newLog["text"] = log;
     newLog["variables"] = variables;
     newLog["parameters"] = parameters;
+    newLog["attributes"] = attributes;
     errorLib.create(newLog);
 }
 
@@ -324,7 +336,7 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
         exit();
     }
     try {
-        let number = ""
+        let number = []
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
@@ -338,11 +350,10 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
         };
         let lastNum = db.attr("nasledujúce číslo");
         let reservedNum = db.attr("rezervované číslo");
-        if (lastNum == reservedNum) {
-            lastNum += 1;
-            message("reserved num")
-        }
+        lastNum = lastNum == reservedNum ? lastNum += 1 : lastNum
         db.setAttr("rezervované číslo", lastNum)
+        number[0] = isPrefix ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
+        number[1] = lastNum;
         number = isPrefix
         ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
@@ -354,13 +365,14 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
 };
 //
 
-const setEntry = (en, mementoLibrary) => {
-    let scriptName = "setEntry 23.0.05"
-    let variables = "Záznam: " + en.name + "memento library: " +mementoLibrary
+const setEntry = en => {
+    let scriptName = "setEntry 23.0.06"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         //message("Nastavujem záznam...");
-        en.set(VIEW, FIELD_VIEW_EDIT)
+        en.set(VIEW, VIEW_EDIT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB){
@@ -370,10 +382,10 @@ const setEntry = (en, mementoLibrary) => {
                 cancel()
                 exit()
             } else {
-                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName);
+                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName);
                 en.set(NUMBER, number);
-                appDB.setAttr("locked", true);
-                appDB.setAttr("locked reason", "editácia užívateľom ");
+                appDB.setAttr("locked", false);
+                appDB.setAttr("locked reason", null);
                 //en.set(LAST_NUM, number);
             }
 
@@ -385,30 +397,40 @@ const setEntry = (en, mementoLibrary) => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.04"
-    let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
+    let scriptName = "saveEntry 23.0.10"
+    let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
        // message("Ukladám záznam...");
-        en.set(VIEW, FIELD_VIEW_PRINT)
+        en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
-        unlockDB(season, mementoLibrary);
+        let nextNumber = en.field("number") + 10
+        appDB.setAttr("locked", false);
+        appDB.setAttr("locked reason", null)
+        appDB.setAttr("nasledujúce číslo", nextNumber)
+        let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
+        message(msgTxt)
+        msgGen(mementoLibrary, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
+        let logTxt = ""
+        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters);
     } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary);
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 //
 // ACTIONS library
 const unlockDB = (season, mementoLibrary) => {
-    let scriptName = "unlockDB 23.0.03";
+    let scriptName = "unlockDB 23.0.04";
     let variables = "Season: " + season + "\nDatabáza: " + mementoLibrary;
     let parameters = "season: " + season +  "\nmementoLibrary" + mementoLibrary
     try {
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         appDB.setAttr("locked", false);
         appDB.setAttr("locked reason", null);
-        message("Databáza " + mementoLibrary + " odomknutá")
+        //message("Databáza " + mementoLibrary + " odomknutá")
         return true;
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);

@@ -1,20 +1,21 @@
 
 const novyVykazPrac = (zakazka, popis) => {
-    let scriptName = "novyVykazPrac 23.1.01";
+    let scriptName = "novyVykazPrac 23.1.03";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
         let season = getSeason(zakazka, DB_VYKAZY_PRAC, scriptName);
-        let vykazy = libByName(DB_VYKAZY_PRAC);
         let appDB = getAppSeasonDB(season, DB_VYKAZY_PRAC, scriptName);
+        let newNumber = getNewNumber(appDB, season, DB_VYKAZY_PRAC, scriptName);
+        let vykazy = libByName(DB_VYKAZY_PRAC);
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_PRAC, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
-        novyVykaz[NUMBER] = newNumber;
+        novyVykaz[NUMBER] = newNumber[0];
+        novyVykaz["number"] = newNumber[1];
         novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = popis;
         novyVykaz["Typ výkazu"] = typVykazu;
@@ -26,8 +27,8 @@ const novyVykazPrac = (zakazka, popis) => {
 
         novyVykaz[SEASON] = season;
         vykazy.create(novyVykaz);
-        let vykazPrac = vykazy.find(newNumber)[0];
-        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
+        let vykazPrac = vykazy.find(newNumber[0])[0];
+        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
         msgGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, msgTxt, variables, parameters )
         return vykazPrac;
@@ -35,6 +36,7 @@ const novyVykazPrac = (zakazka, popis) => {
         errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
     }
 }
+
 
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     let scriptName = "prepocitatVykazPrac 23.1.01";
@@ -156,9 +158,61 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         vykaz.set("Suma bez DPH", sumaBezDPH);
         vykaz.set("DPH", sumaDPH);
         vykaz.set("Suma s DPH", sumaCelkom);
-        setTlac(vykaz);
         return [sumaBezDPH, sumaDPH]
     } catch (error) {
         errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
 }
+}
+
+const newEntryVykazPrac = en => {
+    let scriptName = "newEntryVykazPrac 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryVykazPrac = en => {
+    let scriptName = "updateEntryVykazPrac 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryVykazPrac = en => {
+    let scriptName = "saveEntryVykazPrac 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatVykazPrac(en, true)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
+    }
 }

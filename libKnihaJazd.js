@@ -1,9 +1,55 @@
-const verziaDoprava = () => {
-    var result = "";
-    var nazov = "dopravaLibrary";
-    var verzia = "0.1.04";
-    result = nazov + " " + verzia;
-    return result;
+// NEW AND UPDATE ENTRY
+const newEntryKnihaJazd= en => {
+    let scriptName = "newEntryKnihaJazd23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryKnihaJazd= en => {
+    let scriptName = "updateEntryKnihaJazd23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryKnihaJazd= en => {
+    let scriptName = "saveEntryKnihaJazd23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters);
+    }
 }
 
 const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {

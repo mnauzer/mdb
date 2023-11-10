@@ -1,5 +1,60 @@
+
+const newEntryVykazStrojov = en => {
+    let scriptName = "newEntryVykazStrojov 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryVykazStrojov = en => {
+    let scriptName = "updateEntryVykazStrojov 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryVykazStrojov = en => {
+    let scriptName = "saveEntryVykazStrojov 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+    }
+}
+
+
 const novyVykazStrojov = (zakazka, popis) => {
-    let scriptName = "novyVykazStrojov 23.0.02";
+    let scriptName = "novyVykazStrojov 23.0.03";
     let variables = "Zákazka: " +  zakazka.name + "\nPopis: " + popis
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
@@ -10,10 +65,11 @@ const novyVykazStrojov = (zakazka, popis) => {
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_STROJOV, scriptName);
+        let newNumber = getNewNumber(appDB, season, DB_VYKAZY_STROJOV, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
-        novyVykaz[NUMBER] = newNumber;
+        novyVykaz[NUMBER] = newNumber[0];
+        novyVykaz["number"] = newNumber[1];
         novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
         novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
@@ -24,8 +80,8 @@ const novyVykazStrojov = (zakazka, popis) => {
         novyVykaz["Cenová ponuka"] = cp;
         novyVykaz[SEASON] = season;
         vykazy.create(novyVykaz);
-        let vykazPrac = vykazy.find(newNumber)[0];
-        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
+        let vykazPrac = vykazy.find(newNumber[0])[0];
+        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
         msgGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
         return vykazPrac;

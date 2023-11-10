@@ -1,53 +1,75 @@
 
 const newEntryDochadzka = en => {
-    let scriptName = "updateEntryDochadzka 23.0.05"
-    let mementoDatabase = lib().title
-    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+    let scriptName = "newEntryDochadzka 23.0.06"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
-    message("Nový záznam " + mementoDatabase)
+    message("Nový záznam - " + mementoLibrary)
     try {
-        setEntry(en, mementoDatabase)
+        setEntry(en)
         let date = new Date()
-        let season = getSeason(en, mementoDatabase, scriptName)
-        let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
         en.set(DATE, date)
-        en.set(NUMBER, getNewNumber(appDB, season, mementoDatabase, scriptName))
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
         en.set(SEASON, season)
     } catch (error) {
-        unlockDB(season, mementoDatabase)
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
-const updateEntryDochadzka = (en, mementoDatabase) => {
-    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+const updateEntryDochadzka = en => {
     let scriptName = "updateEntryDochadzka 23.0.01"
-    let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
-    message("Update Entry");
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Úprava záznamu - " + mementoLibrary);
     try {
 
     } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryDochadzka = en => {
+    let scriptName = "saveEntryDochadzka 23.0.02"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
 const lastSadzba = (employee, date) => {
-    let scriptName = "lastSadzba 23.0.01"
-    let variables = "Zamestnanec: " + employee.name + "Dátum: " + date
+    let scriptName = "lastSadzba 23.0.03"
+    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
     let parameters = "employee: " + employee + "\ndate: " + date
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Links: " + links.length', variables);
+        variables += "\nZáznamov: " + links.length
         filtered = filterByDatePlatnost(links, date);
-        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables);
         if (filtered.length < 0) {
-            msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables);
+            msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
             filtered.reverse();
         }
         //vyberie a vráti sadzbu z prvého záznamu
         var sadzba = filtered[0].field("Sadzba");
+        variables += "\nSadzba: " + sadzba
+        msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Aktuálna sadzba', variables, parameters);
         return sadzba;
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
@@ -55,35 +77,36 @@ const lastSadzba = (employee, date) => {
 }
 
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.01"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.02"
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
         // výpočet pracovnej doby
-        var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
-        var odchod = roundTimeQ(en.field("Odchod"));
-        var pracovnaDoba = (odchod - prichod) / 3600000;
+        let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
+        let odchod = roundTimeQ(en.field("Odchod"));
+        let datum = en.field(DATE)
+        let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
-        var mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
-        var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
-        var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
-        var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-        var employees = en.field("Zamestnanci");
-        var evidenciaPrac = en.field("Práce");
+        let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
+        let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
+        let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
+        let prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
+        let employees = en.field("Zamestnanci");
+        let evidenciaPrac = en.field("Práce");
         if (employees.length > 0) {
-            for (var z = 0; z < employees.length; z++) {
-                //var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
-                var links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-                var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
-                // var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
-                var hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
-                var dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
+            for (let z = 0; z < employees.length; z++) {
+                //let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
+                let links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
+                // let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
+                let hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
+                let dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
                 // premenné z knižnice employees
-                var libZarobene = employees[z].field("Zarobené") - dennaMzda;
-                var libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-                var libVyplatene = employees[z].field("Vyplatené");
-                var libHodnotenieD = employees[z].field(ATTENDANCE);
+                let libZarobene = employees[z].field("Zarobené") - dennaMzda;
+                let libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
+                let libVyplatene = employees[z].field("Vyplatené");
+                let libHodnotenieD = employees[z].field(ATTENDANCE);
 
                 employees[z].setAttr("hodinovka", hodinovka);
                 dennaMzda = (pracovnaDoba * (hodinovka

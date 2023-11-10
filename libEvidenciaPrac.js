@@ -4,6 +4,60 @@
 // Popis:
 
 
+const newEntryEvidenciaPrac = en => {
+    let scriptName = "newEntryEvidenciaPrac 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryEvidenciaPrac = en => {
+    let scriptName = "updateEntryEvidenciaPrac 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryEvidenciaPrac = en => {
+    let scriptName = "saveEntryEvidenciaPrac 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+    }
+}
+
+
 const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     let scriptName ="evidenciaSadzbaPrace 23.0.01";
     let variables = "Záznam: " + vykazPrac.name + "\n"
@@ -94,8 +148,8 @@ const prepocetZaznamuEvidencie = en => {
         if (evidovatStroje) {
             var vyuzitieStrojov = en.field("Využitie strojov");
             if (vyuzitieStrojov) {
-                var vykazStrojov = en.field("Výkaz strojov")[0];
-                if (vykazStrojov) {
+                var EvidenciaPrac = en.field("Výkaz strojov")[0];
+                if (EvidenciaPrac) {
                     // ak má zákazka už vygenerovaný výkaz s cp
                     var stroje = vykazStrojov.field("Stroje");
                     for (var i = 0; i < vyuzitieStrojov.length; i++) {
