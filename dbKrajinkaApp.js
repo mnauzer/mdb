@@ -362,7 +362,7 @@ const getNewNumber = (db, season,  mementoLibrary, inputScript) => {
 //
 
 const setEntry = en => {
-    let scriptName = "setEntry 23.0.05"
+    let scriptName = "setEntry 23.0.06"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
@@ -380,8 +380,8 @@ const setEntry = en => {
             } else {
                 let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName);
                 en.set(NUMBER, number);
-                appDB.setAttr("locked", true);
-                appDB.setAttr("locked reason", "editácia užívateľom ");
+                appDB.setAttr("locked", false);
+                appDB.setAttr("locked reason", null);
                 //en.set(LAST_NUM, number);
             }
 
@@ -401,7 +401,7 @@ const saveEntry = (en, mementoLibrary) => {
         en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
-        let nextNumber = en.field("number") + 1
+        let nextNumber = en.field("number") + 10
         appDB.setAttr("locked", false);
         appDB.setAttr("locked reason", null)
         appDB.setAttr("nasledujúce číslo", nextNumber)
