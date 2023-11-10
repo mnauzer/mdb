@@ -83,7 +83,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const prepocetZaznamuEvidenciePrac = en => {
-    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.02";
+    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.03";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
@@ -91,10 +91,11 @@ const prepocetZaznamuEvidenciePrac = en => {
         let typ = en.field("Typ zákazky");
         if (typ == "Hodinovka") {
             //TODO opraviť chybu keď nie je zadaná zákazka
-            en.set(FIELD_ZAKAZKA, en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
+            let vykaz = undefined ? undefined : en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0]
+            en.set(FIELD_ZAKAZKA, vykaz);
         } else if (typ == "Položky") {
         }
-        let zamestnanci = evidencia.field(FIELD_ZAMESTNANCI);
+        let zamestnanci = en.field(FIELD_ZAMESTNANCI);
         let odpracovane = 0;
         let mzdoveNakladyCelkom = 0;
         let nakladyZamestnatec = 0;
