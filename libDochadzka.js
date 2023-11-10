@@ -73,35 +73,36 @@ const lastSadzba = (employee, date) => {
 }
 
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.01"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.02"
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
         // výpočet pracovnej doby
-        var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
-        var odchod = roundTimeQ(en.field("Odchod"));
-        var pracovnaDoba = (odchod - prichod) / 3600000;
+        let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
+        let odchod = roundTimeQ(en.field("Odchod"));
+        let datum = en.field(DATE)
+        let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
-        var mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
-        var odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
-        var evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
-        var prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-        var employees = en.field("Zamestnanci");
-        var evidenciaPrac = en.field("Práce");
+        let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
+        let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
+        let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
+        let prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
+        let employees = en.field("Zamestnanci");
+        let evidenciaPrac = en.field("Práce");
         if (employees.length > 0) {
-            for (var z = 0; z < employees.length; z++) {
-                //var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
-                var links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-                var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
-                // var hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
-                var hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
-                var dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
+            for (let z = 0; z < employees.length; z++) {
+                //let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
+                let links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
+                // let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
+                let hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
+                let dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
                 // premenné z knižnice employees
-                var libZarobene = employees[z].field("Zarobené") - dennaMzda;
-                var libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-                var libVyplatene = employees[z].field("Vyplatené");
-                var libHodnotenieD = employees[z].field(ATTENDANCE);
+                let libZarobene = employees[z].field("Zarobené") - dennaMzda;
+                let libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
+                let libVyplatene = employees[z].field("Vyplatené");
+                let libHodnotenieD = employees[z].field(ATTENDANCE);
 
                 employees[z].setAttr("hodinovka", hodinovka);
                 dennaMzda = (pracovnaDoba * (hodinovka
