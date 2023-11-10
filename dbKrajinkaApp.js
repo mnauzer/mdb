@@ -381,22 +381,20 @@ const setEntry = (en, mementoLibrary) => {
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB){
-            let; locked = appDB.attr("locked");
+            let locked = appDB.attr("locked");
             if (locked) {
                 message("Databáza je zamknutá \nDôvod: "+ appDB.attr("locked reason"))
                 cancel()
                 exit()
             } else {
-                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName));
+                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName);
+                en.set(NUMBER, number);
+                appDB.setAttr("rezervované číslo", number);
+                appDB.setAttr("locked", true);
+                appDB.setAttr("locked reason", "editácia užívateľom ");
+                //en.set(LAST_NUM, number);
             }
-            // nastav základné polia
-            en.set(SEASON, season);
-            en.set(NUMBER, number[0]);
-            appDB.setAttr("rezervované číslo", number[1]);
-            appDB.setAttr("locked", true);
-            appDB.setAttr("locked reason", "editácia užívateľom ");
-            en.set(LAST_NUM, number[1]);
-        }
+
         } else {
             message("Databáza nenájdená v APP")
         }
