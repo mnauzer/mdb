@@ -4,7 +4,7 @@ const newEntryDochadzka = en => {
     let mementoDatabase = lib().title
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
     let parameters = "en: " + en
-    message("New Entry")
+    message("Nový záznam" + mementoDatabase)
     try {
         setEntry(en, mementoDatabase)
         let date = new Date()
@@ -12,6 +12,7 @@ const newEntryDochadzka = en => {
         let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
         en.set(DATE, date)
         en.set(NUMBER, getNewNumber(appDB, season, false, mementoDatabase, scriptName))
+        en.set(SEASON, season)
     } catch (error) {
         unlockDB(season, mementoDatabase)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
