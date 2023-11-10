@@ -7,8 +7,9 @@ const newEntryDochadzka = (en, mementoDatabase) => {
     try {
         let date = new Date()
         let season = getSeason(en, mementoDatabase, scriptName)
+        let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
         en.set(DATE, date)
-        en.set(NUMBER, getNewNumber(lib(), season, false, mementoDatabase, scriptName))
+        en.set(NUMBER, getNewNumber(appDB, season, false, mementoDatabase, scriptName))
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
@@ -44,7 +45,6 @@ const lastSadzba = (employee, date) => {
         //vyberie a vráti sadzbu z prvého záznamu
         var sadzba = filtered[0].field("Sadzba");
         return sadzba;
-
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
