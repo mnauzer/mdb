@@ -392,9 +392,10 @@ const setEntry = en => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.08"
+    let scriptName = "saveEntry 23.0.09"
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
+    let a = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
        // message("Ukladám záznam...");
         let season = getSeason(en, mementoLibrary, scriptName)
@@ -407,7 +408,7 @@ const saveEntry = (en, mementoLibrary) => {
         message(msgTxt)
         msgGen(mementoLibrary, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
         let logTxt = ""
-        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
+        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters);
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
