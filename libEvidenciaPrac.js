@@ -94,7 +94,7 @@ const prepocetZaznamuEvidenciePrac = en => {
             if (en.field("Výkaz práce"[0]) != undefined) {
                 en.set(FIELD_ZAKAZKA, en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0]);
             } else {
-                msgGen(DB_EVIDENCIA_PRAC,"libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
+                msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
             }
         } else if (typ == "Položky") {
         }
