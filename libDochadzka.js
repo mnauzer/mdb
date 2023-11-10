@@ -1,15 +1,34 @@
 
-const newEntry = en => {
+const newEntryDochadzka = (en, mementoDatabase) => {
+    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+    let scriptName = "updateEntryDochadzka 23.0.01"
+    let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
     message("New Entry");
+    try {
+        let date = new Date()
+        let season = getSeason(en, mementoDatabase, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, getNewNumber(lib(), season, false, mementoDatabase, scriptName)))
+    } catch (error) {
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+    }
 }
 
-const updateEntry = en => {
+const updateEntryDochadzka = (en, mementoDatabase) => {
+    let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
+    let scriptName = "updateEntryDochadzka 23.0.01"
+    let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
     message("Update Entry");
+    try {
+
+    } catch (error) {
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+    }
 }
 
 const lastSadzba = (employee, date) => {
     let scriptName = "lastSadzba 23.0.01"
-    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
+    let variables = "Zamestnanec: " + employee.name + "Dátum: " + date
     let parameters = "employee: " + employee + "\ndate: " + date
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
@@ -25,7 +44,7 @@ const lastSadzba = (employee, date) => {
         //vyberie a vráti sadzbu z prvého záznamu
         var sadzba = filtered[0].field("Sadzba");
         return sadzba;
-        
+
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
@@ -33,7 +52,7 @@ const lastSadzba = (employee, date) => {
 
 const prepocitatZaznamDochadzky = en => {
     let scriptName = "prepocitatZaznamDochadzky 23.0.01"
-    let variables = "Záznam: " + en.name 
+    let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
         // výpočet pracovnej doby
@@ -62,7 +81,7 @@ const prepocitatZaznamDochadzky = en => {
                 var libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
                 var libVyplatene = employees[z].field("Vyplatené");
                 var libHodnotenieD = employees[z].field(ATTENDANCE);
-    
+
                 employees[z].setAttr("hodinovka", hodinovka);
                 dennaMzda = (pracovnaDoba * (hodinovka
                     + employees[z].attr("+príplatok (€/h)")))
@@ -75,12 +94,12 @@ const prepocitatZaznamDochadzky = en => {
                 libOdrobene += pracovnaDoba;
                 libHodnotenieD += hodnotenie;
                 var libNedoplatok = libZarobene - libVyplatene;
-    
+
                 employees[z].set("Zarobené", libZarobene);
                 employees[z].set("Odpracované", libOdrobene);
                 employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
                 employees[z].set(ATTENDANCE, libHodnotenieD);
-    
+
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
