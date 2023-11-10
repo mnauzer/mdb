@@ -411,7 +411,7 @@ const setEntry = (en, mementoLibrary) => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.02"
+    let scriptName = "saveEntry 23.0.03"
     let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
@@ -420,7 +420,7 @@ const saveEntry = (en, mementoLibrary) => {
             let season = getSeason(en, mementoLibrary, scriptName)
             let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB) {
-            appDB.setAttr("posledné číslo", db.attr("rezervované číslo"))
+            appDB.setAttr("posledné číslo", appDB.attr("rezervované číslo"))
         }
         unlockDB(season, mementoLibrary);
     } catch (error) {
