@@ -372,8 +372,8 @@ const setView = (en, mementoLibrary, view) => {
     }
 }
 const setEntry = (en, mementoLibrary) => {
-    let scriptName = "setEntry 23.0.04"
-    let variables = "Záznam: " + en.name + "memento library: "
+    let scriptName = "setEntry 23.0.05"
+    let variables = "Záznam: " + en.name + "memento library: " +mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         message("Nastavujem záznam...");
@@ -381,19 +381,13 @@ const setEntry = (en, mementoLibrary) => {
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB){
-            var locked = appDB.attr("locked");
+            let; locked = appDB.attr("locked");
             if (locked) {
                 message("Databáza je zamknutá \nDôvod: "+ appDB.attr("locked reason"))
                 cancel()
                 exit()
             } else {
-            //message(appDB.field("Názov") + ", "+ season);
-            let number = [];
-            var isNumber = en.field(NUMBER);
-            if (isNumber > null) {
-                number.push(en.field(NUMBER));
-            } else {
-                number = getNewNumber(appDB, season, false, mementoLibrary, scriptName);
+                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName));
             }
             // nastav základné polia
             en.set(SEASON, season);
@@ -416,7 +410,7 @@ const saveEntry = (en, mementoLibrary) => {
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         message("Ukladám záznam...");
-        setView(en, "Tlač");
+        setView(en, FIELD_VIEW_PRINT);
             let season = getSeason(en, mementoLibrary, scriptName)
             let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB) {
