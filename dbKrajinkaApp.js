@@ -345,7 +345,7 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         number = isPrefix
         ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
-        db.setAttr("nasledujúce číslo", lastNum += 1 )
+        db.setAttr("nasledujúce číslo", lastNum )
         return number
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
