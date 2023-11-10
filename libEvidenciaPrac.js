@@ -5,7 +5,7 @@
 
 
 const newEntryEvidenciaPrac = en => {
-    let scriptName = "newEntryEvidenciaPrac 23.0.01"
+    let scriptName = "newEntryEvidenciaPrac 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
@@ -22,13 +22,12 @@ const newEntryEvidenciaPrac = en => {
         en.set(SEASON, season)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
     }
 }
 
 const updateEntryEvidenciaPrac = en => {
-    let scriptName = "updateEntryEvidenciaPrac 23.0.01"
+    let scriptName = "updateEntryEvidenciaPrac 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
@@ -37,7 +36,6 @@ const updateEntryEvidenciaPrac = en => {
         
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
@@ -48,11 +46,10 @@ const saveEntryEvidenciaPrac = en => {
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
     try {
-        prepocitatZaznamDochadzky(en)
+        prepocitatZaznamEvidenciePrac(en)
         saveEntry(en, mementoLibrary)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
