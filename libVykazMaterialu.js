@@ -11,7 +11,7 @@ const novyVykazMaterialu = (zakazka, popis) => {
     try {
         var lib = libByName(DB_VYKAZY_MATERIALU);
         var season = getSeason(zakazka, DB_VYKAZY_MATERIALU, scriptName)
-        var appDB = getAppSeasonDB(season, lib.title, DB_VYKAZY_MATERIALU, scriptName);
+        var appDB = getAppSeasonDB(season, DB_VYKAZY_MATERIALU, scriptName);
         var newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_MATERIALU,  scriptName);
         // vytvoriť novú výdajku
         var novaVydajka = new Object();
@@ -29,7 +29,7 @@ const novyVykazMaterialu = (zakazka, popis) => {
         let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber
         message(msgTxt)
         msgGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
-        return vydajkaMaterialu; 
+        return vydajkaMaterialu;
     } catch (error) {
         errorGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
@@ -44,7 +44,7 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
         var sumaBezDPH = 0;
         var sumaDPH = null;
         var sumaCelkom = null;
-    
+
         var typ = vykaz.field("Typ výkazu");
         if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
         var sDPH = vykaz.field("s DPH");
@@ -72,9 +72,9 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
             vykaz.set("DPH", sumaDPH);
             vykaz.set("Suma s DPH", sumaCelkom);
         }
-        return [sumaBezDPH, sumaDPH];    
+        return [sumaBezDPH, sumaDPH];
     } catch (error) {
         errorGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
-    
+
 }

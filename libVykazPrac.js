@@ -7,7 +7,7 @@ const novyVykazPrac = (zakazka, popis) => {
         // inicializácia
         let season = getSeason(zakazka, DB_VYKAZY_PRAC, scriptName);
         let vykazy = libByName(DB_VYKAZY_PRAC);
-        let appDB = getAppSeasonDB(season, vykazy.title, DB_VYKAZY_PRAC, scriptName);
+        let appDB = getAppSeasonDB(season, DB_VYKAZY_PRAC, scriptName);
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
@@ -23,7 +23,7 @@ const novyVykazPrac = (zakazka, popis) => {
         novyVykaz["Vydané"] = "Zákazka";
         novyVykaz["Zákazka"] = zakazka;
         novyVykaz["Cenová ponuka"] = cp;
-    
+
         novyVykaz[SEASON] = season;
         vykazy.create(novyVykaz);
         let vykazPrac = vykazy.find(newNumber)[0];
@@ -157,8 +157,8 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         vykaz.set("DPH", sumaDPH);
         vykaz.set("Suma s DPH", sumaCelkom);
         setTlac(vykaz);
-        return [sumaBezDPH, sumaDPH] 
+        return [sumaBezDPH, sumaDPH]
     } catch (error) {
-        errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters); 
+        errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
 }
 }

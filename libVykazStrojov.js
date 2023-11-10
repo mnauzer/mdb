@@ -6,7 +6,7 @@ const novyVykazStrojov = (zakazka, popis) => {
         // inicializácia
         let season = getSeason(zakazka, DB_VYKAZY_STROJOV, scriptName);
         let vykazy = libByName(DB_VYKAZY_STROJOV);
-        let appDB = getAppSeasonDB(season, vykazy.title, DB_VYKAZY_STROJOV, scriptName);
+        let appDB = getAppSeasonDB(season, DB_VYKAZY_STROJOV, scriptName);
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);

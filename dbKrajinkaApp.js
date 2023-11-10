@@ -379,7 +379,7 @@ const setEntry = (en, mementoLibrary) => {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
         let season = getSeason(en, mementoLibrary, scriptName)
-        let appDB = getAppSeasonDB(season, mementoLibrary, mementoLibrary, scriptName);
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB){
             var locked = appDB.attr("locked");
             if (locked) {
@@ -410,15 +410,22 @@ const setEntry = (en, mementoLibrary) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
-const saveEntry = en => {
-    message("Ukladám záznam...");
-    setView(en, "Tlač");
-    let season = getSeason(en);
-    let db = findAppDB(season);
-    if (db) {
-        db.setAttr("posledné číslo", db.attr("rezervované číslo"))
+const saveEntry = (en, mementoLibrary) => {
+    let scriptName = "saveEntry 23.0.01"
+    let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
+    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
+    try {
+        message("Ukladám záznam...");
+        setView(en, "Tlač");
+            let season = getSeason(en, mementoLibrary, scriptName)
+            let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
+        if (appDB) {
+            appDB.setAttr("posledné číslo", db.attr("rezervované číslo"))
+        }
+        unlockDB(en);
+    } catch (error) {
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
-    unlockDB(en);
 }
 //
 // ACTIONS library
@@ -428,7 +435,7 @@ const unlockDB = (en, mementoLibrary) => {
     let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary
     try {
         let season = getSeason(en, mementoLibrary, scriptName);
-        let appDB = getAppSeasonDB(season, lib().title, mementoLibrary, scriptName);
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         appDB.setAttr("rezervované číslo", null);
         appDB.setAttr("locked", false);
         appDB.setAttr("locked reason", null);
