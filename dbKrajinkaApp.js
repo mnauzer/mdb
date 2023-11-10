@@ -133,9 +133,9 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 }
 
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.021"
+    let scriptName = "getAppSeasonDB 23.1.03"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n";
-    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
+    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or mementoLibrary are undefined", variables, parameters );
         cancel();
