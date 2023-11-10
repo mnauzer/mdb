@@ -1,6 +1,6 @@
 
 const newEntryDochadzka = en => {
-    let scriptName = "updateEntryDochadzka 23.0.0"
+    let scriptName = "updateEntryDochadzka 23.0.04"
     let mementoDatabase = lib().title()
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
     let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
@@ -13,7 +13,8 @@ const newEntryDochadzka = en => {
         en.set(DATE, date)
         en.set(NUMBER, getNewNumber(appDB, season, false, mementoDatabase, scriptName))
     } catch (error) {
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        unlockDB(season, mementoDatabase)
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
