@@ -369,7 +369,7 @@ const setEntry = (en, mementoLibrary) => {
             if (locked) {
                 message("Databáza je zamknutá \nDôvod: "+ appDB.attr("locked reason"))
                 cancel()
-                exit()
+                closes()
             } else {
                 let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName);
                 en.set(NUMBER, number);
