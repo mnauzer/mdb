@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 }
 
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.05"
+    let scriptName = "getAppSeasonDB 23.1.06"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n";
     let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
@@ -147,23 +147,22 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
-                logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
+                let attributes = 
+                "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
+                "\nčíslo testu: " + databazy[v].attr("číslo testu") +
+                "\nrezervované číslo: " + databazy[v].attr("rezervované číslo") +
+                "\ndebug: " + databazy[v].attr("debug") +
+                "\nlocked: " + databazy[v].attr("locked") +
+                "\nlocked reason: " + databazy[v].attr("locked reason") + 
+                "\ntest: " + databazy[v].attr("test") + 
+                "\nprefix: " + databazy[v].attr("prefix") +
+                "\nseason trim: " + databazy[v].attr("season trim") +
+                "\ntrailing digit: " + databazy[v].attr("trailing digit")
+                logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
                 return databazy[v];
             }
         }
         let logTxt = "Databáza " + mementoLibrary +" nenájdená v sezóne " + season
-        let attributes = 
-        "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
-        "\nčíslo testu: " + databazy[v].attr("číslo testu") +
-        "\nrezervované číslo: " + databazy[v].attr("rezervované číslo") +
-        "\ndebug: " + databazy[v].attr("debug") +
-        "\nlocked: " + databazy[v].attr("locked") +
-        "\nlocked reason: " + databazy[v].attr("locked reason") + 
-        "\ntest: " + databazy[v].attr("test") + 
-        "\nprefix: " + databazy[v].attr("prefix") +
-        "\nseason trim: " + databazy[v].attr("season trim") +
-        "\ntrailing digit: " + databazy[v].attr("trailing digit")
-
         logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
         return 0;
     } catch (error) {
