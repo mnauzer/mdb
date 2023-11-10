@@ -52,29 +52,7 @@ const saveEntryDochadzka = en => {
     }
 }
 
-const lastSadzba = (employee, date) => {
-    let scriptName = "lastSadzba 23.0.03"
-    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
-    let parameters = "employee: " + employee + "\ndate: " + date
-    try {
-        // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-        var links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-        variables += "\nZáznamov: " + links.length
-        filtered = filterByDatePlatnost(links, date);
-        if (filtered.length < 0) {
-            msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
-        } else {
-            filtered.reverse();
-        }
-        //vyberie a vráti sadzbu z prvého záznamu
-        var sadzba = filtered[0].field("Sadzba");
-        variables += "\nSadzba: " + sadzba
-        msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Aktuálna sadzba', variables, parameters);
-        return sadzba;
-    } catch (error) {
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
-    }
-}
+
 
 const prepocitatZaznamDochadzky = en => {
     let scriptName = "prepocitatZaznamDochadzky 23.0.02"
@@ -85,6 +63,7 @@ const prepocitatZaznamDochadzky = en => {
         let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         let odchod = roundTimeQ(en.field("Odchod"));
         let datum = en.field(DATE)
+
         let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
@@ -96,10 +75,9 @@ const prepocitatZaznamDochadzky = en => {
         let evidenciaPrac = en.field("Práce");
         if (employees.length > 0) {
             for (let z = 0; z < employees.length; z++) {
-                //let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : employees[z].field("Hodinovka");
-                let links =  employees[z].linksFrom("Zamestnanci Sadzby", "Zamestnanec");
-                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, "Sadzba", "Platnosť od");
-                // let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum);
+                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, scriptName);
+                employees[z].setAttr("hodinovka", hodinovka);
+                
                 let hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
                 let dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
                 // premenné z knižnice employees
@@ -108,7 +86,6 @@ const prepocitatZaznamDochadzky = en => {
                 let libVyplatene = employees[z].field("Vyplatené");
                 let libHodnotenieD = employees[z].field(ATTENDANCE);
 
-                employees[z].setAttr("hodinovka", hodinovka);
                 dennaMzda = (pracovnaDoba * (hodinovka
                     + employees[z].attr("+príplatok (€/h)")))
                     + employees[z].attr("+prémia (€)")

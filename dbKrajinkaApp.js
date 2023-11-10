@@ -99,6 +99,7 @@ const checkDebug = season => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
     }
 }
+
 const getAppSeason = (season, mementoLibrary) => {
     let scriptName = "getAppSeason 23.0.05"
     let variables = "Sezóna: " + season +  "\n"
@@ -115,7 +116,6 @@ const getAppSeason = (season, mementoLibrary) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
-
 const getAppSeasonDatabases = (season, mementoLibrary) => {
     let scriptName = "getAppSeasonDatabases 23.0.04"
     let variables = "Sezóna: " + season +  "\n"
@@ -131,7 +131,6 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
-
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
     let scriptName = "getAppSeasonDB 23.1.06"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n";

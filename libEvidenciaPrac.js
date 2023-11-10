@@ -90,51 +90,41 @@ const prepocetZaznamuEvidencie = en => {
     let scriptName ="prepocetZaznamuEvidencie 23.0.01";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
-    if(en == undefined){
-        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, "chýba parameter en - entry", variables, parameters );
-        cancel();
-        exit();
-    }
     try {
-        var datum = en.field(DATE)
-        // inicializácia
-        var typ = en.field("Typ zákazky");
+        let date = en.field(DATE)
+        let typ = en.field("Typ zákazky");
         if (typ == "Hodinovka") {
             //TODO opraviť chybu keď nie je zadaná zákazka
             en.set(FIELD_ZAKAZKA, en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0] || null);
         } else if (typ == "Položky") {
-            //message("Práce na zákazke " + evidencia.field("Zákazka")[0].field("Názov"));
         }
-        var zamestnanci = evidencia.field(FIELD_ZAMESTNANCI);
-        var odpracovane = 0;
-        var mzdoveNakladyCelkom = 0;
-        var nakladyZamestnatec = 0;
-        // zaokrúhli na 1/4 hod
-        var casOd = roundTimeQ(en.field("Od"));
-        var casDo = roundTimeQ(en.field("Do"));
-
-        // spočítaj hodiny, mzdy a náklady
-        odpracovaneOsoba = (casDo - casOd) / 3600000;
-        for (var z = 0; z < zamestnanci.length; z++) {
+        let zamestnanci = evidencia.field(FIELD_ZAMESTNANCI);
+        let odpracovane = 0;
+        let mzdoveNakladyCelkom = 0;
+        let nakladyZamestnatec = 0;
+        let casOd = roundTimeQ(en.field("Od"));
+        let casDo = roundTimeQ(en.field("Do"));
+        let odpracovaneOsoba = (casDo - casOd) / 3600000;
+        for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
-            var hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z]);
+            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastSadzba(zamestnanci[z], date, scriptName);
             zamestnanci[z].setAttr("hodinovka", hodinovka);
+            
             odpracovane += odpracovaneOsoba;
             nakladyZamestnatec = odpracovaneOsoba * hodinovka;
             mzdoveNakladyCelkom += nakladyZamestnatec;
         };
-        // PRÁCE
-        var vykazPrac = en.field("Výkaz prác");
-        var hodinCelkom = 0;
+        let vykazPrac = en.field("Výkaz prác");
+        let hodinCelkom = 0;
         if (vykazPrac) {
-            for (var v = 0; v < vykazPrac.length; v++) {
+            for (let v = 0; v < vykazPrac.length; v++) {
                 // zistiť hodinovú sadzbu
-                var sadzba = 0;
-                var hodin = vykazPrac[v].attr("počet hodín") || odpracovane;
+                let sadzba = 0;
+                let hodin = vykazPrac[v].attr("počet hodín") || odpracovane;
                 hodinCelkom += hodin;
                 vykazPrac[v].setAttr("popis prác", vykazPrac[v].attr("popis prác") || en.field("Rozpis prác"));
                 vykazPrac[v].setAttr("počet hodín", hodin);
-                var uctovanie = vykazPrac[v].field("Cenová ponuka")[0].field("Počítanie hodinových sadzieb");
+                let uctovanie = vykazPrac[v].field("Cenová ponuka")[0].field("Počítanie hodinových sadzieb");
                 if (uctovanie == "Individuálne za každý výjazd") {
                     sadzba = evidenciaSadzbaPrace(vykazPrac[v], hodin);
                     vykazPrac[v].setAttr("sadzba", sadzba);
@@ -144,18 +134,18 @@ const prepocetZaznamuEvidencie = en => {
         };
 
         //STROJE
-        var evidovatStroje = en.field("Evidovať stroje");
+        let evidovatStroje = en.field("Evidovať stroje");
         if (evidovatStroje) {
-            var vyuzitieStrojov = en.field("Využitie strojov");
+            let vyuzitieStrojov = en.field("Využitie strojov");
             if (vyuzitieStrojov) {
-                var EvidenciaPrac = en.field("Výkaz strojov")[0];
+                let EvidenciaPrac = en.field("Výkaz strojov")[0];
                 if (EvidenciaPrac) {
                     // ak má zákazka už vygenerovaný výkaz s cp
-                    var stroje = vykazStrojov.field("Stroje");
-                    for (var i = 0; i < vyuzitieStrojov.length; i++) {
+                    let stroje = vykazStrojov.field("Stroje");
+                    for (let i = 0; i < vyuzitieStrojov.length; i++) {
                         if (stroje) {
-                            var prevadzkaMTH = 0;
-                            for (var j = 0; j < stroje.length; j++) {
+                            let prevadzkaMTH = 0;
+                            for (let j = 0; j < stroje.length; j++) {
                                 if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
                                 }
                                 stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth", prevadzkaMTH));
@@ -166,7 +156,7 @@ const prepocetZaznamuEvidencie = en => {
                         }
                     }
                 } else {
-                    var vykazStrojovZakazka = en.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
+                    let vykazStrojovZakazka = en.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
                     if (vykazStrojovZakazka) {
                         en.link("Výkaz strojov", vykazStrojovZakazka);
                     } else {
@@ -190,8 +180,6 @@ const prepocetZaznamuEvidencie = en => {
         en.set("Odpracované/os", odpracovaneOsoba); 
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
-        cancel();
-        exit();
     }
     
 }

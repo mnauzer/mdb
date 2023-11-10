@@ -52,7 +52,6 @@ const saveEntryCenovePonuky = en => {
     }
 }
 
-
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 23.0.01";
     let variables = "Záznam: " + en.name
@@ -308,14 +307,8 @@ const linkItems = (vydajkaMaterialu, polozky) => {
 const generujVykazyPrac = zakazka => {
     let scriptName = "generujVykazyPrac 23.0.09";
     let variables = "Zákazka: " +  zakazka.name + "\n"
-    let parameters = "zakazka: " +  zakazka + "\n"
-    if(zakazka == undefined){
-        msgGen("libCenovePonuky.js", scriptName, "zakazka entry is undefined", variables, parameters );
-        cancel();
-        exit();
-    }
+    let parameters = "zakazka: " +  zakazka
     try {
-       // var season = getSeason(zakazka, DB_CENOVE_PONUKY, scriptName);
         var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
@@ -402,13 +395,13 @@ const generujVykazStrojov = zakazka => {
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
-        var cp = zakazka.field("Cenová ponuka")[0];
-        var strojePolozky = cp.field(FIELD_STROJE);
+        var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+        var polozky = cp.field(FIELD_STROJE);
         // vytvoriť nový výkaz
-        var vykazStrojov = novyVykazStrojov(zakazka);
-        nalinkujPolozkyStrojov(vykazStrojov, strojePolozky);          // nalinkuje atribúty na položky
-        spocitajVykaz(vykazStrojov, FIELD_STROJE);                      // výkaz , názov poľa položiek
-        return vykazStrojov;
+        var vykaz = novyVykazStrojov(zakazka);
+        nalinkujPolozkyStrojov(vykaz, polozky);          // nalinkuje atribúty na položky
+        spocitajVykaz(vykaz, FIELD_STROJE);                      // výkaz , názov poľa položiek
+        return vykaz;
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
@@ -434,7 +427,7 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
     let scriptName = "spocitajVykaz 23.0.01"
-    let variables = "Doklad : " +  doklad.name
+    let variables = "Doklad : " +  doklad.name + "\nfield: " + field
     let parameters = "doklad: " +  doklad + "\nfield: " + field
     try {
         var sezona = doklad.field(SEASON);
@@ -619,4 +612,4 @@ const polozkaPrace = prace => {
     }
     return celkom;
 };
-// End of file: 14.03.2022, 07:51aa
+// End of file: 10.11.2023
