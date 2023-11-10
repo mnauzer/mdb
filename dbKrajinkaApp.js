@@ -388,7 +388,7 @@ const saveEntry = (en, mementoLibrary) => {
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         unlockDB(season, mementoLibrary);
-        appDB.setAttr("nasledujúce číslo", )
+        appDB.setAttr("nasledujúce číslo", en.field("number") + 1)
         let msgTxt = "Nový záznam č." + en.field(NUMBER) + " v knižnici " + mementoLibrary
         message(msgTxt)
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
