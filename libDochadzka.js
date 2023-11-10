@@ -1,7 +1,7 @@
 
 const newEntryDochadzka = en => {
     let scriptName = "updateEntryDochadzka 23.0.04"
-    let mementoDatabase = lib().title()
+    let mementoDatabase = lib().title
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
     let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
     message("New Entry")
