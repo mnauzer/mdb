@@ -56,7 +56,6 @@ const prepocitatZaznamDochadzky = en => {
     let parameters = "en: " + en
     try {
         // výpočet pracovnej doby
-        var datum = en.field(DATE);
         var prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         var odchod = roundTimeQ(en.field("Odchod"));
         var pracovnaDoba = (odchod - prichod) / 3600000;
