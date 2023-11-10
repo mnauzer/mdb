@@ -1,6 +1,6 @@
 
 const novyVykazMaterialu = (zakazka, popis) => {
-    let scriptName = "novyVykazMaterialu 23.1.01";
+    let scriptName = "novyVykazMaterialu 23.1.03";
     let variables = "Zákazka: " + zakazka.name + "\n"
     let parameters = "zakazka: " + zakazka + "\npopis: "+ popis
     if(zakazka === undefined ){
@@ -12,19 +12,20 @@ const novyVykazMaterialu = (zakazka, popis) => {
         var lib = libByName(DB_VYKAZY_MATERIALU);
         var season = getSeason(zakazka, DB_VYKAZY_MATERIALU, scriptName)
         var appDB = getAppSeasonDB(season, DB_VYKAZY_MATERIALU, scriptName);
-        var newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_MATERIALU,  scriptName);
+        var newNumber = getNewNumber(appDB, season, B_VYKAZY_MATERIALU,  scriptName);
         // vytvoriť novú výdajku
-        var novaVydajka = new Object();
-        novaVydajka[NUMBER] = newNumber;
-        novaVydajka["Dátum"] = zakazka.field("Dátum");
-        novaVydajka["Popis"] = popis;
-        novaVydajka["s DPH"] = true; // hardcoded
-        novaVydajka["Ceny počítať"] = "Z cenovej ponuky";
-        novaVydajka["Vydané"] = "Zákazka";
-        novaVydajka["Zákazka"] = zakazka;
-        novaVydajka["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
-        novaVydajka[SEASON] = season;
-        lib.create(novaVydajka);
+        var novyVykaz = new Object();
+        novyVykaz[NUMBER] = newNumber[0];
+        novyVykaz["number"] = newNumber[1];
+        novyVykaz["Dátum"] = zakazka.field("Dátum");
+        novyVykaz["Popis"] = popis;
+        novyVykaz["s DPH"] = true; // hardcoded
+        novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
+        novyVykaz["Vydané"] = "Zákazka";
+        novyVykaz["Zákazka"] = zakazka;
+        novyVykaz["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
+        novyVykaz[SEASON] = season;
+        lib.create(novyVykaz);
         var vydajkaMaterialu = lib.find(newNumber)[0];
         let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber
         message(msgTxt)

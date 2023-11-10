@@ -91,7 +91,7 @@ const prepocetPonuky = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.02";
+    var scriptName ="generujZakazku 23.1.03";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -126,7 +126,8 @@ const generujZakazku = cp => {
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
             novaZakazka["Typ zákazky"] = typZakazky;
-            novaZakazka[NUMBER] = newNumber;
+            novaZakazka[NUMBER] = newNumber[0];
+            novaZakazka["number"] = newNumber[1];
             novaZakazka["Klient"] = cp.field("Klient")[0];
             novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita");
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
@@ -341,34 +342,6 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
     }
 }
 
-// STROJE
-// vytvorí nový záznam
-
-// const novyVykazStrojov = (zakazka) => {
-//     // inicializácia
-//     var lib = libByName("Výkaz strojov");
-//     var cp = zakazka.field("Cenová ponuka")[0];
-//     var typVykazu = cp.field("Typ cenovej ponuky");
-//     var datum = zakazka.field("Dátum");
-//     var sezona = zakazka.field(SEASON);
-//     var cislo = noveCislo(sezona, "Výkaz strojov", 0, 3);
-//     // vytvoriť novú výdajku
-//     var novyVykaz = new Object();
-//     novyVykaz[NUMBER] = cislo;
-//     novyVykaz["Dátum"] = datum;
-//     novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
-//     novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
-//     novyVykaz["s DPH"] = true; //harcoded
-//     novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
-//     novyVykaz["Vydané"] = "Zákazka";
-//     novyVykaz["Zákazka"] = zakazka;
-//     novyVykaz["Cenová ponuka"] = cp;
-//     novyVykaz[SEASON] = sezona;
-//     lib.create(novyVykaz);
-//     var vykazStrojov = lib.find(cislo)[0];
-
-//     return vykazStrojov;
-// }
 const generujVykazStrojov = zakazka => {
     let scriptName = "generujVykazStrojov 23.0.01";
     let variables = "Zákazka: " +  zakazka.name + "\n"

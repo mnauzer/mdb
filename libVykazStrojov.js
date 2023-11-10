@@ -1,5 +1,5 @@
 const novyVykazStrojov = (zakazka, popis) => {
-    let scriptName = "novyVykazStrojov 23.0.02";
+    let scriptName = "novyVykazStrojov 23.0.03";
     let variables = "Zákazka: " +  zakazka.name + "\nPopis: " + popis
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
@@ -10,10 +10,11 @@ const novyVykazStrojov = (zakazka, popis) => {
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_STROJOV, scriptName);
+        let newNumber = getNewNumber(appDB, season, DB_VYKAZY_STROJOV, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
-        novyVykaz[NUMBER] = newNumber;
+        novyVykaz[NUMBER] = newNumber[0];
+        novyVykaz["number"] = newNumber[1];
         novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
         novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe

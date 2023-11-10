@@ -1,6 +1,6 @@
 
 const novyVykazPrac = (zakazka, popis) => {
-    let scriptName = "novyVykazPrac 23.1.01";
+    let scriptName = "novyVykazPrac 23.1.03";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
@@ -11,10 +11,11 @@ const novyVykazPrac = (zakazka, popis) => {
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, false, DB_VYKAZY_PRAC, scriptName);
+        let newNumber = getNewNumber(appDB, season,  DB_VYKAZY_PRAC, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
-        novyVykaz[NUMBER] = newNumber;
+        novyVykaz[NUMBER] = newNumber[0];
+        novyVykaz["number"] = newNumber[1];
         novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = popis;
         novyVykaz["Typ výkazu"] = typVykazu;
