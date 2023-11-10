@@ -430,7 +430,7 @@ const saveEntry = (en, mementoLibrary) => {
 //
 // ACTIONS library
 const unlockDB = (season, mementoLibrary) => {
-    let scriptName = "unlockDB 23.0.02";
+    let scriptName = "unlockDB 23.0.03";
     let variables = "Season: " + season + "\nDatabáza: " + mementoLibrary;
     let parameters = "season: " + season +  "\nmementoLibrary" + mementoLibrary
     try {
@@ -438,6 +438,7 @@ const unlockDB = (season, mementoLibrary) => {
         appDB.setAttr("rezervované číslo", null);
         appDB.setAttr("locked", false);
         appDB.setAttr("locked reason", null);
+        message("Databáza " + mementoLibrary + " odomknutá")
         return true;
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
