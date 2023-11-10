@@ -10,7 +10,7 @@ const newEntryDochadzka = en => {
         let date = new Date()
         let season = getSeason(en, mementoDatabase, scriptName)
         let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
-        let number = getNewNumber(appDB, season, false, mementoDatabase, scriptName)
+        let number = getNewNumber(appDB, season, mementoDatabase, scriptName)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
