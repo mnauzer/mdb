@@ -315,7 +315,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters) => 
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
-    let scriptName = "getNewNumber 23.1.06"
+    let scriptName = "getNewNumber 23.1.07"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
@@ -324,7 +324,7 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         exit();
     }
     try {
-        let number = ""
+        let number = []
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
@@ -337,10 +337,10 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         };
         let lastNum = db.attr("nasledujúce číslo");
         let reservedNum = db.attr("rezervované číslo");
+        lastNum = lastNum == reservedNum ? lastNum += 1 : lastNum
         db.setAttr("rezervované číslo", lastNum)
-        number = isPrefix
-        ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
-        : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
+        number[0] = isPrefix ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
+        number[1] = lastNum;
         return number
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
@@ -354,7 +354,7 @@ const setEntry = (en, mementoLibrary) => {
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         //message("Nastavujem záznam...");
-        en.set(VIEW, FIELD_VIEW_EDIT)
+        en.set(VIEW, VIEW_EDIT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB){
@@ -384,9 +384,10 @@ const saveEntry = (en, mementoLibrary) => {
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
        // message("Ukladám záznam...");
-        en.set(VIEW, FIELD_VIEW_PRINT)
+        en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
+        appDB.setAttr("nasledujúce číslo", )
         unlockDB(season, mementoLibrary);
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
