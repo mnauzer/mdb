@@ -10,8 +10,10 @@ const newEntryDochadzka = en => {
         let date = new Date()
         let season = getSeason(en, mementoDatabase, scriptName)
         let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
+        let number = getNewNumber(appDB, season, false, mementoDatabase, scriptName)
         en.set(DATE, date)
-        en.set(NUMBER, getNewNumber(appDB, season, false, mementoDatabase, scriptName))
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
         en.set(SEASON, season)
     } catch (error) {
         unlockDB(season, mementoDatabase)
