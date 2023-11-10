@@ -326,10 +326,10 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 }
 
 // generuje nové číslo záznamu
-const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
+const getNewNumber = (db, season,  mementoLibrary, inputScript) => {
     let scriptName = "getNewNumber 23.1.07"
-    let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
-    let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
+    let variables = "Knižnica: " + db.name + "\nSezóna: " + season ;
+    let parameters = "db: " + db+ "\n" + "season: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters );
         cancel();
@@ -340,6 +340,7 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
+        let isPrefix = db.attr("prefix");
         let attrTrailing = db.attr("trailing digit");
         let attrSeasonTrim = db.attr("season trim");
         if (test) {
@@ -392,17 +393,18 @@ const setEntry = en => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.09"
+    let scriptName = "saveEntry 23.0.10"
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
        // message("Ukladám záznam...");
+        en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
-        let nextNumber = en.field("number")
-        unlockDB(season, mementoLibrary);
-        en.set(VIEW, VIEW_PRINT)
-        appDB.setAttr("nasledujúce číslo", nextNumber += 1)
+        let nextNumber = en.field("number") + 1
+        appDB.setAttr("locked", false);
+        appDB.setAttr("locked reason", null)
+        appDB.setAttr("nasledujúce číslo", nextNumber)
         let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
         message(msgTxt)
         msgGen(mementoLibrary, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
