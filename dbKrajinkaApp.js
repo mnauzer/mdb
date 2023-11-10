@@ -341,7 +341,8 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         }
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-        db.setAttr("nasledujúce číslo", lastNum + 1);
+        db.setAttr("rezervované číslo", lastNum);
+        db.setAttr("nasledujúce číslo", lastNum + 1 );
 
         variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr("nasledujúce číslo");
           //  let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
@@ -372,7 +373,6 @@ const setEntry = (en, mementoLibrary) => {
             } else {
                 let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName);
                 en.set(NUMBER, number);
-                appDB.setAttr("rezervované číslo", number);
                 appDB.setAttr("locked", true);
                 appDB.setAttr("locked reason", "editácia užívateľom ");
                 //en.set(LAST_NUM, number);
@@ -407,7 +407,6 @@ const unlockDB = (season, mementoLibrary) => {
     let parameters = "season: " + season +  "\nmementoLibrary" + mementoLibrary
     try {
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
-        appDB.setAttr("rezervované číslo", null);
         appDB.setAttr("locked", false);
         appDB.setAttr("locked reason", null);
         message("Databáza " + mementoLibrary + " odomknutá")
