@@ -315,7 +315,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters) => 
 
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
-    let scriptName = "getNewNumber 23.1.04"
+    let scriptName = "getNewNumber 23.1.05"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
@@ -324,6 +324,7 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         exit();
     }
     try {
+        let number = ""
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
@@ -338,17 +339,14 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         let reservedNum = db.attr("rezervované číslo");
         if (lastNum == reservedNum) {
             lastNum += 1;
+            message("reserved num")
         }
-        let number = isPrefix ? prefix + season.slice(attrSeasonTrim
-            ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-        db.setAttr("rezervované číslo", lastNum);
-        db.setAttr("nasledujúce číslo", lastNum + 1 );
-
-        variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr("nasledujúce číslo");
-          //  let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
-          //  logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
-        return number;
-
+        db.setAttr("rezervované číslo", lastNum)
+        number = isPrefix
+        ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
+        : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
+        db.setAttr("nasledujúce číslo", lastNum + 1 )
+        return number
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
