@@ -1,10 +1,12 @@
 
-const newEntryDochadzka = (en, mementoDatabase) => {
+const newEntryDochadzka = en => {
+    let scriptName = "updateEntryDochadzka 23.0.0"
+    let mementoDatabase = lib().title()
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
-    let scriptName = "updateEntryDochadzka 23.0.01"
     let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
     message("New Entry")
     try {
+        setEntry(en, mementoDatabase)
         let date = new Date()
         let season = getSeason(en, mementoDatabase, scriptName)
         let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
