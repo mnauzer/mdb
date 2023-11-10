@@ -46,7 +46,7 @@ const saveEntryEvidenciaPrac = en => {
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
     try {
-        prepocitatZaznamEvidenciePrac(en)
+        prepocetZaznamuEvidenciePrac(en)
         saveEntry(en, mementoLibrary)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
@@ -82,8 +82,8 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     }
 };
 
-const prepocetZaznamuEvidencie = en => {
-    let scriptName ="prepocetZaznamuEvidencie 23.0.02";
+const prepocetZaznamuEvidenciePrac = en => {
+    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.02";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
