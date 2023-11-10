@@ -1,6 +1,6 @@
 
 const newEntryDochadzka = en => {
-    let scriptName = "updateEntryDochadzka 23.0.05"
+    let scriptName = "newEntryDochadzka 23.0.06"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
@@ -16,6 +16,7 @@ const newEntryDochadzka = en => {
         en.set("number", number[1])
         en.set(SEASON, season)
     } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
     }
@@ -28,8 +29,10 @@ const updateEntryDochadzka = en => {
     let parameters = "en: " + en 
     message("Úprava záznamu - " + mementoLibrary);
     try {
-
+        
     } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
@@ -43,6 +46,8 @@ const saveEntryDochadzka = en => {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, mementoLibrary)
     } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
