@@ -40,8 +40,6 @@ const saveEntryDochadzka = en => {
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
     try {
-        message("entry: "+ en.name)
-        message("mementoLibrary: " + mementoLibrary)
         prepocitatZaznamDochadzky(en)
         saveEntry(en, mementoLibrary)
     } catch (error) {
@@ -50,7 +48,7 @@ const saveEntryDochadzka = en => {
 }
 
 const lastSadzba = (employee, date) => {
-    let scriptName = "lastSadzba 23.0.02"
+    let scriptName = "lastSadzba 23.0.03"
     let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
     let parameters = "employee: " + employee + "\ndate: " + date
     try {
@@ -59,14 +57,14 @@ const lastSadzba = (employee, date) => {
         variables += "\nZáznamov: " + links.length
         filtered = filterByDatePlatnost(links, date);
         if (filtered.length < 0) {
-            msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
+            msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
             filtered.reverse();
         }
         //vyberie a vráti sadzbu z prvého záznamu
         var sadzba = filtered[0].field("Sadzba");
         variables += "\nSadzba: " + sadzba
-        msgGen(DB_DOCHADZKA, "libDochadzka", scriptName, '"Filtered links: " + filtered.length', variables, parameters);
+        msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Aktuálna sadzba', variables, parameters);
         return sadzba;
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);

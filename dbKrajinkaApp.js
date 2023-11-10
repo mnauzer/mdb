@@ -392,7 +392,7 @@ const setEntry = en => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.07"
+    let scriptName = "saveEntry 23.0.08"
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
@@ -405,7 +405,9 @@ const saveEntry = (en, mementoLibrary) => {
         en.set(VIEW, VIEW_PRINT)
         let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
         message(msgTxt)
-        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+        msgGen(mementoLibrary, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
+        let logTxt = ""
+        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
@@ -413,14 +415,14 @@ const saveEntry = (en, mementoLibrary) => {
 //
 // ACTIONS library
 const unlockDB = (season, mementoLibrary) => {
-    let scriptName = "unlockDB 23.0.03";
+    let scriptName = "unlockDB 23.0.04";
     let variables = "Season: " + season + "\nDatabáza: " + mementoLibrary;
     let parameters = "season: " + season +  "\nmementoLibrary" + mementoLibrary
     try {
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         appDB.setAttr("locked", false);
         appDB.setAttr("locked reason", null);
-        message("Databáza " + mementoLibrary + " odomknutá")
+        //message("Databáza " + mementoLibrary + " odomknutá")
         return true;
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
