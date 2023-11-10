@@ -356,27 +356,22 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
 //
 // TRIGGERS open and save entry
 const setView = (en, mementoLibrary, view) => {
-    let scriptName = "setView 23.0.02"
+    let scriptName = "setView 23.0.03"
     let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary + "View: " + view
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\nview: " + view
     try {
-        if (view === FIELD_VIEW_EDIT) {
-            en.set(VIEW, FIELD_VIEW_EDIT);
-        } else if (view === FIELD_VIEW_PRINT) {
-            en.set(VIEW, FIELD_VIEW_PRINT);
-         //   en.set(DBG, false);
-        }
-
+        en.set(VIEW, view)
     } catch (error) {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
+
 const setEntry = (en, mementoLibrary) => {
     let scriptName = "setEntry 23.0.05"
     let variables = "Záznam: " + en.name + "memento library: " +mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
-        message("Nastavujem záznam...");
+        //message("Nastavujem záznam...");
         setView(en,mementoLibrary, FIELD_VIEW_EDIT);
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
@@ -407,7 +402,7 @@ const saveEntry = (en, mementoLibrary) => {
     let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
-        message("Ukladám záznam...");
+       // message("Ukladám záznam...");
         setView(en, mementoLibrary, FIELD_VIEW_PRINT);
             let season = getSeason(en, mementoLibrary, scriptName)
             let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
