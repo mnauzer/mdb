@@ -26,8 +26,8 @@ const novyVykazMaterialu = (zakazka, popis) => {
         novyVykaz["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
         novyVykaz[SEASON] = season;
         lib.create(novyVykaz);
-        var vydajkaMaterialu = lib.find(newNumber)[0];
-        let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber
+        var vydajkaMaterialu = lib.find(newNumber[0])[0];
+        let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber[0]
         message(msgTxt)
         msgGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
         return vydajkaMaterialu;

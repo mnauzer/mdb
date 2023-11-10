@@ -25,8 +25,8 @@ const novyVykazStrojov = (zakazka, popis) => {
         novyVykaz["Cenová ponuka"] = cp;
         novyVykaz[SEASON] = season;
         vykazy.create(novyVykaz);
-        let vykazPrac = vykazy.find(newNumber)[0];
-        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber
+        let vykazPrac = vykazy.find(newNumber[0])[0];
+        let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
         msgGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
         return vykazPrac;
