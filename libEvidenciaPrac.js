@@ -57,7 +57,6 @@ const saveEntryEvidenciaPrac = en => {
     }
 }
 
-
 const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     let scriptName ="evidenciaSadzbaPrace 23.0.01";
     let variables = "Záznam: " + vykazPrac.name + "\n"
@@ -87,7 +86,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const prepocetZaznamuEvidencie = en => {
-    let scriptName ="prepocetZaznamuEvidencie 23.0.01";
+    let scriptName ="prepocetZaznamuEvidencie 23.0.02";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
@@ -109,7 +108,7 @@ const prepocetZaznamuEvidencie = en => {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
             let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastSadzba(zamestnanci[z], date, scriptName);
             zamestnanci[z].setAttr("hodinovka", hodinovka);
-            
+
             odpracovane += odpracovaneOsoba;
             nakladyZamestnatec = odpracovaneOsoba * hodinovka;
             mzdoveNakladyCelkom += nakladyZamestnatec;
