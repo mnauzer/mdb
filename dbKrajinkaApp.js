@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 }
 
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.04"
+    let scriptName = "getAppSeasonDB 23.1.05"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n";
     let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
