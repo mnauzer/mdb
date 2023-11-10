@@ -1,6 +1,6 @@
 
 const newEntryDochadzka = en => {
-    let scriptName = "updateEntryDochadzka 23.0.04"
+    let scriptName = "updateEntryDochadzka 23.0.05"
     let mementoDatabase = lib().title
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
     let parameters = "en: " + en
@@ -11,7 +11,7 @@ const newEntryDochadzka = en => {
         let season = getSeason(en, mementoDatabase, scriptName)
         let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
         en.set(DATE, date)
-        en.set(NUMBER, getNewNumber(appDB, season, false, mementoDatabase, scriptName))
+        en.set(NUMBER, getNewNumber(appDB, season, mementoDatabase, scriptName))
         en.set(SEASON, season)
     } catch (error) {
         unlockDB(season, mementoDatabase)

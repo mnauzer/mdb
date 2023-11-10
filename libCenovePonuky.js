@@ -108,7 +108,7 @@ const generujZakazku = cp => {
             // vygenerovať novú zákazku
             let zakazky = libByName(DB_ZAKAZKY);
             let appDB = getAppSeasonDB(season, zakazky.title, scriptName);
-            let newNumber = getNewNumber(appDB, season, true, DB_CENOVE_PONUKY, scriptName);
+            let newNumber = getNewNumber(appDB, season, DB_CENOVE_PONUKY, scriptName);
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 var dielyZakazky = cp.field("Diely cenovej ponuky hzs");

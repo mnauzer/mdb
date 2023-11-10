@@ -314,8 +314,8 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters) => 
 }
 
 // generuje nové číslo záznamu
-const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
-    let scriptName = "getNewNumber 23.1.05"
+const getNewNumber = (db, season, mementoLibrary, inputScript) => {
+    let scriptName = "getNewNumber 23.1.06"
     let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n" +  "Prefix: " + isPrefix + "\n";
     let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(db == undefined || db == null){
@@ -328,6 +328,7 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
+        let isPrefix = db.attr("prefix");
         let attrTrailing = db.attr("trailing digit");
         let attrSeasonTrim = db.attr("season trim");
         if (test) {
