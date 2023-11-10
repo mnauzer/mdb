@@ -134,8 +134,8 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 
 const getAppSeasonDB = (season, dbName, mementoLibrary, inputScript) => {
     let scriptName = "getAppSeasonDB 23.1.01"
-    let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n"; 
-    let parameters = "season: " + season +  "\ndbName: " + dbName + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript; 
+    let variables = "Sezóna: " + season +  "\nKnižnica: " + dbName + "\n";
+    let parameters = "season: " + season +  "\ndbName: " + dbName + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(season == undefined || dbName == undefined || season == null || dbName == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName are undefined", variables, parameters );
         cancel();
@@ -341,20 +341,22 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
             db.setAttr(lastNumAttr, lastNum + 1);
-            
+
             variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr(lastNumAttr);
           //  let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
           //  logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
             return number;
-            
+
         } catch (error) {
             errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
         }
 };
 //
 // TRIGGERS open and save entry
-const setView = (en, view) => {
+const setView = (en, mementoLibrary, view) => {
     let scriptName = "setView 23.0.02"
+    let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary + "View: " + view
+    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\nview: " + view
     try {
         if (view === FIELD_VIEW_EDIT) {
             en.set(VIEW, FIELD_VIEW_EDIT);
@@ -362,22 +364,20 @@ const setView = (en, view) => {
             en.set(VIEW, FIELD_VIEW_PRINT);
          //   en.set(DBG, false);
         }
-        
+
     } catch (error) {
-        var variables = ""
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables);
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
-const setEntry = (en, mementoLibrary, isPrefix) => {
+const setEntry = (en, mementoLibrary) => {
     let scriptName = "setEntry 23.0.03"
     let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary + "Prefix: " + isPrefix
-    let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary + "\nisPrefix: " + isPrefix 
+    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\nisPrefix: " + isPrefix
     try {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
-        var prfx = isPrefix || false;
-        var season = getSeason(en, mementoLibrary, scriptName)
-        let appDB = getAppSeasonDB(season, lib().title, mementoLibrary, scriptName);
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, mementoLibrary, scriptName);
         if (appDB){
             var locked = appDB.attr("locked");
             if (locked) {
@@ -423,7 +423,7 @@ const saveEntry = en => {
 const unlockDB = (en, mementoLibrary) => {
     let scriptName = "unlockDB 23.0.06";
     let variables = "Záznam: " + en.name + "\nDatabáza: " + mementoLibrary;
-    let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary  
+    let parameters = "en: " + en +  "\nmementoLibrary" + mementoLibrary
     try {
         let season = getSeason(en, mementoLibrary, scriptName);
         let appDB = getAppSeasonDB(season, lib().title, mementoLibrary, scriptName);
@@ -448,7 +448,7 @@ const setID = entries => {
     } catch (error) {
         errorGen("dbKrajinkaApp.js", scriptName, error, variables);
     }
-    
+
 }
 const setTEST = en => {
     message("Set TEST v.0.23.01");

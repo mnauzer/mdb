@@ -1,8 +1,3 @@
-// zakazky/Event/Script:    Projekty\Cenové ponuky\shared\cpzakazky_w.js
-// JS Libraries:
-// Dátum:                   27.03.2023
-// Popis:
-
 const prepocetPonuky = en => {
     let scriptName ="prepocetPonuky 23.0.01";
     let variables = "Záznam: " + en.name
@@ -130,7 +125,7 @@ const generujZakazku = cp => {
             message("Generujem novú zákazku...")
             var novaZakazka = new Object();
             novaZakazka[DATE] = new Date();
-            novaZakazka["Typ zákazky"] = typZakazky; 
+            novaZakazka["Typ zákazky"] = typZakazky;
             novaZakazka[NUMBER] = newNumber;
             novaZakazka["Klient"] = cp.field("Klient")[0];
             novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita");
@@ -149,7 +144,7 @@ const generujZakazku = cp => {
             let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná";
             message(msgTxt);
             msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
-            
+
             // generovanie výkazov
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 generujVykazyPrac(zakazka);
@@ -254,7 +249,7 @@ const linkItems = (vydajkaMaterialu, polozky) => {
 // VÝKAZY PRÁC
 // vytvorí nový záznam
 
-const generujVykazyPrac = zakazka => { 
+const generujVykazyPrac = zakazka => {
     let scriptName = "generujVykazyPrac 23.0.09";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\n"
@@ -268,7 +263,7 @@ const generujVykazyPrac = zakazka => {
         var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
-        
+
         if (typ == "Položky") {
             popis.push("Práce navyše");                         // Práce navyše
             var dielyPonuky = cp.field("Diely cenovej ponuky");
@@ -294,7 +289,7 @@ const generujVykazyPrac = zakazka => {
                 popis.push(dielyPonuky[d]);                             // Záhradnícke práce, Servis zavlažovanie, Konzultácie a poradenstvo
             }
             if (cp.field("+Položky")) {
-                    var polozkyPonuky = cp.field("Položky") 
+                    var polozkyPonuky = cp.field("Položky")
                 var vykazPrac = novyVykazPrac(zakazka, "Práce"); // vytvorí nový výkaz prác a skoíruje položky
                 nalinkujPolozkyPonukyPrace(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce");
@@ -303,7 +298,7 @@ const generujVykazyPrac = zakazka => {
             for (var p = 0; p < popis.length; p++) {
                 var polozkyPonuky = cp.field(popis[p]);             // Položky ponuky: napr.field("Záhradnícke práce")
                 var vykazPrac = novyVykazPrac(zakazka, popis[p]); // vytvorí nový výkaz prác a skoíruje položky
-                
+
                 nalinkujPolozkyPonukyPraceHZS(vykazPrac, polozkyPonuky);                   // nalinkuje atribúty na položky
                 spocitajVykaz(vykazPrac, "Práce sadzby");
             }
@@ -317,7 +312,7 @@ const generujVykazyPrac = zakazka => {
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
     let scriptName = "nalinkujPolozkyPonukyPrace 23.0.01";
-    let variables = "Výkaz prác: " +  vykazPrac.name 
+    let variables = "Výkaz prác: " +  vykazPrac.name
     let parameters = "vykazPrac: " +  vykazPrac + "\npolozky: " + polozky
     try {
         vykazPrac.set("Práce", null);
@@ -377,7 +372,7 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
 const generujVykazStrojov = zakazka => {
     let scriptName = "generujVykazStrojov 23.0.01";
     let variables = "Zákazka: " +  zakazka.name + "\n"
-    let parameters = "zakazka: " +  zakazka 
+    let parameters = "zakazka: " +  zakazka
     try {
         var cp = zakazka.field("Cenová ponuka")[0];
         var strojePolozky = cp.field(FIELD_STROJE);
@@ -434,7 +429,7 @@ const spocitajVykaz = (doklad, field) => {
         doklad.set("CP Suma bez DPH", sumaBezDPH)
         doklad.set("CP DPH", sumaDPH)
         doklad.set("CP Suma s DPH", sumaCelkomSDPH)
-        
+
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
@@ -454,24 +449,24 @@ const prepocetDielPolozky = (cp, diel) => {
         var praceCelkom = 0;
         var rastlinyCelkom = 0;
         var dielCelkom = 0;
-        
+
         var material = cp.field(diel + " materiál");
         materialCelkom = polozkaMaterial(material);
         cp.set(diel + " materiál celkom", materialCelkom);
         dielCelkom += materialCelkom;
-        
+
         var prace = cp.field(diel + " práce");
         praceCelkom = polozkaPrace(prace);
         cp.set(diel + " práce celkom", praceCelkom);
         dielCelkom += praceCelkom;
-        
+
         if (diel == "Výsadby") {
             var rastliny = cp.field("Rastliny");
             rastlinyCelkom = polozkaMaterial(rastliny);
             cp.set("Rastliny celkom", rastlinyCelkom);
             dielCelkom += rastlinyCelkom;
         }
-    
+
         cp.set(diel + " celkom bez DPH", dielCelkom);
         cp.set(diel, dielCelkom);
         return dielCelkom;
