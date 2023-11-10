@@ -370,9 +370,9 @@ const setView = (en, mementoLibrary, view) => {
     }
 }
 const setEntry = (en, mementoLibrary) => {
-    let scriptName = "setEntry 23.0.03"
-    let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary + "Prefix: " + isPrefix
-    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\nisPrefix: " + isPrefix
+    let scriptName = "setEntry 23.0.04"
+    let variables = "Záznam: " + en.name + "memento library: "
+    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         message("Nastavujem záznam...");
         setView(en, FIELD_VIEW_EDIT);
