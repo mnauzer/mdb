@@ -377,7 +377,7 @@ const setEntry = (en, mementoLibrary) => {
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         message("Nastavujem záznam...");
-        setView(en, FIELD_VIEW_EDIT);
+        setView(en,mementoLibrary, FIELD_VIEW_EDIT);
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB){
@@ -408,7 +408,7 @@ const saveEntry = (en, mementoLibrary) => {
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         message("Ukladám záznam...");
-        setView(en, FIELD_VIEW_PRINT);
+        setView(en, mementoLibrary, FIELD_VIEW_PRINT);
             let season = getSeason(en, mementoLibrary, scriptName)
             let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         if (appDB) {

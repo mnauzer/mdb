@@ -4,7 +4,7 @@ const newEntryDochadzka = en => {
     let mementoDatabase = lib().title
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
     let parameters = "en: " + en
-    message("Nový záznam" + mementoDatabase)
+    message("Nový záznam " + mementoDatabase)
     try {
         setEntry(en, mementoDatabase)
         let date = new Date()
