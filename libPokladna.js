@@ -3,6 +3,62 @@
 // Dátum:                   20.03.2022
 // Popis:
 
+
+
+const newEntryPokladna = en => {
+    let scriptName = "newEntryPokladna 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryPokladna = en => {
+    let scriptName = "updateEntryPokladna 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryPokladna = en => {
+    let scriptName = "saveEntryPokladna 23.0.02"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
+    }
+}
+
+
 const fillPopis = en => {
     let scriptName = "fillPopis 23.0.01";
     let variables = "Záznam: " +  en.name + "\n"
@@ -60,62 +116,6 @@ const fillPopis = en => {
         errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
     }
 }
-
-
-const newEntryPokladna = en => {
-    let scriptName = "newEntryPokladna 23.0.01"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en
-    message("Nový záznam - " + mementoLibrary)
-    try {
-        setEntry(en)
-        let date = new Date()
-        let season = getSeason(en, mementoLibrary, scriptName)
-        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
-        en.set(DATE, date)
-        en.set(NUMBER, number[0])
-        en.set("number", number[1])
-        en.set(SEASON, season)
-    } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
-    }
-}
-
-const updateEntryPokladna = en => {
-    let scriptName = "updateEntryPokladna 23.0.01"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
-    message("Úprava záznamu - " + mementoLibrary);
-    try {
-        
-    } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
-    }
-}
-
-const saveEntryPokladna = en => {
-    let scriptName = "saveEntryPokladna 23.0.02"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
-    try {
-        prepocitatZaznamDochadzky(en)
-        saveEntry(en, mementoLibrary)
-    } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
-    }
-}
-
-
 
 const prepocetPlatby = en => {
     let scriptName = "prepocetPlatby 23.0.01";

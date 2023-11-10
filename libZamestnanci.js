@@ -1,8 +1,27 @@
-function verziaKniznice() {
-    var nazov = "zamestnanciLibrary";
-    var verzia = "0.2.01";
-    //message("cpLibrary v." + verzia);
-    return nazov + " " + verzia;
+
+const lastSadzba = (employee, date, inputScript) => {
+    let scriptName = "lastSadzba 23.0.04"
+    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
+    let parameters = "employee: " + employee + "\ndate: " + date + "\ninputScript: " + input
+    try {
+        // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+        let links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");
+        variables += "\nZáznamov: " + links.length
+        filtered = filterByDatePlatnost(links, date);
+        if (filtered.length < 0) {
+            msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
+        } else {
+            filtered.reverse();
+        }
+        //vyberie a vráti sadzbu z prvého záznamu
+        let sadzba = filtered[0].field("Sadzba");
+        variables += "\nSadzba: " + sadzba
+        let msgTxt = "Aktuálna sadzba zamestnanca " + employee.name + " je " + sadzba + "€/hod"
+        msgGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, msgTxt, variables, parameters);
+        return sadzba;
+    } catch (error) {
+        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+    }
 }
 
 const zamestnanecPlatby = zamestnanec => {
