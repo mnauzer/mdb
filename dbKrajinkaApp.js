@@ -386,7 +386,7 @@ const setEntry = (en, mementoLibrary) => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.03"
+    let scriptName = "saveEntry 23.0.04"
     let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
@@ -394,9 +394,6 @@ const saveEntry = (en, mementoLibrary) => {
         en.set(VIEW, FIELD_VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
-        if (appDB) {
-            appDB.setAttr("posledné číslo", appDB.attr("rezervované číslo"))
-        }
         unlockDB(season, mementoLibrary);
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
