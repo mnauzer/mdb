@@ -327,7 +327,6 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
         let test = db.attr("test");
         let dbID =  db.field("ID");
         let prefix = db.field("Prefix");
-        let lastNumAttr = "posledné číslo";
         let attrTrailing = db.attr("trailing digit");
         let attrSeasonTrim = db.attr("season trim");
         if (test) {
@@ -335,23 +334,23 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
             prefix = "T!" + db.field("Prefix");
             attr =  "číslo testu";
         };
-        let lastNum = db.attr(lastNumAttr);
+        let lastNum = db.attr("nasledujúce číslo");
         let reservedNum = db.attr("rezervované číslo");
         if (lastNum == reservedNum) {
             lastNum += 1;
         }
         let number = isPrefix ? prefix + season.slice(attrSeasonTrim
             ) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing);
-            db.setAttr(lastNumAttr, lastNum + 1);
+        db.setAttr("nasledujúce číslo", lastNum + 1);
 
-            variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr(lastNumAttr);
+        variables += "\nVygenerované číslo: " + number + "\nNasledujúce číslo: " + db.attr("nasledujúce číslo");
           //  let logMsg = "Vygenerované nové číslo " + number + " v knižnici " + db.name;
           //  logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logMsg, variables, parameters);
-            return number;
+        return number;
 
-        } catch (error) {
-            errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
-        }
+    } catch (error) {
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+    }
 };
 //
 
@@ -369,7 +368,6 @@ const setEntry = (en, mementoLibrary) => {
             if (locked) {
                 message("Databáza je zamknutá \nDôvod: "+ appDB.attr("locked reason"))
                 cancel()
-                close()
                 exit()
             } else {
                 let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName);
