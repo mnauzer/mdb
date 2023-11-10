@@ -1,3 +1,58 @@
+
+const newEntryVykazStrojov = en => {
+    let scriptName = "newEntryVykazStrojov 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryVykazStrojov = en => {
+    let scriptName = "updateEntryVykazStrojov 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryVykazStrojov = en => {
+    let scriptName = "saveEntryVykazStrojov 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+    }
+}
+
+
 const novyVykazStrojov = (zakazka, popis) => {
     let scriptName = "novyVykazStrojov 23.0.03";
     let variables = "Zákazka: " +  zakazka.name + "\nPopis: " + popis

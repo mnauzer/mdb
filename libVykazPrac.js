@@ -37,6 +37,7 @@ const novyVykazPrac = (zakazka, popis) => {
     }
 }
 
+
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
     let scriptName = "prepocitatVykazPrac 23.1.01";
     let variables = "Záznam: " +  vykaz.name + "\n"

@@ -1,4 +1,57 @@
 
+const newEntryVykazMaterialu = en => {
+    let scriptName = "newEntryVykazMaterialu 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    message("Nový záznam - " + mementoLibrary)
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set("number", number[1])
+        en.set(SEASON, season)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+    }
+}
+
+const updateEntryVykazMaterialu = en => {
+    let scriptName = "updateEntryVykazMaterialu 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+    }
+}
+
+const saveEntryVykazMaterialu = en => {
+    let scriptName = "saveEntryVykazMaterialu 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    try {
+        prepocitatZaznamDochadzky(en)
+        saveEntry(en, mementoLibrary)
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        unlockDB(season, mementoLibrary)
+        errorGen(DB_VYKAZY_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+    }
+}
+
 const novyVykazMaterialu = (zakazka, popis) => {
     let scriptName = "novyVykazMaterialu 23.1.03";
     let variables = "Zákazka: " + zakazka.name + "\n"
