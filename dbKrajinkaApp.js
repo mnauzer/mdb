@@ -348,9 +348,10 @@ const getNewNumber = (db, season, isPrefix, mementoLibrary, inputScript) => {
 };
 //
 
-const setEntry = (en, mementoLibrary) => {
+const setEntry = en => {
     let scriptName = "setEntry 23.0.05"
-    let variables = "Záznam: " + en.name + "memento library: " +mementoLibrary
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
         //message("Nastavujem záznam...");
@@ -364,7 +365,7 @@ const setEntry = (en, mementoLibrary) => {
                 cancel()
                 exit()
             } else {
-                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, false, mementoLibrary, scriptName);
+                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName);
                 en.set(NUMBER, number);
                 appDB.setAttr("locked", true);
                 appDB.setAttr("locked reason", "editácia užívateľom ");
@@ -379,7 +380,7 @@ const setEntry = (en, mementoLibrary) => {
     }
 }
 const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.05"
+    let scriptName = "saveEntry 23.0.06"
     let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
@@ -388,8 +389,9 @@ const saveEntry = (en, mementoLibrary) => {
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         unlockDB(season, mementoLibrary);
-        appDB.setAttr("nasledujúce číslo", en.field("number") + 1)
-        let msgTxt = "Nový záznam č." + en.field(NUMBER) + " v knižnici " + mementoLibrary
+        let nextNubmber = en.field("number") += 1
+        appDB.setAttr("nasledujúce číslo", nextNubmber)
+        let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
         message(msgTxt)
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
     } catch (error) {

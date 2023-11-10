@@ -6,7 +6,7 @@ const newEntryDochadzka = en => {
     let parameters = "en: " + en
     message("Nový záznam " + mementoDatabase)
     try {
-        setEntry(en, mementoDatabase)
+        setEntry(en)
         let date = new Date()
         let season = getSeason(en, mementoDatabase, scriptName)
         let appDB = getAppSeasonDB(season, mementoDatabase, scriptName)
