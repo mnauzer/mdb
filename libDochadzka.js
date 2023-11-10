@@ -3,12 +3,12 @@ const newEntryDochadzka = (en, mementoDatabase) => {
     let variables = "Záznam: " + en.name + "mementoDatabase: " + mementoDatabase
     let scriptName = "updateEntryDochadzka 23.0.01"
     let parameters = "en: " + en + "mementoDatabase: " + mementoDatabase
-    message("New Entry");
+    message("New Entry")
     try {
         let date = new Date()
         let season = getSeason(en, mementoDatabase, scriptName)
         en.set(DATE, date)
-        en.set(NUMBER, getNewNumber(lib(), season, false, mementoDatabase, scriptName)))
+        en.set(NUMBER, getNewNumber(lib(), season, false, mementoDatabase, scriptName))
     } catch (error) {
         errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
