@@ -157,7 +157,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         vykaz.set("Suma bez DPH", sumaBezDPH);
         vykaz.set("DPH", sumaDPH);
         vykaz.set("Suma s DPH", sumaCelkom);
-        setTlac(vykaz);
         return [sumaBezDPH, sumaDPH]
     } catch (error) {
         errorGen(DB_VYKAZY_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
