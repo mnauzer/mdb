@@ -162,7 +162,7 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
         "\ntest: " + databazy[v].attr("test") + 
         "\nprefix: " + databazy[v].attr("prefix") +
         "\nseason trim: " + databazy[v].attr("season trim") +
-        "\ntrailing digit: " + databazy[v].attr("trailing digit") +
+        "\ntrailing digit: " + databazy[v].attr("trailing digit")
 
         logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
         return 0;
