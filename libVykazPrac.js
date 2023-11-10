@@ -6,12 +6,12 @@ const novyVykazPrac = (zakazka, popis) => {
     try {
         // inicializácia
         let season = getSeason(zakazka, DB_VYKAZY_PRAC, scriptName);
-        let vykazy = libByName(DB_VYKAZY_PRAC);
         let appDB = getAppSeasonDB(season, DB_VYKAZY_PRAC, scriptName);
+        let newNumber = getNewNumber(appDB, season,  DB_VYKAZY_PRAC, scriptName);
+        let vykazy = libByName(DB_VYKAZY_PRAC);
         let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season,  DB_VYKAZY_PRAC, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];

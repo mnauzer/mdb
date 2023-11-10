@@ -12,7 +12,7 @@ const novyVykazMaterialu = (zakazka, popis) => {
         var lib = libByName(DB_VYKAZY_MATERIALU);
         var season = getSeason(zakazka, DB_VYKAZY_MATERIALU, scriptName)
         var appDB = getAppSeasonDB(season, DB_VYKAZY_MATERIALU, scriptName);
-        var newNumber = getNewNumber(appDB, season, B_VYKAZY_MATERIALU,  scriptName);
+        var newNumber = getNewNumber(appDB, season, DB_VYKAZY_MATERIALU, scriptName);
         // vytvoriť novú výdajku
         var novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
