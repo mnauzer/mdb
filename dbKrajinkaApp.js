@@ -381,16 +381,16 @@ const setEntry = en => {
 }
 const saveEntry = (en, mementoLibrary) => {
     let scriptName = "saveEntry 23.0.07"
-    let variables = "Záznam: " + en.name + "memento library: " + mementoLibrary
+    let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
        // message("Ukladám záznam...");
-        en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName);
         unlockDB(season, mementoLibrary);
         let nextNumber = en.field("number")
         appDB.setAttr("nasledujúce číslo", nextNumber += 1)
+        en.set(VIEW, VIEW_PRINT)
         let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
         message(msgTxt)
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
