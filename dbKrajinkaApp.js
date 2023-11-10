@@ -133,7 +133,7 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
 }
 
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.03"
+    let scriptName = "getAppSeasonDB 23.1.04"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n";
     let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript;
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
@@ -152,7 +152,19 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
             }
         }
         let logTxt = "Databáza " + mementoLibrary +" nenájdená v sezóne " + season
-        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters );
+        let attributes = 
+        "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
+        "\nčíslo testu: " + databazy[v].attr("číslo testu") +
+        "\nrezervované číslo: " + databazy[v].attr("rezervované číslo") +
+        "\ndebug: " + databazy[v].attr("debug") +
+        "\nlocked: " + databazy[v].attr("locked") +
+        "\nlocked reason: " + databazy[v].attr("locked reason") + 
+        "\ntest: " + databazy[v].attr("test") + 
+        "\nprefix: " + databazy[v].attr("prefix") +
+        "\nseason trim: " + databazy[v].attr("season trim") +
+        "\ntrailing digit: " + databazy[v].attr("trailing digit") +
+
+        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters, attributes );
         return 0;
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
@@ -298,7 +310,7 @@ const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => 
     errorLib.create(newMsg);
 }
 // generátor log
-const logGen = (mementoLibrary, library, script, log, variables, parameters) => {
+const logGen = (mementoLibrary, library, script, log, variables, parameters, attributes) => {
    // message("LOG: " + script + "\n" + log);
     let errorLib = libByName("APP Errors");
     let newLog = new Object();
@@ -310,6 +322,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters) => 
     newLog["text"] = log;
     newLog["variables"] = variables;
     newLog["parameters"] = parameters;
+    newLog["attributes"] = attributes;
     errorLib.create(newLog);
 }
 
