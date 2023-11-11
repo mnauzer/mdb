@@ -114,10 +114,11 @@ const prepocetZaznamuEvidenciePrac = en => {
         en.set("Mzdové náklady", mzdoveNakladyCelkom)
         en.set("Trvanie", trvanie)
         // checkbuttons
-        let evStroje = en.field("Stroje")
-        let evMateriál = en.field("Materiál")
-        let evPrace = en.field("Výkaz prác")
-        let evDoprava = en.field("Doprava")
+        let evidovat = en.field("Evidovať")
+        let evStroje = evidovat.includes("Stroje")
+        let evMateriál = evidovat.includes("Materiál")
+        let evPrace = evidovat.includes("Výkaz prác")
+        let evDoprava = evidovat.includes("Dopravu")
         // vykazy link to entry
         let vykazPrac = en.field("Výkaz prác")// práce, zamestnancov, trvanie, hodín celkom, hzs, cena
         let vykazStrojov = en.field("Výkaz strojov")// hodín celkom, hzs, cena
@@ -140,6 +141,8 @@ const prepocetZaznamuEvidenciePrac = en => {
             }
         } else {
             message("Chýba výkaz prác")
+            cancel()
+            exit()
         }
         ;
 
