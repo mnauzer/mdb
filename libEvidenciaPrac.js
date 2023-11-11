@@ -83,7 +83,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const prepocetZaznamuEvidenciePrac = en => {
-    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.04";
+    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.05";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
@@ -91,8 +91,9 @@ const prepocetZaznamuEvidenciePrac = en => {
         let typ = en.field("Typ zákazky");
         if (typ == "Hodinovka") {
             //TODO opraviť chybu keď nie je zadaná zákazka
-            if (en.field("Výkaz práce"[0]) != undefined) {
-                en.set(FIELD_ZAKAZKA, en.field("Výkaz prác")[0].field(FIELD_ZAKAZKA)[0]);
+            let vykaz = en.field("Výkaz prác")[0]
+            if (vykaz != undefined) {
+                en.set(FIELD_ZAKAZKA, vykaz.field(FIELD_ZAKAZKA)[0]);
             } else {
                 msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
             }

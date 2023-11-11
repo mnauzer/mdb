@@ -127,7 +127,7 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
     }
 }
 const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "getAppSeasonDB 23.1.06"
+    let scriptName = "getAppSeasonDB 23.1.07"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n"
     let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
@@ -431,7 +431,7 @@ const unlockDB = (season, mementoLibrary) => {
 const setID = entries => {
     let scriptName = "setID 23.0.02"
     let variables = "Počet záznamov: " + entries.length
-    let parameters = "entries: " + enntries
+    let parameters = "entries: " + entries
     try {
         entries.sort(orderDate)
         entries.reverse()
