@@ -76,7 +76,7 @@ const roundTimeQ = time => {
 }
 const mclCheck = (mcl, value) => {
     result = false
-    for (var m = 0 m < mcl.length m++) {
+    for (var m = 0; m < mcl.length; m++) {
         if (value === mcl[m]) {
             result = true
         }
@@ -85,7 +85,7 @@ const mclCheck = (mcl, value) => {
 }
 const lteClear = (lte) => {
     if (lte.length > 0) {
-        for (var l = 0 l < lte.length l++) {
+        for (var l = 0; l < lte.length; l++) {
             lte[l].unlink(lte[l])
         }
     }
@@ -143,7 +143,7 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
     try {
         let entry = libByName(DB_ASSISTENT).find(season)[0]
         let databazy = entry.field("Databázy")
-        for (var v = 0v < databazy.length v++) {
+        for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
                 let attributes =
@@ -182,7 +182,7 @@ const findAppDB = (season, mementoLibrary, inputScript) => {
     try {
         let entry = libByName(mementoLibrary).find(season)[0]
         let databazy = entry.field("Databázy")
-        for (var v = 0v < databazy.length v++) {
+        for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
                 return databazy[v]
             }
@@ -252,7 +252,7 @@ const lastValid = (links, date, valueField, dateField) => {
 const lteCheck = (lte, entry) => {
     result = false
     if (lte.length > 0) {
-        for (var index = 0 index < lte.length index++) {
+        for (var index = 0; index < lte.length; index++) {
             if (entry.id === lte[index].id) {
                 result = true
                 break
@@ -266,7 +266,7 @@ const lteCheck = (lte, entry) => {
 // get index of link from links.linkFrom(lib, field)
 const getLinkIndex = (link, remoteLinks) => {
     var indexy = []
-    for (var r = 0 r < remoteLinks.length r++) {
+    for (var r = 0; r < remoteLinks.length; r++) {
         indexy.push(remoteLinks[r].id)
     }
     var index = indexy.indexOf(link.id)
@@ -439,7 +439,7 @@ const setID = entries => {
     try {
     entries.sort(orderDate)
     entries.reverse()
-    for (var e = 0 e < entries.length e++) {
+    for (var e = 0; e < entries.length; e++) {
         entries[e].set("ID", e + 1)
     }
     } catch (error) {
@@ -535,7 +535,7 @@ const getSadzbaDPH = season => {
 const filterByDatePlatnost = (entries, maxDate) => {
     message("filterByDate v.0.23.04")
     var links = []
-    for(var e = 0 e < entries.length e++) {
+    for(var e = 0; e < entries.length; e++) {
         if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
             links.push(entries[e])
         }
