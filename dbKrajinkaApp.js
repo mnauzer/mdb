@@ -351,7 +351,7 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
         : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         return number
     } catch (error) {
-        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 //
@@ -396,7 +396,7 @@ const saveEntry = (en, mementoLibrary) => {
         en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        let nextNumber = en.field("number") + 10
+        let nextNumber = en.field("number")++
         appDB.setAttr("locked", false)
         appDB.setAttr("locked reason", null)
         appDB.setAttr("nasledujúce číslo", nextNumber)
@@ -429,16 +429,17 @@ const unlockDB = (season, mementoLibrary) => {
 }
 
 const setID = entries => {
-    let scriptName = "setID 23.0.01"
-    let variables = ""
+    let scriptName = "setID 23.0.02"
+    let variables = "Počet záznamov: " + entries.length
+    let parameters = "entries: " + enntries
     try {
-    entries.sort(orderDate)
-    entries.reverse()
-    for (var e = 0; e < entries.length; e++) {
-        entries[e].set("ID", e + 1)
-    }
+        entries.sort(orderDate)
+        entries.reverse()
+        for (var e = 0; e < entries.length; e++) {
+            entries[e].set("ID", e + 1)
+        }
     } catch (error) {
-        errorGen("dbKrajinkaApp.js", scriptName, error, variables)
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 
 }
