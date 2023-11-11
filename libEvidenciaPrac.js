@@ -83,7 +83,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const prepocetZaznamuEvidenciePrac = en => {
-    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.03";
+    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.04";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
