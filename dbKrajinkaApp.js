@@ -522,7 +522,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 //
 const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
     // generátor chyby
-    message("ERR: " + script + "\n" + error)
+    message("ERROR: " + script + "\n" + error)
     let errorLib = libByName("APP Errors")
     let newError = new Object()
     newError["type"] = "error"
