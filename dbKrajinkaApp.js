@@ -294,10 +294,10 @@ const lastValid = (links, date, valueField, dateField) => {
 }
 const getNewNumber = (appDB, season, mementoLibrary, inputScript) => {
     // generuje nové číslo záznamu
-    let scriptName = "getNewNumber 23.1.06"
+    let scriptName = "getNewNumber 23.1.07"
     let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
     let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
-    if(appDB == undefined || appDB == null || season == undefined || season == nul){
+    if(appDB == undefined || appDB == null || season == undefined || season == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters )
         cancel()
         exit()
