@@ -561,4 +561,5 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
     newLog["attributes"] = attributes
     errorLib.create(newLog)
 }
+
 // End of file: 25.03.2022, 16:16

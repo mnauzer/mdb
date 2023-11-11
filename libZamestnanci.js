@@ -1,8 +1,8 @@
 
-const lastSadzba = (employee, date, inputScript) => {
+const lastSadzba = (employee, date, inptScript) => {
     let scriptName = "lastSadzba 23.0.04"
     let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
-    let parameters = "employee: " + employee + "\ndate: " + date + "\ninputScript: " + input
+    let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         let links = employee.linksFrom("Zamestnanci Sadzby", "Zamestnanec");

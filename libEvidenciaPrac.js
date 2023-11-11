@@ -3,7 +3,7 @@
 // Dátum:                   15.03.2022
 // Popis:
 
-
+// TRIGGERS FUNCTIONS
 const newEntryEvidenciaPrac = en => {
     let scriptName = "newEntryEvidenciaPrac 23.0.02"
     let mementoLibrary = lib().title
@@ -12,13 +12,11 @@ const newEntryEvidenciaPrac = en => {
     message("Nový záznam - " + mementoLibrary)
     try {
         setEntry(en, scriptName)
-        
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
     }
 }
-
 const updateEntryEvidenciaPrac = en => {
     let scriptName = "updateEntryEvidenciaPrac 23.0.02"
     let mementoLibrary = lib().title
@@ -32,7 +30,6 @@ const updateEntryEvidenciaPrac = en => {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
-
 const saveEntryEvidenciaPrac = en => {
     let scriptName = "saveEntryEvidenciaPrac 23.0.01"
     let mementoLibrary = lib().title
@@ -47,6 +44,7 @@ const saveEntryEvidenciaPrac = en => {
     }
 }
 
+// ACTION FUNCTIONS
 const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     let scriptName ="evidenciaSadzbaPrace 23.0.01";
     let variables = "Záznam: " + vykazPrac.name + "\n"
@@ -74,7 +72,6 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
         exit();
     }
 };
-
 const prepocetZaznamuEvidenciePrac = en => {
     let scriptName ="prepocetZaznamuEvidenciePrac 23.0.05";
     let variables = "Záznam: " + en.name + "\n"
