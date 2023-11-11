@@ -348,15 +348,12 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
             attr =  "číslo testu"
         }
         let lastNum = db.attr("nasledujúce číslo")
-        let reservedNum = db.attr("rezervované číslo")
-        lastNum = lastNum == reservedNum ? lastNum += 1 : lastNum
         db.setAttr("rezervované číslo", lastNum)
         number[0] = isPrefix ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         number[1] = lastNum
         number = isPrefix
         ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
-        db.setAttr("nasledujúce číslo", lastNum+=1 )
         return number
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
