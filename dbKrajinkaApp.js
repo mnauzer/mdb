@@ -268,7 +268,7 @@ const getLinkIndex = (link, remoteLinks) => {
     // message(index)
     return index
 }
-
+// LOG AND ERROR 
 // generátor chyby
 const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
     message("ERR: " + script + "\n" + error)
@@ -322,8 +322,8 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 // generuje nové číslo záznamu
 const getNewNumber = (db, season, mementoLibrary, inputScript) => {
     let scriptName = "getNewNumber 23.1.06"
-    let variables = "Knižnica: " + db.name + "\n" + "Sezóna: " + season + "\n"
-    let parameters = "db: " + db+ "\n" + "season: " + season + "\n" +  "isPrefix: " + isPrefix + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
+    let variables = "Knižnica: " + db.name + "\nSezóna: " + season + "\n"
+    let parameters = "db: " + db+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
     if(db == undefined || db == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters )
         cancel()
@@ -355,7 +355,7 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
     }
 }
 //
-
+// ENTRY HELPERS
 const setEntry = en => {
     let scriptName = "setEntry 23.0.06"
     let mementoLibrary = lib().title
