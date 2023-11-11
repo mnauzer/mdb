@@ -12,14 +12,7 @@ const newEntryEvidenciaPrac = en => {
     message("Nový záznam - " + mementoLibrary)
     try {
         setEntry(en)
-        let date = new Date()
-        let season = getSeason(en, mementoLibrary, scriptName)
-        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
-        en.set(DATE, date)
-        en.set(NUMBER, number[0])
-        en.set("number", number[1])
-        en.set(SEASON, season)
+        
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)

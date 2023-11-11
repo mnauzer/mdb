@@ -351,29 +351,21 @@ const getSadzbaDPH = (appDB, season, inputScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const setEntry = en => {
-    let scriptName = "setEntry 23.0.06"
+    let scriptName = "setEntry 23.0.07"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
     try {
-        //message("Nastavujem záznam...")
         en.set(VIEW, VIEW_EDIT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         if (appDB){
-            let locked = appDB.attr("locked")
-            if (locked) {
-                message("Databáza je zamknutá \nDôvod: "+ appDB.attr("locked reason"))
-                cancel()
-                exit()
-            } else {
-                let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName)
-                en.set(NUMBER, number)
-                appDB.setAttr("locked", false)
-                appDB.setAttr("locked reason", null)
-                //en.set(LAST_NUM, number)
-            }
-
+            let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName)
+            en.set(DATE, en.field(DATE) || new Date())
+            en.set(NUMBER, number[0])
+            en.set("number", number[1])
+            en.set(SEASON, season)
+            en.set(NUMBER, number)
         } else {
             message("Databáza nenájdená v APP")
         }
