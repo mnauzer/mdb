@@ -120,10 +120,10 @@ const prepocetZaznamuEvidenciePrac = en => {
         let evPrace = evidovat.includes("Výkaz prác")
         let evDoprava = evidovat.includes("Dopravu")
         // vykazy link to entry
-        let vykazPrac = en.field("Výkaz prác")// práce, zamestnancov, trvanie, hodín celkom, hzs, cena
-        let vykazStrojov = en.field("Výkaz strojov")// hodín celkom, hzs, cena
+        let vykazPrac = en.field("Výkaz prác")// práce, zamestnancov, trvanie, hodín, hzs, cena
+        let vykazStrojov = en.field("Výkaz strojov")// hodín, hzs, cena
         let vykazMaterialu = en.field("Výkaz materiálu")// atribúty vykonané práce/počet pracovníkov/trvanie/celkový počet hodín
-        let vykazDopravy = en.field("Výkaz dopravy")// km, počet jázd, sadzba, cena
+        let vykazDopravy = en.field("Výkaz dopravy")// km, jázd, sadzba, cena
         // calc výkaz prác
         if (evPrace && vykazPrac) {
             for (let v = 0; v < vykazPrac.length; v++) {
@@ -133,7 +133,7 @@ const prepocetZaznamuEvidenciePrac = en => {
                 vykazPrac[v].setAttr("práce", en.field("Vykonané práce"))
                 vykazPrac[v].setAttr( "zamestnancov", zamestnanci.length)
                 vykazPrac[v].setAttr("trvanie", en.field("Vykonané práce"))
-                vykazPrac[v].setAttr("hodín celkom", odpracovane)
+                vykazPrac[v].setAttr("hodín", odpracovane)
                 if (uctovanie == "Individuálne za každý výjazd") {
                     vykazPrac[v].setAttr("hzs", sadzba)
                     vykazPrac[v].setAttr("cena", odpracovane * sadzba)
