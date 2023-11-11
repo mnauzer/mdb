@@ -8,6 +8,8 @@ var orderDate = { compare: function(a,b) { return b.field(DATE).getTime()/1000 -
 var orderPlatnost = { compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000 }}
 var filterPlatnost = { compare: function(a,b) { return a.field("Platnosť od").getTime()/1000 < date}}
 
+// FILTER FUNCTIONS
+//
 function fltrDb(value) {
     var arr = [0]
     if (value.field("Názov") == lib().title) {
@@ -22,6 +24,19 @@ function fltrDbByName(value, name) {
         return arr
     }
 }
+const filterByDatePlatnost = (entries, maxDate) => {
+    message("filterByDate v.0.23.04")
+    var links = []
+    for(var e = 0; e < entries.length; e++) {
+        if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
+            links.push(entries[e])
+        }
+    }
+    return links
+}
+
+// DATE TIME FUNCTONS
+//
 const dateDiff = (date1, date2) => {
     var diff = {}// Initialization of the return
     var tmp = date2 - date1
@@ -54,6 +69,17 @@ const dateDiff = (date1, date2) => {
 
     return diff
 }
+const roundTimeQ = time => {
+    // zaokrúhľovanie času na 1/4 hodiny
+    var timeToReturn = new Date(time)
+    timeToReturn.setMilliseconds(Math.round(timeToReturn.getMilliseconds() / 1000) * 1000)
+    timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60)
+    timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15)
+    return timeToReturn
+}
+
+// NUMBER FUNCTIONS
+//
 const pad = (number, length) => {
     let str = '' + number
     while (str.length < length) {
@@ -61,14 +87,9 @@ const pad = (number, length) => {
     }
     return str
 }
-// zaokrúhľovanie času na 1/4 hodiny
-const roundTimeQ = time => {
-    var timeToReturn = new Date(time)
-    timeToReturn.setMilliseconds(Math.round(timeToReturn.getMilliseconds() / 1000) * 1000)
-    timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60)
-    timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15)
-    return timeToReturn
-}
+
+// MEMENTO FIELD HELPERS
+//
 const mclCheck = (mcl, value) => {
     result = false
     for (var m = 0; m < mcl.length; m++) {
@@ -78,7 +99,9 @@ const mclCheck = (mcl, value) => {
     }
     return result
 }
-const lteClear = (lte) => {
+const lteClear = lte => {
+    // link to entry field clearing
+    // Parameter: lte, link to entry field to be cleared
     if (lte.length > 0) {
         for (var l = 0; l < lte.length; l++) {
             lte[l].unlink(lte[l])
@@ -94,7 +117,49 @@ const checkDebug = season => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables)
     }
 }
+const pullAddress = klient => {
+    // fill customer address field
+    if (klient.field("Firma/Osoba") == "Osoba") {
+        var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim()
+        var ulica = klient.field("Ulica")
+        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim()
+        var adresa = meno + "\n" + ulica + "\n" + mesto + "\n"
+    } else {
+        var firma = klient.field("Firma")
+        var ulica = klient.field("Ulica")
+        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim()
+        var adresa = firma + "\n" + ulica + "\n" + mesto + "\n"
+    }
+    return adresa
+}
+const lteCheck = (lte, entry) => {
+    result = false
+    if (lte.length > 0) {
+        for (var index = 0; index < lte.length; index++) {
+            if (entry.id === lte[index].id) {
+                result = true
+                break
+            }
+        }
+        return index
+    } else {
+        return -1
+    }
+}
+const getLinkIndex = (link, remoteLinks) => {
+    // get index of link from links.linkFrom(lib, field)
+    var indexy = []
+    for (var r = 0; r < remoteLinks.length; r++) {
+        indexy.push(remoteLinks[r].id)
+    }
+    var index = indexy.indexOf(link.id)
+    // message(index)
+    return index
+}
 
+
+// KRAJINKA APP FUNCTIONS
+// získat údaje z Krajinka APP
 const getAppSeason = (season, mementoLibrary) => {
     let scriptName = "getAppSeason 23.0.05"
     let variables = "Sezóna: " + season +  "\n"
@@ -163,9 +228,8 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-
-// get db from APP library
 const findAppDB = (season, mementoLibrary, inputScript) => {
+    // get db from APP library
     let scriptName = "findAppDB 23.0.98"
     let variables = "Záznam: " + en.name
     let parameters = "season: " + season  + "\ninputScript: " + inputScript + "\nmementoLibrary: " + mementoLibrary
@@ -188,8 +252,8 @@ const findAppDB = (season, mementoLibrary, inputScript) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-// get db from APP library
 const findAppDBbyName = (season, libTitle) => {
+    // get db from APP library
     var entry = libByName(DB_ASSISTENT).find(season)[0]
     var databazy = entry.field("Databázy")
     //message("Databáz 2: " + databazy.length)
@@ -197,22 +261,6 @@ const findAppDBbyName = (season, libTitle) => {
     var filteredDB = databazy.filter(fltrDb)[0]
     return filteredDB
 }
-// fill customer address field
-const pullAddress = klient => {
-    if (klient.field("Firma/Osoba") == "Osoba") {
-        var meno = (klient.field("Titul") + klient.field("Meno") + " " + klient.field("Priezvisko")).trim()
-        var ulica = klient.field("Ulica")
-        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim()
-        var adresa = meno + "\n" + ulica + "\n" + mesto + "\n"
-    } else {
-        var firma = klient.field("Firma")
-        var ulica = klient.field("Ulica")
-        var mesto = (klient.field("PSČ") + " " + klient.field("Mesto")).trim()
-        var adresa = firma + "\n" + ulica + "\n" + mesto + "\n"
-    }
-    return adresa
-}
-
 const getSeason = (en, mementoLibrary, inputScript) => {
     // get entryDefault season from creation date
     let scriptName = "getSeason 23.1.02"
@@ -244,106 +292,31 @@ const lastValid = (links, date, valueField, dateField) => {
     message("Links: " + links.length + "\nDátum: " + date)
     return links[0].field(valueField)
 }
-const lteCheck = (lte, entry) => {
-    result = false
-    if (lte.length > 0) {
-        for (var index = 0; index < lte.length; index++) {
-            if (entry.id === lte[index].id) {
-                result = true
-                break
-            }
-        }
-        return index
-    } else {
-        return -1
-    }
-}
-// get index of link from links.linkFrom(lib, field)
-const getLinkIndex = (link, remoteLinks) => {
-    var indexy = []
-    for (var r = 0; r < remoteLinks.length; r++) {
-        indexy.push(remoteLinks[r].id)
-    }
-    var index = indexy.indexOf(link.id)
-    // message(index)
-    return index
-}
-// LOG AND ERROR 
-// generátor chyby
-const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
-    message("ERR: " + script + "\n" + error)
-    let errorLib = libByName("APP Errors")
-    let newError = new Object()
-    newError["type"] = "error"
-    newError["date"] = new Date()
-    newError["library"] = library
-    newError["memento library"] = mementoLibrary
-    newError["script"] = script
-    newError["text"] = error
-    newError["line"] = error.lineNumber
-    newError["variables"] = variables
-    newError["parameters"] = parameters
-    errorLib.create(newError)
-    cancel()
-    exit()
-}
-// generátor message
-const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => {
-  //  message("MSG: " + script + "\n" + msg)
-    let errorLib = libByName("APP Errors")
-    let newMsg = new Object()
-    newMsg["type"] = "message"
-    newMsg["date"] = new Date()
-    newMsg["library"] = library
-    newMsg["memento library"] = mementoLibrary
-    newMsg["script"] = script
-    newMsg["text"] = msg
-    newMsg["variables"] = variables
-    newMsg["parameters"] = parameters
-    errorLib.create(newMsg)
-}
-// generátor log
-const logGen = (mementoLibrary, library, script, log, variables, parameters, attributes) => {
-   // message("LOG: " + script + "\n" + log)
-    let errorLib = libByName("APP Errors")
-    let newLog = new Object()
-    newLog["type"] = "log"
-    newLog["date"] = new Date()
-    newLog["library"] = library
-    newLog["memento library"] = mementoLibrary
-    newLog["script"] = script
-    newLog["text"] = log
-    newLog["variables"] = variables
-    newLog["parameters"] = parameters
-    newLog["attributes"] = attributes
-    errorLib.create(newLog)
-}
-
-// generuje nové číslo záznamu
-const getNewNumber = (db, season, mementoLibrary, inputScript) => {
+const getNewNumber = (appDB, season, mementoLibrary, inputScript) => {
+    // generuje nové číslo záznamu
     let scriptName = "getNewNumber 23.1.06"
-    let variables = "Knižnica: " + db.name + "\nSezóna: " + season + "\n"
-    let parameters = "db: " + db+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
-    if(db == undefined || db == null){
+    let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
+    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
+    if(appDB == undefined || appDB == null || season == undefined || season == nul){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters )
         cancel()
         exit()
     }
     try {
         let number = []
-        let test = db.attr("test")
-        let dbID =  db.field("ID")
-        let prefix = db.field("Prefix")
-        let isPrefix = db.attr("prefix")
-        let attrTrailing = db.attr("trailing digit")
-        let attrSeasonTrim = db.attr("season trim")
+        let test = appDB.attr("test")
+        let dbID =  appDB.field("ID")
+        let prefix = appDB.field("Prefix")
+        let isPrefix = appDB.attr("prefix")
+        let attrTrailing = appDB.attr("trailing digit")
+        let attrSeasonTrim = appDB.attr("season trim")
         if (test) {
-            dbID = "T!" + db.field("ID")
-            prefix = "T!" + db.field("Prefix")
+            dbID = "T!" + appDB.field("ID")
+            prefix = "T!" + appDB.field("Prefix")
             attr =  "číslo testu"
         }
-        let lastNum = db.attr("nasledujúce číslo")
-        db.setAttr("rezervované číslo", lastNum)
+        let lastNum = appDB.attr("nasledujúce číslo")
+        appDB.setAttr("rezervované číslo", lastNum)
         number[0] = isPrefix ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         number[1] = lastNum
         number = isPrefix
@@ -354,8 +327,29 @@ const getNewNumber = (db, season, mementoLibrary, inputScript) => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-//
-// ENTRY HELPERS
+const getSadzbaDPH = (appDB, season, inputScript) => {
+      // zistí sadzby DPH v zadanej sezóne
+    let scriptName = "getSadzbaDPH 23.0.02"
+    let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season 
+    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninputScript: " + inputScript
+    if(appDB == undefined || appDB == null || season == undefined || season == null){
+        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
+        cancel()
+        exit()
+    }
+    try {
+        let sadzbyDPH = []
+        sadzbyDPH.push(appDB.field("Základná sadzba DPH"))
+        sadzbyDPH.push(appDB.field("Znížená sadzba DPH"))
+        return sadzbyDPH
+    } catch (error) {
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+    }
+}
+
+
+// ENTRY SCRIPT HELPERS
+// new entry script TRIGGERS
 const setEntry = en => {
     let scriptName = "setEntry 23.0.06"
     let mementoLibrary = lib().title
@@ -411,8 +405,7 @@ const saveEntry = (en, mementoLibrary) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-//
-// ACTIONS library
+// entry script ACTIONS
 const unlockDB = (season, mementoLibrary) => {
     let scriptName = "unlockDB 23.0.04"
     let variables = "Season: " + season + "\nDatabáza: " + mementoLibrary
@@ -427,7 +420,6 @@ const unlockDB = (season, mementoLibrary) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-
 const setID = entries => {
     let scriptName = "setID 23.0.02"
     let variables = "Počet záznamov: " + entries.length
@@ -457,8 +449,6 @@ const setTEST = en => {
     }
     return true
 }
-//
-// ACTIONS entry
 const setDEBUG = en => {
     message("Set DEBUG v.0.23.01")
     en.set(DBG, !en.field(DBG))
@@ -468,34 +458,36 @@ const setDEBUG = en => {
         en.set(BKG_COLOR, MEM_DEFAULT)
     }
 }
+
+// PRICE FUNCTIONS
 //
-// Price functions
 const marzaPercento = (pc, nc) => {
+    // vypočíta percentuálnu maržu z nákupnej a predajnej ceny
     var result = (((pc - nc) / pc) * 100).toFixed(2)
     return result
 }
 const ziskSuma = (pc, nc, dph) => {
+    // vypočíta sumu zisku z nákupnej a predajnej ceny a sadzby dph
     var result = (pc - nc) - ((pc - nc) * dph)
     return result
 }
-// zistiť aké je percento rabatu z nc
 const rabatPercento = (euro, pc) => {
+    // zistí aké je percento rabatu z nc
     var result = euro / pc * 100
     return result
 }
-// aké ja suma v eurách z percenta rabatu a predajnej ceny
 const rabatSuma = (percento, pc) => {
+    // aké ja suma v eurách z percenta rabatu a predajnej ceny
     var result = percento / 100 * pc
     return result
 }
-// aké je percento prirážky z nákupnej a predajnej ceny
 const prirazkaSuma = (pc, nc) => {
+    // aké je percento prirážky z nákupnej a predajnej ceny
     var result = (pc - nc) / nc * 100
     return result
 }
 const getPCTovaru = (nc, prirazka, sadzbaDPH) => {
     // vypočíta predajnú cenu bez dph z nákupnej ceny a prirážky
-    //
     var pcBezDPH = 0
     var pcSDPH = 0
     var koefDPH = sadzbaDPH / 100 + 1
@@ -525,17 +517,56 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
     result = sumaBezDPH * (sadzbaDPH + 1)
     return result
 }
-const getSadzbaDPH = season => {
-}
 
-const filterByDatePlatnost = (entries, maxDate) => {
-    message("filterByDate v.0.23.04")
-    var links = []
-    for(var e = 0; e < entries.length; e++) {
-        if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
-            links.push(entries[e])
-        }
-    }
-    return links
+// LOG AND ERROR 
+//
+const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
+    // generátor chyby
+    message("ERR: " + script + "\n" + error)
+    let errorLib = libByName("APP Errors")
+    let newError = new Object()
+    newError["type"] = "error"
+    newError["date"] = new Date()
+    newError["library"] = library
+    newError["memento library"] = mementoLibrary
+    newError["script"] = script
+    newError["text"] = error
+    newError["line"] = error.lineNumber
+    newError["variables"] = variables
+    newError["parameters"] = parameters
+    errorLib.create(newError)
+    cancel()
+    exit()
+}
+const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => {
+    // generátor message
+  //  message("MSG: " + script + "\n" + msg)
+    let errorLib = libByName("APP Errors")
+    let newMsg = new Object()
+    newMsg["type"] = "message"
+    newMsg["date"] = new Date()
+    newMsg["library"] = library
+    newMsg["memento library"] = mementoLibrary
+    newMsg["script"] = script
+    newMsg["text"] = msg
+    newMsg["variables"] = variables
+    newMsg["parameters"] = parameters
+    errorLib.create(newMsg)
+}
+const logGen = (mementoLibrary, library, script, log, variables, parameters, attributes) => {
+    // generátor log
+   // message("LOG: " + script + "\n" + log)
+    let errorLib = libByName("APP Errors")
+    let newLog = new Object()
+    newLog["type"] = "log"
+    newLog["date"] = new Date()
+    newLog["library"] = library
+    newLog["memento library"] = mementoLibrary
+    newLog["script"] = script
+    newLog["text"] = log
+    newLog["variables"] = variables
+    newLog["parameters"] = parameters
+    newLog["attributes"] = attributes
+    errorLib.create(newLog)
 }
 // End of file: 25.03.2022, 16:16
