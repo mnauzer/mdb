@@ -73,7 +73,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     }
 };
 const prepocetZaznamuEvidenciePrac = en => {
-    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.06";
+    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.07";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
@@ -116,16 +116,13 @@ const prepocetZaznamuEvidenciePrac = en => {
         // checkbuttons
         let evidovat = en.field("Evidovať")
         let evStroje = evidovat.includes("Stroje")
-        let evMateriál = evidovat.includes("Materiál")
+        let evMaterial = evidovat.includes("Materiál")
         let evPrace = evidovat.includes("Výkaz prác")
         let evDoprava = evidovat.includes("Dopravu")
-        // vykazy link to entry
-        let vykazPrac = en.field("Výkaz prác")// práce, zamestnancov, trvanie, hodín, hzs, cena
-        let vykazStrojov = en.field("Výkaz strojov")// hodín, hzs, cena
-        let vykazMaterialu = en.field("Výkaz materiálu")// atribúty vykonané práce/počet pracovníkov/trvanie/celkový počet hodín
-        let vykazDopravy = en.field("Výkaz dopravy")// km, jázd, sadzba, cena
-        // calc výkaz prác
-        if (evPrace && vykazPrac) {
+        // PRÁCE
+        if (evPrace) {
+            let vykazPrac = en.field("Výkaz prác")// práce, zamestnancov, trvanie, hodín, hzs, cena
+            // TODO: automaticky nalinkovať výkaz zo zákazky
             for (let v = 0; v < vykazPrac.length; v++) {
                 // zistiť hodinovú sadzbu
                 let sadzba = evidenciaSadzbaPrace(vykazPrac[v], odpracovane) // TODO: refaktoring funkcie
@@ -139,50 +136,28 @@ const prepocetZaznamuEvidenciePrac = en => {
                     vykazPrac[v].setAttr("cena", odpracovane * sadzba)
                 }
             }
-        } else {
-            message("Chýba výkaz prác")
-            cancel()
-            exit()
         }
-        ;
-
+            
         //STROJE
-        let evidovatStroje = en.field("Evidovať stroje");
-        if (evidovatStroje) {
+        if (evStroje) {
+            let vykazStrojov = en.field("Výkaz strojov")// hodín, hzs, cena
+            // TODO: automaticky nalinkovať výkaz zo zákazky
             let vyuzitieStrojov = en.field("Využitie strojov");
             if (vyuzitieStrojov) {
-                let EvidenciaPrac = en.field("Výkaz strojov")[0];
-                if (EvidenciaPrac) {
-                    // ak má zákazka už vygenerovaný výkaz s cp
-                    let stroje = vykazStrojov.field("Stroje");
-                    for (let i = 0; i < vyuzitieStrojov.length; i++) {
-                        if (stroje) {
-                            let prevadzkaMTH = 0;
-                            for (let j = 0; j < stroje.length; j++) {
-                                if (vyuzitieStrojov[i].field("Cena")[0].id == stroje[j].id) {
-                                }
-                                stroje[j].setAttr("prevádzka mth", stroje[j].attr("prevádzka mth", prevadzkaMTH));
-                            }
-                        } else {
-                            message("false");
-                            vykazStrojov.link("Stroje", vyuzitieStrojov[i].field("Cena")[0]);
-                        }
-                    }
-                } else {
-                    let vykazStrojovZakazka = en.field("Zákazka")[0].linksFrom("Výkaz strojov", "Zákazka")[0];
-                    if (vykazStrojovZakazka) {
-                        en.link("Výkaz strojov", vykazStrojovZakazka);
-                    } else {
-                        // ak neexistuje, vygeneruj nový výkaz strojov
-                        message("Generujem výkaz strojov");
-                        vykazStrojov = novyVykazStrojov(en.field("Zákazka")[0]);
-                        en.link("Výkaz strojov", vykazStrojov);
-                    }
-                }
-                prepocitatVykazStrojov(vykazStrojov);
+                
             } else {
                 message("V zázname nie su vybraté žiadne využité stroje");
             }
+        }
+        //MATERIÁL
+        if (evMaterial) {
+            let vykazMaterialu = en.field("Výkaz materiálu")// hodín, hzs, cena
+            // TODO: automaticky nalinkovať výkaz zo zákazky
+        }
+        //DOPRAVA
+        if (evDoprava) {
+            let vykazDopravy = en.field("Výkaz dopravy")// hodín, hzs, cena
+            // TODO: automaticky nalinkovať výkaz zo zákazky
         }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
