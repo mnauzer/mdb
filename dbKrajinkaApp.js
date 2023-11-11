@@ -166,9 +166,9 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
 
 // get db from APP library
 const findAppDB = (season, mementoLibrary, inputScript) => {
-    let scriptName = "findAppDB 23.0.08"
-    let variables = "Záznam: " + en.name  + "\n"
-    let parameters = "season: " + season  + "\inputScript: " + inputScript + "\nmementoLibrary: " + mementoLibrary
+    let scriptName = "findAppDB 23.0.98"
+    let variables = "Záznam: " + en.name
+    let parameters = "season: " + season  + "\ninputScript: " + inputScript + "\nmementoLibrary: " + mementoLibrary
     if(season === undefined || season == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters )
         cancel()
