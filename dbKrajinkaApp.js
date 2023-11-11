@@ -191,10 +191,10 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
+const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
     let scriptName = "getAppSeasonDB 23.1.07"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n"
-    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
+    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or mementoLibrary are undefined", variables, parameters )
         cancel()
@@ -228,11 +228,11 @@ const getAppSeasonDB = (season, mementoLibrary, inputScript) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-const findAppDB = (season, mementoLibrary, inputScript) => {
+const findAppDB = (season, mementoLibrary, inptScript) => {
     // get db from APP library
     let scriptName = "findAppDB 23.0.98"
     let variables = "Záznam: " + en.name
-    let parameters = "season: " + season  + "\ninputScript: " + inputScript + "\nmementoLibrary: " + mementoLibrary
+    let parameters = "season: " + season  + "\ninptScript: " + inptScript + "\nmementoLibrary: " + mementoLibrary
     if(season === undefined || season == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters )
         cancel()
@@ -261,11 +261,11 @@ const findAppDBbyName = (season, libTitle) => {
     var filteredDB = databazy.filter(fltrDb)[0]
     return filteredDB
 }
-const getSeason = (en, mementoLibrary, inputScript) => {
+const getSeason = (en, mementoLibrary, inptScript) => {
     // get entryDefault season from creation date
     let scriptName = "getSeason 23.1.02"
     let variables = "Záznam: " + en.name
-    let parameters = "en: " + en + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
+    let parameters = "en: " + en + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     if(en == undefined || en == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters )
         cancel()
@@ -292,11 +292,11 @@ const lastValid = (links, date, valueField, dateField) => {
     message("Links: " + links.length + "\nDátum: " + date)
     return links[0].field(valueField)
 }
-const getNewNumber = (appDB, season, mementoLibrary, inputScript) => {
+const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
     // generuje nové číslo záznamu
     let scriptName = "getNewNumber 23.1.07"
     let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
-    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninputScript: " + inputScript
+    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     if(appDB == undefined || appDB == null || season == undefined || season == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters )
         cancel()
@@ -327,11 +327,11 @@ const getNewNumber = (appDB, season, mementoLibrary, inputScript) => {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-const getSadzbaDPH = (appDB, season, inputScript) => {
+const getSadzbaDPH = (appDB, season, inptScript) => {
       // zistí sadzby DPH v zadanej sezóne
     let scriptName = "getSadzbaDPH 23.0.02"
     let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season 
-    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninputScript: " + inputScript
+    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
     if(appDB == undefined || appDB == null || season == undefined || season == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
         cancel()
@@ -350,11 +350,11 @@ const getSadzbaDPH = (appDB, season, inputScript) => {
 
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
-const setEntry = en => {
+const setEntry = (en, inptScript) => {
     let scriptName = "setEntry 23.0.07"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
-    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary +  "\ninptScript: " + inptScript
     try {
         en.set(VIEW, VIEW_EDIT)
         let season = getSeason(en, mementoLibrary, scriptName)

@@ -11,7 +11,7 @@ const newEntryEvidenciaPrac = en => {
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
-        setEntry(en)
+        setEntry(en, scriptName)
         
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
