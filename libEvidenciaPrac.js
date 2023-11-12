@@ -77,6 +77,7 @@ const btnFill = en => {
     let scriptName ="btnFill 23.0.01";
     let variables = "Záznam: " + en.name 
     let parameters = "en: " + en
+    let txtMsg = ""
     try {
         let zakazka = en.field(FIELD_ZAKAZKA)
         if (zakazka == undefined) {
@@ -84,10 +85,12 @@ const btnFill = en => {
             cancel()
             exit()
         }
+        txtMsg = "Zákazka: " + zakazka.name
+        //zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
+
         zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-//        zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-
-
+        
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     } 
