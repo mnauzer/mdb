@@ -94,10 +94,12 @@ const btnFill = () => {
         let evidovat = entry().field("Evidovať")
         switch (evidovat) {
             case "Výkaz prác":
+                message("Výkaz práce")
                 entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
                 break
             case "Stavebný denník":
-                entry().link("Stavebný denník", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Stavebný denník", "Zákazka")[0])
+                    message("Stavebný denník")
+                    entry().link("Stavebný denník", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Stavebný denník", "Zákazka")[0])
                 break
             case "Materiál":
                 entry().link("Výkaz materiálu", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz materiálu", "Zákazka")[0])
