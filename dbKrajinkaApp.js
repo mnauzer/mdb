@@ -372,9 +372,9 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    let scriptName = "newEntry 23.0.03"
+    let scriptName = "newEntry 23.0.04"
     let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
@@ -383,12 +383,12 @@ const newEntry = en => {
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         if (appDB){
             let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
-            en.set(DATE, en.field(DATE) || new Date())
+            en.set(DATE, new Date())
             en.set(NUMBER, number[0])
             en.set(NUMBER_ENTRY, number[1])
             en.set(SEASON, season)
             en.set(CR, user())
-            en.set(CR_DATE, new DATE())
+            en.set(CR_DATE, new Date())
         } else {
             message("Databáza nenájdená v APP")
         }
@@ -408,7 +408,7 @@ const updateEntry = en => {
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         if (appDB){
             en.set(MOD, user())
-            en.set(MOD_DATE, new DATE())
+            en.set(MOD_DATE, new Date())
         } else {
             message("Databáza nenájdená v APP")
         }
