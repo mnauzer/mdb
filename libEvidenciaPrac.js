@@ -72,6 +72,11 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
         exit();
     }
 };
+
+const btnFill = en => {
+    message("button fill")
+}
+
 const prepocetZaznamuEvidenciePrac = en => {
     let scriptName ="prepocetZaznamuEvidenciePrac 23.0.08";
     let variables = "Záznam: " + en.name + "\n"
