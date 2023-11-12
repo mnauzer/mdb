@@ -79,7 +79,7 @@ const btnFill = en => {
     let parameters = "en: " + en
     let txtMsg = ""
     try {
-        let zakazka = en.field("Zákazka")
+        let zakazka = en.field("Zákazka")[0]
         if (!zakazka) {
             message("Najprv vyber zákazku...")
             cancel()
