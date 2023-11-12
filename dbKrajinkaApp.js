@@ -25,18 +25,18 @@ function fltrDbByName(value, name) {
     }
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
-    let scriptName = "filterByDate 23.0.02"
+    let scriptName = "filterByDate 23.0.03"
     let variables = ""
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
         var links = []
-        let logTxt = "Pôvodný počet linkov: " + links
+        let logTxt = "Pôvodný počet linkov: " + links.length
         for(var e = 0; e < entries.length; e++) {
             if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
                 links.push(entries[e])
             }
         }
-        logTxt += "\nFiltrovaný počet linkov: " + links
+        logTxt += "\nFiltrovaný počet linkov: " + links.length
         logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
         return links
     } catch (error) {
