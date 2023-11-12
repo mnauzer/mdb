@@ -14,7 +14,7 @@ const saveEntryCenovePonuky = en => {
 }
 
 const prepocitatCenovuPonuku = en => {
-    let scriptName ="prepocitatCenovuPonuku 23.0.01";
+    let scriptName ="prepocitatCenovuPonuku 23.0.03";
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
@@ -61,7 +61,7 @@ const prepocitatCenovuPonuku = en => {
                 dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy   
                 break;
                 case "Hodinovka":
-                var diely = en.field("Diely cenovej ponuky hzs");
+                diely = en.field("Diely cenovej ponuky hzs");
                 if (diely) {
                     for (var d = 0; d < diely.length; d++) {
                         pracaCelkom += prepocetDielHZS(en, diely[d]);
