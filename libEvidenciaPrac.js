@@ -89,12 +89,14 @@ const btnFill = () => {
         msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
         
         message("nastavujem záznam..." + scriptName)
+        m
         entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
+        message(evidovat)
         switch (evidovat) {
             case "Výkaz prác":
-                message("Výkaz práce")
+                message("Výkaz prác")
                 entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
                 break
             case "Stavebný denník":
