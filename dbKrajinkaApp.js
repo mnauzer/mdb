@@ -318,7 +318,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
 }
 const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
     // generuje nové číslo záznamu
-    let scriptName = "getNewNumber 23.1.07"
+    let scriptName = "getNewNumber 23.1.08"
     let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
     let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     if(appDB == undefined || appDB == null || season == undefined || season == null){
@@ -343,9 +343,6 @@ const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
         appDB.setAttr("rezervované číslo", lastNum)
         number[0] = isPrefix ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         number[1] = lastNum
-        number = isPrefix
-        ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
-        : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
         return number
     } catch (error) {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
@@ -375,26 +372,30 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    let scriptName = "newEntry 23.0.01"
+    let scriptName = "newEntry 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
         setEntry(en, scriptName)
+        en.set(CR, user())
+        en.set(CR_DATE, new DATE())
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntry = en => {
-    let scriptName = "updateEntry 23.0.01"
+    let scriptName = "updateEntry 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
     message("Úprava záznamu - " + mementoLibrary);
     try {
         setEntry(en, scriptName)
+        en.set(MOD, user())
+        en.set(MOD_DATE, new DATE())
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
@@ -413,7 +414,7 @@ const setEntry = (en, inptScript) => {
             let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName)
             en.set(DATE, en.field(DATE) || new Date())
             en.set(NUMBER, number[0])
-            en.set("number", number[1])
+            en.set(NUMBER_ENTRY, number[1])
             en.set(SEASON, season)
             en.set(NUMBER, number)
         } else {
@@ -433,7 +434,7 @@ const saveEntry = (en, mementoLibrary, inptScript) => {
         en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        let nextNumber = en.field("number")
+        let nextNumber = en.field(NUMBER_ENTRY)
         appDB.setAttr("nasledujúce číslo", nextNumber++)
         // let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
         // message(msgTxt)

@@ -36,19 +36,21 @@ const prepocitatCenovuPonuku = en => {
         var datum = new Date(en.field(DATE));
         var platnost = new Date(en.field("Platnosť do"));
         var platnost30 = new Date(moment(datum).add(en.field("Platnosť ponuky"), "Days"));
+        
         en.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
-
+        
         // doplň adresu klienta do Krycieho listu
         var klient = en.field("Miesto realizácie")[0].field("Klient")[0];
         en.set("Klient", klient);
         if (klient) {
             en.set("Odberateľ", pullAddress(klient));
         }
-
+        
         // prepočet podľa typu cenovej ponuky
         switch (typ) {
             case "Položky":
-                var diely = en.field("Diely cenovej ponuky");
+                let diely = en.field("Diely cenovej ponuky");
+                let evidovat = en.field("Evidovať")
                 // prejsť všetky diely a spočítať práce a materiál
                 if (diely) {
                     for (var d = 0; d < diely.length; d++) {

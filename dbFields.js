@@ -94,6 +94,7 @@ let ATTDC_EMPLOYEES = "Zamestnanci"
 
 // # SPOLOČNÉ POLIA
 const NUMBER = "Číslo"
+const NUMBER_ENTRY = "number"
 const DATE = "Dátum"
 const NICK = "Nick"
 const VIEW = "view"
