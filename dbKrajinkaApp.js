@@ -25,18 +25,19 @@ function fltrDbByName(value, name) {
     }
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
-    let scriptName = "filterByDate 23.0.03"
+    let scriptName = "filterByDate 23.0.05"
     let variables = ""
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
+        let logTxt = "Záznamov: " + entries.length
         var links = []
-        let logTxt = "Pôvodný počet linkov: " + links.length
         for(var e = 0; e < entries.length; e++) {
             if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
                 links.push(entries[e])
             }
         }
-        logTxt += "\nFiltrovaný počet linkov: " + links.length
+ 
+        logTxt += "\nFiltrovaných záznamov: " + links.length
         logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
         return links
     } catch (error) {
@@ -294,15 +295,15 @@ const getSeason = (en, mementoLibrary, inptScript) => {
 const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "lastValid 23.0.03"
+    let scriptName = "lastValid 23.0.04"
     let variables = "Links: " + links.length + "\nDátum: " + date 
     let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
     try {
         // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
         //links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
+               // ✅ Sort in Ascending order (low to high)
         filteredLinks = filterByDate(links, date, "Platnosť od", scriptName)
-      //  filteredLinks.sort(orderPlatnost) 
-      // TODO sort these
+        filteredLinks.sort((objA, objB) => Number(objA.field("Platnosť od") - Number(objB.field("Platnosť od"))))
         filteredLinks.reverse()
         message("Links: " + filteredLinks.length + "\nDátum: " + date)
         return links[0].field(valueField)
