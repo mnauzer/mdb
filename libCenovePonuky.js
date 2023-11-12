@@ -112,7 +112,7 @@ const prepocitatCenovuPonuku = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.03";
+    var scriptName ="generujZakazku 23.1.04";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -199,7 +199,7 @@ const generujZakazku = cp => {
             exit();
         } else {
             let msgTxt = "Cenová ponuka musí byť schválená";
-            msgGenGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
+            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
             message(msgTxt);
             cancel();
             exit();
