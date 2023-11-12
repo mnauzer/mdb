@@ -505,12 +505,12 @@ const setDEBUG = en => {
 }
 const setIdentifikator = en => {
     // nastaví pole identifikátor
-    let scriptName = "setIdentifikator 23.0.01"
-    let mementoLibrary = lib().title
+    let scriptName = "setIdentifikator 23.0.02"
+    
     let variables = "Záznam: " + en.name 
     let parameters = "en: " + en 
     try {
-        let identifikator = en.field("Miesto realizácie")[0].field("Klient")[0].name + ", " + en.field("Miesto realizácie")[0].name
+        let identifikator = en.field("Miesto realizácie")[0].name + ", " + en.field("Klient")[0].name
         en.set("Identifikátor", identifikator)
     } catch (error) {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
