@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.09"
+    let scriptName ="btnFill 23.0.10"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -100,7 +100,7 @@ const btnFill = () => {
                 entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
                 
                 break;
-            case "Externá":
+            case "Externá ponuka":
                 entry().set("Evidovať ext", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
                 
                 break;
@@ -108,7 +108,7 @@ const btnFill = () => {
             default:
                 break;
         }
-        entry().set("Typ zákazky", entry().field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+       // entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
