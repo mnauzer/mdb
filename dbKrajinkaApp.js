@@ -202,9 +202,10 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
     }
 }
 const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
-    let scriptName = "getAppSeasonDB 23.1.07"
+    let scriptName = "getAppSeasonDB 23.1.08"
     let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n"
     let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
+    let attributes = ""
     if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or mementoLibrary are undefined", variables, parameters )
         cancel()
@@ -216,7 +217,7 @@ const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
-                let attributes =
+                attributes =
                 "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
                 "\nčíslo testu: " + databazy[v].attr("číslo testu") +
                 "\nrezervované číslo: " + databazy[v].attr("rezervované číslo") +
