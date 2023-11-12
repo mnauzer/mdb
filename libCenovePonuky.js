@@ -112,7 +112,7 @@ const prepocitatCenovuPonuku = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.06";
+    var scriptName ="generujZakazku 23.1.07";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -143,82 +143,83 @@ const generujZakazku = cp => {
             }
             // vytvorenie nového objektu
             message("Generujem novú zákazku...")
-            var novaZakazka = new Object();
-            novaZakazka[DATE] = new Date();
-            novaZakazka["Typ zákazky"] = typZakazky;
-            novaZakazka[NUMBER] = newNumber[0];
-            novaZakazka["number"] = newNumber[1];
-            novaZakazka["Klient"] = cp.field("Klient")[0];
-            novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita");
-            novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0];
-            novaZakazka["Stav zákazky"] = "Čakajúca"; // hardcoded
-            novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky");
-            novaZakazka["Diely zákazky"] = dielyZakazky.join();
-            novaZakazka["Cenová ponuka"] = cp;
-            novaZakazka[SEASON] = season;
-            novaZakazka["Účtovanie DPH"] = ["Práce", "Materiál", "Doprava", "Mechanizácia"]; // hardcoded
-            novaZakazka["Účtovanie zákazky"] = cp.field("Typ cenovej ponuky");
-            zakazky.create(novaZakazka);
+            var novaZakazka = new Object()
+            novaZakazka[DATE] = new Date()
+            novaZakazka["Typ zákazky"] = typZakazky
+            novaZakazka[NUMBER] = newNumber[0]
+            novaZakazka["number"] = newNumber[1]
+            novaZakazka["Klient"] = cp.field("Klient")[0]
+            novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita")
+            novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0]
+            novaZakazka["Stav zákazky"] = "Čakajúca" // hardcoded
+            novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky")
+            novaZakazka["Diely zákazky"] = dielyZakazky.join()
+            novaZakazka["Cenová ponuka"] = cp
+            novaZakazka[SEASON]= season
+            novaZakazka[CR] = user()
+            novaZakazka[CR_DATE] = new Date()
+            novaZakazka["Účtovanie DPH"] = ["Práce", "Materiál", "Doprava", "Mechanizácia"] // hardcoded
+            novaZakazka["Účtovanie zákazky"] = cp.field("Typ cenovej ponuky")
+            zakazky.create(novaZakazka)
 
             // inicializácia premennej z posledného záznamu
-            var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
-            let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná";
+            var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]
+            let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná"
             let nextNumber = zakazka.field(NUMBER_ENTRY)
             appDB.setAttr("nasledujúce číslo", nextNumber++)
 
-            message(msgTxt);
-            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
+            message(msgTxt)
+            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
 
             // generovanie výkazov
             let evidovat = cp.field("Evidovať")
-            generujVykazyPrac(zakazka);
+            generujVykazyPrac(zakazka)
             //generujVykazDopravy(zakazka)
             if (evidovat.includes("Výkaz materiálu")) {
-                generujVykazyMaterialu(zakazka);
+                generujVykazyMaterialu(zakazka)
             }
             if (evidovat.includes("Výkaz strojov")) {
-                message("generujVykazStrojov...");
-                generujVykazStrojov(zakazka);
+                message("generujVykazStrojov...")
+                generujVykazStrojov(zakazka)
             }
             if (evidovat.includes("Položky")) {
-                message("generujVykazyPrac...");
-                generujVykazyPrac(zakazka);
+                message("generujVykazyPrac...")
+                generujVykazyPrac(zakazka)
             }
             if (evidovat.includes("Výkaz prác")) {
-                message("generujVykazyPrac...");
-                generujVykazyPrac(zakazka);
+                message("generujVykazyPrac...")
+                generujVykazyPrac(zakazka)
             }
             if (evidovat.includes("Vykaz dopravy")) {
-                //message("generujVykazyPrac...");
-                //generujVykazDopravy(zakazka);
+                //message("generujVykazyPrac...")
+                //generujVykazDopravy(zakazka)
             }
             if (evidovat.includes("Stavebný denník")) {
-                //message("generujVykazyPrac...");
-                //generujStavebnyDennik(zakazka);
+                //message("generujVykazyPrac...")
+                //generujStavebnyDennik(zakazka)
             }
             if (evidovat.includes("Subdodávky")) {
-                //message("generujVykazyPrac...");
-                //generujVykazSubdodavok(zakazka);
+                //message("generujVykazyPrac...")
+                //generujVykazSubdodavok(zakazka)
             }
-            
-            cp.set("Stav cenovej ponuky", "Uzavretá");
+            cp.set("Stav cenovej ponuky", "Uzavretá")
         } else if (cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]) {
-            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
-            message(msgTxt);
-            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
-            cancel();
-            exit();
+            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]
+            message(msgTxt)
+            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            cancel()
+            exit()
         } else {
-            let msgTxt = "Cenová ponuka musí byť schválená";
-            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
-            message(msgTxt);
-            cancel();
-            exit();
+            let msgTxt = "Cenová ponuka musí byť schválená"
+            msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            message(msgTxt)
+            cancel()
+            exit()
         }
     } catch (error) {
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
-        cancel();
-        exit();
+        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
+        cancel()
+        exit()
     }
 }
 
