@@ -74,13 +74,13 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = en => {
-    let scriptName ="btnFill 23.0.02"
+    let scriptName ="btnFill 23.0.03"
     let variables = "Záznam: " + en.name 
     let parameters = "en: " + en
     let txtMsg = ""
     try {
         let zakazka = en.field("Zákazka")
-        if (zakazka == undefined) {
+        if (!zakazka) {
             message("Najprv vyber zákazku...")
             cancel()
             exit()
