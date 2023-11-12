@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.29"
+    let scriptName ="btnFill 23.0.30xc"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -106,7 +106,7 @@ const btnFill = () => {
             message(links.length)
             if (element != undefined)
             message(element)
-            entry().link(element, links[0])
+            entry().set(element, links[0])
         });
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
