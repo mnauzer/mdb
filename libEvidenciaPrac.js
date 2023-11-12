@@ -113,13 +113,13 @@ const prepocetZaznamuEvidenciePrac = en => {
             }
         } else if (typ == "Položky") {
         }
-        let zamestnanci = en.field(FIELD_ZAMESTNANCI);
-        let odpracovane = 0;
-        let mzdoveNakladyCelkom = 0;
-        let nakladyZamestnatec = 0;
-        let casOd = roundTimeQ(en.field("Od"));
-        let casDo = roundTimeQ(en.field("Do"));
-        let trvanie = (casDo - casOd) / 3600000;
+        let zamestnanci = en.field(FIELD_ZAMESTNANCI)
+        let odpracovane = 0
+        let mzdoveNakladyCelkom = 0
+        let nakladyZamestnatec = 0
+        let casOd = roundTimeQ(en.field("Od"))
+        let casDo = roundTimeQ(en.field("Do"))
+        let trvanie = (casDo - casOd) / 3600000
         // dosaď mzdy zamestnancov
         for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
