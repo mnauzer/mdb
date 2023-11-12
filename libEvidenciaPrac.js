@@ -94,19 +94,20 @@ const btnFill = () => {
         switch (typ) {
             case "Hodinovka":
                 entry().set("Evidovať hzs", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
-                
-                break;
+                evidovat =  entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
+                message(evidovat)
+                break
             case "Položky":
                 entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
                 
-                break;
+                break
             case "Externá ponuka":
                 entry().set("Evidovať ext", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
                 
-                break;
+                break
         
             default:
-                break;
+                break
         }
        // entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         
