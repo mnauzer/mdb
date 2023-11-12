@@ -1,32 +1,4 @@
 
-const newEntryCenovePonuky = en => {
-    let scriptName = "newEntryCenovePonuky 23.0.01"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en
-    message("Nový záznam - " + mementoLibrary)
-    try {
-        setEntry(en, scriptName)
-    } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
-    }
-}
-
-const updateEntryCenovePonuky = en => {
-    let scriptName = "updateEntryCenovePonuky 23.0.01"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
-    message("Úprava záznamu - " + mementoLibrary);
-    try {
-        
-    } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
-    }
-}
-
 const saveEntryCenovePonuky = en => {
     let scriptName = "saveEntryCenovePonuky 23.0.01"
     let mementoLibrary = lib().title
@@ -57,6 +29,7 @@ const prepocitatCenovuPonuku = en => {
         var cenaCelkomBezDPH = 0;
         var cenaSDPH = 0;
         var dph = 0;
+        var dopravaCelkom = 0;
         var season = getSeason(en, DB_CENOVE_PONUKY, scriptName);
         var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
         // nastaviť splatnosť
@@ -82,8 +55,10 @@ const prepocitatCenovuPonuku = en => {
                         cenaCelkomBezDPH += prepocetDielPolozky(en, diely[d]);
                     }
                 }
+                  // Doprava každopádne
+                dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy   
                 break;
-            case "Hodinovka":
+                case "Hodinovka":
                 var diely = en.field("Diely cenovej ponuky hzs");
                 if (diely) {
                     for (var d = 0; d < diely.length; d++) {
@@ -104,17 +79,17 @@ const prepocitatCenovuPonuku = en => {
                         en.set("Stroje celkom bez DPH", strojeCelkom);
                     }
                     cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
-
                 }
+                dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy   
+                break;
+            case "Externá ponuka":
+                cenaCelkomBezDPH = en.field("Cena externej ponuky")
+                dopravaCelkom = 0
                 break;
             case "Ad Hoc":
                 message("I'am thinking about it!");
                 break;
         }
-
-        // Doprava každopádne
-        var dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
-
         // dph
         cenaCelkomBezDPH += dopravaCelkom;
         dph = cenaCelkomBezDPH * sadzbaDPH;
@@ -129,6 +104,7 @@ const prepocitatCenovuPonuku = en => {
         message(msgTxt)
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
     } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
     }
 }
