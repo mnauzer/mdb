@@ -50,36 +50,52 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     let variables = "Záznam: " + vykazPrac.name + "\n"
     let parameters = "vykazPrac: " + vykazPrac + "\nhodinyCelkom: " + hodinyCelkom
     if(vykazPrac == undefined){
-        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, "chýba parameter vykazPrac", variables, parameters );
-        cancel();
-        exit();
+        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, "chýba parameter vykazPrac", variables, parameters )
+        cancel()
+        exit()
     }
     try {
-        let zakladnaSadzba = vykazPrac.field("Práce sadzby")[0].field("Cena bez DPH");
+        let zakladnaSadzba = vykazPrac.field("Práce sadzby")[0].field("Cena bez DPH")
         // zistiť zľavu podľa počtu odpracovaných hodín
         let zlava = 0;
-        let limity = vykazPrac.field("Práce sadzby")[0].field("Limity");
+        let limity = vykazPrac.field("Práce sadzby")[0].field("Limity")
         for (let m = 0; m < limity.length; m++) {
             if (hodinyCelkom > limity[m].field("Limit") && zlava < limity[m].field("Zľava")) {
                 zlava = limity[m].field("Zľava");
             }
         }
-        let sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100);
-        return sadzba;
+        let sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100)
+        return sadzba
     } catch (error) {
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
-        cancel();
-        exit();
+        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
+        cancel()
+        exit()
     }
 };
 
 const btnFill = en => {
-    message("button fill")
+    let scriptName ="btnFill 23.0.01";
+    let variables = "Záznam: " + en.name 
+    let parameters = "en: " + en
+    try {
+        let zakazka = en.field(FIELD_ZAKAZKA)
+        if (zakazka == undefined) {
+            message("Najprv vyber zákazku")
+            cancel()
+            exit()
+        }
+        zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+//        zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+
+
+    } catch (error) {
+        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+    } 
 }
 
 const prepocetZaznamuEvidenciePrac = en => {
     let scriptName ="prepocetZaznamuEvidenciePrac 23.0.08";
-    let variables = "Záznam: " + en.name + "\n"
+    let variables = "Záznam: " + en.name 
     let parameters = "en: " + en 
     try {
         let date = en.field(DATE)
