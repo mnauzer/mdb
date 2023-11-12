@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = en => {
-    let scriptName ="btnFill 23.0.03"
+    let scriptName ="btnFill 23.0.04"
     let variables = "Záznam: " + en.name 
     let parameters = "en: " + en
     let txtMsg = ""
