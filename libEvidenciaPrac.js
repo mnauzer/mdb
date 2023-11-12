@@ -79,9 +79,9 @@ const btnFill = en => {
     let parameters = "en: " + en
     let txtMsg = ""
     try {
-        let zakazka = en.field(FIELD_ZAKAZKA)
+        let zakazka = en.field("Zákazka")
         if (zakazka == undefined) {
-            message("Najprv vyber zákazku")
+            message("Najprv vyber zákazku...")
             cancel()
             exit()
         }
