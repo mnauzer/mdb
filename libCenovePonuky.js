@@ -112,7 +112,7 @@ const prepocitatCenovuPonuku = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.05";
+    var scriptName ="generujZakazku 23.1.06";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -120,14 +120,12 @@ const generujZakazku = cp => {
         cancel();
         exit();
     }
-
     try {
-        var season = getSeason(cp, DB_CENOVE_PONUKY, scriptName);
-      //  var en = cp.linksFrom(DB_ZAKAZKY, "Cenová ponuka");
         var stav = cp.field("Stav cenovej ponuky");
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let zakazky = libByName(DB_ZAKAZKY);
+            let season = getSeason(en, mementoLibrary, scriptName)
             let appDB = getAppSeasonDB(season, zakazky.title, scriptName);
             let newNumber = getNewNumber(appDB, season, DB_CENOVE_PONUKY, scriptName);
             // vyber diely zákazky podľa typu cp
@@ -164,6 +162,9 @@ const generujZakazku = cp => {
             // inicializácia premennej z posledného záznamu
             var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
             let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná";
+            let nextNumber = zakazka.field(NUMBER_ENTRY)
+            appDB.setAttr("nasledujúce číslo", nextNumber++)
+
             message(msgTxt);
             msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
 
