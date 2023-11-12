@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.25"
+    let scriptName ="btnFill 23.0.26"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -93,13 +93,19 @@ const btnFill = () => {
         entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
-        for(let i=0; i<evidovat.length; i++) {
-            message(links[i])
+        // for(let i=0; i<evidovat.length; i++) {
+        //     message(links[i])
+        //     let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+        //     if (links[i] != undefined)
+        //     message(links[i].name)
+        // //entry().link(evidovat[i], link )
+        // }
+        evidovat.forEach(element => {
+            message(element)
             let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
-            if (links[i] != undefined)
-            message(links[i].name)
-            //entry().link(evidovat[i], link )
-        }
+            if (element != undefined)
+            message(element.name)
+        });
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     } 
