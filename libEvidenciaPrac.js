@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.14"
+    let scriptName ="btnFill 23.0.15"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -88,7 +88,7 @@ const btnFill = () => {
         //zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
         
-        message("nastavujem záznam...")
+        message("nastavujem záznam..." + scriptName)
         entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
