@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.18"
+    let scriptName ="btnFill 23.0.19"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -96,11 +96,9 @@ const btnFill = () => {
         evidovat.forEach(element => {
             switch (element) {
                 case "Výkaz prác":
-                    message("Výkaz prác")
                     entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
                     break
                 case "Stavebný denník":
-                        message("Stavebný denník")
                         entry().link("Stavebný denník", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Stavebný denník", "Zákazka")[0])
                     break
                 case "Materiál":
