@@ -73,43 +73,42 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     }
 };
 
-const btnFill = en => {
-    let scriptName ="btnFill 23.0.07"
-    let variables = "Záznam: " + en.name 
-    let parameters = "en: " + en
+const btnFill = () => {
+    let scriptName ="btnFill 23.0.08"
+    let variables = "Záznam: " + entry().name 
+    let parameters = "en: " + entry()
     let txtMsg = ""
     try {
-        let zakazka = en.field("Zákazka")[0]
-        if (!zakazka) {
+        if (!entry().field("Zákazka")[0]) {
             message("Najprv vyber zákazku...")
             cancel()
             exit()
         }
-        txtMsg = "Zákazka: " + zakazka.name
+        txtMsg = "Zákazka: " + entry().name
         //zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
         
         message("nastavujem záznam...")
-        zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        entry().set("Typ zákazky", entry().field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         let typ = en.field("Typ zákazky")
         switch (typ) {
             case "Hodinovka":
-                zakazka.set("Evidovať hzs", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
+                entry().set("Evidovať hzs", entry().field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
                 
                 break;
             case "Položky":
-                zakazka.set("Evidovať", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
+                entry().set("Evidovať", entry().field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
                 
                 break;
             case "Externá":
-                zakazka.set("Evidovať ext", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
+                entry().set("Evidovať ext", entry().field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
                 
                 break;
         
             default:
                 break;
         }
-        zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        entry().set("Typ zákazky", entry().field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
