@@ -295,7 +295,7 @@ const getSeason = (en, mementoLibrary, inptScript) => {
 const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "lastValid 23.0.06"
+    let scriptName = "lastValid 23.0.07"
     let variables = "Links: " + links.length + "\nDátum: " + date 
     let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
     try {
@@ -310,7 +310,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
         //     sadzby.push(filteredLinks.field(valueField))
         // }
         //return sadzby[0]
-        return filteredLinks.field(valueField)[0]
+        return filteredLinks[0].field(valueField)
     } catch (error) {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
