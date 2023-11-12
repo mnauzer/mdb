@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.24"
+    let scriptName ="btnFill 23.0.25"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -94,7 +94,9 @@ const btnFill = () => {
         entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
         for(let i=0; i<evidovat.length; i++) {
+            message(links[i])
             let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+            if (links[i] != undefined)
             message(links[i].name)
             //entry().link(evidovat[i], link )
         }
