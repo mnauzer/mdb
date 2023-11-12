@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.20"
+    let scriptName ="btnFill 23.0.21"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -93,32 +93,9 @@ const btnFill = () => {
         entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
-        for(let i=0; i<evidovat.length; i5++) {
-            switch (evidovat[i]) {
-                case "Výkaz prác":
-                    entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
-                    break
-                case "Stavebný denník":
-                        entry().link("Stavebný denník", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Stavebný denník", "Zákazka")[0])
-                    break
-                case "Materiál":
-                    entry().link("Výkaz materiálu", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz materiálu", "Zákazka")[0])
-                    break
-                case "Položky":
-                    //entry().link("Položky", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Položky", "Zákazka")[0])
-                    break
-                case "Dopravu":
-                    entry().link("Výkaz dopravy", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz dopravy", "Zákazka")[0])
-                    break
-                case "Stroje":
-                    entry().link("Výkaz strojov", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz strojov", "Zákazka")[0])
-                    break
-                case "Subdodávky":
-                    break
-            
-                default:
-                    break
-            }
+        for(let i=0; i<evidovat.length; i++) {
+            let link = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")[0]
+            entry().link(evidovat[i], link )
         }
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
