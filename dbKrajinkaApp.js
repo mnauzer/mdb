@@ -295,18 +295,22 @@ const getSeason = (en, mementoLibrary, inptScript) => {
 const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "lastValid 23.0.05"
+    let scriptName = "lastValid 23.0.06"
     let variables = "Links: " + links.length + "\nDátum: " + date 
     let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
     try {
         // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
         //links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
                // ✅ Sort in Ascending order (low to high)
+        let sadzby = []
         filteredLinks = filterByDate(links, date, dateField, scriptName)
         filteredLinks.sort((objA, objB) => Number(objA.field(dateField) - Number(objB.field(dateField))))
-        //filteredLinks.reverse()
-        message("Links: " + filteredLinks.length + "\nDátum: " + date)
-        return links[0].field(valueField)
+        filteredLinks.reverse()
+        // for (let i = 0; filteredLinks.length; i++) {
+        //     sadzby.push(filteredLinks.field(valueField))
+        // }
+        //return sadzby[0]
+        return filteredLinks.field(valueField)[0]
     } catch (error) {
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
