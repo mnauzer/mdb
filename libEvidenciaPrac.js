@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.30xc"
+    let scriptName ="btnFill 23.0.31"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -102,12 +102,8 @@ const btnFill = () => {
         // }
         message(evidovat)
         evidovat.forEach(element => {
-            let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(element, "Zákazka")
-            message(links.length)
-            if (element != undefined)
-            message(element)
-            entry().set(element, links[0])
-        });
+            entry().set(element, entry().field(FIELD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
+        })
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     } 
