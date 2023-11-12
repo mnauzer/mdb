@@ -100,11 +100,11 @@ const btnFill = () => {
         //     message(links[i].name)
         // //entry().link(evidovat[i], link )
         // }
-        evidovat.forEach(element => {
-            message(element)
-            let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+        let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat, "Zákazka")
+        message(links.length)
+        links.forEach(element => {
             if (element != undefined)
-            message(element.name)
+            message(element)
         });
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
