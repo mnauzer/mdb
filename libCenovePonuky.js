@@ -112,7 +112,7 @@ const prepocitatCenovuPonuku = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.04";
+    var scriptName ="generujZakazku 23.1.05";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -168,28 +168,37 @@ const generujZakazku = cp => {
             msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters);
 
             // generovanie výkazov
-            if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
-                generujVykazyPrac(zakazka);
-                //generujVykazDopravy(zakazka)
-                if (cp.field("+Materiál")) {
-                    generujVykazyMaterialu(zakazka);
-                }
-                if (cp.field("+Mechanizácia")) {
-                    message("generujVykazStrojov...");
-                    generujVykazStrojov(zakazka);
-                }
-                if (cp.field("+Položky")) {
-                    message("generujVykazyPrac...");
-                    generujVykazyPrac(zakazka);
-                }
-            } else if (cp.field("Typ cenovej ponuky") == "Položky") {
-                message("generujVykazyPrac2...");
-                generujVykazyPrac(zakazka);
-                message("generujVykazyMaterialu...");
+            let evidovat = cp.field("Evidovať")
+            generujVykazyPrac(zakazka);
+            //generujVykazDopravy(zakazka)
+            if (evidovat.includes("Výkaz materiálu")) {
                 generujVykazyMaterialu(zakazka);
-            } else {
-                message("Nie je jasný typ zákazky");
             }
+            if (evidovat.includes("Výkaz strojov")) {
+                message("generujVykazStrojov...");
+                generujVykazStrojov(zakazka);
+            }
+            if (evidovat.includes("Položky")) {
+                message("generujVykazyPrac...");
+                generujVykazyPrac(zakazka);
+            }
+            if (evidovat.includes("Výkaz prác")) {
+                message("generujVykazyPrac...");
+                generujVykazyPrac(zakazka);
+            }
+            if (evidovat.includes("Vykaz dopravy")) {
+                //message("generujVykazyPrac...");
+                //generujVykazDopravy(zakazka);
+            }
+            if (evidovat.includes("Stavebný denník")) {
+                //message("generujVykazyPrac...");
+                //generujStavebnyDennik(zakazka);
+            }
+            if (evidovat.includes("Subdodávky")) {
+                //message("generujVykazyPrac...");
+                //generujVykazSubdodavok(zakazka);
+            }
+            
             cp.set("Stav cenovej ponuky", "Uzavretá");
         } else if (cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]) {
             let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0];
