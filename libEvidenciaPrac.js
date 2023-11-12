@@ -101,35 +101,6 @@ const btnFill = () => {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     } 
 }
-const checkEvidovat = arrayItem =>{
-    switch (arrayItem) {
-        case "Výkaz prác":
-            message("Výkaz prác")
-            entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
-            break
-        case "Stavebný denník":
-                message("Stavebný denník")
-                entry().link("Stavebný denník", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Stavebný denník", "Zákazka"))
-            break
-        case "Materiál":
-            entry().link("Výkaz materiálu", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz materiálu", "Zákazka"))
-            break
-        case "Položky":
-            //entry().link("Položky", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Položky", "Zákazka")[0])
-            break
-        case "Dopravu":
-            entry().link("Výkaz dopravy", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz dopravy", "Zákazka"))
-            break
-        case "Stroje":
-            entry().link("Výkaz strojov", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz strojov", "Zákazka"))
-            break
-        case "Subdodávky":
-            break
-    
-        default:
-            break
-    }
-}
 
 const prepocetZaznamuEvidenciePrac = en => {
     let scriptName ="prepocetZaznamuEvidenciePrac 23.0.08";
