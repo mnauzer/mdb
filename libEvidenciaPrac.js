@@ -97,7 +97,7 @@ const btnFill = () => {
         switch (evidovat) {
             case "Výkaz prác":
                 message("Výkaz prác")
-                entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka"))
+                entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
                 break
             case "Stavebný denník":
                     message("Stavebný denník")
