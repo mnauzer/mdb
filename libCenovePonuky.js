@@ -6,18 +6,9 @@ const newEntryCenovePonuky = en => {
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
-        setEntry(en)
-        let date = new Date()
-        let season = getSeason(en, mementoLibrary, scriptName)
-        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
-        en.set(DATE, date)
-        en.set(NUMBER, number[0])
-        en.set("number", number[1])
-        en.set(SEASON, season)
+        setEntry(en, scriptName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
     }
 }
@@ -32,7 +23,6 @@ const updateEntryCenovePonuky = en => {
         
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
@@ -43,17 +33,16 @@ const saveEntryCenovePonuky = en => {
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en 
     try {
-        prepocitatZaznamDochadzky(en)
+        prepocitatCenovuPonuku(en)
         saveEntry(en, mementoLibrary)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
-const prepocetPonuky = en => {
-    let scriptName ="prepocetPonuky 23.0.01";
+const prepocitatCenovuPonuku = en => {
+    let scriptName ="prepocitatCenovuPonuku 23.0.01";
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
