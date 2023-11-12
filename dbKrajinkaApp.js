@@ -372,15 +372,26 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    let scriptName = "newEntry 23.0.02"
+    let scriptName = "newEntry 23.0.03"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
-        setEntry(en, scriptName)
-        en.set(CR, user())
-        en.set(CR_DATE, new DATE())
+        en.set(VIEW, VIEW_EDIT)
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        if (appDB){
+            let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+            en.set(DATE, en.field(DATE) || new Date())
+            en.set(NUMBER, number[0])
+            en.set(NUMBER_ENTRY, number[1])
+            en.set(SEASON, season)
+            en.set(CR, user())
+            en.set(CR_DATE, new DATE())
+        } else {
+            message("Databáza nenájdená v APP")
+        }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
@@ -393,9 +404,14 @@ const updateEntry = en => {
     let parameters = "en: " + en 
     message("Úprava záznamu - " + mementoLibrary);
     try {
-        setEntry(en, scriptName)
-        en.set(MOD, user())
-        en.set(MOD_DATE, new DATE())
+        let season = getSeason(en, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        if (appDB){
+            en.set(MOD, user())
+            en.set(MOD_DATE, new DATE())
+        } else {
+            message("Databáza nenájdená v APP")
+        }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
@@ -407,19 +423,7 @@ const setEntry = (en, inptScript) => {
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary +  "\ninptScript: " + inptScript
     try {
-        en.set(VIEW, VIEW_EDIT)
-        let season = getSeason(en, mementoLibrary, scriptName)
-        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        if (appDB){
-            let number = en.field(NUMBER) ? en.field(NUMBER) : getNewNumber(appDB, season, mementoLibrary, scriptName)
-            en.set(DATE, en.field(DATE) || new Date())
-            en.set(NUMBER, number[0])
-            en.set(NUMBER_ENTRY, number[1])
-            en.set(SEASON, season)
-            en.set(NUMBER, number)
-        } else {
-            message("Databáza nenájdená v APP")
-        }
+        
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
