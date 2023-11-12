@@ -120,12 +120,13 @@ const generujZakazku = cp => {
         cancel();
         exit();
     }
+
     try {
         var stav = cp.field("Stav cenovej ponuky");
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let zakazky = libByName(DB_ZAKAZKY);
-            let season = getSeason(en, mementoLibrary, scriptName)
+            let season = getSeason(en, DB_CENOVE_PONUKY, scriptName)
             let appDB = getAppSeasonDB(season, zakazky.title, scriptName);
             let newNumber = getNewNumber(appDB, season, DB_CENOVE_PONUKY, scriptName);
             // vyber diely zákazky podľa typu cp
