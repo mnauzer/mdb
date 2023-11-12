@@ -295,7 +295,7 @@ const getSeason = (en, mementoLibrary, inptScript) => {
 const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "lastValid 23.0.04"
+    let scriptName = "lastValid 23.0.05"
     let variables = "Links: " + links.length + "\nDátum: " + date 
     let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
     try {
@@ -304,7 +304,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
                // ✅ Sort in Ascending order (low to high)
         filteredLinks = filterByDate(links, date, "Platnosť od", scriptName)
         filteredLinks.sort((objA, objB) => Number(objA.field("Platnosť od") - Number(objB.field("Platnosť od"))))
-        filteredLinks.reverse()
+        //filteredLinks.reverse()
         message("Links: " + filteredLinks.length + "\nDátum: " + date)
         return links[0].field(valueField)
     } catch (error) {
