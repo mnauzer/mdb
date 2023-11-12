@@ -38,6 +38,7 @@ let DB_STROJE = "Stroje";
 let DB_VOZIDLA = "Vozidlá";
 let DB_PLANTS = "Databáza rastlín";
 let DB_RCPTS = "Príjemky";
+let DB_Z_SADZBY = "Zamestnanci Sadzby";
 
 // aGroup
 let DBA_OBL = "aZáväzky";

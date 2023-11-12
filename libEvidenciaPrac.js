@@ -73,7 +73,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     }
 };
 const prepocetZaznamuEvidenciePrac = en => {
-    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.07";
+    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.08";
     let variables = "Záznam: " + en.name + "\n"
     let parameters = "en: " + en 
     try {
@@ -93,14 +93,14 @@ const prepocetZaznamuEvidenciePrac = en => {
         let odpracovane = 0;
         let mzdoveNakladyCelkom = 0;
         let nakladyZamestnatec = 0;
-        let hodinCelkom = 0;
         let casOd = roundTimeQ(en.field("Od"));
         let casDo = roundTimeQ(en.field("Do"));
         let trvanie = (casDo - casOd) / 3600000;
         // dosaď mzdy zamestnancov
         for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
-            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastSadzba(zamestnanci[z], date, scriptName);
+
+            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(DB_Z_SADZBY, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
             zamestnanci[z].setAttr("hodinovka", hodinovka);
             odpracovane += trvanie;
             nakladyZamestnatec = trvanie * hodinovka;

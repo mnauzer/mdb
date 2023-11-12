@@ -5,7 +5,7 @@ let FIELD_ZAKAZKA = "Zákazka"
 let FIELD_VYUCTOVANIE = "Vyúčtovanie"
 let FIELD_TYP_VYKAZU = "Typ výkazu"
 let FIELD_POPIS = "Popis"
-
+let FLD_ZAM = "Zamestnanec"
 
 
 

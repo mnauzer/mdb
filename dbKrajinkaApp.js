@@ -24,20 +24,23 @@ function fltrDbByName(value, name) {
         return arr
     }
 }
-const filterByDatePlatnost = (entries, maxDate, inptScript) => {
-    let scriptName = "filterByDatePlatnost 23.0.01"
+const filterByDate = (entries, maxDate, dateField, inptScript) => {
+    let scriptName = "filterByDate 23.0.02"
     let variables = ""
-    let parameters = "entries: " + entries + "\nmaxDate: " + maxDate + "\ninptScript: " + inptScript
+    let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
         var links = []
+        let logTxt = "Pôvodný počet linkov: " + links
         for(var e = 0; e < entries.length; e++) {
-            if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
+            if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
                 links.push(entries[e])
             }
         }
+        logTxt += "\nFiltrovaný počet linkov: " + links
+        logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
         return links
     } catch (error) {
-        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -288,15 +291,23 @@ const getSeason = (en, mementoLibrary, inptScript) => {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-const lastValid = (links, date, valueField, dateField) => {
-    message(new Date(links[0].field(dateField)).getTime())
-
-    // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
-    links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
-    links.sort(orderPlatnost)
-    links.reverse()
-    message("Links: " + links.length + "\nDátum: " + date)
-    return links[0].field(valueField)
+const lastValid = (links, date, valueField, dateField, inptScript) => {
+    //message(new Date(links[0].field(dateField)).getTime())
+    // zistí sadzby DPH v zadanej sezóne
+    let scriptName = "lastValid 23.0.02"
+    let variables = "Links: " + links.length + "\nDátum: " + date 
+    let parameters = "linkns: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
+    try {
+        // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
+        //links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
+        filteredLinks = filterByDate(links, date, "Platnosť od", scriptName)
+        filteredLinks.sort(orderPlatnost)
+        filteredLinks.reverse()
+        message("Links: " + filteredLinks.length + "\nDátum: " + date)
+        return links[0].field(valueField)
+    } catch (error) {
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+    }
 }
 const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
     // generuje nové číslo záznamu
@@ -376,31 +387,29 @@ const setEntry = (en, inptScript) => {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        en.set(VIEW, VIEW_DEBUG)
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
-const saveEntry = (en, mementoLibrary) => {
-    let scriptName = "saveEntry 23.0.10"
+const saveEntry = (en, mementoLibrary, inptScript) => {
+    let scriptName = "saveEntry 23.0.11"
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
-    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     try {
        // message("Ukladám záznam...")
         en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         let nextNumber = en.field("number")++
-        appDB.setAttr("locked", false)
-        appDB.setAttr("locked reason", null)
         appDB.setAttr("nasledujúce číslo", nextNumber)
-        let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
-        message(msgTxt)
-        msgGen(mementoLibrary, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
-        let logTxt = ""
-        logGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
+        // let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
+        // message(msgTxt)
+        // msgGen(DB_ASSISTENT, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
+        let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
+        logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
-        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS
