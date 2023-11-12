@@ -84,7 +84,7 @@ const prepocitatCenovuPonuku = en => {
                 }
                 dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy   
                 break;
-            case "Externá ponuka":
+            case "Externá":
                 cenaCelkomBezDPH = en.field("Cena externej ponuky")
                 dopravaCelkom = 0
                 break;
