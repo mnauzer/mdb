@@ -14,7 +14,7 @@ const saveEntryCenovePonuky = en => {
 }
 
 const prepocitatCenovuPonuku = en => {
-    let scriptName ="prepocitatCenovuPonuku 23.0.03";
+    let scriptName ="prepocitatCenovuPonuku 23.0.04";
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
@@ -73,7 +73,7 @@ const prepocitatCenovuPonuku = en => {
                         en.set("Materiál hzs", materialCelkom);
                         en.set("Materiál celkom bez DPH", materialCelkom);
                     }
-                    if (en.field("+Mechanizácia")) {
+                    if (evidovat.includes("Výkaz strojov")) {
                         // spočítať mechanizácie
                         var stroje = en.field(FIELD_STROJE);
                         strojeCelkom = prepocetDielStroje(stroje);
