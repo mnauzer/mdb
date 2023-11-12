@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.08"
+    let scriptName ="btnFill 23.0.09"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -89,19 +89,19 @@ const btnFill = () => {
         msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
         
         message("nastavujem záznam...")
-        entry().set("Typ zákazky", entry().field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         let typ = en.field("Typ zákazky")
         switch (typ) {
             case "Hodinovka":
-                entry().set("Evidovať hzs", entry().field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
+                entry().set("Evidovať hzs", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
                 
                 break;
             case "Položky":
-                entry().set("Evidovať", entry().field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
+                entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
                 
                 break;
             case "Externá":
-                entry().set("Evidovať ext", entry().field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
+                entry().set("Evidovať ext", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
                 
                 break;
         
