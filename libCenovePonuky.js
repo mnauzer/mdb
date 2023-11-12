@@ -47,10 +47,10 @@ const prepocitatCenovuPonuku = en => {
         }
         
         // prepočet podľa typu cenovej ponuky
+        let evidovat = en.field("Evidovať")
         switch (typ) {
             case "Položky":
                 let diely = en.field("Diely cenovej ponuky");
-                let evidovat = en.field("Evidovať")
                 // prejsť všetky diely a spočítať práce a materiál
                 if (diely) {
                     for (var d = 0; d < diely.length; d++) {
@@ -66,7 +66,7 @@ const prepocitatCenovuPonuku = en => {
                     for (var d = 0; d < diely.length; d++) {
                         pracaCelkom += prepocetDielHZS(en, diely[d]);
                     }
-                    if (en.field("+Materiál")) {
+                    if (evidovat.includes("Výkaz materiálu")) {
                         // spočítať  materiál
                         var material = en.field("Materiál");
                         materialCelkom = polozkaMaterial(material);
