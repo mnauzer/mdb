@@ -24,15 +24,21 @@ function fltrDbByName(value, name) {
         return arr
     }
 }
-const filterByDatePlatnost = (entries, maxDate) => {
-    message("filterByDate v.0.23.04")
-    var links = []
-    for(var e = 0; e < entries.length; e++) {
-        if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
-            links.push(entries[e])
+const filterByDatePlatnost = (entries, maxDate, inptScript) => {
+    let scriptName = "filterByDatePlatnost 23.0.01"
+    let variables = ""
+    let parameters = "entries: " + entries + "\nmaxDate: " + maxDate + "\ninptScript: " + inptScript
+    try {
+        var links = []
+        for(var e = 0; e < entries.length; e++) {
+            if (entries[e].field("Platnosť od").getTime()/1000 <= maxDate.getTime()/1000) {
+                links.push(entries[e])
+            }
         }
+        return links
+    } catch (error) {
+        errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
-    return links
 }
 
 // DATE TIME FUNCTONS
@@ -163,7 +169,7 @@ const getLinkIndex = (link, remoteLinks) => {
 const getAppSeason = (season, mementoLibrary) => {
     let scriptName = "getAppSeason 23.0.05"
     let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary
+    let parameters = "season: " + season +  "\nmaxDate: " + maxDate
     if(season === undefined || season == null){
         msgGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, "season or dbName parameters are missing", variables, parameters )
         cancel()

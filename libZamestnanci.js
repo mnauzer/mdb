@@ -1,6 +1,6 @@
 
 const lastSadzba = (employee, date, inptScript) => {
-    let scriptName = "lastSadzba 23.0.04"
+    let scriptName = "lastSadzba 23.0.05"
     let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
