@@ -294,14 +294,15 @@ const getSeason = (en, mementoLibrary, inptScript) => {
 const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "lastValid 23.0.02"
+    let scriptName = "lastValid 23.0.03"
     let variables = "Links: " + links.length + "\nDátum: " + date 
-    let parameters = "linkns: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
+    let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
     try {
         // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
         //links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
         filteredLinks = filterByDate(links, date, "Platnosť od", scriptName)
-        filteredLinks.sort(orderPlatnost)
+      //  filteredLinks.sort(orderPlatnost) 
+      // TODO sort these
         filteredLinks.reverse()
         message("Links: " + filteredLinks.length + "\nDátum: " + date)
         return links[0].field(valueField)
