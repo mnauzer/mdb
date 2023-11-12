@@ -102,6 +102,8 @@ const prepocitatCenovuPonuku = en => {
         en.set("Celkom (bez DPH)", cenaCelkomBezDPH);
         en.set("DPH 20%", dph);
         en.set("Cena celkom (s DPH)", cenaSDPH);
+        let identifikator =  en.field("Klient")[0].name + ", " + en.field("Miesto realizácie")[0].name
+        en.set("Identifikátor", identifikator)
         let msgTxt = "Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€"
         message(msgTxt)
         msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
@@ -112,7 +114,7 @@ const prepocitatCenovuPonuku = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.07";
+    var scriptName ="generujZakazku 23.1.08";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     if(cp == undefined){
@@ -146,15 +148,16 @@ const generujZakazku = cp => {
             var novaZakazka = new Object()
             novaZakazka[DATE] = new Date()
             novaZakazka["Typ zákazky"] = typZakazky
+            novaZakazka["Identifikátor"] = identifikator
             novaZakazka[NUMBER] = newNumber[0]
-            novaZakazka["number"] = newNumber[1]
+            novaZakazka[NUMBER_ENTRY] = newNumber[1]
             novaZakazka["Klient"] = cp.field("Klient")[0]
             novaZakazka["Identifikátor"] = cp.field("Klient")[0].field("Nick") + ', ' + cp.field("Miesto realizácie")[0].field("Lokalita")
             novaZakazka["Miesto"] = cp.field("Miesto realizácie")[0]
             novaZakazka["Stav zákazky"] = "Čakajúca" // hardcoded
             novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky")
             novaZakazka["Diely zákazky"] = dielyZakazky.join()
-            novaZakazka["Cenová ponuka"] = cp
+            novaZakazka[FIELD_CENOVA_PONUKA] = cp
             novaZakazka[SEASON]= season
             novaZakazka[CR] = user()
             novaZakazka[CR_DATE] = new Date()
