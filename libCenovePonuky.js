@@ -202,7 +202,7 @@ const generujZakazku = cp => {
                 //message("generujVykazyPrac...")
                 //generujVykazSubdodavok(zakazka)
             }
-            cp.set("Stav cenovej ponuky", "Uzavretá")
+            cp.set("Stav cenovej ponuky", "Zákazka")
         } else if (cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]) {
             let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]
             message(msgTxt)
