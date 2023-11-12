@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.10"
+    let scriptName ="btnFill 23.0.11"
     let variables = "Záznam: " + entry().name 
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -90,20 +90,23 @@ const btnFill = () => {
         
         message("nastavujem záznam...")
         entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-        let typ = en.field("Typ zákazky")
-        switch (typ) {
-            case "Hodinovka":
-                entry().set("Evidovať hzs", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
-                evidovat =  entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať hzs"))
-                message(evidovat)
+        entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
+        let evidovat =  entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať")
+        switch (evidovat) {
+            case "Výkaz prác":
+                entry().link("Výkaz prác", entry().field(FIELD_ZAKAZKA)[0].linksFrom("Výkaz prác", "Zákazka")[0])
+                break
+            case "Stavebný denník":
+                break
+            case "Materiál":
                 break
             case "Položky":
-                entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
-                
                 break
-            case "Externá ponuka":
-                entry().set("Evidovať ext", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať ext"))
-                
+            case "Dopravu":
+                break
+            case "Stroje":
+                break
+            case "Subdodávky":
                 break
         
             default:
