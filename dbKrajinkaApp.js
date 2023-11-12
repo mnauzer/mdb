@@ -388,6 +388,20 @@ const newEntry = en => {
     }
 }
 
+const updateEntry = en => {
+    let scriptName = "updateEntry 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en 
+    message("Úprava záznamu - " + mementoLibrary);
+    try {
+        
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+    }
+}
+
 const setEntry = (en, inptScript) => {
     let scriptName = "setEntry 23.0.07"
     let mementoLibrary = lib().title
