@@ -1,6 +1,6 @@
 
 const novyVykazPrac = (zakazka, popis) => {
-    let scriptName = "novyVykazPrac 23.1.03";
+    let scriptName = "novyVykazPrac 23.1.04";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
@@ -15,15 +15,17 @@ const novyVykazPrac = (zakazka, popis) => {
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
-        novyVykaz["number"] = newNumber[1];
+        novyVykaz[NUMBER_ENTRY] = newNumber[1];
         novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = popis;
         novyVykaz["Typ výkazu"] = typVykazu;
         novyVykaz["s DPH"] = true; //harcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz["Zákazka"] = zakazka;
-        novyVykaz["Cenová ponuka"] = cp;
+        novyVykaz[FIELD_ZAKAZKA] = zakazka;
+        novyVykaz[SEASON]= season
+        novyVykaz[CR] = user()
+        novyVykaz[CR_DATE] = new Date()
 
         novyVykaz[SEASON] = season;
         vykazy.create(novyVykaz);

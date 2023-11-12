@@ -53,7 +53,7 @@ const saveEntryVykazMaterialu = en => {
 }
 
 const novyVykazMaterialu = (zakazka, popis) => {
-    let scriptName = "novyVykazMaterialu 23.1.03";
+    let scriptName = "novyVykazMaterialu 23.1.04";
     let variables = "Zákazka: " + zakazka.name + "\n"
     let parameters = "zakazka: " + zakazka + "\npopis: "+ popis
     if(zakazka === undefined ){
@@ -69,15 +69,16 @@ const novyVykazMaterialu = (zakazka, popis) => {
         // vytvoriť novú výdajku
         var novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
-        novyVykaz["number"] = newNumber[1];
-        novyVykaz["Dátum"] = zakazka.field("Dátum");
+        novyVykaz[NUMBER_ENTRY] = newNumber[1];
+        novyVykaz[DATE] = zakazka.field("Dátum");
         novyVykaz["Popis"] = popis;
         novyVykaz["s DPH"] = true; // hardcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz["Zákazka"] = zakazka;
-        novyVykaz["Cenová ponuka"] = zakazka.field("Cenová ponuka")[0];
+        novyVykaz[FIELD_ZAKAZKA] = zakazka;
         novyVykaz[SEASON] = season;
+        novyVykaz[CR] = user()
+        novyVykaz[CR_DATE] = new Date()
         lib.create(novyVykaz);
         var vydajkaMaterialu = lib.find(newNumber[0])[0];
         let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber[0]

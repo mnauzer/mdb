@@ -54,7 +54,7 @@ const saveEntryVykazStrojov = en => {
 
 
 const novyVykazStrojov = (zakazka, popis) => {
-    let scriptName = "novyVykazStrojov 23.0.03";
+    let scriptName = "novyVykazStrojov 23.0.04";
     let variables = "Zákazka: " +  zakazka.name + "\nPopis: " + popis
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
@@ -69,16 +69,17 @@ const novyVykazStrojov = (zakazka, popis) => {
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
-        novyVykaz["number"] = newNumber[1];
+        novyVykaz[NUMBER_ENTRY] = newNumber[1];
         novyVykaz[DATE] = datum;
         novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
         novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
         novyVykaz["s DPH"] = true; //harcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz["Zákazka"] = zakazka;
-        novyVykaz["Cenová ponuka"] = cp;
+        novyVykaz[FIELD_ZAKAZKA] = zakazka;
         novyVykaz[SEASON] = season;
+        novyVykaz[CR] = user()
+        novyVykaz[CR_DATE] = new Date()
         vykazy.create(novyVykaz);
         let vykazPrac = vykazy.find(newNumber[0])[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
