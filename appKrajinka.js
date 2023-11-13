@@ -511,12 +511,15 @@ const setIdentifikator = en => {
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
-        let identifikator =  en.field("Klient")[0].name + ", " + en.field("Miesto realizácie")[0].name
+var lfLibraryName = linksFrom("LibraryName", "LinkedFieldName");
+        let identifikator =  en.field("Klient")[0].name + ", " + en.field("Klient")[0].linksFrom("Miesta", "Klient")[0].name
         en.set("Identifikátor", identifikator)
     } catch (error) {
         errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
+
+
 
 // PRICE FUNCTIONS
 //
