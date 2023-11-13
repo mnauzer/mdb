@@ -3,7 +3,7 @@ const saveEntryCenovePonuky = en => {
     let scriptName = "saveEntryCenovePonuky 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     try {
         prepocitatCenovuPonuku(en)
         saveEntry(en, mementoLibrary)
@@ -36,16 +36,16 @@ const prepocitatCenovuPonuku = en => {
         var datum = new Date(en.field(DATE));
         var platnost = new Date(en.field("Platnosť do"));
         var platnost30 = new Date(moment(datum).add(en.field("Platnosť ponuky"), "Days"));
-        
+
         en.set("Platnosť do", platnost > datum ? platnost30 : platnost30);
-        
+
         // doplň adresu klienta do Krycieho listu
         var klient = en.field("Miesto realizácie")[0].field("Klient")[0];
         en.set("Klient", klient);
         if (klient) {
             en.set("Odberateľ", pullAddress(klient));
         }
-        
+
         // prepočet podľa typu cenovej ponuky
         let evidovat = en.field("Evidovať")
         switch (typ) {
@@ -58,7 +58,7 @@ const prepocitatCenovuPonuku = en => {
                     }
                 }
                   // Doprava každopádne
-                dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy   
+                dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
                 break;
                 case "Hodinovka":
                 diely = en.field("Diely cenovej ponuky hzs");
@@ -75,14 +75,14 @@ const prepocitatCenovuPonuku = en => {
                     }
                     if (evidovat.includes("Výkaz strojov")) {
                         // spočítať mechanizácie
-                        var stroje = en.field(FIELD_STROJE);
+                        var stroje = en.field(FLD_STROJE);
                         strojeCelkom = prepocetDielStroje(stroje);
                         en.set("Využitie mechanizácie", strojeCelkom);
                         en.set("Stroje celkom bez DPH", strojeCelkom);
                     }
                     cenaCelkomBezDPH = materialCelkom + strojeCelkom + pracaCelkom;
                 }
-                dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy   
+                dopravaCelkom = ponukaDoprava(en, uctoDopravy, cenaCelkomBezDPH); // cenová ponuka + spôsob účtovania dopravy
                 break;
             case "Externá":
                 cenaCelkomBezDPH = en.field("Cena externej ponuky")
@@ -114,15 +114,9 @@ const prepocitatCenovuPonuku = en => {
 }
 
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.08";
+    var scriptName ="generujZakazku 23.1.09";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
-    if(cp == undefined){
-        msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, "chýba parameter cp - cenová ponuka", variables, parameters );
-        cancel();
-        exit();
-    }
-
     try {
         var stav = cp.field("Stav cenovej ponuky");
         if (stav == "Schválená") {
@@ -157,7 +151,7 @@ const generujZakazku = cp => {
             novaZakazka["Stav zákazky"] = "Čakajúca" // hardcoded
             novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky")
             novaZakazka["Diely zákazky"] = dielyZakazky.join()
-            novaZakazka[FIELD_CENOVA_PONUKA] = cp
+            novaZakazka[FLD_CENOVA_PONUKA] = cp
             novaZakazka[SEASON]= season
             novaZakazka[CR] = user()
             novaZakazka[CR_DATE] = new Date()
@@ -166,7 +160,7 @@ const generujZakazku = cp => {
             zakazky.create(novaZakazka)
 
             // inicializácia premennej z posledného záznamu
-            var zakazka = cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]
+            var zakazka = cp.linksFrom(DB_ZAKAZKY, FLD_CENOVA_PONUKA)[0]
             let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná"
             let nextNumber = zakazka.field(NUMBER_ENTRY)
             appDB.setAttr("nasledujúce číslo", nextNumber++)
@@ -206,8 +200,8 @@ const generujZakazku = cp => {
                 //generujVykazSubdodavok(zakazka)
             }
             cp.set("Stav cenovej ponuky", "Zákazka")
-        } else if (cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]) {
-            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FIELD_CENOVA_PONUKA)[0]
+        } else if (cp.linksFrom(DB_ZAKAZKY, FLD_CENOVA_PONUKA)[0]) {
+            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(DB_ZAKAZKY, FLD_CENOVA_PONUKA)[0]
             message(msgTxt)
             msgGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
             cancel()
@@ -234,7 +228,7 @@ const generujVykazyMaterialu = zakazka => {
     let variables = "Zákazka: " + zakazka.name;
     let parameters = "zakazka: " + zakazka
     try {
-        var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+        var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
         var popis = [];
         // ak je zákazka hodinovka
         if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
@@ -291,7 +285,7 @@ const generujVykazyPrac = zakazka => {
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
-        var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+        var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
 
@@ -377,12 +371,12 @@ const generujVykazStrojov = zakazka => {
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
-        var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-        var polozky = cp.field(FIELD_STROJE);
+        var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+        var polozky = cp.field(FLD_STROJE);
         // vytvoriť nový výkaz
         var vykaz = novyVykazStrojov(zakazka);
         nalinkujPolozkyStrojov(vykaz, polozky);          // nalinkuje atribúty na položky
-        spocitajVykaz(vykaz, FIELD_STROJE);                      // výkaz , názov poľa položiek
+        spocitajVykaz(vykaz, FLD_STROJE);                      // výkaz , názov poľa položiek
         return vykaz;
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
@@ -394,11 +388,11 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
     let variables = "Výkaz : " +  vykaz.name
     let parameters = "vykaz: " +  vykaz + "\npolozky: " + polozky
     try {
-        vykaz.set(FIELD_STROJE, null);
+        vykaz.set(FLD_STROJE, null);
         for (var m = 0; m < polozky.length; m++) {
-            vykaz.link(FIELD_STROJE, polozky[m]);
-            vykaz.field(FIELD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
-            vykaz.field(FIELD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+            vykaz.link(FLD_STROJE, polozky[m]);
+            vykaz.field(FLD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
+            vykaz.field(FLD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
         }
     } catch (error) {
         errorGen(DB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
@@ -420,7 +414,7 @@ const spocitajVykaz = (doklad, field) => {
         var polozky = doklad.field(field);
         for (var p = 0; p < polozky.length; p++) {
             var mnozstvo = polozky[p].attr("množstvo z cp");
-            if (field == "Práce sadzby" || field == FIELD_STROJE) {
+            if (field == "Práce sadzby" || field == FLD_STROJE) {
                 var cena = polozky[p].attr("základná sadzba");
             } else if (field == "Práce" || field == "Materiál")
             var cena = polozky[p].attr("cena");

@@ -1,7 +1,7 @@
 
 var textVyuctovanie = "prepočítané";
 const prepocetZakazky = (contract) => {
-    var vyuctovanie = contract.field(FIELD_VYUCTOVANIE)[0];
+    var vyuctovanie = contract.field(FLD_VYUCTOVANIE)[0];
     if (!vyuctovanie) {
         message("Zákazka ešte nemá záznam vyúčtovania...\nGenerujem nové vyúčtovanie...");
         vyuctovanie = noveVyuctovanie(contract);
@@ -9,10 +9,10 @@ const prepocetZakazky = (contract) => {
     }
     message("Prepočítavám zákazku...");
 
-    var uctovanieDPH = contract.field(FIELD_UCTOVANIE_DPH);
+    var uctovanieDPH = contract.field(FLD_UCTOVANIE_DPH);
     var season = contract.field(SEASON);
     if (!season || season == 0) {
-        season = contract.field(FIELD_DATUM).getFullYear();
+        season = contract.field(FLD_DATUM).getFullYear();
         contract.set(SEASON, season);
     }
 
@@ -60,10 +60,10 @@ const prepocetZakazky = (contract) => {
             praceCelkomBezDPH += prace[0];
             if (vyuctovanie) {
                 // nastaviť status výkazov práce na Vyúčtované
-                vykazyPrac[vp].link(FIELD_VYUCTOVANIE, vyuctovanie);
+                vykazyPrac[vp].link(FLD_VYUCTOVANIE, vyuctovanie);
                 vykazyPrac[vp].set(STATUS, stavVyuctovania);
                 // záapis do vyúčtovania
-                vyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
+                vyuctovanie.set(vykazyPrac[vp].field(FLD_POPIS) + " celkom", praceCelkomBezDPH);
                 // nalinkuj výkazy prác
                 typVykazu = vykazyPrac[vp].field("Typ výkazu");
                 if (typVykazu == W_HODINOVKA) {
@@ -81,7 +81,7 @@ const prepocetZakazky = (contract) => {
         odpracovanychHodin = spocitatHodinyZevidencie(contract);
     }
     // message("Práce celkom:" + praceCelkom);
-    contract.set(FIELD_PRACE, praceCelkom);
+    contract.set(FLD_PRACE, praceCelkom);
     contract.set("txt práce", txtPrace);
     // náklady
     var mzdy = contractMzdy(contract);
@@ -132,10 +132,10 @@ const prepocetZakazky = (contract) => {
             if (vyuctovanie) {
                 // nastaviť príznak výdajok materiálu na vyúčtované
 
-                vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
+                vydajkyMaterialu[vm].link(FLD_VYUCTOVANIE, vyuctovanie);
                 vydajkyMaterialu[vm].set(STATUS, stavVyuctovania);
                 // zápis do vyúčtovania
-                vyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
+                vyuctovanie.set(vydajkyMaterialu[vm].field(FLD_POPIS) + " celkom", materialCelkomBezDPH);
                 nalinkujMaterial(vyuctovanie, vydajkyMaterialu[vm]);
             }
         }
@@ -146,7 +146,7 @@ const prepocetZakazky = (contract) => {
         contractCelkom += materialCelkom;
     }
     //message("Materiál celkom:" + materialCelkom);
-    contract.set(FIELD_MATERIAL, materialCelkom);
+    contract.set(FLD_MATERIAL, materialCelkom);
     contract.set("txt materiál", txtMaterial);
     // náklady
     contract.set("Nákup materiálu", nakupMaterialu);
@@ -191,10 +191,10 @@ const prepocetZakazky = (contract) => {
                     vykazStrojov.unlink("Vyúčtovanie", vykazStrojovVyuctovanie[l]);
                 }
             }
-            vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
+            vykazStrojov.link(FLD_VYUCTOVANIE, vyuctovanie);
             vykazStrojov.set(STATUS, stavVyuctovania);
             // zápis do vyúčtovania
-            vyuctovanie.set(vykazStrojov.field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
+            vyuctovanie.set(vykazStrojov.field(FLD_POPIS) + " celkom", strojeCelkomBezDPH);
             nalinkujStroje(vyuctovanie, vykazStrojov);
 
         }
@@ -211,7 +211,7 @@ const prepocetZakazky = (contract) => {
     contractCelkom += strojeCelkom;
 
     //message("Stroje celkom:" + strojeCelkom);
-    contract.set(FIELD_STROJE, strojeCelkom);
+    contract.set(FLD_STROJE, strojeCelkom);
     contract.set("txt stroje", txtStroje);
     // náklady
     contract.set("Náklady stroje", nakladyStroje);
@@ -276,7 +276,7 @@ const prepocetZakazky = (contract) => {
     contractDPH += dopravaDPH;
     contractCelkom += dopravaCelkom;
     //message("Doprava celkom:" + dopravaCelkom);
-    contract.set(FIELD_DOPRAVA, dopravaCelkom);
+    contract.set(FLD_DOPRAVA, dopravaCelkom);
     contract.set("txt doprava", txtDoprava);
     // náklady
     contract.set("Počet jázd", pocetJazd);
@@ -320,7 +320,7 @@ const prepocetZakazky = (contract) => {
     // PLATBY
     var zaplatene = contractPrijmy(contract);
     // CELKOM
-    var rozpocetSDPH = contract.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
+    var rozpocetSDPH = contract.field(FLD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
 
     // Message
     message(
@@ -396,7 +396,7 @@ const prepocetZakazky = (contract) => {
 
     // VYÚČTOVANIE
     if (vyuctovanie) {
-        var typ = contract.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
+        var typ = contract.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
         // NASTAVENIE POLÍ
         // časti vyúčtovania
         vyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)

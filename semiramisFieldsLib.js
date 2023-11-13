@@ -1,45 +1,45 @@
 // fields
 // spolocne
-const FIELD_CENOVA_PONUKA = "Cenová ponuka"; // link to entry
-const FIELD_ZAKAZKA = "Zákazka";
-const FIELD_VYUCTOVANIE = "Vyúčtovanie";
-const FIELD_TYP_VYKAZU = "Typ výkazu";
-const FIELD_POPIS = "Popis";
+const FLD_CENOVA_PONUKA = "Cenová ponuka"; // link to entry
+const FLD_ZAKAZKA = "Zákazka";
+const FLD_VYUCTOVANIE = "Vyúčtovanie";
+const FLD_TYP_VYKAZU = "Typ výkazu";
+const FLD_POPIS = "Popis";
 const NUMBER = "Číslo";
 // nastavenia
 const SEASON = "sezóna";
 const DBG = "debug";
-const FIELD_BACKROUND_COLOR = "background color";
+const FLD_BACKROUND_COLOR = "background color";
 const ENT_COLOR = "entry color";
 const VIEW = "Tlač";
 const STATUS = "Stav";
 //
-const FIELD_PRACE = "Práce";
-const FIELD_MATERIAL = "Materiál";
-const FIELD_STROJE = "Stroje";
-const FIELD_DOPRAVA = "Doprava";
+const FLD_PRACE = "Práce";
+const FLD_MATERIAL = "Materiál";
+const FLD_STROJE = "Stroje";
+const FLD_DOPRAVA = "Doprava";
 // diely polozky
-const FIELD_TRAVNIK = "Trávnik";
-const FIELD_VYSADBY = "Výsadby";
-const FIELD_RASTLINY = "Rastliny";
-const FIELD_ZAVLAZOVANIE = "Zavlažovanie";
-const FIELD_JAZIERKO = "Jazierko";
-const FIELD_KAMEN = "Kameň";
-const FIELD_NESTANDARDNE = "Neštandardné";
-const FIELD_SUBDODAVKY = "Subdodávky";
+const FLD_TRAVNIK = "Trávnik";
+const FLD_VYSADBY = "Výsadby";
+const FLD_RASTLINY = "Rastliny";
+const FLD_ZAVLAZOVANIE = "Zavlažovanie";
+const FLD_JAZIERKO = "Jazierko";
+const FLD_KAMEN = "Kameň";
+const FLD_NESTANDARDNE = "Neštandardné";
+const FLD_SUBDODAVKY = "Subdodávky";
 // diely hzs
-const FIELD_ZAHRADNICKE_PRACE = "Záhradnícke práce";
-const FIELD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania";
-const FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
-const FIELD_PRACE_NAVYSE = "Práce navyše";
+const FLD_ZAHRADNICKE_PRACE = "Záhradnícke práce";
+const FLD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania";
+const FLD_KONZULTACIE = "Konzultácie a poradenstvo"
+const FLD_PRACE_NAVYSE = "Práce navyše";
 const DATE= "Dátum";
 // zamestnanci
-const FIELD_ZAMESTNANCI = "Zamestnanci";
+const FLD_ZAMESTNANCI = "Zamestnanci";
 const FLD_ZAMESTNANCI = 'field("Zamestnanci")';
-const FIELD_HODINOVKA = "Hodinovka";
+const FLD_HODINOVKA = "Hodinovka";
 const FLD_HODINOVKA = 'field("Hodinovka")';
 // zakazky
-const FIELD_UCTOVANIE_DPH = "Účtovanie DPH";
+const FLD_UCTOVANIE_DPH = "Účtovanie DPH";
 
 // words
 const W_ZAKAZKA = "Zákazka";

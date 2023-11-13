@@ -1,8 +1,8 @@
 // TODO json export
 const zakazkaToJsonHZS = zakazka => {
     var result = "";
-    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
+    var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+    var vyuctovanie = zakazka.field(FLD_VYUCTOVANIE)[0];
     var f = file("/sdcard/" + zakazka.field(NUMBER) + "_file.json");
     var odberatel = zakazka.field("Klient")[0];
     f.writeLine('{"Odberateľ":{');

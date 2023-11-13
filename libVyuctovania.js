@@ -17,7 +17,7 @@ const noveVyuctovanie = zakazka => {
     var nVyuctovanie = new Object();
     // inicializácia
     var datum = new Date();
-    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+    var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
     var sezona = zakazka.field(SEASON);
     var cislo = noveCislo(sezona, DB_VYUCTOVANIA, 1, 2);
     var klient = zakazka.field("Klient")[0]
@@ -54,8 +54,8 @@ const noveVyuctovanie = zakazka => {
     nVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
     nVyuctovanie["Klient"] = klient;
     nVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
-    nVyuctovanie[FIELD_CENOVA_PONUKA] = cp;
-    nVyuctovanie[FIELD_ZAKAZKA] = zakazka;
+    nVyuctovanie[FLD_CENOVA_PONUKA] = cp;
+    nVyuctovanie[FLD_ZAKAZKA] = zakazka;
     nVyuctovanie[SEASON] = sezona;
     nVyuctovanie["Diely vyúčtovania"] = diely.join();
     // doprava
@@ -66,8 +66,8 @@ const noveVyuctovanie = zakazka => {
     vyuctovania.create(nVyuctovanie);
 
     var vyuctovanie = vyuctovania.find(cislo)[0];
-    zakazka.set(FIELD_VYUCTOVANIE, empty);
-    zakazka.link(FIELD_VYUCTOVANIE, vyuctovanie);
+    zakazka.set(FLD_VYUCTOVANIE, empty);
+    zakazka.link(FLD_VYUCTOVANIE, vyuctovanie);
     return vyuctovanie;
 }
 
@@ -75,10 +75,10 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
     var vydajkaCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vydajka.field(FIELD_POPIS);
+    var popis = vydajka.field(FLD_POPIS);
     vyuctovanie.set(popis, empty);
     // položky z výdajky do array
-    var polozkyVydajka = vydajka.field(FIELD_MATERIAL);
+    var polozkyVydajka = vydajka.field(FLD_MATERIAL);
     var typVydajky = vydajka.field("Typ výkazu");
     if (typVydajky == "Hodinovka") {
         var polozkyVyuctovanie = vyuctovanie.field(popis);
@@ -110,7 +110,7 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
 const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
-    var popis = vykazPrac.field(FIELD_POPIS);
+    var popis = vykazPrac.field(FLD_POPIS);
     // vynuluj staré položky
 
     var polozky = vyuctovanie.field(popis);
@@ -122,7 +122,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     }
     // práce navyše ošetriť inak
 
-    var polozkyVykazPrac = vykazPrac.field(FIELD_PRACE);
+    var polozkyVykazPrac = vykazPrac.field(FLD_PRACE);
     if (popis == "Práce navyše") {
         for (var m = 0; m < polozkyVykazPrac.length; m++) {
             var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
@@ -161,8 +161,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
     // message("Vyýkaz prác " + vykazPrac.title);
-    var pocitanieHodinovychSadzieb = vykazPrac.field(FIELD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-    var popis = vykazPrac.field(FIELD_POPIS);
+    var pocitanieHodinovychSadzieb = vykazPrac.field(FLD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
+    var popis = vykazPrac.field(FLD_POPIS);
     var polozky = vyuctovanie.field(popis);
     // vynuluj staré položky
     if (polozky.length > 0) {
@@ -238,10 +238,10 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
     var vykazStrojovCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vykazStrojov.field(FIELD_POPIS);
+    var popis = vykazStrojov.field(FLD_POPIS);
     vyuctovanie.set(popis, empty);
 
-    var polozkyVykaz = vykazStrojov.field(FIELD_STROJE);
+    var polozkyVykaz = vykazStrojov.field(FLD_STROJE);
     // nastav atribúty položiek vo vyúčtovaní
     var polozkyVyuctovanie = vyuctovanie.field(popis);
     for (var m = 0; m < polozkyVykaz.length; m++) {

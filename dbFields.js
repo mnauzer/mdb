@@ -1,40 +1,38 @@
 // fields
 // spolocne
-let FIELD_CENOVA_PONUKA = "Cenová ponuka" // link to entry
-let FIELD_ZAKAZKA = "Zákazka"
-let FIELD_VYUCTOVANIE = "Vyúčtovanie"
-let FIELD_TYP_VYKAZU = "Typ výkazu"
-let FIELD_POPIS = "Popis"
+let FLD_CENOVA_PONUKA = "Cenová ponuka" // link to entry
+let FLD_ZAKAZKA = "Zákazka"
+let FLD_VYUCTOVANIE = "Vyúčtovanie"
+let FLD_TYP_VYKAZU = "Typ výkazu"
+let FLD_POPIS = "Popis"
 let FLD_ZAM = "Zamestnanec"
 
 
 
 //
-let FIELD_PRACE = "Práce"
-let FIELD_MATERIAL = "Materiál"
-let FIELD_STROJE = "Stroje"
-let FIELD_DOPRAVA = "Doprava"
+let FLD_PRACE = "Práce"
+let FLD_MATERIAL = "Materiál"
+let FLD_STROJE = "Stroje"
+let FLD_DOPRAVA = "Doprava"
 // diely polozky
-let FIELD_TRAVNIK = "Trávnik"
-let FIELD_VYSADBY = "Výsadby"
-let FIELD_RASTLINY = "Rastliny"
-let FIELD_ZAVLAZOVANIE = "Zavlažovanie"
-let FIELD_JAZIERKO = "Jazierko"
-let FIELD_KAMEN = "Kameň"
-let FIELD_NESTANDARDNE = "Neštandardné"
-let FIELD_SUBDODAVKY = "Subdodávky"
+let FLD_TRAVNIK = "Trávnik"
+let FLD_VYSADBY = "Výsadby"
+let FLD_RASTLINY = "Rastliny"
+let FLD_ZAVLAZOVANIE = "Zavlažovanie"
+let FLD_JAZIERKO = "Jazierko"
+let FLD_KAMEN = "Kameň"
+let FLD_NESTANDARDNE = "Neštandardné"
+let FLD_SUBDODAVKY = "Subdodávky"
 // diely hzs
-let FIELD_ZAHRADNICKE_PRACE = "Záhradnícke práce"
-let FIELD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania"
-let FIELD_KONZULTACIE = "Konzultácie a poradenstvo"
-let FIELD_PRACE_NAVYSE = "Práce navyše"
+let FLD_ZAHRADNICKE_PRACE = "Záhradnícke práce"
+let FLD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania"
+let FLD_KONZULTACIE = "Konzultácie a poradenstvo"
+let FLD_PRACE_NAVYSE = "Práce navyše"
 // zamestnanci
-let FIELD_ZAMESTNANCI = "Zamestnanci"
-let FLD_ZAMESTNANCI = 'field("Zamestnanci")'
-let FIELD_HODINOVKA = "Hodinovka"
-let FLD_HODINOVKA = 'field("Hodinovka")'
+let FLD_ZAMESTNANCI = "Zamestnanci"
+let FLD_HODINOVKA = "Hodinovka"
 // zakazky
-let FIELD_UCTOVANIE_DPH = "Účtovanie DPH"
+let FLD_UCTOVANIE_DPH = "Účtovanie DPH"
 
 // words
 let W_ZAKAZKA = "Zákazka"

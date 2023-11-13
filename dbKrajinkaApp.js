@@ -36,7 +36,7 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
                 links.push(entries[e])
             }
         }
- 
+
         logTxt += "\nFiltrovaných záznamov: " + links.length
         logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
         return links
@@ -91,6 +91,7 @@ const roundTimeQ = time => {
 // NUMBER FUNCTIONS
 //
 const pad = (number, length) => {
+    // pridá počet núl k čislu do zadanej dĺžky
     let str = '' + number
     while (str.length < length) {
         str = '0' + str
@@ -166,7 +167,6 @@ const getLinkIndex = (link, remoteLinks) => {
     // message(index)
     return index
 }
-
 
 // KRAJINKA APP FUNCTIONS
 // získat údaje z Krajinka APP
@@ -297,7 +297,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
     let scriptName = "lastValid 23.0.07"
-    let variables = "Links: " + links.length + "\nDátum: " + date 
+    let variables = "Links: " + links.length + "\nDátum: " + date
     let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
     try {
         // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
@@ -351,7 +351,7 @@ const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
 const getSadzbaDPH = (appDB, season, inptScript) => {
       // zistí sadzby DPH v zadanej sezóne
     let scriptName = "getSadzbaDPH 23.0.02"
-    let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season 
+    let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
     let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
     if(appDB == undefined || appDB == null || season == undefined || season == null){
         msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
@@ -401,7 +401,7 @@ const updateEntry = en => {
     let scriptName = "updateEntry 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
         let season = getSeason(en, mementoLibrary, scriptName)
@@ -423,7 +423,7 @@ const setEntry = (en, inptScript) => {
     let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary +  "\ninptScript: " + inptScript
     try {
-        
+
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
@@ -506,9 +506,9 @@ const setDEBUG = en => {
 const setIdentifikator = en => {
     // nastaví pole identifikátor
     let scriptName = "setIdentifikator 23.0.02"
-    
-    let variables = "Záznam: " + en.name 
-    let parameters = "en: " + en 
+
+    let variables = "Záznam: " + en.name
+    let parameters = "en: " + en
     try {
         let identifikator =  en.field("Klient")[0].name + ", " + en.field("Miesto realizácie")[0].name
         en.set("Identifikátor", identifikator)
@@ -576,7 +576,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
     return result
 }
 
-// LOG AND ERROR 
+// LOG AND ERROR
 //
 const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
     // generátor chyby

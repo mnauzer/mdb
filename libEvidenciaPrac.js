@@ -21,10 +21,10 @@ const updateEntryEvidenciaPrac = en => {
     let scriptName = "updateEntryEvidenciaPrac 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
-        
+
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
@@ -34,7 +34,7 @@ const saveEntryEvidenciaPrac = en => {
     let scriptName = "saveEntryEvidenciaPrac 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     try {
         prepocetZaznamuEvidenciePrac(en)
         saveEntry(en, mementoLibrary)
@@ -75,7 +75,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 
 const btnFill = () => {
     let scriptName ="btnFill 23.0.31"
-    let variables = "Záznam: " + entry().name 
+    let variables = "Záznam: " + entry().name
     let parameters = "en: " + entry()
     let txtMsg = ""
     try {
@@ -85,34 +85,34 @@ const btnFill = () => {
             exit()
         }
         txtMsg = "Zákazka: " + entry().name
-        //zakazka.set("Typ zákazky", zakazka.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        //zakazka.set("Typ zákazky", zakazka.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
-        
+
         message("nastavujem záznam..." + scriptName)
-        
-        entry().set("Typ zákazky", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-        entry().set("Evidovať", entry().field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Evidovať"))
+
+        entry().set("Typ zákazky", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        entry().set("Evidovať", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
         // for(let i=0; i<evidovat.length; i++) {
         //     message(links[i])
-        //     let links = entry().field(FIELD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+        //     let links = entry().field(FLD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
         //     if (links[i] != undefined)
         //     message(links[i].name)
         // //entry().link(evidovat[i], link )
         // }
         message(evidovat)
         evidovat.forEach(element => {
-            entry().set(element, entry().field(FIELD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
+            entry().set(element, entry().field(FLD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
-    } 
+    }
 }
 
 const prepocetZaznamuEvidenciePrac = en => {
     let scriptName ="prepocetZaznamuEvidenciePrac 23.0.08";
-    let variables = "Záznam: " + en.name 
-    let parameters = "en: " + en 
+    let variables = "Záznam: " + en.name
+    let parameters = "en: " + en
     try {
         let date = en.field(DATE)
         let typ = en.field("Typ zákazky");
@@ -120,13 +120,13 @@ const prepocetZaznamuEvidenciePrac = en => {
             //TODO opraviť chybu keď nie je zadaná zákazka
             let vykaz = en.field("Výkaz prác")[0]
             if (vykaz != undefined) {
-                en.set(FIELD_ZAKAZKA, vykaz.field(FIELD_ZAKAZKA)[0]);
+                en.set(FLD_ZAKAZKA, vykaz.field(FLD_ZAKAZKA)[0]);
             } else {
                 msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
             }
         } else if (typ == "Položky") {
         }
-        let zamestnanci = en.field(FIELD_ZAMESTNANCI)
+        let zamestnanci = en.field(FLD_ZAMESTNANCI)
         let odpracovane = 0
         let mzdoveNakladyCelkom = 0
         let nakladyZamestnatec = 0
@@ -174,14 +174,14 @@ const prepocetZaznamuEvidenciePrac = en => {
                 }
             }
         }
-            
+
         //STROJE
         if (evStroje) {
             let vykazStrojov = en.field("Výkaz strojov")// hodín, hzs, cena
             // TODO: automaticky nalinkovať výkaz zo zákazky
             let vyuzitieStrojov = en.field("Využitie strojov");
             if (vyuzitieStrojov) {
-                
+
             } else {
                 message("V zázname nie su vybraté žiadne využité stroje");
             }
@@ -200,7 +200,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
-    
+
 }
 
 

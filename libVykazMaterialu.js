@@ -26,10 +26,10 @@ const updateEntryVykazMaterialu = en => {
     let scriptName = "updateEntryVykazMaterialu 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
-        
+
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
@@ -41,7 +41,7 @@ const saveEntryVykazMaterialu = en => {
     let scriptName = "saveEntryVykazMaterialu 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     try {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, mementoLibrary)
@@ -75,7 +75,7 @@ const novyVykazMaterialu = (zakazka, popis) => {
         novyVykaz["s DPH"] = true; // hardcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz[FIELD_ZAKAZKA] = zakazka;
+        novyVykaz[FLD_ZAKAZKA] = zakazka;
         novyVykaz[SEASON] = season;
         novyVykaz[CR] = user()
         novyVykaz[CR_DATE] = new Date()
@@ -95,7 +95,7 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
     let variables = "Záznam: " + vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
     let parameters = "vykaz: " + vykaz + "\nuctovatDPH: "+ uctovatDPH
     try {
-        var material = vykaz.field(FIELD_MATERIAL);
+        var material = vykaz.field(FLD_MATERIAL);
         var sumaBezDPH = 0;
         var sumaDPH = null;
         var sumaCelkom = null;

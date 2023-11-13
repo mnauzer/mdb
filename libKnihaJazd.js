@@ -26,10 +26,10 @@ const updateEntryKnihaJazd= en => {
     let scriptName = "updateEntryKnihaJazd23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
-        
+
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
@@ -41,7 +41,7 @@ const saveEntryKnihaJazd= en => {
     let scriptName = "saveEntryKnihaJazd23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     try {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, mementoLibrary)
@@ -54,8 +54,8 @@ const saveEntryKnihaJazd= en => {
 
 const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
     var jazd = zakazkaPocetJazd(zakazka);
-    var cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
-    var vyuctovanie = zakazka.field(FIELD_VYUCTOVANIE)[0];
+    var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+    var vyuctovanie = zakazka.field(FLD_VYUCTOVANIE)[0];
     var uctovanieDopravy = cp.field("Účtovanie dopravy");
     // doprava
     //message("Debug DOPRAVA " + uctovanie);
@@ -170,7 +170,7 @@ const prepocitatJazdu = jazda => {
     var trvanieStart = start[0].field("Trvanie");
     var ucelJazdy = "Neurčené";
     if (jazda.field("Zákazka")[0].field("Cenová ponuka")[0]) {
-        var uctovanie = jazda.field(FIELD_ZAKAZKA)[0].field(FIELD_CENOVA_PONUKA)[0].field("Účtovanie dopravy");
+        var uctovanie = jazda.field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Účtovanie dopravy");
     } else {
         var uctovanie = "Neúčtovať";
 

@@ -26,10 +26,10 @@ const updateEntryVykazStrojov = en => {
     let scriptName = "updateEntryVykazStrojov 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
-        
+
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
@@ -41,7 +41,7 @@ const saveEntryVykazStrojov = en => {
     let scriptName = "saveEntryVykazStrojov 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     try {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, mementoLibrary)
@@ -62,7 +62,7 @@ const novyVykazStrojov = (zakazka, popis) => {
         let season = getSeason(zakazka, DB_VYKAZY_STROJOV, scriptName);
         let vykazy = libByName(DB_VYKAZY_STROJOV);
         let appDB = getAppSeasonDB(season, DB_VYKAZY_STROJOV, scriptName);
-        let cp = zakazka.field(FIELD_CENOVA_PONUKA)[0];
+        let cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
         let newNumber = getNewNumber(appDB, season, DB_VYKAZY_STROJOV, scriptName);
@@ -71,12 +71,12 @@ const novyVykazStrojov = (zakazka, popis) => {
         novyVykaz[NUMBER] = newNumber[0];
         novyVykaz[NUMBER_ENTRY] = newNumber[1];
         novyVykaz[DATE] = datum;
-        novyVykaz["Popis"] = FIELD_STROJE;          // Jediný typ výkazu v knižnici
+        novyVykaz["Popis"] = FLD_STROJE;          // Jediný typ výkazu v knižnici
         novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
         novyVykaz["s DPH"] = true; //harcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz[FIELD_ZAKAZKA] = zakazka;
+        novyVykaz[FLD_ZAKAZKA] = zakazka;
         novyVykaz[SEASON] = season;
         novyVykaz[CR] = user()
         novyVykaz[CR_DATE] = new Date()
@@ -109,7 +109,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         if (zaznamyEvidencia) {
             for (var v = 0; v < zaznamyEvidencia.length; v++) {
                 var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
-                var stroje = vykaz.field(FIELD_STROJE);
+                var stroje = vykaz.field(FLD_STROJE);
                 if (vyuzitieStrojov) {
                     for (var i in vyuzitieStrojov) {
                         var prevadzkaMTH = 0;
@@ -150,7 +150,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         if (sDPH) {
             var sezona = vykaz.field(SEASON);
             if (!sezona || sezona == 0) {
-                sezona = vykaz.field(FIELD_DATUM).getFullYear();
+                sezona = vykaz.field(FLD_DATUM).getFullYear();
                 vykaz.set(SEASON, sezona);
             }
             var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
