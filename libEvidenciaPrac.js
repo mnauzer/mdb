@@ -74,12 +74,12 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.04"
+    let scriptName ="btnFill 23.0.05"
     let variables = "Záznam: " + entry().name
     let parameters = "en: " + entry()
     let txtMsg = ""
     try {
-        if (!entry().field("Zákazka")[0]) {
+        if (!entry().field(FLD_ZKZ)[0]) {
             message("Najprv vyber zákazku...")
             cancel()
             exit()
