@@ -506,12 +506,24 @@ const setDEBUG = en => {
 }
 const setIdentifikator = en => {
     // nastaví pole identifikátor
-    let scriptName = "setIdentifikator 23.0.02"
-
+    let scriptName = "setIdentifikator 23.0.03"
+    let libName = lib().name
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
+    let identifikator = ""
     try {
-        let identifikator =  en.field("Klient")[0].name + ", " + en.field("Klient")[0].linksFrom("Miesta", "Klient")[0].name
+        switch (libName) {
+            case LIB_MIESTA:
+                identifikator =  en.field("Klient")[0].name
+                return identifikator
+                break
+            case LIB_ZAKAZKY:
+                identifikator =  en.field("Klient")[0].name
+                return identifikator
+                break
+            default:
+                break
+        }
         en.set("Identifikátor", identifikator)
     } catch (error) {
         errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
