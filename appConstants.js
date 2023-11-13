@@ -1,8 +1,9 @@
 // libraries
 // APP
-const APP = "KRAJINKA APP"
-const APP_DB = "KRAJINKA APP DATABÁZY"
-const APP_ERROR = "APP Errors"
+const APP = "ASISTANTO"
+const APP_DB = "ASISTANTO DB"
+const APP_ERROR = "ASISTANTO Errors"
+const APP_TENATNS = "ASISTANTO Tenants"
 
 // PROJEKTY
 const LIB_CENOVE_PONUKY = "Cenové ponuky"
