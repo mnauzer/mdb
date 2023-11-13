@@ -12,6 +12,43 @@ const verziaVyuctovania = () => {
     return result;
 }
 
+
+const btnVyuctovania1 = () => {
+    let scriptName ="btnVyuctovania1 23.0.31"
+    let variables = "Záznam: " + entry().name
+    let parameters = "en: " + entry()
+    let txtMsg = ""
+    try {
+        if (!entry().field("Zákazka")[0]) {
+            message("Najprv vyber zákazku...")
+            cancel()
+            exit()
+        }
+        txtMsg = "Zákazka: " + entry().name
+        //zakazka.set("Typ zákazky", zakazka.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
+
+        message("nastavujem záznam..." + scriptName)
+
+        entry().set("Typ zákazky", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        entry().set("Evidovať", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
+        entry().set("Výkazy", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
+        let evidovat = entry().field("Evidovať")
+        // for(let i=0; i<evidovat.length; i++) {
+        //     message(links[i])
+        //     let links = entry().field(FLD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+        //     if (links[i] != undefined)
+        //     message(links[i].name)
+        // //entry().link(evidovat[i], link )
+        // }
+        message(evidovat)
+        evidovat.forEach(element => {
+            entry().set(element, entry().field(FLD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
+        })
+    } catch (error) {
+        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+    }
+}
 const noveVyuctovanie = zakazka => {
     var vyuctovania = libByName(DB_VYUCTOVANIA);
     var nVyuctovanie = new Object();
@@ -28,6 +65,7 @@ const noveVyuctovanie = zakazka => {
     var stavVyuctovania = "Prebieha";
     // inicializácia
     var empty = []; // mazacie pole
+
 
     // vyber diely zákazky podľa typu cp
     if (typ == "Hodinovka") {

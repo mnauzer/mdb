@@ -74,7 +74,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
 };
 
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.31"
+    let scriptName ="btnFill 23.0.04"
     let variables = "Záznam: " + entry().name
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -92,6 +92,7 @@ const btnFill = () => {
 
         entry().set("Typ zákazky", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
+        entry().set("Výkazy", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Výkazy"))
         let evidovat = entry().field("Evidovať")
         // for(let i=0; i<evidovat.length; i++) {
         //     message(links[i])
