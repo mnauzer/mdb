@@ -1,20 +1,23 @@
 // libraries
-// app
+// APP
 const APP = "KRAJINKA APP";
 const APP_DB = "KRAJINKA APP DATABÁZY";
 const APP_ERROR = "APP Errors
 
+// PROJEKTY
 const DB_CENOVE_PONUKY = "Cenové ponuky";
 const DB_ZAKAZKY = "Zákazky";
 const DB_VYUCTOVANIA = "Vyúčtovania";
 const DB_CENNIK_PRAC = "Cenník prác";
 const DB_SKLAD = "Sklad";
 const DB_PLAN_PRAC = "Plán prác";
-// administratíva
-const DB_VYKAZY_PRAC = "Výkaz prác";
-const DB_VYKAZY_MATERIALU = "Výkaz materiálu";
-const DB_VYKAZY_STROJOV = "Výkaz strojov";
-const DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
+const DB_VYKAZ_PRAC = "Výkaz prác";
+const DB_VYKAZ_MATERIALU = "Výkaz materiálu";
+const DB_VYKAZ_STROJOV = "Výkaz strojov";
+const DB_VYKAZ_DOPRAVY = "Výkaz dopravy";
+const DB_STAVEBNY_DENNIK = "Stavebný denník";
+
+// ADMINISTRATÍVA
 const DB_INVENTURY = "Invenúry";
 const DB_PRIJEMKY = "Príjemky";
 const DB_REZERVACIE = "Rezervácie";
@@ -22,13 +25,14 @@ const DB_OBJEDNAVKY = "Objednávky";
 const DB_DOFA = "Faktúry prijaté";
 const DB_ODFA = "Faktúry odoslané";
 
-// evidencia
+// EVIDENCIA
 const DB_POKLADNA = "Pokladňa";
 const DB_EVIDENCIA_PRAC = "Evidencia prác";
 const DB_DOCHADZKA = "Dochádzka";
 const DB_KNIHA_JAZD = "Kniha jázd";
 const DB_ZASTAVKY = "Zastávky";
-// databázy
+
+// DATABÁZY
 const DB_ZAMESTNANCI = "Zamestnanci";
 const DB_KLIENTI = "Klienti";
 const DB_DODAVATELIA = "Dodávatelia";

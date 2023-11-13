@@ -10,9 +10,9 @@ const DB_CENNIK_PRAC = "Cenník prác Semiramis";
 const DB_SKLAD = "Sklad Semiramis";
 const DB_PLAN_PRAC = "Plán prác";
 // administratíva
-const DB_VYKAZY_PRAC = "Výkaz prác Semiramis";
-const DB_VYKAZY_MATERIALU = "Výdajky Semiramis";
-const DB_VYKAZY_STROJOV = "Výkaz strojov";
+const DB_VYKAZ_PRAC = "Výkaz prác Semiramis";
+const DB_VYKAZ_MATERIALU = "Výdajky Semiramis";
+const DB_VYKAZ_STROJOV = "Výkaz strojov";
 const DB_INVENTURY = "Invenúry";
 const DB_PRIJEMKY = "Príjemky Semiramis";
 const DB_REZERVACIE = "Rezervácie";
