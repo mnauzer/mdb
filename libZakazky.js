@@ -202,7 +202,7 @@ const prepocetZakazky = (contract) => {
     }
     strojeCelkom += strojeCelkomBezDPH + strojeDPH;
     // náklady stroje
-    var koefStroje = libByName(DB_ASSISTENT).find(season)[0].field("Koeficient nákladov prevádzky strojov");
+    var koefStroje = libByName(APP).find(season)[0].field("Koeficient nákladov prevádzky strojov");
     nakladyStroje = strojeCelkomBezDPH * koefStroje;
     txtNakladyStroje = "✔...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     // globálny súčet
@@ -255,14 +255,14 @@ const prepocetZakazky = (contract) => {
     if (dopravaCelkomBezDPH > 0) {
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
         if (dopravaUctovatDPH) {
-            var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
+            var sadzbaDPH = libByName(APP).find(season)[0].field("Základná sadzba DPH") / 100;
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
         } else {
             txtDoprava = " bez DPH";
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
-        var koefVozidla = libByName(DB_ASSISTENT).find(season)[0].field("Koeficient nákladov prevádzky vozidiel");
+        var koefVozidla = libByName(APP).find(season)[0].field("Koeficient nákladov prevádzky vozidiel");
         nakladyVozidla = dopravaCelkomBezDPH * koefVozidla;
     }
     // náklady doprava

@@ -1,142 +1,143 @@
 // libraries
 // app
-let DB_ASSISTENT = "KRAJINKA APP";
-let DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
-// projekty
-let DB_CENOVE_PONUKY = "Cenové ponuky";
-let DB_ZAKAZKY = "Zákazky";
-let DB_VYUCTOVANIA = "Vyúčtovania";
-let DB_CENNIK_PRAC = "Cenník prác";
-let DB_SKLAD = "Sklad";
-let DB_PLAN_PRAC = "Plán prác";
+const APP = "KRAJINKA APP";
+const APP_DB = "KRAJINKA APP DATABÁZY";
+const APP_ERROR = "APP Errors
+
+const DB_CENOVE_PONUKY = "Cenové ponuky";
+const DB_ZAKAZKY = "Zákazky";
+const DB_VYUCTOVANIA = "Vyúčtovania";
+const DB_CENNIK_PRAC = "Cenník prác";
+const DB_SKLAD = "Sklad";
+const DB_PLAN_PRAC = "Plán prác";
 // administratíva
-let DB_VYKAZY_PRAC = "Výkaz prác";
-let DB_VYKAZY_MATERIALU = "Výkaz materiálu";
-let DB_VYKAZY_STROJOV = "Výkaz strojov";
-let DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
-let DB_INVENTURY = "Invenúry";
-let DB_PRIJEMKY = "Príjemky";
-let DB_REZERVACIE = "Rezervácie";
-let DB_OBJEDNAVKY = "Objednávky";
-let DB_DOFA = "Faktúry prijaté";
-let DB_ODFA = "Faktúry odoslané";
+const DB_VYKAZY_PRAC = "Výkaz prác";
+const DB_VYKAZY_MATERIALU = "Výkaz materiálu";
+const DB_VYKAZY_STROJOV = "Výkaz strojov";
+const DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
+const DB_INVENTURY = "Invenúry";
+const DB_PRIJEMKY = "Príjemky";
+const DB_REZERVACIE = "Rezervácie";
+const DB_OBJEDNAVKY = "Objednávky";
+const DB_DOFA = "Faktúry prijaté";
+const DB_ODFA = "Faktúry odoslané";
 
 // evidencia
-let DB_POKLADNA = "Pokladňa";
-let DB_EVIDENCIA_PRAC = "Evidencia prác";
-let DB_DOCHADZKA = "Dochádzka";
-let DB_KNIHA_JAZD = "Kniha jázd";
-let DB_ZASTAVKY = "Zastávky";
+const DB_POKLADNA = "Pokladňa";
+const DB_EVIDENCIA_PRAC = "Evidencia prác";
+const DB_DOCHADZKA = "Dochádzka";
+const DB_KNIHA_JAZD = "Kniha jázd";
+const DB_ZASTAVKY = "Zastávky";
 // databázy
-let DB_ZAMESTNANCI = "Zamestnanci";
-let DB_KLIENTI = "Klienti";
-let DB_DODAVATELIA = "Dodávatelia";
-let DB_PARTNERI = "Partneri";
-let DB_MIESTA = "Miesta";
-let DB_UCTY = "Účty";
-let DB_STROJE = "Stroje";
-let DB_VOZIDLA = "Vozidlá";
-let DB_PLANTS = "Databáza rastlín";
-let DB_RCPTS = "Príjemky";
-let DB_Z_SADZBY = "Zamestnanci Sadzby";
+const DB_ZAMESTNANCI = "Zamestnanci";
+const DB_KLIENTI = "Klienti";
+const DB_DODAVATELIA = "Dodávatelia";
+const DB_PARTNERI = "Partneri";
+const DB_MIESTA = "Miesta";
+const DB_UCTY = "Účty";
+const DB_STROJE = "Stroje";
+const DB_VOZIDLA = "Vozidlá";
+const DB_PLANTS = "Databáza rastlín";
+const DB_RCPTS = "Príjemky";
+const DB_Z_SADZBY = "Zamestnanci Sadzby";
 
 // aGroup
-let DBA_OBL = "aZáväzky";
-let DBA_SAL= "aMzdy";
-let DBA_POHLADAVKY = "aPohľadávky";
-let DBA_DOCHADZKA = "aDochádzka";
-let DBA_WORK = "aPráce";
+const DBA_OBL = "aZáväzky";
+const DBA_SAL= "aMzdy";
+const DBA_POHLADAVKY = "aPohľadávky";
+const DBA_DOCHADZKA = "aDochádzka";
+const DBA_WORK = "aPráce";
 
 // fields
 // spolocne
-let FLD_CENOVA_PONUKA = "Cenová ponuka" // link to entry
-let FLD_ZAKAZKA = "Zákazka"
-let FLD_VYUCTOVANIE = "Vyúčtovanie"
-let FLD_TYP_VYKAZU = "Typ výkazu"
-let FLD_POPIS = "Popis"
-let FLD_ZAM = "Zamestnanec"
+const FLD_CENOVA_PONUKA = "Cenová ponuka" // link to entry
+const FLD_ZAKAZKA = "Zákazka"
+const FLD_VYUCTOVANIE = "Vyúčtovanie"
+const FLD_TYP_VYKAZU = "Typ výkazu"
+const FLD_POPIS = "Popis"
+const FLD_ZAM = "Zamestnanec"
 
 
 
 //
-let FLD_PRACE = "Práce"
-let FLD_MATERIAL = "Materiál"
-let FLD_STROJE = "Stroje"
-let FLD_DOPRAVA = "Doprava"
+const FLD_PRACE = "Práce"
+const FLD_MATERIAL = "Materiál"
+const FLD_STROJE = "Stroje"
+const FLD_DOPRAVA = "Doprava"
 // diely polozky
-let FLD_TRAVNIK = "Trávnik"
-let FLD_VYSADBY = "Výsadby"
-let FLD_RASTLINY = "Rastliny"
-let FLD_ZAVLAZOVANIE = "Zavlažovanie"
-let FLD_JAZIERKO = "Jazierko"
-let FLD_KAMEN = "Kameň"
-let FLD_NESTANDARDNE = "Neštandardné"
-let FLD_SUBDODAVKY = "Subdodávky"
+const FLD_TRAVNIK = "Trávnik"
+const FLD_VYSADBY = "Výsadby"
+const FLD_RASTLINY = "Rastliny"
+const FLD_ZAVLAZOVANIE = "Zavlažovanie"
+const FLD_JAZIERKO = "Jazierko"
+const FLD_KAMEN = "Kameň"
+const FLD_NESTANDARDNE = "Neštandardné"
+const FLD_SUBDODAVKY = "Subdodávky"
 // diely hzs
-let FLD_ZAHRADNICKE_PRACE = "Záhradnícke práce"
-let FLD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania"
-let FLD_KONZULTACIE = "Konzultácie a poradenstvo"
-let FLD_PRACE_NAVYSE = "Práce navyše"
+const FLD_ZAHRADNICKE_PRACE = "Záhradnícke práce"
+const FLD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania"
+const FLD_KONZULTACIE = "Konzultácie a poradenstvo"
+const FLD_PRACE_NAVYSE = "Práce navyše"
 // zamestnanci
-let FLD_ZAMESTNANCI = "Zamestnanci"
-let FLD_HODINOVKA = "Hodinovka"
+const FLD_ZAMESTNANCI = "Zamestnanci"
+const FLD_HODINOVKA = "Hodinovka"
 // zakazky
-let FLD_UCTOVANIE_DPH = "Účtovanie DPH"
+const FLD_UCTOVANIE_DPH = "Účtovanie DPH"
 
 // words
-let W_ZAKAZKA = "Zákazka"
-let W_PRACE = "Práce"
-let W_PRACE_NAVYSE = "Práce navyše"
-let W_DOPRAVA = "Doprava"
-let W_MATERIAL = "Materiál"
-let W_STROJE = "Stroje"
-let W_HODINOVKA = "Hodinovka"
-let W_POLOZKY = "Položky"
+const W_ZAKAZKA = "Zákazka"
+const W_PRACE = "Práce"
+const W_PRACE_NAVYSE = "Práce navyše"
+const W_DOPRAVA = "Doprava"
+const W_MATERIAL = "Materiál"
+const W_STROJE = "Stroje"
+const W_HODINOVKA = "Hodinovka"
+const W_POLOZKY = "Položky"
 
 // Knižnica Faktúry prijaté
 // DB_DOFA
-let DOFA_SUP = "Dodávateľ"
-let DOFA_SUP_NUMBER = "Číslo faktúry"
-let DOFA_SUP_VS = "VS" // variabilný symbol
-let DOFA_DATE = "Dátum vystavenia"
-let DOFA_DUE_DATE = "Dátum splatnosti"
-let DOFA_PAY_DATE = "Dátum úhrady"
-let DOFA_SUM = "Suma bez DPH"
-let DOFA_SUM_DPH = "DPH"
-let DOFA_SUM_TOTAL = "Suma s DPH"
-let DOFA_PAYED = "Uhradená"
+const DOFA_SUP = "Dodávateľ"
+const DOFA_SUP_NUMBER = "Číslo faktúry"
+const DOFA_SUP_VS = "VS" // variabilný symbol
+const DOFA_DATE = "Dátum vystavenia"
+const DOFA_DUE_DATE = "Dátum splatnosti"
+const DOFA_PAY_DATE = "Dátum úhrady"
+const DOFA_SUM = "Suma bez DPH"
+const DOFA_SUM_DPH = "DPH"
+const DOFA_SUM_TOTAL = "Suma s DPH"
+const DOFA_PAYED = "Uhradená"
 
 // aZáväzky
-let A_OBL_TYPE = "Typ záväzku"
-let A_OBL_SUM = "Suma"
-let A_OBL_DUE_DATE = "Dátum splatnosti"
-let A_OBL_PAY_DATE = "Dátum úhrady"
-let A_OBL_INVC = "Faktúry prijaté"
-let A_OBL_PAYED = "Uhradené"
+const A_OBL_TYPE = "Typ záväzku"
+const A_OBL_SUM = "Suma"
+const A_OBL_DUE_DATE = "Dátum splatnosti"
+const A_OBL_PAY_DATE = "Dátum úhrady"
+const A_OBL_INVC = "Faktúry prijaté"
+const A_OBL_PAYED = "Uhradené"
 
 // Príjemky
 // DB_RCPTS
-let RCPTS_INVC = "Faktúry prijaté"
+const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
 // Pokladňa/bi
 // DB_POKLADNA
 // Polia
-let POK_POHYB = "Pohyb" //Select
-let POK_U_PREVOD = "Účel prevodu" //Select
-let POK_DOKLAD = "Doklad" //Multiple choice
-let POK_S_DPH = "s DPH" //Checklist
-let POK_SADZBA_DPH = "sadzba DPH" //Real Number
-let POK_ = "%DPH" //Real number
+const POK_POHYB = "Pohyb" //Select
+const POK_U_PREVOD = "Účel prevodu" //Select
+const POK_DOKLAD = "Doklad" //Multiple choice
+const POK_S_DPH = "s DPH" //Checklist
+const POK_SADZBA_DPH = "sadzba DPH" //Real Number
+const POK_ = "%DPH" //Real number
 
 
 // Dochádzka/Attendance
 // DB_ATTDC
-let ATTENDANCE = "Dochádzka"
-let ATTDC_ARRIVAL = "Príchod"
-let ATTDC_DEPARTURE = "Odchod"
-let ATTDC_WORKS = "Práce" // Link to Entry
-let ATTDC_EMPLOYEES = "Zamestnanci"
+const ATTENDANCE = "Dochádzka"
+const ATTDC_ARRIVAL = "Príchod"
+const ATTDC_DEPARTURE = "Odchod"
+const ATTDC_WORKS = "Práce" // Link to Entry
+const ATTDC_EMPLOYEES = "Zamestnanci"
 
 
 // # SPOLOČNÉ POLIA
@@ -161,18 +162,18 @@ const VIEW_PRINT = "Tlač"
 const VIEW_DEBUG = "Debug"
 
 // COLOR CODES
-let FIREBRICK = "#B22222";
-let CHARTREUSE = "#7FFF00";
-let MEDIUMAQUAMARINE = "#66CDAA";
+const FIREBRICK = "#B22222";
+const CHARTREUSE = "#7FFF00";
+const MEDIUMAQUAMARINE = "#66CDAA";
 
 // MEMENTO COLORS
 
-let MEM_RED = "#B22222";
-let MEM_GREEN = "#669966";
-let MEM_BLUE = "#4D66CC";
-let MEM_LIGHT_GREEN = "#CCFFCC";
-let MEM_LIGHT_YELLOW = "#FFFFCC";
-let MEM_LIGHT_BLUE = "#CCFFFF";
-let MEM_DEFAULT = "#FFFFFF";
+const MEM_RED = "#B22222";
+const MEM_GREEN = "#669966";
+const MEM_BLUE = "#4D66CC";
+const MEM_LIGHT_GREEN = "#CCFFCC";
+const MEM_LIGHT_YELLOW = "#FFFFCC";
+const MEM_LIGHT_BLUE = "#CCFFFF";
+const MEM_DEFAULT = "#FFFFFF";
 
 

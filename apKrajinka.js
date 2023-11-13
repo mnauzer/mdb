@@ -38,10 +38,10 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         }
 
         logTxt += "\nFiltrovaných záznamov: " + links.length
-        logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
+        logGen(APP, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
         return links
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -125,7 +125,7 @@ const checkDebug = season => {
         return getAppSeason(season).field("debug")
     } catch (error) {
         var variables = ""
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables)
     }
 }
 const pullAddress = klient => {
@@ -180,7 +180,7 @@ const getAppSeason = (season, mementoLibrary) => {
         exit()
     }
     try {
-        let entry = libByName(DB_ASSISTENT).find(season)[0]
+        let entry = libByName(APP).find(season)[0]
         return entry
     } catch (error) {
         errorGen(mementoLibrary, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
@@ -212,7 +212,7 @@ const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
         exit()
     }
     try {
-        let entry = libByName(DB_ASSISTENT).find(season)[0]
+        let entry = libByName(APP).find(season)[0]
         let databazy = entry.field("Databázy")
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
@@ -265,7 +265,7 @@ const findAppDB = (season, mementoLibrary, inptScript) => {
 }
 const findAppDBbyName = (season, libTitle) => {
     // get db from APP library
-    var entry = libByName(DB_ASSISTENT).find(season)[0]
+    var entry = libByName(APP).find(season)[0]
     var databazy = entry.field("Databázy")
     //message("Databáz 2: " + databazy.length)
     // var filteredDB = databazy.filter(fltrDb(libTitle))[0]
@@ -313,7 +313,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
         //return sadzby[0]
         return filteredLinks[0].field(valueField)
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
@@ -322,7 +322,7 @@ const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
     let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
     let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     if(appDB == undefined || appDB == null || season == undefined || season == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters )
+        msgGen(APP, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined", variables, parameters )
         cancel()
         exit()
     }
@@ -345,7 +345,7 @@ const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
         number[1] = lastNum
         return number
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 const getSadzbaDPH = (appDB, season, inptScript) => {
@@ -354,7 +354,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
     let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
     let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
     if(appDB == undefined || appDB == null || season == undefined || season == null){
-        msgGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
+        msgGen(APP, "dbKrajinkaApp.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
         cancel()
         exit()
     }
@@ -364,7 +364,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
         sadzbyDPH.push(appDB.field("Znížená sadzba DPH"))
         return sadzbyDPH
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -394,7 +394,7 @@ const newEntry = en => {
         }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntry = en => {
@@ -415,7 +415,7 @@ const updateEntry = en => {
         }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters);
     }
 }
 const setEntry = (en, inptScript) => {
@@ -427,7 +427,7 @@ const setEntry = (en, inptScript) => {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 const saveEntry = (en, mementoLibrary, inptScript) => {
@@ -443,12 +443,12 @@ const saveEntry = (en, mementoLibrary, inptScript) => {
         appDB.setAttr("nasledujúce číslo", nextNumber++)
         // let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
         // message(msgTxt)
-        // msgGen(DB_ASSISTENT, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
+        // msgGen(APP, "dbKrajinkaApp.j", scriptName, msgTxt, variables, parameters)
         let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
-        logGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
+        logGen(APP, "dbKrajinkaApp.js", scriptName, logTxt, variables, parameters)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS
@@ -477,7 +477,7 @@ const setID = entries => {
             entries[e].set("ID", e + 1)
         }
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 
 }
@@ -514,7 +514,7 @@ const setIdentifikator = en => {
         let identifikator =  en.field("Klient")[0].name + ", " + en.field("Miesto realizácie")[0].name
         en.set("Identifikátor", identifikator)
     } catch (error) {
-        errorGen(DB_ASSISTENT, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
+        errorGen(APP, "dbKrajinkaApp.js", scriptName, error, variables, parameters)
     }
 }
 

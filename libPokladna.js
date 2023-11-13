@@ -32,10 +32,10 @@ const updateEntryPokladna = en => {
     let scriptName = "updateEntryPokladna 23.0.01"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
-        
+
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
@@ -47,7 +47,7 @@ const saveEntryPokladna = en => {
     let scriptName = "saveEntryPokladna 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en 
+    let parameters = "en: " + en
     try {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, mementoLibrary)
@@ -62,7 +62,7 @@ const saveEntryPokladna = en => {
 const fillPopis = en => {
     let scriptName = "fillPopis 23.0.01";
     let variables = "Záznam: " +  en.name + "\n"
-    let parameters = "en: " +  en 
+    let parameters = "en: " +  en
     try {
         let popis = en.field("Popis platby");
         if (!popis) {
@@ -120,7 +120,7 @@ const fillPopis = en => {
 const prepocetPlatby = en => {
     let scriptName = "prepocetPlatby 23.0.01";
     let variables = "Záznam: " +  en.name + "\n"
-    let parameters = "en: " +  en 
+    let parameters = "en: " +  en
     try {
         let datum = en.field(DATE);
         let db = lib();
@@ -130,9 +130,9 @@ const prepocetPlatby = en => {
         // zistiť aktuálnu sadzbu dph v databáze
         if (en.field("s DPH")) {
             if (en.field("sadzba") === "základná") {
-                let sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100
+                let sadzbaDPH = libByName(APP).find(sezona)[0].field("Základná sadzba DPH") / 100
             } else if (en.field("sadzba") === "znížená") {
-                let sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Znížená sadzba DPH") / 100
+                let sadzbaDPH = libByName(APP).find(sezona)[0].field("Znížená sadzba DPH") / 100
             } else if (en.field("sadzba") === "nulová") {
                 let sadzbaDPH = 0;
             }

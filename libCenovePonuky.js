@@ -31,7 +31,7 @@ const prepocitatCenovuPonuku = en => {
         var dph = 0;
         var dopravaCelkom = 0;
         var season = getSeason(en, DB_CENOVE_PONUKY, scriptName);
-        var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
+        var sadzbaDPH = libByName(APP).find(season)[0].field("Základná sadzba DPH") / 100;
         // nastaviť splatnosť
         var datum = new Date(en.field(DATE));
         var platnost = new Date(en.field("Platnosť do"));
@@ -407,7 +407,7 @@ const spocitajVykaz = (doklad, field) => {
     let parameters = "doklad: " +  doklad + "\nfield: " + field
     try {
         var sezona = doklad.field(SEASON);
-        var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+        var sadzbaDPH = libByName(APP).find(sezona)[0].field("Základná sadzba DPH") / 100;
         var sumaBezDPH = 0;
         var sumaDPH = 0;
         var sumaCelkomSDPH = 0

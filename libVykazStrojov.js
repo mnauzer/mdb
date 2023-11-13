@@ -153,7 +153,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
                 sezona = vykaz.field(FLD_DATUM).getFullYear();
                 vykaz.set(SEASON, sezona);
             }
-            var sadzbaDPH = libByName(DB_ASSISTENT).find(sezona)[0].field("Základná sadzba DPH") / 100;
+            var sadzbaDPH = libByName(APP).find(sezona)[0].field("Základná sadzba DPH") / 100;
             sumaDPH = sumaBezDPH * sadzbaDPH;
         }
         sumaCelkom = sumaBezDPH + sumaDPH;
