@@ -96,7 +96,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     let variables = "Záznam: " +  vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
     let parameters = "vykaz: " +  vykaz + "\nuctovatDPH: " + ucnuctovatDPH
     try {
-        var zaznamyEvidencia = vykaz.linksFrom(LIB_EVIDENCIA_PRAC, "Výkaz strojov");
+        var zaznamyEvidencia = vykaz.linksFrom(LIB_EP, "Výkaz strojov");
         var sumaBezDPH = 0;
         var sumaDPH = 0;
         var sumaCelkom = 0;

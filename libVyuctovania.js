@@ -26,7 +26,7 @@ const btnVyuctovania1 = () => {
         }
         txtMsg = "Zákazka: " + entry().name
         //zakazka.set("Typ zákazky", zakazka.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-        msgGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
+        msgGen(LIB_EP, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
 
         message("nastavujem záznam..." + scriptName)
 
@@ -46,7 +46,7 @@ const btnVyuctovania1 = () => {
             entry().set(element, entry().field(FLD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
-        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
 const noveVyuctovanie = zakazka => {
@@ -222,7 +222,7 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     var hodinCelkom = 0;
     var uctovanaSadzba = 0;
     vyuctovanie.link(popis, vykazPraceSadzby);
-    var evidenciaLinks = vykazPrac.linksFrom(LIB_EVIDENCIA_PRAC, "Výkaz prác");
+    var evidenciaLinks = vykazPrac.linksFrom(LIB_EP, "Výkaz prác");
     if (pocitanieHodinovychSadzieb == "Za celú zákazku") {
         var zlava = vykazPraceSadzby.attr("zľava %");
         var zakladnaSadzba = vykazPraceSadzby.attr("základná sadzba");

@@ -19,19 +19,21 @@ const LIB_VYKAZ_DOPRAVY = "Výkaz dopravy"
 const LIB_STAVEBNY_DENNIK = "Stavebný denník"
 
 // ADMINISTRATÍVA
-const LIB_INVENTURY = "Invenúry"
-const LIB_PRIJEMKY = "Príjemky"
-const LIB_REZERVACIE = "Rezervácie"
-const LIB_OBJEDNAVKY = "Objednávky"
+const LIB_INV = "Invenúry"
+const LIB_PRJ = "Príjemky"
+const LIB_REZ = "Rezervácie"
+const LIB_OBJ = "Objednávky"
 const LIB_DOFA = "Faktúry prijaté"
 const LIB_ODFA = "Faktúry odoslané"
+const LIB_POH = "Pohľadávky"
+const LIB_ZAV = "Záväzky"
 
 // EVIDENCIA
-const LIB_POKLADNA = "Pokladňa"
-const LIB_EVIDENCIA_PRAC = "Evidencia prác"
-const LIB_DOCHADZKA = "Dochádzka"
-const LIB_KNIHA_JAZD = "Kniha jázd"
-const LIB_ZASTAVKY = "Zastávky"
+const LIB_POK = "Pokladňa"
+const LIB_EP = "Evidencia prác"
+const LIB_DOCH = "Dochádzka"
+const LIB_KJ = "Kniha jázd"
+const LIB_ZAS = "Zastávky"
 
 // DATABÁZY
 const LIB_ZAMESTNANCI = "Zamestnanci"
@@ -126,7 +128,7 @@ const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
 // Pokladňa/bi
-// LIB_POKLADNA
+// LIB_POK
 // Polia
 const POK_POHYB = "Pohyb" //Select
 const POK_U_PREVOD = "Účel prevodu" //Select

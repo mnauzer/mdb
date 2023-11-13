@@ -57,7 +57,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
             var prace = vykaz.field("Práce sadzby")[0];
             var hodinyCelkom = 0;
 
-            var evidenciaLinks = vykaz.linksFrom(LIB_EVIDENCIA_PRAC, "Výkaz prác");
+            var evidenciaLinks = vykaz.linksFrom(LIB_EP, "Výkaz prác");
             var limity = prace.field("Limity");
             var uctovanie = vykaz.field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
             // vynulovať rozpis prác
