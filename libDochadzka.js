@@ -137,7 +137,7 @@ const aSalary = (en, NEW_ENTRY) => {
     let parameters = "en: " + en + "\nNEW_ENTRY: " + NEW_ENTRY
     try {
         var salaries = libByName(DBA_SAL);
-        var employees = en.field(ATTDC_EMPLOYEES);
+        var employees = en.field(DOCH_EMPLOYEES);
         if (NEW_ENTRY) {
 
         } else {

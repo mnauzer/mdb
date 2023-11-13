@@ -25,38 +25,38 @@ const btnVyuctovania1 = () => {
             exit()
         }
         txtMsg = "Zákazka: " + entry().name
-        //zakazka.set("Typ zákazky", zakazka.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        //zakazka.set("Typ zákazky", zakazka.field(FLD_CPN)[0].field("Typ cenovej ponuky"))
         msgGen(LIB_EP, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
 
         message("nastavujem záznam..." + scriptName)
 
-        entry().set("Typ zákazky", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-        entry().set("Evidovať", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
-        entry().set("Výkazy", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
+        entry().set("Typ zákazky", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Typ cenovej ponuky"))
+        entry().set("Evidovať", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Evidovať"))
+        entry().set("Výkazy", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Evidovať"))
         let evidovat = entry().field("Evidovať")
         // for(let i=0; i<evidovat.length; i++) {
         //     message(links[i])
-        //     let links = entry().field(FLD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+        //     let links = entry().field(FLD_ZKZ)[0].linksFrom(evidovat[i], "Zákazka")
         //     if (links[i] != undefined)
         //     message(links[i].name)
         // //entry().link(evidovat[i], link )
         // }
         message(evidovat)
         evidovat.forEach(element => {
-            entry().set(element, entry().field(FLD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
+            entry().set(element, entry().field(FLD_ZKZ)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
         errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
 const noveVyuctovanie = zakazka => {
-    var vyuctovania = libByName(LIB_VYUCTOVANIA);
+    var vyuctovania = libByName(LIB_VYC);
     var nVyuctovanie = new Object();
     // inicializácia
     var datum = new Date();
-    var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+    var cp = zakazka.field(FLD_CPN)[0];
     var sezona = zakazka.field(SEASON);
-    var cislo = noveCislo(sezona, LIB_VYUCTOVANIA, 1, 2);
+    var cislo = noveCislo(sezona, LIB_VYC, 1, 2);
     var klient = zakazka.field("Klient")[0]
     var miesto = zakazka.field("Miesto")[0];
     var typ = cp.field("Typ cenovej ponuky");
@@ -92,8 +92,8 @@ const noveVyuctovanie = zakazka => {
     nVyuctovanie["Účtovanie dopravy"] = cp.field("Účtovanie dopravy");
     nVyuctovanie["Klient"] = klient;
     nVyuctovanie["Popis vyúčtovania"] = popisVyuctovania;
-    nVyuctovanie[FLD_CENOVA_PONUKA] = cp;
-    nVyuctovanie[FLD_ZAKAZKA] = zakazka;
+    nVyuctovanie[FLD_CPN] = cp;
+    nVyuctovanie[FLD_ZKZ] = zakazka;
     nVyuctovanie[SEASON] = sezona;
     nVyuctovanie["Diely vyúčtovania"] = diely.join();
     // doprava
@@ -104,8 +104,8 @@ const noveVyuctovanie = zakazka => {
     vyuctovania.create(nVyuctovanie);
 
     var vyuctovanie = vyuctovania.find(cislo)[0];
-    zakazka.set(FLD_VYUCTOVANIE, empty);
-    zakazka.link(FLD_VYUCTOVANIE, vyuctovanie);
+    zakazka.set(FLD_VYC, empty);
+    zakazka.link(FLD_VYC, vyuctovanie);
     return vyuctovanie;
 }
 
@@ -113,10 +113,10 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
     var vydajkaCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vydajka.field(FLD_POPIS);
+    var popis = vydajka.field(FLD_PPS);
     vyuctovanie.set(popis, empty);
     // položky z výdajky do array
-    var polozkyVydajka = vydajka.field(FLD_MATERIAL);
+    var polozkyVydajka = vydajka.field(FLD_MAT);
     var typVydajky = vydajka.field("Typ výkazu");
     if (typVydajky == "Hodinovka") {
         var polozkyVyuctovanie = vyuctovanie.field(popis);
@@ -148,7 +148,7 @@ const nalinkujMaterial = (vyuctovanie, vydajka) => {
 const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
-    var popis = vykazPrac.field(FLD_POPIS);
+    var popis = vykazPrac.field(FLD_PPS);
     // vynuluj staré položky
 
     var polozky = vyuctovanie.field(popis);
@@ -160,7 +160,7 @@ const nalinkujPrace = (vyuctovanie, vykazPrac) => {
     }
     // práce navyše ošetriť inak
 
-    var polozkyVykazPrac = vykazPrac.field(FLD_PRACE);
+    var polozkyVykazPrac = vykazPrac.field(FLD_PRC);
     if (popis == "Práce navyše") {
         for (var m = 0; m < polozkyVykazPrac.length; m++) {
             var mnozstvo = polozkyVykazPrac[m].attr("dodané množstvo");
@@ -199,8 +199,8 @@ const nalinkujPraceHZS = (vyuctovanie, vykazPrac) => {
     vykazPracCelkom = 0;
     // najprv vymaž staré
     // message("Vyýkaz prác " + vykazPrac.title);
-    var pocitanieHodinovychSadzieb = vykazPrac.field(FLD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
-    var popis = vykazPrac.field(FLD_POPIS);
+    var pocitanieHodinovychSadzieb = vykazPrac.field(FLD_CPN)[0].field("Počítanie hodinových sadzieb");
+    var popis = vykazPrac.field(FLD_PPS);
     var polozky = vyuctovanie.field(popis);
     // vynuluj staré položky
     if (polozky.length > 0) {
@@ -276,10 +276,10 @@ const nalinkujStroje = (vyuctovanie, vykazStrojov) => {
     var vykazStrojovCelkom = 0;
     // najprv vymaž staré
     var empty = [];
-    var popis = vykazStrojov.field(FLD_POPIS);
+    var popis = vykazStrojov.field(FLD_PPS);
     vyuctovanie.set(popis, empty);
 
-    var polozkyVykaz = vykazStrojov.field(FLD_STROJE);
+    var polozkyVykaz = vykazStrojov.field(FLD_STR);
     // nastav atribúty položiek vo vyúčtovaní
     var polozkyVyuctovanie = vyuctovanie.field(popis);
     for (var m = 0; m < polozkyVykaz.length; m++) {

@@ -18,7 +18,7 @@ const newEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -59,24 +59,24 @@ const novyVykazStrojov = (zakazka, popis) => {
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
-        let season = getSeason(zakazka, LIB_VYKAZ_STROJOV, scriptName);
-        let vykazy = libByName(LIB_VYKAZ_STROJOV);
-        let appDB = getAppSeasonDB(season, LIB_VYKAZ_STROJOV, scriptName);
-        let cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+        let season = getSeason(zakazka, LIB_VS, scriptName);
+        let vykazy = libByName(LIB_VS);
+        let appDB = getAppSeasonDB(season, LIB_VS, scriptName);
+        let cp = zakazka.field(FLD_CPN)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, LIB_VYKAZ_STROJOV, scriptName);
+        let newNumber = getNewNumber(appDB, season, LIB_VS, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
         novyVykaz[NUMBER_ENTRY] = newNumber[1];
         novyVykaz[DATE] = datum;
-        novyVykaz["Popis"] = FLD_STROJE;          // Jediný typ výkazu v knižnici
+        novyVykaz["Popis"] = FLD_STR;          // Jediný typ výkazu v knižnici
         novyVykaz["Typ výkazu"] = typVykazu;  // výkaz strojov je len pri hodinovej sadzbe
         novyVykaz["s DPH"] = true; //harcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz[FLD_ZAKAZKA] = zakazka;
+        novyVykaz[FLD_ZKZ] = zakazka;
         novyVykaz[SEASON] = season;
         novyVykaz[CR] = user()
         novyVykaz[CR_DATE] = new Date()
@@ -84,10 +84,10 @@ const novyVykazStrojov = (zakazka, popis) => {
         let vykazPrac = vykazy.find(newNumber[0])[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
-        msgGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
+        msgGen(LIB_VS, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
         return vykazPrac;
     } catch (error) {
-        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -109,7 +109,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         if (zaznamyEvidencia) {
             for (var v = 0; v < zaznamyEvidencia.length; v++) {
                 var vyuzitieStrojov = zaznamyEvidencia[v].field("Využitie strojov");
-                var stroje = vykaz.field(FLD_STROJE);
+                var stroje = vykaz.field(FLD_STR);
                 if (vyuzitieStrojov) {
                     for (var i in vyuzitieStrojov) {
                         var prevadzkaMTH = 0;
@@ -163,7 +163,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         setTlac(vykaz);
         return [sumaBezDPH, sumaDPH, sumaCelkom];
     } catch (error) {
-        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
 
     }
 }

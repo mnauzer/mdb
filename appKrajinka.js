@@ -513,11 +513,11 @@ const setIdentifikator = en => {
     let identifikator = ""
     try {
         switch (libName) {
-            case LIB_MIESTA:
+            case LIB_MIE:
                 identifikator =  en.field("Klient")[0].name
                 return identifikator
                 break
-            case LIB_ZAKAZKY:
+            case LIB_ZKZ:
                 identifikator =  en.field("Klient")[0].name
                 return identifikator
                 break

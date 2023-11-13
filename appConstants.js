@@ -6,47 +6,47 @@ const APP_ERROR = "APP_ERROR"
 const APP_TENATNS = "ASISTANTO Tenants"
 
 // PROJEKTY
-const LIB_CENOVE_PONUKY = "Cenové ponuky"
-const LIB_ZAKAZKY = "Zákazky"
-const LIB_VYUCTOVANIA = "Vyúčtovania"
-const LIB_CENNIK_PRAC = "Cenník prác"
-const LIB_SKLAD = "Sklad"
-const LIB_PLAN_PRAC = "Plán prác"
-const LIB_VYKAZ_PRAC = "Výkaz prác"
-const LIB_VYKAZ_MATERIALU = "Výkaz materiálu"
-const LIB_VYKAZ_STROJOV = "Výkaz strojov"
-const LIB_VYKAZ_DOPRAVY = "Výkaz dopravy"
-const LIB_STAVEBNY_DENNIK = "Stavebný denník"
+const LIB_CPN = "Cenové ponuky"
+const LIB_ZKZ = "Zákazky"
+const LIB_VYC = "Vyúčtovania"
+const LIB_CPR = "Cenník prác"
+const LIB_SKL = "Sklad"
+const LIB_PP = "Plán prác"
+const LIB_VP = "Výkaz prác"
+const LIB_VM = "Výkaz materiálu"
+const LIB_VS = "Výkaz strojov"
+const LIB_VD = "Výkaz dopravy"
+const LIB_SD = "Stavebný denník"
 
 // ADMINISTRATÍVA
 const LIB_INV = "Invenúry"
 const LIB_PRJ = "Príjemky"
 const LIB_REZ = "Rezervácie"
 const LIB_OBJ = "Objednávky"
-const LIB_DOFA = "Faktúry prijaté"
-const LIB_ODFA = "Faktúry odoslané"
+const LIB_FV = "Faktúry prijaté"
+const LIB_FO = "Faktúry odoslané"
 const LIB_POH = "Pohľadávky"
 const LIB_ZAV = "Záväzky"
 
 // EVIDENCIA
-const LIB_POK = "Pokladňa"
+const LIB_PKL = "Pokladňa"
 const LIB_EP = "Evidencia prác"
 const LIB_DOCH = "Dochádzka"
 const LIB_KJ = "Kniha jázd"
 const LIB_ZAS = "Zastávky"
 
 // DATABÁZY
-const LIB_ZAMESTNANCI = "Zamestnanci"
-const LIB_KLIENTI = "Klienti"
-const LIB_DODAVATELIA = "Dodávatelia"
-const LIB_PARTNERI = "Partneri"
-const LIB_MIESTA = "Miesta"
-const LIB_UCTY = "Účty"
-const LIB_STROJE = "Stroje"
-const LIB_VOZIDLA = "Vozidlá"
-const LIB_PLANTS = "Databáza rastlín"
-const LIB_RCPTS = "Príjemky"
-const LIB_Z_SADZBY = "Zamestnanci Sadzby"
+const LIB_ZAM = "Zamestnanci"
+const LIB_KLI = "Klienti"
+const LIB_DOD = "Dodávatelia"
+const LIB_PAR = "Partneri"
+const LIB_MIE = "Miesta"
+const LIB_UCT = "Účty"
+const LIB_STR = "Stroje"
+const LIB_VOZ = "Vozidlá"
+const LIB_DR = "Databáza rastlín"
+const LIB_PRM = "Príjemky"
+const LIB_ZS = "Zamestnanci Sadzby"
 
 // aGroup
 const DBA_OBL = "aZáväzky"
@@ -57,20 +57,20 @@ const DBA_WORK = "aPráce"
 
 // fields
 // spolocne
-const FLD_CENOVA_PONUKA = "Cenová ponuka" // link to entry
-const FLD_ZAKAZKA = "Zákazka"
-const FLD_VYUCTOVANIE = "Vyúčtovanie"
-const FLD_TYP_VYKAZU = "Typ výkazu"
-const FLD_POPIS = "Popis"
+const FLD_CPN = "Cenová ponuka" // link to entry
+const FLD_ZKZ = "Zákazka"
+const FLD_VYC = "Vyúčtovanie"
+const FLD_TV = "Typ výkazu"
+const FLD_PPS = "Popis"
 const FLD_ZAM = "Zamestnanec"
 
 
 
 //
-const FLD_PRACE = "Práce"
-const FLD_MATERIAL = "Materiál"
-const FLD_STROJE = "Stroje"
-const FLD_DOPRAVA = "Doprava"
+const FLD_PRC = "Práce"
+const FLD_MAT = "Materiál"
+const FLD_STR = "Stroje"
+const FLD_DPR = "Doprava"
 // diely polozky
 const FLD_TRAVNIK = "Trávnik"
 const FLD_VYSADBY = "Výsadby"
@@ -84,10 +84,10 @@ const FLD_SUBDODAVKY = "Subdodávky"
 const FLD_ZAHRADNICKE_PRACE = "Záhradnícke práce"
 const FLD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania"
 const FLD_KONZULTACIE = "Konzultácie a poradenstvo"
-const FLD_PRACE_NAVYSE = "Práce navyše"
+const FLD_PRC_NAVYSE = "Práce navyše"
 // zamestnanci
 const FLD_ZAMESTNANCI = "Zamestnanci"
-const FLD_HODINOVKA = "Hodinovka"
+const FLD_HZS = "Hodinovka"
 // zakazky
 const FLD_UCTOVANIE_DPH = "Účtovanie DPH"
 
@@ -102,17 +102,17 @@ const W_HODINOVKA = "Hodinovka"
 const W_POLOZKY = "Položky"
 
 // Knižnica Faktúry prijaté
-// LIB_DOFA
-const DOFA_SUP = "Dodávateľ"
-const DOFA_SUP_NUMBER = "Číslo faktúry"
-const DOFA_SUP_VS = "VS" // variabilný symbol
-const DOFA_DATE = "Dátum vystavenia"
-const DOFA_DUE_DATE = "Dátum splatnosti"
-const DOFA_PAY_DATE = "Dátum úhrady"
-const DOFA_SUM = "Suma bez DPH"
-const DOFA_SUM_DPH = "DPH"
-const DOFA_SUM_TOTAL = "Suma s DPH"
-const DOFA_PAYED = "Uhradená"
+// LIB_FV
+const FO_DOD = "Dodávateľ"
+const FO_DOD_NUMBER = "Číslo faktúry"
+const FO_DOD_VS = "VS" // variabilný symbol
+const FO_DATE = "Dátum vystavenia"
+const FO_DUE_DATE = "Dátum splatnosti"
+const FO_PAY_DATE = "Dátum úhrady"
+const FO_SUM = "Suma bez DPH"
+const FO_SUM_DPH = "DPH"
+const FO_SUM_TOTAL = "Suma s DPH"
+const FO_PAYED = "Uhradená"
 
 // aZáväzky
 const A_OBL_TYPE = "Typ záväzku"
@@ -123,12 +123,12 @@ const A_OBL_INVC = "Faktúry prijaté"
 const A_OBL_PAYED = "Uhradené"
 
 // Príjemky
-// LIB_RCPTS
+// LIB_PRM
 const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
 // Pokladňa/bi
-// LIB_POK
+// LIB_PKL
 // Polia
 const POK_POHYB = "Pohyb" //Select
 const POK_U_PREVOD = "Účel prevodu" //Select
@@ -140,11 +140,10 @@ const POK_ = "%DPH" //Real number
 
 // Dochádzka/Attendance
 // LIB_ATTDC
-const ATTENDANCE = "Dochádzka"
-const ATTDC_ARRIVAL = "Príchod"
-const ATTDC_DEPARTURE = "Odchod"
-const ATTDC_WORKS = "Práce" // Link to Entry
-const ATTDC_EMPLOYEES = "Zamestnanci"
+const DOCH_ARRIVAL = "Príchod"
+const DOCH_DEPARTURE = "Odchod"
+const DOCH_WORKS = "Práce" // Link to Entry
+const DOCH_EMPLOYEES = "Zamestnanci"
 
 
 // SPOLOČNÉ POLIA
@@ -155,10 +154,8 @@ const VIEW_DEBUG = "Debug"
 const STATUS = "Stav"
 const DATE = "Dátum"
 const NUMBER = "Číslo"
-
 const NICK = "Nick"
 const DBG = "debug"
-
 const SEASON = "sezóna"
 const LAST_NUM = "lastnum"
 const APP_SEASON = "Sezóna" // linked field

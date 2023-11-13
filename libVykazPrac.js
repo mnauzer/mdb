@@ -5,11 +5,11 @@ const novyVykazPrac = (zakazka, popis) => {
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
-        let season = getSeason(zakazka, LIB_VYKAZ_PRAC, scriptName);
-        let appDB = getAppSeasonDB(season, LIB_VYKAZ_PRAC, scriptName);
-        let newNumber = getNewNumber(appDB, season, LIB_VYKAZ_PRAC, scriptName);
-        let vykazy = libByName(LIB_VYKAZ_PRAC);
-        let cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+        let season = getSeason(zakazka, LIB_VP, scriptName);
+        let appDB = getAppSeasonDB(season, LIB_VP, scriptName);
+        let newNumber = getNewNumber(appDB, season, LIB_VP, scriptName);
+        let vykazy = libByName(LIB_VP);
+        let cp = zakazka.field(FLD_CPN)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
         // vytvoriť novú výdajku
@@ -22,7 +22,7 @@ const novyVykazPrac = (zakazka, popis) => {
         novyVykaz["s DPH"] = true; //harcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz[FLD_ZAKAZKA] = zakazka;
+        novyVykaz[FLD_ZKZ] = zakazka;
         novyVykaz[SEASON]= season
         novyVykaz[CR] = user()
         novyVykaz[CR_DATE] = new Date()
@@ -32,10 +32,10 @@ const novyVykazPrac = (zakazka, popis) => {
         let vykazPrac = vykazy.find(newNumber[0])[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
-        msgGen(LIB_VYKAZ_PRAC, "libVykazPrac.js", scriptName, msgTxt, variables, parameters )
+        msgGen(LIB_VP, "libVykazPrac.js", scriptName, msgTxt, variables, parameters )
         return vykazPrac;
     } catch (error) {
-        errorGen(LIB_VYKAZ_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -49,7 +49,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         var sumaBezDPH = 0;
         var sumaDPH = null;
         var sumaCelkom = null;
-        var popis = vykaz.field(FLD_POPIS);
+        var popis = vykaz.field(FLD_PPS);
         if (uctovatDPH) { vykaz.set("s DPH", uctovatDPH) };
         var sDPH = vykaz.field("s DPH");
 
@@ -59,7 +59,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
 
             var evidenciaLinks = vykaz.linksFrom(LIB_EP, "Výkaz prác");
             var limity = prace.field("Limity");
-            var uctovanie = vykaz.field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Počítanie hodinových sadzieb");
+            var uctovanie = vykaz.field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Počítanie hodinových sadzieb");
             // vynulovať rozpis prác
             var empty = [];
             vykaz.set("Rozpis", empty);
@@ -102,7 +102,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                             setTlac(vykaz.field("Rozpis")[el]);
                         }
                         // zistiť zľavu podľa počtu odpracovaných hodín
-                        var sadzba = vykaz.field(FLD_CENOVA_PONUKA)[0].field(popis)[0].attr("sadzba");
+                        var sadzba = vykaz.field(FLD_CPN)[0].field(popis)[0].attr("sadzba");
                         var zlava = null;
                         var zakladnaSadzba = null;
                         if (limity) {
@@ -162,7 +162,7 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         vykaz.set("Suma s DPH", sumaCelkom);
         return [sumaBezDPH, sumaDPH]
     } catch (error) {
-        errorGen(LIB_VYKAZ_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
 }
 }
 
@@ -185,7 +185,7 @@ const newEntryVykazPrac = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -200,7 +200,7 @@ const updateEntryVykazPrac = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -215,6 +215,6 @@ const saveEntryVykazPrac = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_PRAC, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
     }
 }

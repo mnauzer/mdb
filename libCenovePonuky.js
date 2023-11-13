@@ -9,7 +9,7 @@ const saveEntryCenovePonuky = en => {
         saveEntry(en, mementoLibrary)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -30,7 +30,7 @@ const prepocitatCenovuPonuku = en => {
         var cenaSDPH = 0;
         var dph = 0;
         var dopravaCelkom = 0;
-        var season = getSeason(en, LIB_CENOVE_PONUKY, scriptName);
+        var season = getSeason(en, LIB_CPN, scriptName);
         var sadzbaDPH = libByName(APP).find(season)[0].field("Základná sadzba DPH") / 100;
         // nastaviť splatnosť
         var datum = new Date(en.field(DATE));
@@ -75,7 +75,7 @@ const prepocitatCenovuPonuku = en => {
                     }
                     if (evidovat.includes("Výkaz strojov")) {
                         // spočítať mechanizácie
-                        var stroje = en.field(FLD_STROJE);
+                        var stroje = en.field(FLD_STR);
                         strojeCelkom = prepocetDielStroje(stroje);
                         en.set("Využitie mechanizácie", strojeCelkom);
                         en.set("Stroje celkom bez DPH", strojeCelkom);
@@ -106,10 +106,10 @@ const prepocitatCenovuPonuku = en => {
         en.set("Identifikátor", identifikator)
         let msgTxt = "Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€"
         message(msgTxt)
-        msgGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+        msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -121,10 +121,10 @@ const generujZakazku = cp => {
         var stav = cp.field("Stav cenovej ponuky");
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
-            let zakazky = libByName(LIB_ZAKAZKY);
-            let season = getSeason(en, LIB_CENOVE_PONUKY, scriptName)
+            let zakazky = libByName(LIB_ZKZ);
+            let season = getSeason(en, LIB_CPN, scriptName)
             let appDB = getAppSeasonDB(season, zakazky.title, scriptName);
-            let newNumber = getNewNumber(appDB, season, LIB_CENOVE_PONUKY, scriptName);
+            let newNumber = getNewNumber(appDB, season, LIB_CPN, scriptName);
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
@@ -151,7 +151,7 @@ const generujZakazku = cp => {
             novaZakazka["Stav zákazky"] = "Čakajúca" // hardcoded
             novaZakazka["Názov zákazky"] = cp.field("Popis cenovej ponuky")
             novaZakazka["Diely zákazky"] = dielyZakazky.join()
-            novaZakazka[FLD_CENOVA_PONUKA] = cp
+            novaZakazka[FLD_CPN] = cp
             novaZakazka[SEASON]= season
             novaZakazka[CR] = user()
             novaZakazka[CR_DATE] = new Date()
@@ -160,13 +160,13 @@ const generujZakazku = cp => {
             zakazky.create(novaZakazka)
 
             // inicializácia premennej z posledného záznamu
-            var zakazka = cp.linksFrom(LIB_ZAKAZKY, FLD_CENOVA_PONUKA)[0]
+            var zakazka = cp.linksFrom(LIB_ZKZ, FLD_CPN)[0]
             let msgTxt = "Zákazka č." + zakazka.field(NUMBER) + " bola vygenerovaná"
             let nextNumber = zakazka.field(NUMBER_ENTRY)
             appDB.setAttr("nasledujúce číslo", nextNumber++)
 
             message(msgTxt)
-            msgGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
 
             // generovanie výkazov
             let evidovat = cp.field("Evidovať")
@@ -200,21 +200,21 @@ const generujZakazku = cp => {
                 //generujVykazSubdodavok(zakazka)
             }
             cp.set("Stav cenovej ponuky", "Zákazka")
-        } else if (cp.linksFrom(LIB_ZAKAZKY, FLD_CENOVA_PONUKA)[0]) {
-            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(LIB_ZAKAZKY, FLD_CENOVA_PONUKA)[0]
+        } else if (cp.linksFrom(LIB_ZKZ, FLD_CPN)[0]) {
+            let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(LIB_ZKZ, FLD_CPN)[0]
             message(msgTxt)
-            msgGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
             cancel()
             exit()
         } else {
             let msgTxt = "Cenová ponuka musí byť schválená"
-            msgGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
             message(msgTxt)
             cancel()
             exit()
         }
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters)
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters)
         cancel()
         exit()
     }
@@ -228,7 +228,7 @@ const generujVykazyMaterialu = zakazka => {
     let variables = "Zákazka: " + zakazka.name;
     let parameters = "zakazka: " + zakazka
     try {
-        var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+        var cp = zakazka.field(FLD_CPN)[0];
         var popis = [];
         // ak je zákazka hodinovka
         if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
@@ -258,7 +258,7 @@ const generujVykazyMaterialu = zakazka => {
         }
         return vydajka;
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 const linkItems = (vydajkaMaterialu, polozky) => {
@@ -273,7 +273,7 @@ const linkItems = (vydajkaMaterialu, polozky) => {
             vydajkaMaterialu.field("Materiál")[p].setAttr("cena", polozky[p].attr("cena"));
         }
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -285,7 +285,7 @@ const generujVykazyPrac = zakazka => {
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
-        var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
+        var cp = zakazka.field(FLD_CPN)[0];
         var typ = cp.field("Typ cenovej ponuky");
         var popis = [];
 
@@ -332,7 +332,7 @@ const generujVykazyPrac = zakazka => {
         }
         return vykazPrac; //suma
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
@@ -347,7 +347,7 @@ const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
             vykazPrac.field("Práce")[p].setAttr("cena", polozky[p].attr("cena"));
         }
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
@@ -362,7 +362,7 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
             vykazPrac.field("Práce sadzby")[p].setAttr("základná sadzba", polozky[p].attr("sadzba"));
         }
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -371,15 +371,15 @@ const generujVykazStrojov = zakazka => {
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
-        var cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
-        var polozky = cp.field(FLD_STROJE);
+        var cp = zakazka.field(FLD_CPN)[0];
+        var polozky = cp.field(FLD_STR);
         // vytvoriť nový výkaz
         var vykaz = novyVykazStrojov(zakazka);
         nalinkujPolozkyStrojov(vykaz, polozky);          // nalinkuje atribúty na položky
-        spocitajVykaz(vykaz, FLD_STROJE);                      // výkaz , názov poľa položiek
+        spocitajVykaz(vykaz, FLD_STR);                      // výkaz , názov poľa položiek
         return vykaz;
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -388,14 +388,14 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
     let variables = "Výkaz : " +  vykaz.name
     let parameters = "vykaz: " +  vykaz + "\npolozky: " + polozky
     try {
-        vykaz.set(FLD_STROJE, null);
+        vykaz.set(FLD_STR, null);
         for (var m = 0; m < polozky.length; m++) {
-            vykaz.link(FLD_STROJE, polozky[m]);
-            vykaz.field(FLD_STROJE)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
-            vykaz.field(FLD_STROJE)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
+            vykaz.link(FLD_STR, polozky[m]);
+            vykaz.field(FLD_STR)[m].setAttr("množstvo z cp", polozky[m].attr("odhadovaný počet mth"));
+            vykaz.field(FLD_STR)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
         }
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -414,7 +414,7 @@ const spocitajVykaz = (doklad, field) => {
         var polozky = doklad.field(field);
         for (var p = 0; p < polozky.length; p++) {
             var mnozstvo = polozky[p].attr("množstvo z cp");
-            if (field == "Práce sadzby" || field == FLD_STROJE) {
+            if (field == "Práce sadzby" || field == FLD_STR) {
                 var cena = polozky[p].attr("základná sadzba");
             } else if (field == "Práce" || field == "Materiál")
             var cena = polozky[p].attr("cena");
@@ -428,7 +428,7 @@ const spocitajVykaz = (doklad, field) => {
         doklad.set("CP Suma s DPH", sumaCelkomSDPH)
 
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 }
 //
@@ -468,7 +468,7 @@ const prepocetDielPolozky = (cp, diel) => {
         cp.set(diel, dielCelkom);
         return dielCelkom;
     } catch (error) {
-        errorGen(LIB_CENOVE_PONUKY, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
     }
 };
 

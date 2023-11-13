@@ -18,7 +18,7 @@ const newEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -62,10 +62,10 @@ const novyVykazMaterialu = (zakazka, popis) => {
         exit();
     }
     try {
-        var lib = libByName(LIB_VYKAZ_MATERIALU);
-        var season = getSeason(zakazka, LIB_VYKAZ_MATERIALU, scriptName)
-        var appDB = getAppSeasonDB(season, LIB_VYKAZ_MATERIALU, scriptName);
-        var newNumber = getNewNumber(appDB, season, LIB_VYKAZ_MATERIALU, scriptName);
+        var lib = libByName(LIB_VM);
+        var season = getSeason(zakazka, LIB_VM, scriptName)
+        var appDB = getAppSeasonDB(season, LIB_VM, scriptName);
+        var newNumber = getNewNumber(appDB, season, LIB_VM, scriptName);
         // vytvoriť novú výdajku
         var novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
@@ -75,7 +75,7 @@ const novyVykazMaterialu = (zakazka, popis) => {
         novyVykaz["s DPH"] = true; // hardcoded
         novyVykaz["Ceny počítať"] = "Z cenovej ponuky";
         novyVykaz["Vydané"] = "Zákazka";
-        novyVykaz[FLD_ZAKAZKA] = zakazka;
+        novyVykaz[FLD_ZKZ] = zakazka;
         novyVykaz[SEASON] = season;
         novyVykaz[CR] = user()
         novyVykaz[CR_DATE] = new Date()
@@ -83,10 +83,10 @@ const novyVykazMaterialu = (zakazka, popis) => {
         var vydajkaMaterialu = lib.find(newNumber[0])[0];
         let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber[0]
         message(msgTxt)
-        msgGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
+        msgGen(LIB_VM, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
         return vydajkaMaterialu;
     } catch (error) {
-        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -95,7 +95,7 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
     let variables = "Záznam: " + vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
     let parameters = "vykaz: " + vykaz + "\nuctovatDPH: "+ uctovatDPH
     try {
-        var material = vykaz.field(FLD_MATERIAL);
+        var material = vykaz.field(FLD_MAT);
         var sumaBezDPH = 0;
         var sumaDPH = null;
         var sumaCelkom = null;
@@ -129,7 +129,7 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
         }
         return [sumaBezDPH, sumaDPH];
     } catch (error) {
-        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
 
 }

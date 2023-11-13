@@ -489,7 +489,7 @@ const contractMaterialRozdielDPH = vykaz => {
 };
 
 const contractPrijmy = (contract, sDPH) => {
-    var links = contract.linksFrom(DB_POKLADNA, "Zákazka");
+    var links = contract.linksFrom(DB_PKLLADNA, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Príjem bez DPH") + links[p].field("DPH+"));
@@ -498,7 +498,7 @@ const contractPrijmy = (contract, sDPH) => {
 };
 
 const contractVydavky = (contract, sDPH, vyuctovanie) => {
-    var vydavkyLinks = contract.linksFrom(DB_POKLADNA, "Zákazka")
+    var vydavkyLinks = contract.linksFrom(DB_PKLLADNA, "Zákazka")
     var vydavkyBezDPH = 0;
     var vydavkyDPH = 0;
     var vydavkyCelkom = 0;

@@ -85,25 +85,25 @@ const btnFill = () => {
             exit()
         }
         txtMsg = "Zákazka: " + entry().name
-        //zakazka.set("Typ zákazky", zakazka.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
+        //zakazka.set("Typ zákazky", zakazka.field(FLD_CPN)[0].field("Typ cenovej ponuky"))
         msgGen(LIB_EP, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
 
         message("nastavujem záznam..." + scriptName)
 
-        entry().set("Typ zákazky", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-        entry().set("Evidovať", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Evidovať"))
-        entry().set("Výkazy", entry().field(FLD_ZAKAZKA)[0].field(FLD_CENOVA_PONUKA)[0].field("Výkazy"))
+        entry().set("Typ zákazky", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Typ cenovej ponuky"))
+        entry().set("Evidovať", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Evidovať"))
+        entry().set("Výkazy", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Výkazy"))
         let evidovat = entry().field("Evidovať")
         // for(let i=0; i<evidovat.length; i++) {
         //     message(links[i])
-        //     let links = entry().field(FLD_ZAKAZKA)[0].linksFrom(evidovat[i], "Zákazka")
+        //     let links = entry().field(FLD_ZKZ)[0].linksFrom(evidovat[i], "Zákazka")
         //     if (links[i] != undefined)
         //     message(links[i].name)
         // //entry().link(evidovat[i], link )
         // }
         message(evidovat)
         evidovat.forEach(element => {
-            entry().set(element, entry().field(FLD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
+            entry().set(element, entry().field(FLD_ZKZ)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
         errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
@@ -121,7 +121,7 @@ const prepocetZaznamuEvidenciePrac = en => {
             //TODO opraviť chybu keď nie je zadaná zákazka
             let vykaz = en.field("Výkaz prác")[0]
             if (vykaz != undefined) {
-                en.set(FLD_ZAKAZKA, vykaz.field(FLD_ZAKAZKA)[0]);
+                en.set(FLD_ZKZ, vykaz.field(FLD_ZKZ)[0]);
             } else {
                 msgGen(LIB_EP, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
             }
@@ -138,7 +138,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
 
-            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_Z_SADZBY, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
+            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_ZS, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
             zamestnanci[z].setAttr("hodinovka", hodinovka);
             odpracovane += trvanie;
             nakladyZamestnatec = trvanie * hodinovka;
