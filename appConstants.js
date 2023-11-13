@@ -1,56 +1,56 @@
 // libraries
 // APP
-const APP = "KRAJINKA APP";
-const APP_DB = "KRAJINKA APP DATABÁZY";
-const APP_ERROR = "APP Errors
+const APP = "KRAJINKA APP"
+const APP_DB = "KRAJINKA APP DATABÁZY"
+const APP_ERROR = "APP Errors"
 
 // PROJEKTY
-const LIB_CENOVE_PONUKY = "Cenové ponuky";
-const LIB_ZAKAZKY = "Zákazky";
-const LIB_VYUCTOVANIA = "Vyúčtovania";
-const LIB_CENNIK_PRAC = "Cenník prác";
-const LIB_SKLAD = "Sklad";
-const LIB_PLAN_PRAC = "Plán prác";
-const LIB_VYKAZ_PRAC = "Výkaz prác";
-const LIB_VYKAZ_MATERIALU = "Výkaz materiálu";
-const LIB_VYKAZ_STROJOV = "Výkaz strojov";
-const LIB_VYKAZ_DOPRAVY = "Výkaz dopravy";
-const LIB_STAVEBNY_DENNIK = "Stavebný denník";
+const LIB_CENOVE_PONUKY = "Cenové ponuky"
+const LIB_ZAKAZKY = "Zákazky"
+const LIB_VYUCTOVANIA = "Vyúčtovania"
+const LIB_CENNIK_PRAC = "Cenník prác"
+const LIB_SKLAD = "Sklad"
+const LIB_PLAN_PRAC = "Plán prác"
+const LIB_VYKAZ_PRAC = "Výkaz prác"
+const LIB_VYKAZ_MATERIALU = "Výkaz materiálu"
+const LIB_VYKAZ_STROJOV = "Výkaz strojov"
+const LIB_VYKAZ_DOPRAVY = "Výkaz dopravy"
+const LIB_STAVEBNY_DENNIK = "Stavebný denník"
 
 // ADMINISTRATÍVA
-const LIB_INVENTURY = "Invenúry";
-const LIB_PRIJEMKY = "Príjemky";
-const LIB_REZERVACIE = "Rezervácie";
-const LIB_OBJEDNAVKY = "Objednávky";
-const LIB_DOFA = "Faktúry prijaté";
-const LIB_ODFA = "Faktúry odoslané";
+const LIB_INVENTURY = "Invenúry"
+const LIB_PRIJEMKY = "Príjemky"
+const LIB_REZERVACIE = "Rezervácie"
+const LIB_OBJEDNAVKY = "Objednávky"
+const LIB_DOFA = "Faktúry prijaté"
+const LIB_ODFA = "Faktúry odoslané"
 
 // EVIDENCIA
-const LIB_POKLADNA = "Pokladňa";
-const LIB_EVIDENCIA_PRAC = "Evidencia prác";
-const LIB_DOCHADZKA = "Dochádzka";
-const LIB_KNIHA_JAZD = "Kniha jázd";
-const LIB_ZASTAVKY = "Zastávky";
+const LIB_POKLADNA = "Pokladňa"
+const LIB_EVIDENCIA_PRAC = "Evidencia prác"
+const LIB_DOCHADZKA = "Dochádzka"
+const LIB_KNIHA_JAZD = "Kniha jázd"
+const LIB_ZASTAVKY = "Zastávky"
 
 // DATABÁZY
-const LIB_ZAMESTNANCI = "Zamestnanci";
-const LIB_KLIENTI = "Klienti";
-const LIB_DODAVATELIA = "Dodávatelia";
-const LIB_PARTNERI = "Partneri";
-const LIB_MIESTA = "Miesta";
-const LIB_UCTY = "Účty";
-const LIB_STROJE = "Stroje";
-const LIB_VOZIDLA = "Vozidlá";
-const LIB_PLANTS = "Databáza rastlín";
-const LIB_RCPTS = "Príjemky";
-const LIB_Z_SADZBY = "Zamestnanci Sadzby";
+const LIB_ZAMESTNANCI = "Zamestnanci"
+const LIB_KLIENTI = "Klienti"
+const LIB_DODAVATELIA = "Dodávatelia"
+const LIB_PARTNERI = "Partneri"
+const LIB_MIESTA = "Miesta"
+const LIB_UCTY = "Účty"
+const LIB_STROJE = "Stroje"
+const LIB_VOZIDLA = "Vozidlá"
+const LIB_PLANTS = "Databáza rastlín"
+const LIB_RCPTS = "Príjemky"
+const LIB_Z_SADZBY = "Zamestnanci Sadzby"
 
 // aGroup
-const DBA_OBL = "aZáväzky";
-const DBA_SAL= "aMzdy";
-const DBA_POHLADAVKY = "aPohľadávky";
-const DBA_DOCHADZKA = "aDochádzka";
-const DBA_WORK = "aPráce";
+const DBA_OBL = "aZáväzky"
+const DBA_SAL= "aMzdy"
+const DBA_POHLADAVKY = "aPohľadávky"
+const DBA_DOCHADZKA = "aDochádzka"
+const DBA_WORK = "aPráce"
 
 // fields
 // spolocne
@@ -168,18 +168,18 @@ const ENT_COLOR = "farba záznamu"
 const BKG_COLOR = "farba pozadia"
 
 // COLOR CODES
-const FIREBRICK = "#B22222";
-const CHARTREUSE = "#7FFF00";
-const MEDIUMAQUAMARINE = "#66CDAA";
+const FIREBRICK = "#B22222"
+const CHARTREUSE = "#7FFF00"
+const MEDIUMAQUAMARINE = "#66CDAA"
 
 // MEMENTO COLORS
 
-const MEM_RED = "#B22222";
-const MEM_GREEN = "#669966";
-const MEM_BLUE = "#4D66CC";
-const MEM_LIGHT_GREEN = "#CCFFCC";
-const MEM_LIGHT_YELLOW = "#FFFFCC";
-const MEM_LIGHT_BLUE = "#CCFFFF";
-const MEM_DEFAULT = "#FFFFFF";
+const MEM_RED = "#B22222"
+const MEM_GREEN = "#669966"
+const MEM_BLUE = "#4D66CC"
+const MEM_LIGHT_GREEN = "#CCFFCC"
+const MEM_LIGHT_YELLOW = "#FFFFCC"
+const MEM_LIGHT_BLUE = "#CCFFFF"
+const MEM_DEFAULT = "#FFFFFF"
 
 
