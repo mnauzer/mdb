@@ -140,7 +140,6 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
                 prace[p].setAttr("cena", cena);
                 prace[p].setAttr("cena celkom", cenaCelkom);
                 sumaBezDPH += cenaCelkom;
-                setTlac(prace[p]);
             }
             var attrMJ = "cena";
         } else {

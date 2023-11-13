@@ -404,6 +404,7 @@ const updateEntry = en => {
     let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
+        en.set(VIEW, VIEW_EDIT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         if (appDB){
