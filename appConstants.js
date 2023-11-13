@@ -2,7 +2,7 @@
 // APP
 const APP = "ASISTANTO"
 const APP_DB = "ASISTANTO DB"
-const APP_ERROR = "APP_ERROR"
+const APP_ERROR = "ASISTANTO Errors"
 const APP_TENATNS = "ASISTANTO Tenants"
 
 // PROJEKTY
