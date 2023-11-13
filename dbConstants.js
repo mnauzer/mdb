@@ -1,3 +1,52 @@
+// libraries
+// app
+let DB_ASSISTENT = "KRAJINKA APP";
+let DB_ASSISTENT_DATABAZY = "KRAJINKA APP DATABÁZY";
+// projekty
+let DB_CENOVE_PONUKY = "Cenové ponuky";
+let DB_ZAKAZKY = "Zákazky";
+let DB_VYUCTOVANIA = "Vyúčtovania";
+let DB_CENNIK_PRAC = "Cenník prác";
+let DB_SKLAD = "Sklad";
+let DB_PLAN_PRAC = "Plán prác";
+// administratíva
+let DB_VYKAZY_PRAC = "Výkaz prác";
+let DB_VYKAZY_MATERIALU = "Výkaz materiálu";
+let DB_VYKAZY_STROJOV = "Výkaz strojov";
+let DB_VYKAZY_DOPRAVY = "Výkaz dopravy";
+let DB_INVENTURY = "Invenúry";
+let DB_PRIJEMKY = "Príjemky";
+let DB_REZERVACIE = "Rezervácie";
+let DB_OBJEDNAVKY = "Objednávky";
+let DB_DOFA = "Faktúry prijaté";
+let DB_ODFA = "Faktúry odoslané";
+
+// evidencia
+let DB_POKLADNA = "Pokladňa";
+let DB_EVIDENCIA_PRAC = "Evidencia prác";
+let DB_DOCHADZKA = "Dochádzka";
+let DB_KNIHA_JAZD = "Kniha jázd";
+let DB_ZASTAVKY = "Zastávky";
+// databázy
+let DB_ZAMESTNANCI = "Zamestnanci";
+let DB_KLIENTI = "Klienti";
+let DB_DODAVATELIA = "Dodávatelia";
+let DB_PARTNERI = "Partneri";
+let DB_MIESTA = "Miesta";
+let DB_UCTY = "Účty";
+let DB_STROJE = "Stroje";
+let DB_VOZIDLA = "Vozidlá";
+let DB_PLANTS = "Databáza rastlín";
+let DB_RCPTS = "Príjemky";
+let DB_Z_SADZBY = "Zamestnanci Sadzby";
+
+// aGroup
+let DBA_OBL = "aZáväzky";
+let DBA_SAL= "aMzdy";
+let DBA_POHLADAVKY = "aPohľadávky";
+let DBA_DOCHADZKA = "aDochádzka";
+let DBA_WORK = "aPráce";
+
 // fields
 // spolocne
 let FLD_CENOVA_PONUKA = "Cenová ponuka" // link to entry
@@ -110,5 +159,20 @@ const BKG_COLOR = "farba pozadia"
 const VIEW_EDIT = "Editácia"
 const VIEW_PRINT = "Tlač"
 const VIEW_DEBUG = "Debug"
+
+// COLOR CODES
+let FIREBRICK = "#B22222";
+let CHARTREUSE = "#7FFF00";
+let MEDIUMAQUAMARINE = "#66CDAA";
+
+// MEMENTO COLORS
+
+let MEM_RED = "#B22222";
+let MEM_GREEN = "#669966";
+let MEM_BLUE = "#4D66CC";
+let MEM_LIGHT_GREEN = "#CCFFCC";
+let MEM_LIGHT_YELLOW = "#FFFFCC";
+let MEM_LIGHT_BLUE = "#CCFFFF";
+let MEM_DEFAULT = "#FFFFFF";
 
 
