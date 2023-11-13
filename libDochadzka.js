@@ -18,7 +18,7 @@ const newEntryDochadzka = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryDochadzka = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryDochadzka = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -77,7 +77,7 @@ const prepocitatZaznamDochadzky = en => {
             for (let z = 0; z < employees.length; z++) {
                 let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, scriptName);
                 employees[z].setAttr("hodinovka", hodinovka);
-                
+
                 let hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
                 let dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
                 // premenné z knižnice employees
@@ -127,7 +127,7 @@ const prepocitatZaznamDochadzky = en => {
         en.set("Prestoje", prestojeCelkom);
         message("Hotovo...");
     } catch (error) {
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -191,6 +191,6 @@ const aSalary = (en, NEW_ENTRY) => {
             }
         }
     } catch (error) {
-        errorGen(DB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }

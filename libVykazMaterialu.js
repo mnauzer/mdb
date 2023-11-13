@@ -18,7 +18,7 @@ const newEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -62,10 +62,10 @@ const novyVykazMaterialu = (zakazka, popis) => {
         exit();
     }
     try {
-        var lib = libByName(DB_VYKAZ_MATERIALU);
-        var season = getSeason(zakazka, DB_VYKAZ_MATERIALU, scriptName)
-        var appDB = getAppSeasonDB(season, DB_VYKAZ_MATERIALU, scriptName);
-        var newNumber = getNewNumber(appDB, season, DB_VYKAZ_MATERIALU, scriptName);
+        var lib = libByName(LIB_VYKAZ_MATERIALU);
+        var season = getSeason(zakazka, LIB_VYKAZ_MATERIALU, scriptName)
+        var appDB = getAppSeasonDB(season, LIB_VYKAZ_MATERIALU, scriptName);
+        var newNumber = getNewNumber(appDB, season, LIB_VYKAZ_MATERIALU, scriptName);
         // vytvoriť novú výdajku
         var novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
@@ -83,10 +83,10 @@ const novyVykazMaterialu = (zakazka, popis) => {
         var vydajkaMaterialu = lib.find(newNumber[0])[0];
         let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber[0]
         message(msgTxt)
-        msgGen(DB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
+        msgGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
         return vydajkaMaterialu;
     } catch (error) {
-        errorGen(DB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -129,7 +129,7 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
         }
         return [sumaBezDPH, sumaDPH];
     } catch (error) {
-        errorGen(DB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VYKAZ_MATERIALU, "libVykazMaterialu.js", scriptName, error, variables, parameters)
     }
 
 }

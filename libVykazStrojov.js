@@ -18,7 +18,7 @@ const newEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters)
+        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -59,13 +59,13 @@ const novyVykazStrojov = (zakazka, popis) => {
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
-        let season = getSeason(zakazka, DB_VYKAZ_STROJOV, scriptName);
-        let vykazy = libByName(DB_VYKAZ_STROJOV);
-        let appDB = getAppSeasonDB(season, DB_VYKAZ_STROJOV, scriptName);
+        let season = getSeason(zakazka, LIB_VYKAZ_STROJOV, scriptName);
+        let vykazy = libByName(LIB_VYKAZ_STROJOV);
+        let appDB = getAppSeasonDB(season, LIB_VYKAZ_STROJOV, scriptName);
         let cp = zakazka.field(FLD_CENOVA_PONUKA)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, DB_VYKAZ_STROJOV, scriptName);
+        let newNumber = getNewNumber(appDB, season, LIB_VYKAZ_STROJOV, scriptName);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
@@ -84,10 +84,10 @@ const novyVykazStrojov = (zakazka, popis) => {
         let vykazPrac = vykazy.find(newNumber[0])[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
-        msgGen(DB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
+        msgGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
         return vykazPrac;
     } catch (error) {
-        errorGen(DB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -96,7 +96,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
     let variables = "Záznam: " +  vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
     let parameters = "vykaz: " +  vykaz + "\nuctovatDPH: " + ucnuctovatDPH
     try {
-        var zaznamyEvidencia = vykaz.linksFrom(DB_EVIDENCIA_PRAC, "Výkaz strojov");
+        var zaznamyEvidencia = vykaz.linksFrom(LIB_EVIDENCIA_PRAC, "Výkaz strojov");
         var sumaBezDPH = 0;
         var sumaDPH = 0;
         var sumaCelkom = 0;
@@ -163,7 +163,7 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         setTlac(vykaz);
         return [sumaBezDPH, sumaDPH, sumaCelkom];
     } catch (error) {
-        errorGen(DB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen(LIB_VYKAZ_STROJOV, "libVykazStrojov.js", scriptName, error, variables, parameters);
 
     }
 }

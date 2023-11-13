@@ -5,45 +5,45 @@ const APP_DB = "KRAJINKA APP DATABÁZY";
 const APP_ERROR = "APP Errors
 
 // PROJEKTY
-const DB_CENOVE_PONUKY = "Cenové ponuky";
-const DB_ZAKAZKY = "Zákazky";
-const DB_VYUCTOVANIA = "Vyúčtovania";
-const DB_CENNIK_PRAC = "Cenník prác";
-const DB_SKLAD = "Sklad";
-const DB_PLAN_PRAC = "Plán prác";
-const DB_VYKAZ_PRAC = "Výkaz prác";
-const DB_VYKAZ_MATERIALU = "Výkaz materiálu";
-const DB_VYKAZ_STROJOV = "Výkaz strojov";
-const DB_VYKAZ_DOPRAVY = "Výkaz dopravy";
-const DB_STAVEBNY_DENNIK = "Stavebný denník";
+const LIB_CENOVE_PONUKY = "Cenové ponuky";
+const LIB_ZAKAZKY = "Zákazky";
+const LIB_VYUCTOVANIA = "Vyúčtovania";
+const LIB_CENNIK_PRAC = "Cenník prác";
+const LIB_SKLAD = "Sklad";
+const LIB_PLAN_PRAC = "Plán prác";
+const LIB_VYKAZ_PRAC = "Výkaz prác";
+const LIB_VYKAZ_MATERIALU = "Výkaz materiálu";
+const LIB_VYKAZ_STROJOV = "Výkaz strojov";
+const LIB_VYKAZ_DOPRAVY = "Výkaz dopravy";
+const LIB_STAVEBNY_DENNIK = "Stavebný denník";
 
 // ADMINISTRATÍVA
-const DB_INVENTURY = "Invenúry";
-const DB_PRIJEMKY = "Príjemky";
-const DB_REZERVACIE = "Rezervácie";
-const DB_OBJEDNAVKY = "Objednávky";
-const DB_DOFA = "Faktúry prijaté";
-const DB_ODFA = "Faktúry odoslané";
+const LIB_INVENTURY = "Invenúry";
+const LIB_PRIJEMKY = "Príjemky";
+const LIB_REZERVACIE = "Rezervácie";
+const LIB_OBJEDNAVKY = "Objednávky";
+const LIB_DOFA = "Faktúry prijaté";
+const LIB_ODFA = "Faktúry odoslané";
 
 // EVIDENCIA
-const DB_POKLADNA = "Pokladňa";
-const DB_EVIDENCIA_PRAC = "Evidencia prác";
-const DB_DOCHADZKA = "Dochádzka";
-const DB_KNIHA_JAZD = "Kniha jázd";
-const DB_ZASTAVKY = "Zastávky";
+const LIB_POKLADNA = "Pokladňa";
+const LIB_EVIDENCIA_PRAC = "Evidencia prác";
+const LIB_DOCHADZKA = "Dochádzka";
+const LIB_KNIHA_JAZD = "Kniha jázd";
+const LIB_ZASTAVKY = "Zastávky";
 
 // DATABÁZY
-const DB_ZAMESTNANCI = "Zamestnanci";
-const DB_KLIENTI = "Klienti";
-const DB_DODAVATELIA = "Dodávatelia";
-const DB_PARTNERI = "Partneri";
-const DB_MIESTA = "Miesta";
-const DB_UCTY = "Účty";
-const DB_STROJE = "Stroje";
-const DB_VOZIDLA = "Vozidlá";
-const DB_PLANTS = "Databáza rastlín";
-const DB_RCPTS = "Príjemky";
-const DB_Z_SADZBY = "Zamestnanci Sadzby";
+const LIB_ZAMESTNANCI = "Zamestnanci";
+const LIB_KLIENTI = "Klienti";
+const LIB_DODAVATELIA = "Dodávatelia";
+const LIB_PARTNERI = "Partneri";
+const LIB_MIESTA = "Miesta";
+const LIB_UCTY = "Účty";
+const LIB_STROJE = "Stroje";
+const LIB_VOZIDLA = "Vozidlá";
+const LIB_PLANTS = "Databáza rastlín";
+const LIB_RCPTS = "Príjemky";
+const LIB_Z_SADZBY = "Zamestnanci Sadzby";
 
 // aGroup
 const DBA_OBL = "aZáväzky";
@@ -99,7 +99,7 @@ const W_HODINOVKA = "Hodinovka"
 const W_POLOZKY = "Položky"
 
 // Knižnica Faktúry prijaté
-// DB_DOFA
+// LIB_DOFA
 const DOFA_SUP = "Dodávateľ"
 const DOFA_SUP_NUMBER = "Číslo faktúry"
 const DOFA_SUP_VS = "VS" // variabilný symbol
@@ -120,12 +120,12 @@ const A_OBL_INVC = "Faktúry prijaté"
 const A_OBL_PAYED = "Uhradené"
 
 // Príjemky
-// DB_RCPTS
+// LIB_RCPTS
 const RCPTS_INVC = "Faktúry prijaté"
 // aMzdy
 
 // Pokladňa/bi
-// DB_POKLADNA
+// LIB_POKLADNA
 // Polia
 const POK_POHYB = "Pohyb" //Select
 const POK_U_PREVOD = "Účel prevodu" //Select
@@ -136,7 +136,7 @@ const POK_ = "%DPH" //Real number
 
 
 // Dochádzka/Attendance
-// DB_ATTDC
+// LIB_ATTDC
 const ATTENDANCE = "Dochádzka"
 const ATTDC_ARRIVAL = "Príchod"
 const ATTDC_DEPARTURE = "Odchod"
@@ -144,26 +144,28 @@ const ATTDC_WORKS = "Práce" // Link to Entry
 const ATTDC_EMPLOYEES = "Zamestnanci"
 
 
-// # SPOLOČNÉ POLIA
-const NUMBER = "Číslo"
-const NUMBER_ENTRY = "number"
-const DATE = "Dátum"
-const NICK = "Nick"
+// SPOLOČNÉ POLIA
 const VIEW = "view"
+const VIEW_EDIT = "Editácia"
+const VIEW_PRINT = "Tlač"
+const VIEW_DEBUG = "Debug"
 const STATUS = "Stav"
+const DATE = "Dátum"
+const NUMBER = "Číslo"
+
+const NICK = "Nick"
 const DBG = "debug"
+
 const SEASON = "sezóna"
 const LAST_NUM = "lastnum"
 const APP_SEASON = "Sezóna" // linked field
+const NUMBER_ENTRY = "number"
 const CR = "zapísal"
 const CR_DATE = "dátum zápisu"
 const MOD = "upravil"
 const MOD_DATE = "dátum úpravy"
 const ENT_COLOR = "farba záznamu"
 const BKG_COLOR = "farba pozadia"
-const VIEW_EDIT = "Editácia"
-const VIEW_PRINT = "Tlač"
-const VIEW_DEBUG = "Debug"
 
 // COLOR CODES
 const FIREBRICK = "#B22222";

@@ -14,7 +14,7 @@ const newEntryEvidenciaPrac = en => {
         setEntry(en, scriptName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
+        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntryEvidenciaPrac = en => {
@@ -27,7 +27,7 @@ const updateEntryEvidenciaPrac = en => {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
 const saveEntryEvidenciaPrac = en => {
@@ -40,7 +40,7 @@ const saveEntryEvidenciaPrac = en => {
         saveEntry(en, mementoLibrary)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -50,7 +50,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     let variables = "Záznam: " + vykazPrac.name + "\n"
     let parameters = "vykazPrac: " + vykazPrac + "\nhodinyCelkom: " + hodinyCelkom
     if(vykazPrac == undefined){
-        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, "chýba parameter vykazPrac", variables, parameters )
+        msgGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, "chýba parameter vykazPrac", variables, parameters )
         cancel()
         exit()
     }
@@ -67,7 +67,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
         let sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100)
         return sadzba
     } catch (error) {
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
+        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
         cancel()
         exit()
     }
@@ -86,7 +86,7 @@ const btnFill = () => {
         }
         txtMsg = "Zákazka: " + entry().name
         //zakazka.set("Typ zákazky", zakazka.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky"))
-        msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
+        msgGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
 
         message("nastavujem záznam..." + scriptName)
 
@@ -106,7 +106,7 @@ const btnFill = () => {
             entry().set(element, entry().field(FLD_ZAKAZKA)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -123,7 +123,7 @@ const prepocetZaznamuEvidenciePrac = en => {
             if (vykaz != undefined) {
                 en.set(FLD_ZAKAZKA, vykaz.field(FLD_ZAKAZKA)[0]);
             } else {
-                msgGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
+                msgGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
             }
         } else if (typ == "Položky") {
         }
@@ -138,7 +138,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
 
-            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(DB_Z_SADZBY, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
+            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_Z_SADZBY, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
             zamestnanci[z].setAttr("hodinovka", hodinovka);
             odpracovane += trvanie;
             nakladyZamestnatec = trvanie * hodinovka;
@@ -199,7 +199,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(DB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen(LIB_EVIDENCIA_PRAC, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
     }
 
 }

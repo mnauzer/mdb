@@ -10,7 +10,7 @@ const ucetPrijmy = ucet => {
     var prijmyCelkom = 0;
     if (sezony.length > 0) {
         // Príjmy
-        var zaznamy = ucet.linksFrom(DB_POKLADNA, "Do pokladne");
+        var zaznamy = ucet.linksFrom(LIB_POKLADNA, "Do pokladne");
         if (zaznamy.length > 0) {
             //          var zaznamyPrepocet = [];
             for (var s = 0; s < sezony.length; s++) {
@@ -38,7 +38,7 @@ const ucetVydavky = ucet => {
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var vydavkyCelkom = 0;
     if (sezony.length > 0) {
-        var zaznamy = ucet.linksFrom(DB_POKLADNA, "Z pokladne");
+        var zaznamy = ucet.linksFrom(LIB_POKLADNA, "Z pokladne");
         if (zaznamy.length > 0) {
             for (var s = 0; s < sezony.length; s++) {
                 for (var v = 0; v < zaznamy.length; v++) {

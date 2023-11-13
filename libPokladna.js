@@ -24,7 +24,7 @@ const newEntryPokladna = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -39,7 +39,7 @@ const updateEntryPokladna = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
+        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -54,7 +54,7 @@ const saveEntryPokladna = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
+        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -113,7 +113,7 @@ const fillPopis = en => {
             message(popis);
         }
     } catch (error) {
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -187,7 +187,7 @@ const prepocetPlatby = en => {
         fillPopis(en);
         message("Hotovo...");
     } catch (error) {
-        errorGen(DB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
     }
 }
 

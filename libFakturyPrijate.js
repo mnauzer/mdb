@@ -23,9 +23,9 @@ const checkOverdue = (en, date) => {
 // check if invoice items are
 // skontroluje či položky faktúry sú zaevidované na skladovej príjemke
 const checkRcpts = en => {
-    var receipts = libByName(DB_RCPTS);
+    var receipts = libByName(LIB_RCPTS);
 
-    var links = en.linksFrom(DB_RCPTS, RCPTS_INVC);
+    var links = en.linksFrom(LIB_RCPTS, RCPTS_INVC);
     if (links.length <= 0) {
         // if not exist, create new entry
         en.set(BKG_COLOR, MEM_LIGHT_BLUE)

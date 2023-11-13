@@ -33,7 +33,7 @@ const prepocetZakazky = (contract) => {
     // prepočet výkazov prác
     // prepočet práce
     var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
-    var vykazyPrac = contract.linksFrom(DB_VYKAZ_PRAC, W_contract)
+    var vykazyPrac = contract.linksFrom(LIB_VYKAZ_PRAC, W_contract)
     // prepočet nákladov práce
     var mzdy = 0;
     var odpracovanychHodin = 0;
@@ -107,7 +107,7 @@ const prepocetZakazky = (contract) => {
     var txtNakupMaterialu = "✘...žiadny nákup materiálu";
     var txtOdvodDPHMaterial = "✘...žiadny odvod DPH z materiálu";
     // prepočet výdajok materiálu
-    var vydajkyMaterialu = contract.linksFrom(DB_VYKAZ_MATERIALU, W_contract);
+    var vydajkyMaterialu = contract.linksFrom(LIB_VYKAZ_MATERIALU, W_contract);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     // prepočet nákladov materiálu
     var nakupMaterialu = 0;
@@ -164,7 +164,7 @@ const prepocetZakazky = (contract) => {
     // prepočet výkazov strojov
 
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
-    var vykazStrojov = contract.linksFrom(DB_VYKAZ_STROJOV, W_contract)[0];
+    var vykazStrojov = contract.linksFrom(LIB_VYKAZ_STROJOV, W_contract)[0];
     var nakladyStroje = 0; // náklady
     var strojeCelkomBezDPH = 0;
     var strojeDPH = 0;
@@ -439,7 +439,7 @@ const prepocetZakazky = (contract) => {
 }
 
 const spocitatHodinyZevidencie = contract => {
-    var links = contract.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
+    var links = contract.linksFrom(LIB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -452,7 +452,7 @@ const spocitatHodinyZevidencie = contract => {
 };
 
 const contractMzdy = contract => {
-    var links = contract.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
+    var links = contract.linksFrom(LIB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -465,7 +465,7 @@ const contractMzdy = contract => {
 };
 
 const contractMaterialDPH = contract => {
-    var links = contract.linksFrom(DB_VYKAZ_MATERIALU, "Zákazka");
+    var links = contract.linksFrom(LIB_VYKAZ_MATERIALU, "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -490,7 +490,7 @@ const contractMaterialRozdielDPH = vykaz => {
 };
 
 const contractPrijmy = (contract, sDPH) => {
-    var links = contract.linksFrom(DB_POKLADNA, "Zákazka");
+    var links = contract.linksFrom(LIB_POKLADNA, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Príjem bez DPH") + links[p].field("DPH+"));
@@ -499,7 +499,7 @@ const contractPrijmy = (contract, sDPH) => {
 };
 
 const contractVydavky = (contract, sDPH, vyuctovanie) => {
-    var vydavkyLinks = contract.linksFrom(DB_POKLADNA, "Zákazka")
+    var vydavkyLinks = contract.linksFrom(LIB_POKLADNA, "Zákazka")
     var vydavkyBezDPH = 0;
     var vydavkyDPH = 0;
     var vydavkyCelkom = 0;

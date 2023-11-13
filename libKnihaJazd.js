@@ -18,7 +18,7 @@ const newEntryKnihaJazd= en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters)
+        errorGen(LIB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryKnihaJazd= en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters);
+        errorGen(LIB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryKnihaJazd= en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(DB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters);
+        errorGen(LIB_KNIHA_JAZD, "libKnihaJazd.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -117,8 +117,8 @@ const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
 
 const zakazkaPocetJazd = zakazka => {
     // počíta len cesty na miesto realizácie
-    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
-    var zastavky = zakazka.linksFrom(DB_KNIHA_JAZD, "Zastávka na zákazke")
+    var links = zakazka.linksFrom(LIB_KNIHA_JAZD, "Zákazka")
+    var zastavky = zakazka.linksFrom(LIB_KNIHA_JAZD, "Zastávka na zákazke")
     var jazd = 0;
     if (links.length > 0 || zastavky.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -138,7 +138,7 @@ const zakazkaPocetJazd = zakazka => {
 };
 
 const zakazkaKm = zakazka => {
-    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
+    var links = zakazka.linksFrom(LIB_KNIHA_JAZD, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -149,7 +149,7 @@ const zakazkaKm = zakazka => {
 };
 
 const zakazkaCasJazdy = zakazka => {
-    var links = zakazka.linksFrom(DB_KNIHA_JAZD, "Zákazka")
+    var links = zakazka.linksFrom(LIB_KNIHA_JAZD, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
