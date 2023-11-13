@@ -1,7 +1,6 @@
 
-var textVyuctovanie = "prepočítané";
 const prepocetZakazky = (contract) => {
-    var vyuctovanie = contract.field(FLD_VYUCTOVANIE)[0];
+    var vyuctovanie = contract.field(FIELD_VYUCTOVANIE)[0];
     if (!vyuctovanie) {
         message("Zákazka ešte nemá záznam vyúčtovania...\nGenerujem nové vyúčtovanie...");
         vyuctovanie = noveVyuctovanie(contract);
@@ -9,10 +8,10 @@ const prepocetZakazky = (contract) => {
     }
     message("Prepočítavám zákazku...");
 
-    var uctovanieDPH = contract.field(FLD_UCTOVANIE_DPH);
+    var uctovanieDPH = contract.field(FIELD_UCTOVANIE_DPH);
     var season = contract.field(SEASON);
     if (!season || season == 0) {
-        season = contract.field(FLD_DATUM).getFullYear();
+        season = contract.field(FIELD_DATUM).getFullYear();
         contract.set(SEASON, season);
     }
 
@@ -33,7 +32,7 @@ const prepocetZakazky = (contract) => {
     // prepočet výkazov prác
     // prepočet práce
     var praceUctovatDPH = mclCheck(uctovanieDPH, W_PRACE);
-    var vykazyPrac = contract.linksFrom(LIB_VYKAZ_PRAC, W_contract)
+    var vykazyPrac = contract.linksFrom(DB_VYKAZY_PRAC, W_contract)
     // prepočet nákladov práce
     var mzdy = 0;
     var odpracovanychHodin = 0;
@@ -60,10 +59,10 @@ const prepocetZakazky = (contract) => {
             praceCelkomBezDPH += prace[0];
             if (vyuctovanie) {
                 // nastaviť status výkazov práce na Vyúčtované
-                vykazyPrac[vp].link(FLD_VYUCTOVANIE, vyuctovanie);
+                vykazyPrac[vp].link(FIELD_VYUCTOVANIE, vyuctovanie);
                 vykazyPrac[vp].set(STATUS, stavVyuctovania);
                 // záapis do vyúčtovania
-                vyuctovanie.set(vykazyPrac[vp].field(FLD_POPIS) + " celkom", praceCelkomBezDPH);
+                vyuctovanie.set(vykazyPrac[vp].field(FIELD_POPIS) + " celkom", praceCelkomBezDPH);
                 // nalinkuj výkazy prác
                 typVykazu = vykazyPrac[vp].field("Typ výkazu");
                 if (typVykazu == W_HODINOVKA) {
@@ -81,7 +80,7 @@ const prepocetZakazky = (contract) => {
         odpracovanychHodin = spocitatHodinyZevidencie(contract);
     }
     // message("Práce celkom:" + praceCelkom);
-    contract.set(FLD_PRACE, praceCelkom);
+    contract.set(FIELD_PRACE, praceCelkom);
     contract.set("txt práce", txtPrace);
     // náklady
     var mzdy = contractMzdy(contract);
@@ -107,7 +106,7 @@ const prepocetZakazky = (contract) => {
     var txtNakupMaterialu = "✘...žiadny nákup materiálu";
     var txtOdvodDPHMaterial = "✘...žiadny odvod DPH z materiálu";
     // prepočet výdajok materiálu
-    var vydajkyMaterialu = contract.linksFrom(LIB_VYKAZ_MATERIALU, W_contract);
+    var vydajkyMaterialu = contract.linksFrom(DB_VYKAZY_MATERIALU, W_contract);
     var materialUctovatDPH = mclCheck(uctovanieDPH, W_MATERIAL);
     // prepočet nákladov materiálu
     var nakupMaterialu = 0;
@@ -132,10 +131,10 @@ const prepocetZakazky = (contract) => {
             if (vyuctovanie) {
                 // nastaviť príznak výdajok materiálu na vyúčtované
 
-                vydajkyMaterialu[vm].link(FLD_VYUCTOVANIE, vyuctovanie);
+                vydajkyMaterialu[vm].link(FIELD_VYUCTOVANIE, vyuctovanie);
                 vydajkyMaterialu[vm].set(STATUS, stavVyuctovania);
                 // zápis do vyúčtovania
-                vyuctovanie.set(vydajkyMaterialu[vm].field(FLD_POPIS) + " celkom", materialCelkomBezDPH);
+                vyuctovanie.set(vydajkyMaterialu[vm].field(FIELD_POPIS) + " celkom", materialCelkomBezDPH);
                 nalinkujMaterial(vyuctovanie, vydajkyMaterialu[vm]);
             }
         }
@@ -146,7 +145,7 @@ const prepocetZakazky = (contract) => {
         contractCelkom += materialCelkom;
     }
     //message("Materiál celkom:" + materialCelkom);
-    contract.set(FLD_MATERIAL, materialCelkom);
+    contract.set(FIELD_MATERIAL, materialCelkom);
     contract.set("txt materiál", txtMaterial);
     // náklady
     contract.set("Nákup materiálu", nakupMaterialu);
@@ -164,7 +163,7 @@ const prepocetZakazky = (contract) => {
     // prepočet výkazov strojov
 
     var strojeUctovatDPH = mclCheck(uctovanieDPH, "Mechanizácia");
-    var vykazStrojov = contract.linksFrom(LIB_VYKAZ_STROJOV, W_contract)[0];
+    var vykazStrojov = contract.linksFrom(DB_VYKAZY_STROJOV, W_contract)[0];
     var nakladyStroje = 0; // náklady
     var strojeCelkomBezDPH = 0;
     var strojeDPH = 0;
@@ -191,10 +190,10 @@ const prepocetZakazky = (contract) => {
                     vykazStrojov.unlink("Vyúčtovanie", vykazStrojovVyuctovanie[l]);
                 }
             }
-            vykazStrojov.link(FLD_VYUCTOVANIE, vyuctovanie);
+            vykazStrojov.link(FIELD_VYUCTOVANIE, vyuctovanie);
             vykazStrojov.set(STATUS, stavVyuctovania);
             // zápis do vyúčtovania
-            vyuctovanie.set(vykazStrojov.field(FLD_POPIS) + " celkom", strojeCelkomBezDPH);
+            vyuctovanie.set(vykazStrojov.field(FIELD_POPIS) + " celkom", strojeCelkomBezDPH);
             nalinkujStroje(vyuctovanie, vykazStrojov);
 
         }
@@ -202,7 +201,7 @@ const prepocetZakazky = (contract) => {
     }
     strojeCelkom += strojeCelkomBezDPH + strojeDPH;
     // náklady stroje
-    var koefStroje = libByName(APP).find(season)[0].field("Koeficient nákladov prevádzky strojov");
+    var koefStroje = libByName(DB_ASSISTENT).find(season)[0].field("Koeficient nákladov prevádzky strojov");
     nakladyStroje = strojeCelkomBezDPH * koefStroje;
     txtNakladyStroje = "✔...náklady na prevádzku strojov (" + koefStroje * 100 + "% z účtovanej sadzby)";                        // náklady 75%
     // globálny súčet
@@ -211,7 +210,7 @@ const prepocetZakazky = (contract) => {
     contractCelkom += strojeCelkom;
 
     //message("Stroje celkom:" + strojeCelkom);
-    contract.set(FLD_STROJE, strojeCelkom);
+    contract.set(FIELD_STROJE, strojeCelkom);
     contract.set("txt stroje", txtStroje);
     // náklady
     contract.set("Náklady stroje", nakladyStroje);
@@ -255,14 +254,14 @@ const prepocetZakazky = (contract) => {
     if (dopravaCelkomBezDPH > 0) {
         var dopravaUctovatDPH = mclCheck(uctovanieDPH, W_DOPRAVA);
         if (dopravaUctovatDPH) {
-            var sadzbaDPH = libByName(APP).find(season)[0].field("Základná sadzba DPH") / 100;
+            var sadzbaDPH = libByName(DB_ASSISTENT).find(season)[0].field("Základná sadzba DPH") / 100;
             txtDoprava = " s DPH";
             dopravaDPH = dopravaCelkomBezDPH * sadzbaDPH;
         } else {
             txtDoprava = " bez DPH";
         }
         dopravaCelkom += dopravaCelkomBezDPH + dopravaDPH;
-        var koefVozidla = libByName(APP).find(season)[0].field("Koeficient nákladov prevádzky vozidiel");
+        var koefVozidla = libByName(DB_ASSISTENT).find(season)[0].field("Koeficient nákladov prevádzky vozidiel");
         nakladyVozidla = dopravaCelkomBezDPH * koefVozidla;
     }
     // náklady doprava
@@ -276,7 +275,7 @@ const prepocetZakazky = (contract) => {
     contractDPH += dopravaDPH;
     contractCelkom += dopravaCelkom;
     //message("Doprava celkom:" + dopravaCelkom);
-    contract.set(FLD_DOPRAVA, dopravaCelkom);
+    contract.set(FIELD_DOPRAVA, dopravaCelkom);
     contract.set("txt doprava", txtDoprava);
     // náklady
     contract.set("Počet jázd", pocetJazd);
@@ -320,7 +319,7 @@ const prepocetZakazky = (contract) => {
     // PLATBY
     var zaplatene = contractPrijmy(contract);
     // CELKOM
-    var rozpocetSDPH = contract.field(FLD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
+    var rozpocetSDPH = contract.field(FIELD_CENOVA_PONUKA)[0].field("Cena celkom (s DPH)");
 
     // Message
     message(
@@ -396,7 +395,7 @@ const prepocetZakazky = (contract) => {
 
     // VYÚČTOVANIE
     if (vyuctovanie) {
-        var typ = contract.field(FLD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
+        var typ = contract.field(FIELD_CENOVA_PONUKA)[0].field("Typ cenovej ponuky");
         // NASTAVENIE POLÍ
         // časti vyúčtovania
         vyuctovanie.set("Doprava celkom", dopravaCelkomBezDPH)
@@ -439,7 +438,7 @@ const prepocetZakazky = (contract) => {
 }
 
 const spocitatHodinyZevidencie = contract => {
-    var links = contract.linksFrom(LIB_EP, "Zákazka")
+    var links = contract.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -452,7 +451,7 @@ const spocitatHodinyZevidencie = contract => {
 };
 
 const contractMzdy = contract => {
-    var links = contract.linksFrom(LIB_EP, "Zákazka")
+    var links = contract.linksFrom(DB_EVIDENCIA_PRAC, "Zákazka")
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -465,7 +464,7 @@ const contractMzdy = contract => {
 };
 
 const contractMaterialDPH = contract => {
-    var links = contract.linksFrom(LIB_VYKAZ_MATERIALU, "Zákazka");
+    var links = contract.linksFrom(DB_VYKAZY_MATERIALU, "Zákazka");
     var result = 0;
     if (links.length > 0) {
         for (var p = 0; p < links.length; p++) {
@@ -490,7 +489,7 @@ const contractMaterialRozdielDPH = vykaz => {
 };
 
 const contractPrijmy = (contract, sDPH) => {
-    var links = contract.linksFrom(LIB_POK, "Zákazka");
+    var links = contract.linksFrom(DB_POKLADNA, "Zákazka");
     var result = 0;
     for (var p = 0; p < links.length; p++) {
         result += (links[p].field("Príjem bez DPH") + links[p].field("DPH+"));
@@ -499,7 +498,7 @@ const contractPrijmy = (contract, sDPH) => {
 };
 
 const contractVydavky = (contract, sDPH, vyuctovanie) => {
-    var vydavkyLinks = contract.linksFrom(LIB_POK, "Zákazka")
+    var vydavkyLinks = contract.linksFrom(DB_POKLADNA, "Zákazka")
     var vydavkyBezDPH = 0;
     var vydavkyDPH = 0;
     var vydavkyCelkom = 0;
