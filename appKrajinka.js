@@ -596,7 +596,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 const errorGen = (mementoLibrary, library, script, error, variables, parameters) => {
     // generátor chyby
     message("ERROR: " + script + "\n" + error)
-    let errorLib = libByName("APP Errors")
+    let errorLib = libByName(APP_ERROR)
     let newError = new Object()
     newError["type"] = "error"
     newError["date"] = new Date()
@@ -614,7 +614,7 @@ const errorGen = (mementoLibrary, library, script, error, variables, parameters)
 const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
-    let errorLib = libByName("APP Errors")
+    let errorLib = libByName(APP_ERROR)
     let newMsg = new Object()
     newMsg["type"] = "message"
     newMsg["date"] = new Date()
@@ -629,7 +629,7 @@ const msgGen = (mementoLibrary, library, script, msg, variables, parameters) => 
 const logGen = (mementoLibrary, library, script, log, variables, parameters, attributes) => {
     // generátor log
    // message("LOG: " + script + "\n" + log)
-    let errorLib = libByName("APP Errors")
+    let errorLib = libByName(APP_ERROR)
     let newLog = new Object()
     newLog["type"] = "log"
     newLog["date"] = new Date()
