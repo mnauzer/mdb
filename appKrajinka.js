@@ -511,7 +511,6 @@ const setIdentifikator = en => {
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
-var lfLibraryName = linksFrom("LibraryName", "LinkedFieldName");
         let identifikator =  en.field("Klient")[0].name + ", " + en.field("Klient")[0].linksFrom("Miesta", "Klient")[0].name
         en.set("Identifikátor", identifikator)
     } catch (error) {
