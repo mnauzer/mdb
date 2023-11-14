@@ -18,7 +18,7 @@ const newEntryDochadzka = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
@@ -33,7 +33,7 @@ const updateEntryDochadzka = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -48,7 +48,7 @@ const saveEntryDochadzka = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, mementoLibrary)
-        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -84,7 +84,7 @@ const prepocitatZaznamDochadzky = en => {
                 let libZarobene = employees[z].field("Zarobené") - dennaMzda;
                 let libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
                 let libVyplatene = employees[z].field("Vyplatené");
-                let libHodnotenieD = employees[z].field(ATTENDANCE);
+                let libHodnotenieD = employees[z].field(FLD_DOCH);
 
                 dennaMzda = (pracovnaDoba * (hodinovka
                     + employees[z].attr("+príplatok (€/h)")))
@@ -101,7 +101,7 @@ const prepocitatZaznamDochadzky = en => {
                 employees[z].set("Zarobené", libZarobene);
                 employees[z].set("Odpracované", libOdrobene);
                 employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
-                employees[z].set(ATTENDANCE, libHodnotenieD);
+                employees[z].set(FLD_DOCH, libHodnotenieD);
 
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
@@ -127,7 +127,7 @@ const prepocitatZaznamDochadzky = en => {
         en.set("Prestoje", prestojeCelkom);
         message("Hotovo...");
     } catch (error) {
-        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 
@@ -141,7 +141,7 @@ const aSalary = (en, NEW_ENTRY) => {
         if (NEW_ENTRY) {
 
         } else {
-            var links = en.linksFrom(DBA_SAL, ATTENDANCE)
+            var links = en.linksFrom(DBA_SAL, FLD_DOCH)
             // skontrolovať či je už záznam nalinkovaný
             if (links.length > 0){
                 //vymaž nalinkované záznamy
@@ -160,11 +160,11 @@ const aSalary = (en, NEW_ENTRY) => {
             newEntry["Mzda"] =  employees[z].attr("denná mzda");
             newEntry["Vyplatiť"] =  employees[z].attr("denná mzda");
             newEntry[SEASON] = en.field(DATE).getFullYear();
-            newEntry[ATTENDANCE] = en;
+            newEntry[FLD_DOCH] = en;
             newEntry["Zamestnanec"] = employees[z];
             salaries.create(newEntry);
-            var entrySalaries = en.linksFrom(DBA_SAL,ATTENDANCE)[0];
-            entrySalaries.field(ATTENDANCE)[0].setAttr("odpracované", en.field("Pracovná doba"));
+            var entrySalaries = en.linksFrom(DBA_SAL,FLD_DOCH)[0];
+            entrySalaries.field(FLD_DOCH)[0].setAttr("odpracované", en.field("Pracovná doba"));
             entrySalaries.field("Zamestnanec")[0].setAttr("sadzba", employees[z].attr("hodinovka"));
             // zauctuj preplatok ak je
             var preplatokLinks = employees[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
@@ -191,6 +191,6 @@ const aSalary = (en, NEW_ENTRY) => {
             }
         }
     } catch (error) {
-        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }

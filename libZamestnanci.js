@@ -9,7 +9,7 @@ const lastSadzba = (employee, date, inptScript) => {
         variables += "\nZáznamov: " + links.length
         filtered = filterByDate(links, date, "Platnosť od", scriptName);
         if (filtered.length < 0) {
-            msgGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
+            msgGen(LIB_DOCH, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
             filtered.sort({ compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000 }})
             filtered.reverse();
@@ -18,10 +18,10 @@ const lastSadzba = (employee, date, inptScript) => {
         let sadzba = filtered[0].field("Sadzba");
         variables += "\nSadzba: " + sadzba
         let msgTxt = "Aktuálna sadzba zamestnanca " + employee.name + " je " + sadzba + "€/hod"
-        msgGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, msgTxt, variables, parameters);
+        msgGen(LIB_DOCH, "libDochadzka.js", scriptName, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
-        errorGen(LIB_DOCHADZKA, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
 

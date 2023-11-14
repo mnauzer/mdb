@@ -4,6 +4,7 @@ const APP = "ASISTANTO"
 const APP_DB = "ASISTANTO DB"
 const APP_ERROR = "ASISTANTO Errors"
 const APP_TENATNS = "ASISTANTO Tenants"
+const APP_TODO = "ASISTANTO ToDo"
 
 // PROJEKTY
 const LIB_CPN = "Cenové ponuky"
