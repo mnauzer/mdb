@@ -215,7 +215,6 @@ const saveEntryVykazPrac = en => {
 }
 
 // VÝKAZY STROJOV
-
 const newEntryVykazStrojov = en => {
     let scriptName = "newEntryVykazStrojov 23.0.01"
     let mementoLibrary = lib().title
@@ -381,7 +380,6 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
 }
 
 // VÝKAZY MATERIÁLU
-
 const newEntryVykazMaterialu = en => {
     let scriptName = "newEntryVykazMaterialu 23.0.01"
     let mementoLibrary = lib().title

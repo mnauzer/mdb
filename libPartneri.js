@@ -1,5 +1,4 @@
-
-
+// ZAMESTNANCI
 const zamestnanecPlatby = zamestnanec => {
     //    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
     var sz = zamestnanec.field("Výber sezóny na prepočet"); //sezóny na prepočet
@@ -24,8 +23,7 @@ const zamestnanecPlatby = zamestnanec => {
     });
     zamestnanec.set("Vyplatené", vyplateneCelkom);
     zamestnanec.set("Preplatok/Nedoplatok", zamestnanec.field("Zarobené") - vyplateneCelkom);
-};
-
+}
 const zamestnanecDochadzka = zamestnanec => {
     //    var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
     //    var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
@@ -65,9 +63,6 @@ const zamestnanecDochadzka = zamestnanec => {
     zamestnanec.set("Dochádzka", hodnotenieCelkom);
     zamestnanec.set("Preplatok/Nedoplatok", zarobeneCelkom - zamestnanec.field("Vyplatené"));
 }
-
-
-
 const zamestnanecPrace = zamestnanec => {
     //   var hs = zamestnanec.field("Hodinovka"); // nastavená hodinová sadzba (hs)
     //   var os = zamestnanec.field("Odpracované sezóny"); // odpracované sezóny (os)
@@ -93,10 +88,9 @@ const zamestnanecPrace = zamestnanec => {
     });
     zamestnanec.set("Odpracované na zákazkach", evidenciaCelkom);
     //zamestnanec.set("Zákazky", hodnotenieEvidenciaCelkom);
-};
-
-// spočítať vyplatené mzdy zamestnancovi za obdobie (rok)
+}
 const zamPlatby = (zam, sezona ) =>{
+// spočítať vyplatené mzdy zamestnancovi za obdobie (rok)
     var lib = libByName("Pokladňa"); // const dbLib.js
     var entries = lib.entries();
     var vyplatene = 0;
@@ -114,8 +108,8 @@ const zamPlatby = (zam, sezona ) =>{
         message("Nie je žiadny záznam v databáze " + lib.title);
     }
 }
-// spočítať dochádzku zamestnanca za obdobie (rok)
 const zamDochadzka = (zam, sezona) => {
+// spočítať dochádzku zamestnanca za obdobie (rok)
     message("Prepočítavam\n zamestnanec: " + zam.field("Nick") + "\n za sezónu: " + sezona);
     var lib = libByName("Dochádzka"); // const dbLib.js
    // var entries = lib.entries().filter(entry => entry.field("sezóna") == sezona);
@@ -141,3 +135,11 @@ const zamDochadzka = (zam, sezona) => {
     }
     return odpracovane;
 }
+
+// DODÁVATELIA
+
+
+// PARTNERI
+
+
+// KLIENTI

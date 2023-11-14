@@ -1,12 +1,4 @@
-const prijemky = "0.1.01";
-
-const verziaPrijemky = () => {
-    var result = "";
-    var nazov = "prijemkyLibrary";
-    result = nazov + " " + prijemky;
-    return result;
-}
-
+// ADMINISTRÁCIA
 const prepocitatPrijemku = prijemka => {
 
     prijemka.set("sezóna", prijemka.field("Dátum").getFullYear());

@@ -1,10 +1,28 @@
-const varziaUcty = () => {
-    var nazov = "uctyLibrary";
-    var verzia = "0.2.11";
-    //message("cpLibrary v." + verzia);
-    return nazov + " " + verzia;
-}
+// SKLAD
 
+// PLATNOST CIEN
+
+// CENNÍK PRÁC
+const setPrice = en => {
+    message("V199");
+
+    let links = en.linksFrom("Ceny prác", "Práca");
+    if (links.length > 0) {
+        message(links.length);
+
+        let date = new Date().getTime();
+        message("Cena: " + price + "\nDátum: " + date);
+        let price = lastValid(links, date, "Cena", "Platnosť od");
+        message("Cena: " + price + "\nDátum: " + date);
+
+        en.set("Cena bez DPH", price);
+    } else {
+        message("Položka nemá žiadne zaevidované ceny");
+    }
+}
+// LIMITY PRACOVNÝCH HODÍN
+
+// ÚČTY
 const ucetPrijmy = ucet => {
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var prijmyCelkom = 0;
@@ -33,7 +51,6 @@ const ucetPrijmy = ucet => {
         message("Nie sú vybraté sezóny na prepočet");
     }
 };
-
 const ucetVydavky = ucet => {
     var sezony = ucet.field("Výber sezóny na prepočet"); //sezóny na prepočet
     var vydavkyCelkom = 0;
