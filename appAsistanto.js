@@ -732,7 +732,7 @@ const setBckgColor = (en, field) => {
                     case "Čakajúca":
                             en.set(BKG_COLOR, MEM_LIGHT_GREEN)
                     case "Čakajúca (klient)":
-                            en.set(BKG_COLOR, PORCELAIN)
+                            en.set(BKG_COLOR, AIRCRAFT_WHITE)
                         break;
                     case "Prebieha":
                             en.set(BKG_COLOR, BONE)
@@ -756,4 +756,16 @@ const setBckgColor = (en, field) => {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
+
+
+
+let entries = lib().entries()
+if(entries) {
+    for(let i = 0; i < entries.length; i++ ) {
+        entries
+    }
+}
+
+
+
 // End of file: 25.03.2022, 16:16
