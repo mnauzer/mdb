@@ -172,15 +172,33 @@ const BKG_COLOR = "farba pozadia"
 const FIREBRICK = "#B22222"
 const CHARTREUSE = "#7FFF00"
 const MEDIUMAQUAMARINE = "#66CDAA"
+// GRAY
+const MARENGO = "#4C5866"
+const MEDIUM_GRAY = "#BEBEBE"
+const NICKEL = "#727472"
+const STONE_GRAY  = "#928E85"
+const OUTER_SPACE = "#414A4C"
+// WHITE
+const PORCELAIN = "#FFFEFC"
+const WHITE = "#FFFFFF"
+const CHIFFON = "#FBFAF2"
+const BONE = "#E7DECC"
+const ACOUSTIC_WHITE = "#EFECE1"
+const AIRCRAFT_WHITE = "#EDF2F8"
+const CERAMIC = "#FCFFF9"
+const BRIGHT_WHITE = "#F4F5F0"
+const BRILLIANT_WHITE = "#EDF1FE"
+
+
+
 
 // MEMENTO COLORS
-
 const MEM_RED = "#B22222"
 const MEM_GREEN = "#669966"
 const MEM_BLUE = "#4D66CC"
 const MEM_LIGHT_GREEN = "#CCFFCC"
 const MEM_LIGHT_YELLOW = "#FFFFCC"
 const MEM_LIGHT_BLUE = "#CCFFFF"
-const MEM_DEFAULT = "#FFFFFF"
+
 
 

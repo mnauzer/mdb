@@ -718,5 +718,43 @@ const getLibFieldsNames = lib =>{
     }
 }
 
+// COLORS
+const setBckgColor = (en, field) => {
+    let scriptName = "setBckgColor 23.0.01"
+    let libName = lib().title
+    let variables = "Library: " + libName + "\nEntry: " + entry.name + "\nField: " + field
+    let parameters = "lib: " + libName + "\nen:" + entry + "\nfield: " + field
+    try {
 
+        switch (libName) {
+            case LIB_ZKZ: // Zákazky
+                switch (field) {
+                    case "Čakajúca":
+                            en.set(BKG_COLOR, PORCELAIN)
+                        break;
+                    case "Čakajúca (klient)":
+                            en.set(BKG_COLOR, CHIFFON)
+                        break;
+                    case "Prebieha":
+                            en.set(BKG_COLOR, BONE)
+                        break;
+                    case "Ukončená":
+                            en.set(BKG_COLOR, NICKEL)
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+
+
+    //let msgTxt = "App DB: " + appDB + "\nEntryToSet: " + entryToSet.name
+    // msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
+
+    } catch (error) {
+        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+    }
+}
 // End of file: 25.03.2022, 16:16
