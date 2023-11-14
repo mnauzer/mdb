@@ -17,7 +17,6 @@ const newEntryDochadzka = en => {
         en.set(SEASON, season)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
@@ -25,14 +24,13 @@ const newEntryDochadzka = en => {
 const updateEntryDochadzka = en => {
     let scriptName = "updateEntryDochadzka 23.0.01"
     let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, mementoLibrary)
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
@@ -194,3 +192,4 @@ const aSalary = (en, NEW_ENTRY) => {
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
+

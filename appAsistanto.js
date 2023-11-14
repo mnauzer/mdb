@@ -643,4 +643,51 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
     errorLib.create(newLog)
 }
 
+
+// lib ZAMESTNANCI
+const lastSadzba = (employee, date, inptScript) => {
+    let scriptName = "lastSadzba 23.0.07"
+    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
+    let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
+    try {
+        // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+        let links = employee.linksFrom(LIB_ZS, FLD_ZAM);
+        variables += "\nZáznamov: " + links.length
+        filtered = filterByDate(links, date, "Platnosť od", scriptName);
+        if (filtered.length < 0) {
+            msgGen(APP, "libDochadzka.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
+        } else {
+            filtered.sort({ compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000 }})
+            filtered.reverse();
+        }
+        //vyberie a vráti sadzbu z prvého záznamu
+        let sadzba = filtered[0].field("Sadzba");
+        variables += "\nSadzba: " + sadzba
+        let msgTxt = "Aktuálna sadzba zamestnanca " + employee.name + " je " + sadzba + "€/hod"
+        msgGen(APP, "libDochadzka.js", scriptName, msgTxt, variables, parameters);
+        return sadzba;
+    } catch (error) {
+        errorGen(APP, "libDochadzka.js", scriptName, error, variables, parameters);
+    }
+}
+
+const getLibFieldsNames = en =>{
+    let scriptName = "getLibFieldsNames 23.0.01"
+    let mementoLibrary = lib().title
+    let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
+    let parameters = "en: " + en
+    try {
+        let fields = lib().fields
+        let fieldsNames = []
+        for (let f in fields) {
+            fieldsNames.push(fields[f] + "\n")
+        }
+        libByName(mementoLibrary).set("fields", fieldsNames)
+
+    } catch (error) {
+        errorGen(APP, "libDochadzka.js", scriptName, error, variables, parameters)
+    }
+}
+
+
 // End of file: 25.03.2022, 16:16
