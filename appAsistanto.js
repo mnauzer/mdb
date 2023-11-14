@@ -730,10 +730,9 @@ const setBckgColor = (en, field) => {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
                     case "Čakajúca":
-                            en.set(BKG_COLOR, PORCELAIN)
-                        break;
+                            en.set(BKG_COLOR, MEM_LIGHT_GREEN)
                     case "Čakajúca (klient)":
-                            en.set(BKG_COLOR, CHIFFON)
+                            en.set(BKG_COLOR, PORCELAIN)
                         break;
                     case "Prebieha":
                             en.set(BKG_COLOR, BONE)
