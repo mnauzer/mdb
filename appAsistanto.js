@@ -373,7 +373,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 const newEntry = en => {
     let scriptName = "newEntry 23.0.03"
     let mementoLibrary = lib().title
-    let variables = "Záznam: " + entryDefault().name + "\nmementoLibrary: " + mementoLibrary
+  //  let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
