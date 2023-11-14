@@ -467,15 +467,32 @@ const unlockDB = (season, mementoLibrary) => {
     }
 }
 const setID = entries => {
-    let scriptName = "setID 23.0.02"
+    let scriptName = "setID 23.0.03"
     let variables = "Počet záznamov: " + entries.length
     let parameters = "entries: " + entries
     try {
         entries.sort(orderDate)
         entries.reverse()
         for (var e = 0; e < entries.length; e++) {
-            entries[e].set("ID", e + 1)
+            entries[e].set("ID", e++)
         }
+        message("ID's is set")
+    } catch (error) {
+        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+    }
+
+}
+const setNumber = entries => {
+    let scriptName = "setNumber 23.0.01"
+    let variables = "Počet záznamov: " + entries.length
+    let parameters = "entries: " + entries
+    try {
+        entries.sort(orderDate)
+        entries.reverse()
+        for (var e = 0; e < entries.length; e++) {
+            entries[e].set("ID", e++)
+        }
+        message("new number's is set")
     } catch (error) {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
