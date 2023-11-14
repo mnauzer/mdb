@@ -373,7 +373,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 const newEntry = en => {
     let scriptName = "newEntry 23.0.03"
     let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
+    let variables = "Záznam: " + entryDefault().name + "\nmementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Nový záznam - " + mementoLibrary)
     try {
@@ -397,18 +397,20 @@ const newEntry = en => {
     }
 }
 const updateEntry = en => {
-    let scriptName = "updateEntry 23.0.02"
+    let scriptName = "updateEntry 23.0.03"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     message("Úprava záznamu - " + mementoLibrary);
     try {
         en.set(VIEW, VIEW_EDIT)
+        en.set(DATE, new Date())
+        en.set(MOD, user())
+        en.set(MOD_DATE, new Date())
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         if (appDB){
-            en.set(MOD, user())
-            en.set(MOD_DATE, new Date())
+
         } else {
             message("Databáza nenájdená v APP")
         }
@@ -724,7 +726,6 @@ const setBckgColor = (en, field) => {
     let variables = "Library: " + libName + "\nEntry: " + entry.name + "\nField: " + field
     let parameters = "lib: " + libName + "\nen:" + entry + "\nfield: " + field
     try {
-
         switch (libName) {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
@@ -745,12 +746,7 @@ const setBckgColor = (en, field) => {
                 break;
             default:
                 break;
-        }
-
-
-    //let msgTxt = "App DB: " + appDB + "\nEntryToSet: " + entryToSet.name
-    // msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
-
+}
     } catch (error) {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
