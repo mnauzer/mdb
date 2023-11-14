@@ -682,7 +682,7 @@ const getLibFieldsNames = en =>{
         for (let f in fields) {
             fieldsNames.push(fields[f] + "\n")
         }
-        libByName(mementoLibrary).set("fields", fieldsNames)
+        libByName(APP_DB).find(mementoLibrary).set("fields", fieldsNames)
 
     } catch (error) {
         errorGen(APP, "libDochadzka.js", scriptName, error, variables, parameters)
