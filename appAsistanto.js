@@ -672,7 +672,7 @@ const lastSadzba = (employee, date, inptScript) => {
 }
 
 const getLibFieldsNames = lib =>{
-    let scriptName = "getLibFieldsNames 23.0.12"
+    let scriptName = "getLibFieldsNames 23.0.13"
     let libName = lib.title
     let variables = "Library: " + libName
     let parameters = "lib: " + libName
@@ -684,7 +684,7 @@ const getLibFieldsNames = lib =>{
         for (let f in fields) {
             fieldsNames.push(fields[f] + "\n")
         }
-        let msgTxt = "Fields: " + fields + "\nEntryToSet: " + entryToSet.name +"\nField names: " + fieldsNames
+        let msgTxt = "App DB: " + appDB.name + "\nEntryToSet: " + entryToSet.name
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         entryToSet.set("Fields", fieldsNames)
 
