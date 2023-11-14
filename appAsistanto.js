@@ -672,10 +672,10 @@ const lastSadzba = (employee, date, inptScript) => {
 }
 
 const getLibFieldsNames = lib =>{
-    let scriptName = "getLibFieldsNames 23.0.10"
+    let scriptName = "getLibFieldsNames 23.0.11"
     let libName = lib.title
-    let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en
+    let variables = "Ĺibrary: " + libName
+    let parameters = "lib: " + libName
     try {
         let fields = lib.fields()
         let fieldsNames = []
