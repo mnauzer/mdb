@@ -756,16 +756,4 @@ const setBckgColor = (en, field) => {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-
-
-
-let entries = lib().entries()
-if(entries) {
-    for(let i = 0; i < entries.length; i++ ) {
-        entries
-    }
-}
-
-
-
 // End of file: 25.03.2022, 16:16
