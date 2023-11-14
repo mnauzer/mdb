@@ -274,7 +274,7 @@ const findAppDBbyName = (season, libTitle) => {
 }
 const getSeason = (en, mementoLibrary, inptScript) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.1.02"
+    let scriptName = "getSeason 23.1.0"
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     if(en == undefined || en == null){
@@ -284,7 +284,6 @@ const getSeason = (en, mementoLibrary, inptScript) => {
     }
     try {
         let season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString()
-        en.set(SEASON, season)
         variables += "\nSezóna: " + season + "\n"
      //   let logMsg = "Setting season field to " + season
      //  logGen(mementoLibrary, "appAsistanto.js", scriptName, logMsg, variables, parameters)
@@ -372,7 +371,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    let scriptName = "newEntry 23.0.0"
+    let scriptName = "newEntry 23.0.03"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
