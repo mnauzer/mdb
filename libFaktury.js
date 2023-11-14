@@ -1,13 +1,4 @@
-// FAKtÚRY VYSTAVENÉ
-// Library/Event/Script:    libFakturyPrijate.js
-// JS Libraries:
-// Dátum:                   09.04.2023
-// Popis:
-// Autor:                   just me, for my garden business. this code is muddy like me
-// script library pre knižnicu Faktúry Prijaté
-
-// check if invoice is overdue and set entry color code
-// skontroluje či je faktúra po splatnosti a nastaví farebný práznak záznamu
+// FAKTÚRY VYSTAVENÉ
 const checkOverdue = (en, date) => {
     if (!en.field(DOFA_PAYED)){
         if (en.field(DOFA_D_SPL) <= date ) {
@@ -19,9 +10,8 @@ const checkOverdue = (en, date) => {
             en.set(ENT_COLOR, MEM_GREEN)
     }
 }
-// check if invoice items are
-// skontroluje či položky faktúry sú zaevidované na skladovej príjemke
 const checkRcpts = en => {
+// skontroluje či položky faktúry sú zaevidované na skladovej príjemke
     var receipts = libByName(LIB_RCPTS);
 
     var links = en.linksFrom(LIB_RCPTS, RCPTS_INVC);
@@ -35,9 +25,8 @@ const checkRcpts = en => {
     }
 
 }
-// create or update new entry in DBA_OBL
-// vytvorí alebo upraví záznam v aZáväzky
 const updateObligations = en => {
+// vytvorí alebo upraví záznam v aZáväzky
     var obligations = libByName(DBA_OBL);
     // check if entry exist
     var links = en.linksFrom(DBA_OBL, A_OBL_INVC);
