@@ -1,3 +1,4 @@
+// FAKtÚRY VYSTAVENÉ
 // Library/Event/Script:    libFakturyPrijate.js
 // JS Libraries:
 // Dátum:                   09.04.2023
@@ -18,8 +19,6 @@ const checkOverdue = (en, date) => {
             en.set(ENT_COLOR, MEM_GREEN)
     }
 }
-
-
 // check if invoice items are
 // skontroluje či položky faktúry sú zaevidované na skladovej príjemke
 const checkRcpts = en => {
@@ -36,7 +35,6 @@ const checkRcpts = en => {
     }
 
 }
-
 // create or update new entry in DBA_OBL
 // vytvorí alebo upraví záznam v aZáväzky
 const updateObligations = en => {
@@ -54,4 +52,8 @@ const updateObligations = en => {
 
 
 }
+
+// FAKTÚRY PRIJATÉ
+
+
 // End of file: 09.04.2023, 12:14
