@@ -672,17 +672,19 @@ const lastSadzba = (employee, date, inptScript) => {
 }
 
 const getLibFieldsNames = en =>{
-    let scriptName = "getLibFieldsNames 23.0.01"
+    let scriptName = "getLibFieldsNames 23.0.02"
     let mementoLibrary = lib().title
     let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
     let parameters = "en: " + en
     try {
         let fields = lib().fields
         let fieldsNames = []
+        let dbToSet = libByName(APP_DB)
+        let entryToSet = dbToSet.find(mementoLibrary)
         for (let f in fields) {
             fieldsNames.push(fields[f] + "\n")
         }
-        libByName(APP_DB).find(mementoLibrary).set("fields", fieldsNames)
+        entryToSet.set("Fields", fieldsNames)
 
     } catch (error) {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
