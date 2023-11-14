@@ -739,7 +739,7 @@ const setBckgColor = (en, field) => {
                             en.set(BKG_COLOR, BONE)
                         break;
                     case "Ukončená":
-                            en.set(BKG_COLOR, NICKEL)
+                            en.set(BKG_COLOR, OUTER_SPACE)
                         break;
                     default:
                         break;
