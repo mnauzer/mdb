@@ -89,8 +89,8 @@ const updateObligations = en => {
     // check if entry exist
     var links = en.linksFrom(DBA_OBL, A_OBL_INVC);
     if (links.length <= 0) {
-        // if not exist, create new entry
-        message("entry not exist");
+			// if not exist, create new entry
+        message("entry don't exist");
 
     } else {
         // if exist update entry
