@@ -679,8 +679,8 @@ const getLibFieldsNames = en =>{
     try {
         let fields = lib().fields
         let fieldsNames = []
-        let dbToSet = libByName(APP_DB)
-        let entryToSet = dbToSet.find(mementoLibrary)
+        let appDB = libByName(APP_DB)
+        let entryToSet = appDB.find(mementoLibrary)
         for (let f in fields) {
             fieldsNames.push(fields[f] + "\n")
         }
