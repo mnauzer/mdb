@@ -140,7 +140,8 @@ const newEntryZavazky = (employee, en, sum) => {
         let novyZavazok = zavazky.entries()[0]
         if (novyZavazok.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "\nNový záznam záväzku č. " + newNumber[0]
-            appDB.setAttr("posledné číslo", newNumber[0] + 1)
+            appDB.setAttr("posledné číslo", newNumber[0])
+            appDB.setAttr("následujúce číslo", newNumber[0] + 1)
             novyZavazok.set(VIEW, VIEW_PRINT)
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
