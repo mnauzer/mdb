@@ -104,7 +104,7 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.04"
+    let scriptName = "newEntryZavazky 23.0.05"
     let parameters = "en: " + en
     let mementoLibrary = lib().title
     let variables = "user: " + user() + "\nmemLib: " + mementoLibrary
@@ -118,29 +118,32 @@ const newEntryZavazky = (employee, en, sum) => {
         variables += "\nappDB: " + appDB
         let newNumber = getNewNumber(appDB, season, mementoLibrary, scriptName)
         variables += "\nnumber: " + newNumber[0]
-        let newEntry = new Object();
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
+        // vytvorenie nového záznamu
+        let newEntry = new Object();
         newEntry[NUMBER] = newNumber[0];
         newEntry[NUMBER_ENTRY] = newNumber[1];
         newEntry[DATE] = date;
         newEntry["Typ"] = "Mzdy";
-        newEntry["info"] = "generované automaticky";
         newEntry["Popis"] = popis;
         newEntry["Zamestnanec"] = employee;
         newEntry["Dochádzka"] = en;
         newEntry["Suma"] = sum;
+        newEntry["info"] = "generované automaticky";
         newEntry[SEASON]= season
         newEntry[CR] = user()
         newEntry[CR_DATE] = new Date()
         newEntry[SEASON] = season;
         zavazky.create(newEntry);
+        // kontrola vytvorenia záznamu
         let novyZavazok = zavazky.entries()[0]
         if (novyZavazok.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "\nNový záznam záväzku č. " + newNumber[0]
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
+
         logGen(mementoLibrary, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
