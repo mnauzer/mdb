@@ -63,6 +63,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         let datum = en.field(DATE)
         let zavazok = en.field("Generovať záväzky")
         let vymazaneCisla = []
+        let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
         let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
@@ -102,7 +103,6 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                 zamestnanci[z].set("Preplatok/Nedoplatok", Nedoplatok);
                 zamestnanci[z].set("Dochádzka", HodnotenieD);
                 if (zavazok) {
-                    let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
 
                     if(stareZavazky){
                         for (let i in stareZavazky) {
@@ -110,6 +110,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                             vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
                             stareZavazky[i].trash()
                         }
+                    stareZavazky = false
                     }
                     if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                     newEntryZavazky(zamestnanci[z], en, dennaMzda)
