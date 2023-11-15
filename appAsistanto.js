@@ -426,15 +426,15 @@ const updateEntry = en => {
     }
 }
 const setEntry = (en, inptScript) => {
-    let scriptName = "setEntry 23.0.07"
+    let scriptName = "setEntry 23.0.08"
     let memLib = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + memLib
-    let parameters = "en: " + en +  "\nmemLib: " + memLib +  "\ninptScript: " + inptScript
+    let parameters = "en: " + "\ninptScript: " + inptScript
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const saveEntry = (en,  inptScript) => {
@@ -449,10 +449,19 @@ const saveEntry = (en,  inptScript) => {
         variables += "\nseason: " + season
         let appDB = getAppSeasonDB(season, memLib, scriptName)
         variables += "\nappDB: " + appDB
-        let nextNumber = en.field(NUMBER_ENTRY)
         variables += "\nnextNumber: " + nextNumber
         appDB.setAttr("nasledujúce číslo", nextNumber + 1)
         let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + memLib
+        en.setAttr("nasledujúce číslo", nextNumber[1])
+        en.setAttr("posledné číslo", nextNumber[1] + 1)
+        switch (memLib) {
+            case LIB_DOCH:
+                prepocitatZaznamDochadzky(en)
+                break;
+        
+            default:
+                break;
+        }
         logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
