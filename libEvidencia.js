@@ -104,16 +104,14 @@ const prepocitatZaznamDochadzky = en => {
                 if (zavazok) {
                     let stareZavazky = zamestnanci[z].linksFrom(LIB_ZVK, "Dochádzka")
                     if(stareZavazky){
-
                         for (let i in stareZavazky) {
+                            message("Mažem staré záväzky...")
                             vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
                             stareZavazky[i].trash()
-                        }
-
-                    } else {
-                        if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-                        newEntryZavazky(zamestnanci[z], en, dennaMzda)
+                              }
                     }
+                    if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+                    newEntryZavazky(zamestnanci[z], en, dennaMzda)
                 }
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
