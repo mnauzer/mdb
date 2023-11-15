@@ -31,7 +31,8 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
         let logTxt = "entries: " + entries.length
-        entries.filter(entry => Number(entry.field(dateField)) <= Number(entry.field(dateField)))
+        //entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
+        entries.filter(entry => Number(entry.field(dateField)) <= Number(entry.field(maxDate)))
         //entries.sort((entryA, entryB) => entryA.field(dateField).getTime()/1000 - entryB.field(dateField).getTime()/1000)
         entries.sort((entryA, entryB) => Number(entryA.field(dateField)) - Number(entryB.field(dateField)))
         entries.reverse()
@@ -453,7 +454,7 @@ const saveEntry = (en, inptScript) => {
         variables += "\nappDB: " + appDB
         let newNumber = getNewNumber(appDB, season, memLib, scriptName)
         variables += "\nnewNumber: " + newNumber
-        createdEntry = memLib.entries()[0]
+        createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
@@ -466,7 +467,7 @@ const saveEntry = (en, inptScript) => {
             case LIB_DOCH:
                 prepocitatZaznamDochadzky(en)
                 break;
-
+        
             default:
                 break;
         }
