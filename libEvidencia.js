@@ -102,7 +102,7 @@ const prepocitatZaznamDochadzky = en => {
                 employees[z].set("Dochádzka", libHodnotenieD);
                 if (zavazok) {
                     if (z == 0 ) {message("Generujem závazky\nIN PROGRESS.....")}
-                    newEntryZavazok(employees[z])
+                    newEntryZavazky(employees[z])
                 }
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
