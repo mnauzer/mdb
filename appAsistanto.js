@@ -730,11 +730,11 @@ const getLibFieldsNames = lib =>{
 
 // COLORS
 const setBckgColor = (en, field) => {
-    let scriptName = "setBckgColor 23.0.01"
+    let scriptName = "setBckgColor 23.0.02"
+    let variables = "user: " + user()
+    let parameters = "en:" + en + "\nfield: " + field
     try {
         let libName = lib().title
-        let variables = "Library: " + libName + "\nEntry: " + entry.name + "\nField: " + field
-        let parameters = "lib: " + libName + "\nen:" + entry + "\nfield: " + field
         switch (libName) {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
@@ -757,6 +757,7 @@ const setBckgColor = (en, field) => {
                 break;
 }
     } catch (error) {
+        variables += "\nLibrary: " + libName + "\nEntry: " + entry.name + "\nField: " + field
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
