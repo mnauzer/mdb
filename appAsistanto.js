@@ -26,7 +26,7 @@ function fltrDbByName(value, name) {
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    let scriptName = "filterByDate 23.0.08"
+    let scriptName = "filterByDate 23.0.09"
     let variables = "user: " + user()
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
@@ -39,6 +39,8 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         // }
         // return links
         entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
+        entries.sort((entryA, entryB) => entryA.field(dateField).getTime()/1000 - entryB.field(dateField.getTime()/1000))
+        entries.reverse()
         logTxt += "\nfiltered entries: " + entries.length
         logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters )
         return entries
