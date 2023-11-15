@@ -129,7 +129,7 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry["Popis"] = popis;
         newEntry["Zamestnanec"] = employee;
         newEntry["Dochádzka"] = en;
-        newEntry["Suma"] = sum;
+        newEntry["Suma"] = sum.toFixed(2);
         newEntry["info"] = "generované automaticky";
         newEntry[SEASON]= season
         newEntry[CR] = user()

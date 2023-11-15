@@ -121,7 +121,7 @@ const prepocitatZaznamDochadzky = en => {
             }
         }
         prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
-        en.set("Mzdové náklady", mzdyCelkom);
+        en.set("Mzdové náklady", mzdyCelkom.toFixed(2));
         en.set("Pracovná doba", pracovnaDoba);
         en.set("Odpracované", odpracovaneCelkom);
         en.set("Na zákazkách", evidenciaCelkom);
