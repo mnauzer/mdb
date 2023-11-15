@@ -65,6 +65,7 @@ const prepocitatZaznamDochadzky = en => {
         let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
+         let vymazaneCisla = []
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
@@ -103,12 +104,12 @@ const prepocitatZaznamDochadzky = en => {
                 if (zavazok) {
                     let stareZavazky = zamestnanci[z].linksFrom(LIB_ZVK, "Dochádzka")
                     if(stareZavazky){
-                        let vymazaneCisla = []
+
                         for (let i in stareZavazky) {
                             vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
                             stareZavazky[i].trash()
                         }
-                        
+
                     } else {
                         if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                         newEntryZavazky(zamestnanci[z], en, dennaMzda)
