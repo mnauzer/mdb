@@ -25,20 +25,22 @@ function fltrDbByName(value, name) {
     }
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
-    let scriptName = "filterByDate 23.0.06"
+    let scriptName = "filterByDate 23.0.07"
     let variables = "user: " + user()
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
         let logTxt = "Záznamov: " + entries.length
-        let links = []
-        for(var e = 0; e < entries.length; e++) {
-            if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
-                links.push(entries[e])
-            }
-        }
-        return links
+        //let links = []
+        // for(var e = 0; e < entries.length; e++) {
+        //     if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
+        //         links.push(entries[e])
+        //     }
+        // }
+        // return links
+        entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
+        return entries
     } catch (error) {
-        variables += "\nlinks: " + links.length
+        variables += "\nlinks: " + entries.length
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
