@@ -53,7 +53,7 @@ const saveEntryDochadzka = en => {
     }
 }
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.06"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.07"
     let variables = "user: " + user()
     let parameters = "en: " + en
     try {
@@ -103,10 +103,14 @@ const prepocitatZaznamDochadzky = en => {
                 if (zavazok) {
                     let stareZavazky = zamestnanci[z].linksFrom(LIB_ZVK, "Dochádzka")
                     if(stareZavazky){
-                        for (let i in stareZavazky)
-                        stareZavazky[i].trash()
+                        let vymazaneCisla = []
+                        for (let i in stareZavazky) {
+                            vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
+                            stareZavazky[i].trash()
+                        }
+                        appDB.setAttr("vymazané čísla", vymazaneCisla.join(','))
                     } else {
-                        if (z == 0 ) {message("Generujem záväzky......")} // message only once
+                        if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                         newEntryZavazky(zamestnanci[z], en, dennaMzda)
                     }
                 }
@@ -114,10 +118,10 @@ const prepocitatZaznamDochadzky = en => {
                 odpracovaneCelkom += pracovnaDoba;
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac) {
-                    for (var ep in evidenciaPrac) {
-                        var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                        var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
-                        for (var znz in zamNaZakazke) {
+                    for (let ep in evidenciaPrac) {
+                        let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
+                        let naZakazke = evidenciaPrac[ep].field("Odpracované/os");
+                        for (let znz in zamNaZakazke) {
                             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                                 evidenciaCelkom += naZakazke;
                             }
