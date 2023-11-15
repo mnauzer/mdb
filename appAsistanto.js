@@ -689,7 +689,7 @@ const lastSadzba = (employee, date, inptScript) => {
         let links = employee.linksFrom(LIB_SZ, FLD_ZAM);
         variables += "\nZáznamov: " + links.length
         filteredLinks = filterByDate(links, date, "Platnosť od", scriptName);
-        variables += "\nFiltrovaných záznamov: " + filterdLinks.length
+        variables += "\nFiltrovaných záznamov: " + filteredLinks.length
         if (filteredLinks.length < 0) {
             msgGen(APP, "appAsistanto.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
