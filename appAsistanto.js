@@ -679,9 +679,9 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 }
 
 
-// lib ZAMESTNANCI
+// ZAMESTNANCI
 const lastSadzba = (employee, date, inptScript) => {
-    let scriptName = "lastSadzba 23.0.08"
+    let scriptName = "lastSadzba 23.0.09"
     let variables = "user: " + user()
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
