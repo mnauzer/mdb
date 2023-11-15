@@ -108,7 +108,7 @@ const prepocitatZaznamDochadzky = en => {
                             vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
                             stareZavazky[i].trash()
                         }
-                        appDB.setAttr("vymazané čísla", vymazaneCisla.join(','))
+                        
                     } else {
                         if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                         newEntryZavazky(zamestnanci[z], en, dennaMzda)
@@ -138,6 +138,7 @@ const prepocitatZaznamDochadzky = en => {
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
         message("Hotovo...");
+        return vymazaneCisla
     } catch (error) {
         errorGen(LIB_DOCH, 'appAsistanto.js', scriptName, error, variables, parameters);
     }

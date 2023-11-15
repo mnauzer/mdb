@@ -449,7 +449,7 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    let scriptName = "saveEntry 23.0.16"
+    let scriptName = "saveEntry 23.0.17"
     let variables = "user: " + user()
     let memLib = lib().title
     let parameters = "en: " + en + "\ninptScript: " + inptScript
@@ -474,7 +474,8 @@ const saveEntry = (en, inptScript) => {
         }
         switch (memLib) {
             case LIB_DOCH:
-                prepocitatZaznamDochadzky(en)
+                vymazaneCisla = prepocitatZaznamDochadzky(en)
+                appDB.setAttr("vymazané čísla", vymazaneCisla.join(','))
                 break;
         
             default:
