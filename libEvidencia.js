@@ -1,20 +1,26 @@
 // DOCHÁDZKA
 const newEntryDochadzka = en => {
-    let scriptName = "newEntryDochadzka 23.0.06"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+    let scriptName = "newEntryDochadzka 23.0.07"
     let parameters = "en: " + en
-    message("Nový záznam - " + mementoLibrary)
+    let mementoLibrary = lib().title
+    let variables = "user: " + updateEntryDochadzkaser()
+    message("Nový záznam [" + mementoLibrary +"]")
     try {
         setEntry(en)
         let date = new Date()
         let season = getSeason(en, mementoLibrary, scriptName)
+        variables += "\nseason: " + season
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        variables += "\nappDB: " + appDB
         let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        variables += "\nnumber: " + number
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
         en.set(SEASON, season)
+        let msgTxt = "nový záznam dochádzky č. " + number[0]
+        msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
+        return sadzba;
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters)
