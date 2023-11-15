@@ -62,10 +62,10 @@ const prepocitatZaznamDochadzky = en => {
         let odchod = roundTimeQ(en.field("Odchod"));
         let datum = en.field(DATE)
         let zavazok = en.field("Generovať záväzky")
+        let vymazaneCisla = []
         let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
-         let vymazaneCisla = []
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
@@ -102,13 +102,15 @@ const prepocitatZaznamDochadzky = en => {
                 zamestnanci[z].set("Preplatok/Nedoplatok", Nedoplatok);
                 zamestnanci[z].set("Dochádzka", HodnotenieD);
                 if (zavazok) {
-                    let stareZavazky = zamestnanci[z].linksFrom(LIB_ZVK, "Dochádzka")
+                    let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+                    var lfLibraryName = linksFrom("LibraryName", "LinkedFieldName");
+
                     if(stareZavazky){
                         for (let i in stareZavazky) {
                             message("Mažem staré záväzky...")
                             vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
                             stareZavazky[i].trash()
-                              }
+                        }
                     }
                     if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                     newEntryZavazky(zamestnanci[z], en, dennaMzda)
