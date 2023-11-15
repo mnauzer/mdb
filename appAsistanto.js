@@ -451,7 +451,7 @@ const saveEntry = (en,  inptScript) => {
         variables += "\nappDB: " + appDB
         let nextNumber = en.field(NUMBER_ENTRY)
         variables += "\nnextNumber: " + nextNumber
-        appDB.setAttr("nasledujúce číslo", Number(nextNumber)  ++)
+        appDB.setAttr("nasledujúce číslo", nextNumber + 1)
         let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + memLib
         logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
