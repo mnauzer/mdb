@@ -444,7 +444,6 @@ const saveEntry = (en,  inptScript) => {
     let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
-        let memLib = lib().title
         variables += "\nlibrary: " + memLib
         let season = getSeason(en, memLib, scriptName)
         variables += "\nseason: " + season
