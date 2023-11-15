@@ -103,7 +103,6 @@ const prepocitatZaznamDochadzky = en => {
                 zamestnanci[z].set("Dochádzka", HodnotenieD);
                 if (zavazok) {
                     let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
-                    var lfLibraryName = linksFrom("LibraryName", "LinkedFieldName");
 
                     if(stareZavazky){
                         for (let i in stareZavazky) {
