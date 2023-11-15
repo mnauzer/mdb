@@ -104,7 +104,7 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.02"
+    let scriptName = "newEntryZavazky 23.0.03"
     let parameters = "en: " + en
     let mementoLibrary = lib().title
     let variables = "user: " + user()
@@ -116,10 +116,10 @@ const newEntryZavazky = (employee, en, sum) => {
         variables += "\nseason: " + season
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         variables += "\nappDB: " + appDB
-        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
-        variables += "\nnumber: " + number
+        let newNumber = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        variables += "\nnumber: " + newNumber[0]
         let newEntry = new Object();
-        let popis = ""
+        let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
         newEntry[NUMBER] = newNumber[0];
         newEntry[NUMBER_ENTRY] = newNumber[1];
@@ -136,8 +136,8 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[SEASON] = season;
         zavazky.create(newEntry);
         let novyZavazok = zavazky.entries()[0]
-        if (novyZavazok.field(NUMBER_ENTRY) == number[1]) {
-            logTxt += "\nNový záznam záväzku č. " + number[0]
+        if (novyZavazok.field(NUMBER_ENTRY) == newNumber[1]) {
+            logTxt += "\nNový záznam záväzku č. " + newNumber[0]
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
