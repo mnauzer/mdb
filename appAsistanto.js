@@ -202,10 +202,10 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
     }
 }
 const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
-    let scriptName = "getAppSeasonDB 23.1.09"
+    let scriptName = "getAppSeasonDB 23.1.10"
+    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
+    let variables = "user: " + user()
     try {
-        let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n"
-        let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
         let attributes = ""
         if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
             msgGen(mementoLibrary, "appAsistanto.js", scriptName, "season or mementoLibrary are undefined", variables, parameters )
@@ -217,6 +217,7 @@ const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == mementoLibrary) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
+                // TODO: make it js object
                 attributes =
                 "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
                 "\nčíslo testu: " + databazy[v].attr("číslo testu") +
@@ -236,6 +237,7 @@ const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
         logGen(mementoLibrary, "appAsistanto.js", scriptName, logTxt, variables, parameters, attributes )
         return 0
     } catch (error) {
+        variables += ""
         errorGen(mementoLibrary, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
@@ -438,11 +440,11 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, mementoLibrary, inptScript) => {
-    let scriptName = "saveEntry 23.0.12"
-    let variables = "Záznam: " + en.name + "\nmemento library: " + mementoLibrary
+    let scriptName = "saveEntry 23.0.13"
+    let variables = "user: " + user()
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     try {
-       // message("Ukladám záznam...")
+        message("Ukladám záznam...")
         en.set(VIEW, VIEW_PRINT)
         let season = getSeason(en, mementoLibrary, scriptName)
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
@@ -455,6 +457,7 @@ const saveEntry = (en, mementoLibrary, inptScript) => {
         logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
+        variables += "\nentry: " + en.name + "\nmemento library: " + mementoLibrary
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }

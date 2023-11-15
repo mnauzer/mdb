@@ -28,17 +28,16 @@ const LIB_OBJ = "Objednávky"
 const LIB_FV = "Faktúry prijaté"
 const LIB_FO = "Faktúry odoslané"
 const LIB_POH = "Pohľadávky"
-const LIB_ZAV = "Záväzky"
+const LIB_ZVK = "Záväzky"
 
 // EVIDENCIA
 const LIB_PKL = "Pokladňa"
 const LIB_EP = "Evidencia prác"
 const LIB_DOCH = "Dochádzka"
 const LIB_KJ = "Kniha jázd"
-const LIB_ZAS = "Zastávky"
 
 // DATABÁZY
-const LIB_ZAM = "Zamestnanci"
+const LIB_ZVKM = "Zamestnanci"
 const LIB_KLI = "Klienti"
 const LIB_DOD = "Dodávatelia"
 const LIB_PAR = "Partneri"
