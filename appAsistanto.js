@@ -46,7 +46,7 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         filtered.reverse()
         logTxt += "\nfiltered entries: " + filtered.length
         logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters )
-        return entries
+        return filtered
     } catch (error) {
         variables += "\nlinks: " + entries.length
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
@@ -475,9 +475,9 @@ const saveEntry = (en, inptScript) => {
         switch (memLib) {
             case LIB_DOCH:
                 let vymazaneCisla = prepocitatZaznamDochadzky(en)
-                appDB.setAttr("vymazané čísla", vymazaneCisla.join(','))
+                appDB.setAttr("vymazané čísla", vymazaneCisla.join())
                 break;
-        
+
             default:
                 break;
         }
