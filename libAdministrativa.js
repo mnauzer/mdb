@@ -109,7 +109,6 @@ const newEntryZavazky = (employee, en, sum) => {
     let memLib = LIB_ZVK
     let variables = "user: " + user() + "\nmemLib: " + memLib
     try {
-        setEntry(en)
         let date = new Date()
         let logTxt = ""
         let season = getSeason(en, memLib, scriptName)
@@ -137,12 +136,12 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[SEASON] = season;
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
-        let novyZavazok = zavazky.entries()[0]
-        if (novyZavazok.field(NUMBER_ENTRY) == newNumber[1]) {
-            logTxt = "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
-            appDB.setAttr("posledné číslo", newNumber[1])
+        let createdEntry = zavazky.entries()[0]
+        if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
-            novyZavazok.set(VIEW, VIEW_PRINT)
+            appDB.setAttr("posledné číslo", newNumber[1])
+            createdEntry.set(VIEW, VIEW_PRINT)
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }

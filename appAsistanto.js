@@ -430,6 +430,7 @@ const setEntry = (en, inptScript) => {
     let memLib = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + memLib
     let parameters = "en: " + "\ninptScript: " + inptScript
+    let logTxt = ""
     try {
 
     } catch (error) {
@@ -437,7 +438,7 @@ const setEntry = (en, inptScript) => {
         errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const saveEntry = (en,  inptScript) => {
+const saveEntry = (en, inptScript) => {
     let scriptName = "saveEntry 23.0.16"
     let variables = "user: " + user()
     let memLib = lib().title
@@ -451,10 +452,15 @@ const saveEntry = (en,  inptScript) => {
         variables += "\nappDB: " + appDB
         let newNumber = getNewNumber(appDB, season, memLib, scriptName)
         variables += "\nnewNumber: " + newNumber
-        appDB.setAttr("nasledujúce číslo", newNumber + 1)
-        let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + memLib
-        appDB.setAttr("nasledujúce číslo", newNumber[1])
-        appDB.setAttr("posledné číslo", newNumber[1] + 1)
+        createdEntry = memLib.entries()[0]
+        if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
+            appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
+            appDB.setAttr("posledné číslo", newNumber[1])
+            createdEntry.set(VIEW, VIEW_PRINT)
+        } else {
+            logTxt += "\nNový záznam nebol vytvorený"
+        }
         switch (memLib) {
             case LIB_DOCH:
                 prepocitatZaznamDochadzky(en)
