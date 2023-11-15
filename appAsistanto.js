@@ -428,7 +428,7 @@ const updateEntry = en => {
     }
 }
 const setEntry = (en, inptScript) => {
-    let scriptName = "setEntry 23.0.09"
+    let scriptName = "setEntry 23.0.10"
     let memLib = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + memLib
     let parameters = "en: " + "\ninptScript: " + inptScript
@@ -447,6 +447,7 @@ const saveEntry = (en, inptScript) => {
     let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
+        let logTxt = ""
         variables += "\nlibrary: " + memLib
         let season = getSeason(en, memLib, scriptName)
         variables += "\nseason: " + season
