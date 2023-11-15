@@ -687,27 +687,31 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 
 
 // ZAMESTNANCI
-const lastSadzba = (employee, date, inptScript) => {
-    let scriptName = "lastSadzba 23.0.11"
+const sadzbaZamestnanca = (employee, date, inptScript) => {
+    // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
+    // v databáze "LIB_SZ - sadzby zamestnancov"
+    let scriptName = "sadzbaZamestnanca 23.0.12"
     let variables = "user: " + user()
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         let links = employee.linksFrom(LIB_SZ, FLD_ZAM);
         let dateField ="Platnosť od"
+        let msgTxt = ""
+        let sadzba = 0
         variables += "\nZáznamov: " + links.length
         filteredLinks = filterByDate(links, date, dateField, scriptName);
         variables += "\nFiltrovaných záznamov: " + filteredLinks.length
         if (filteredLinks.length < 0) {
-            msgGen(APP, "appAsistanto.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
+            msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu'
         } else {
             //filteredLinks.sort({ compare: function(a,b) { return b.field(dateField).getTime()/1000 - a.field(dateField).getTime()/1000 }})
             //filteredLinks.reverse();
-            let sadzba = filteredLinks[0].field("Sadzba");
+            sadzba = filteredLinks[0].field("Sadzba");
+            msgTxt = "Nájdená sadzba zamestnanca " + employee.name
         }
         //vyberie a vráti sadzbu z prvého záznamu
         variables += "\nZamestnanec: " + employee.name + "\nSadzba: " + sadzba
-        let msgTxt = "Nájdená sadzba zamestnanca " + employee.name
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {

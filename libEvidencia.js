@@ -73,7 +73,7 @@ const prepocitatZaznamDochadzky = en => {
         let evidenciaPrac = en.field("Práce");
         if (employees.length > 0) {
             for (let z = 0; z < employees.length; z++) {
-                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : lastSadzba(employees[z], datum, scriptName);
+                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : sadzbaZamestnanca(employees[z], datum, scriptName);
                 employees[z].setAttr("hodinovka", hodinovka);
 
                 let hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
