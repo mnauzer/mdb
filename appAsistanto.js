@@ -438,9 +438,9 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en,  inptScript) => {
-    let scriptName = "saveEntry 23.0.14"
+    let scriptName = "saveEntry 23.0.15"
     let variables = "user: " + user()
-    let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
+    let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
         let mementoLibrary = lib().title
