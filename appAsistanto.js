@@ -26,9 +26,9 @@ function fltrDbByName(value, name) {
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
     let scriptName = "filterByDate 23.0.05"
-    let variables = ""
-    let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
+        let variables = ""
+        let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
         let logTxt = "Záznamov: " + entries.length
         var links = []
         for(var e = 0; e < entries.length; e++) {
