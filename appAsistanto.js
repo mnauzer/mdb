@@ -681,24 +681,25 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 
 // lib ZAMESTNANCI
 const lastSadzba = (employee, date, inptScript) => {
-    let scriptName = "lastSadzba 23.0.07"
-    let variables = "Zamestnanec: " + employee.name + "\nDátum: " + date
+    let scriptName = "lastSadzba 23.0.08"
+    let variables = "user: " + user()
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-        let links = employee.linksFrom(LIB_ZS, FLD_ZAM);
+        let links = employee.linksFrom(LIB_SZ, FLD_ZAM);
         variables += "\nZáznamov: " + links.length
-        filtered = filterByDate(links, date, "Platnosť od", scriptName);
-        if (filtered.length < 0) {
+        filteredLinks = filterByDate(links, date, "Platnosť od", scriptName);
+        variables += "\nFiltrovaných záznamov: " + filterdLinks.length
+        if (filteredLinks.length < 0) {
             msgGen(APP, "appAsistanto.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
-            filtered.sort({ compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000 }})
-            filtered.reverse();
+            filteredLinks.sort({ compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000 }})
+            filteredLinks.reverse();
         }
         //vyberie a vráti sadzbu z prvého záznamu
         let sadzba = filtered[0].field("Sadzba");
-        variables += "\nSadzba: " + sadzba
-        let msgTxt = "Aktuálna sadzba zamestnanca " + employee.name + " je " + sadzba + "€/hod"
+        variables += "\nZamestnanec: " + employee.name + "\nSadzba: " + sadzba
+        let msgTxt = "Nájdená sadzba zamestnanca " + employee.name
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
@@ -757,6 +758,7 @@ const setBckgColor = (en, field) => {
                 break;
 }
     } catch (error) {
+        en.set("view", VIEW_DEBUG)
         variables += "\nLibrary: " + libName + "\nEntry: " + entry.name + "\nField: " + field
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }

@@ -318,7 +318,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
 
-            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_ZS, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
+            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_SZ, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
             zamestnanci[z].setAttr("hodinovka", hodinovka);
             odpracovane += trvanie;
             nakladyZamestnatec = trvanie * hodinovka;
