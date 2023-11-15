@@ -681,7 +681,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 
 // ZAMESTNANCI
 const lastSadzba = (employee, date, inptScript) => {
-    let scriptName = "lastSadzba 23.0.09"
+    let scriptName = "lastSadzba 23.0.10"
     let variables = "user: " + user()
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
@@ -698,7 +698,7 @@ const lastSadzba = (employee, date, inptScript) => {
             filteredLinks.reverse();
         }
         //vyberie a vráti sadzbu z prvého záznamu
-        let sadzba = filtered[0].field("Sadzba");
+        let sadzba = filteredLinks[0].field("Sadzba");
         variables += "\nZamestnanec: " + employee.name + "\nSadzba: " + sadzba
         let msgTxt = "Nájdená sadzba zamestnanca " + employee.name
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
