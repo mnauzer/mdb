@@ -106,17 +106,17 @@ const updateObligations = en => {
 const newEntryZavazky = (employee, en, sum) => {
     let scriptName = "newEntryZavazky 23.0.06"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let mementoLibrary = LIB_ZVK
-    let variables = "user: " + user() + "\nmemLib: " + mementoLibrary
+    let memLib = LIB_ZVK
+    let variables = "user: " + user() + "\nmemLib: " + memLib
     try {
         setEntry(en)
         let date = new Date()
         let logTxt = ""
-        let season = getSeason(en, mementoLibrary, scriptName)
+        let season = getSeason(en, memLib, scriptName)
         variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        let appDB = getAppSeasonDB(season, memLib, scriptName)
         variables += "\nappDB: " + appDB.name
-        let newNumber = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        let newNumber = getNewNumber(appDB, season, memLib, scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
@@ -146,10 +146,10 @@ const newEntryZavazky = (employee, en, sum) => {
             logTxt += "\nNový záznam nebol vytvorený"
         }
 
-        logGen(mementoLibrary, "appAsistanto.js", scriptName, logTxt, variables, parameters);
+        logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters);
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(mementoLibrary, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(memLib, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
