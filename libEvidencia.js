@@ -53,7 +53,7 @@ const saveEntryDochadzka = en => {
     }
 }
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.03"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.04"
     let variables = "user: " + user()
     let parameters = "en: " + en
     try {
@@ -102,7 +102,7 @@ const prepocitatZaznamDochadzky = en => {
                 employees[z].set("Dochádzka", libHodnotenieD);
                 if (zavazok) {
                     if (z == 0 ) {message("Generujem závazky\nIN PROGRESS.....")}
-                    newEntryZavazky(employees[z])
+                    newEntryZavazky(employees[z], en, dennaMzda)
                 }
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
