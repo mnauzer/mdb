@@ -373,7 +373,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 const newEntry = en => {
     let scriptName = "newEntry 23.0.05"
     let mementoLibrary = lib().title
-    let variables = ""
+    let variables = "user" + user()
     let parameters = "en: " + en
     try {
         message("Nový záznam [" + mementoLibrary + "]")
@@ -384,8 +384,8 @@ const newEntry = en => {
         let season = getSeason(en, mementoLibrary, scriptName)
         variables += "\nseason: " + season //msgGen log
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
-        variables += "\nappDB: " + appDB
         if (appDB){
+            variables += "\nappDB: " + appDB
             let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
             variables += "\nnumber: " + number
             en.set(NUMBER, number[0])
@@ -395,30 +395,32 @@ const newEntry = en => {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        variables += "entry: " + en.name + "\nmementoLibrary: " + mementoLibrary
+        variables += "\nentry: " + en.name + "\nmementoLibrary: " + mementoLibrary
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntry = en => {
-    let scriptName = "updateEntry 23.0.04"
+    let scriptName = "updateEntry 23.0.05"
     let mementoLibrary = lib().title
+    let variables = "user: " + user()
     let parameters = "en: " + en
     try {
         message("Úprava záznamu - " + mementoLibrary);
         en.set(VIEW, VIEW_EDIT)
-        en.set(DATE, new Date())
+        en.set(DATE, en.field(DATE) ? en.field(DATE) : new Date())
         en.set(MOD, user())
         en.set(MOD_DATE, new Date())
         let season = getSeason(en, mementoLibrary, scriptName)
+        variables += "\nseason: " + season //msgGen log
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
         if (appDB){
-
+            variables += "\nappDB: " + appDB
         } else {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        variables += "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+        variables += "\nentry: " + en.name + "mementoLibrary: " + mementoLibrary
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters);
     }
