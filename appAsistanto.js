@@ -26,7 +26,7 @@ function fltrDbByName(value, name) {
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    let scriptName = "filterByDate 23.0.09"
+    let scriptName = "filterByDate 23.0.10"
     let variables = "user: " + user()
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
@@ -688,7 +688,7 @@ const logGen = (mementoLibrary, library, script, log, variables, parameters, att
 
 // ZAMESTNANCI
 const lastSadzba = (employee, date, inptScript) => {
-    let scriptName = "lastSadzba 23.0.10"
+    let scriptName = "lastSadzba 23.0.11"
     let variables = "user: " + user()
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
@@ -701,11 +701,11 @@ const lastSadzba = (employee, date, inptScript) => {
         if (filteredLinks.length < 0) {
             msgGen(APP, "appAsistanto.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
-            filteredLinks.sort({ compare: function(a,b) { return b.field(dateField).getTime()/1000 - a.field(dateField).getTime()/1000 }})
-            filteredLinks.reverse();
+            //filteredLinks.sort({ compare: function(a,b) { return b.field(dateField).getTime()/1000 - a.field(dateField).getTime()/1000 }})
+            //filteredLinks.reverse();
+            let sadzba = filteredLinks[0].field("Sadzba");
         }
         //vyberie a vráti sadzbu z prvého záznamu
-        let sadzba = filteredLinks[0].field("Sadzba");
         variables += "\nZamestnanec: " + employee.name + "\nSadzba: " + sadzba
         let msgTxt = "Nájdená sadzba zamestnanca " + employee.name
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
