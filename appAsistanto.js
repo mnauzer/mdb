@@ -26,17 +26,25 @@ function fltrDbByName(value, name) {
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    let scriptName = "filterByDate 23.0.14"
+    let scriptName = "filterByDate 23.0.15"
     let variables = "user: " + user()
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
         let logTxt = "entries: " + entries.length
         //entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
-        entries.filter(entry => Number(entry.field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000))
+        //entries.filter(entry => Number(entry.field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000))
         //entries.sort((entryA, entryB) => entryA.field(dateField).getTime()/1000 - entryB.field(dateField).getTime()/1000)
-        entries.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
-        entries.reverse()
-        logTxt += "\nfiltered entries: " + entries.length
+
+        // metóda filter tu asi nefunguje tak to skúsim oldway :
+        let filtered = []
+        for(let i in entries) {
+            if(Number(entries[i].field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000)) {
+                filtered.push(entries[i])
+            }
+        }
+        filtered.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
+        filtered.reverse()
+        logTxt += "\nfiltered entries: " + filtered.length
         logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters )
         return entries
     } catch (error) {
