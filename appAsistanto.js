@@ -25,22 +25,20 @@ function fltrDbByName(value, name) {
     }
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
-    let scriptName = "filterByDate 23.0.05"
+    let scriptName = "filterByDate 23.0.06"
+    let variables = "user: " + user()
+    let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
-        let variables = ""
-        let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
         let logTxt = "Záznamov: " + entries.length
-        var links = []
+        let links = []
         for(var e = 0; e < entries.length; e++) {
             if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
                 links.push(entries[e])
             }
         }
-
-        logTxt += "\nFiltrovaných záznamov: " + links.length
-        logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         return links
     } catch (error) {
+        variables += "\nlinks: " + links.length
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
@@ -687,13 +685,14 @@ const lastSadzba = (employee, date, inptScript) => {
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         let links = employee.linksFrom(LIB_SZ, FLD_ZAM);
+        let dateField ="Platnosť od"
         variables += "\nZáznamov: " + links.length
-        filteredLinks = filterByDate(links, date, "Platnosť od", scriptName);
+        filteredLinks = filterByDate(links, date, dateField, scriptName);
         variables += "\nFiltrovaných záznamov: " + filteredLinks.length
         if (filteredLinks.length < 0) {
             msgGen(APP, "appAsistanto.js", scriptName, 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu', variables, parameters);
         } else {
-            filteredLinks.sort({ compare: function(a,b) { return b.field("Platnosť od").getTime()/1000 - a.field("Platnosť od").getTime()/1000 }})
+            filteredLinks.sort({ compare: function(a,b) { return b.field(dateField).getTime()/1000 - a.field(dateField).getTime()/1000 }})
             filteredLinks.reverse();
         }
         //vyberie a vráti sadzbu z prvého záznamu

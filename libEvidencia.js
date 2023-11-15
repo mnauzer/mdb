@@ -4,7 +4,6 @@ const newEntryDochadzka = en => {
     let parameters = "en: " + en
     let mementoLibrary = lib().title
     let variables = "user: " + updateEntryDochadzkaser()
-    message("Nový záznam [" + mementoLibrary +"]")
     try {
         setEntry(en)
         let date = new Date()
