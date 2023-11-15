@@ -52,10 +52,10 @@ const saveEntryDochadzka = en => {
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
-const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.07"
+const prepocitatZaznamDochadzky = (en, inptScript)=> {
+    let scriptName = "prepocitatZaznamDochadzky 23.0.08"
     let variables = "user: " + user()
-    let parameters = "en: " + en
+    let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         // výpočet pracovnej doby
         let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
