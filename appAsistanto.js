@@ -474,7 +474,7 @@ const saveEntry = (en, inptScript) => {
         }
         switch (memLib) {
             case LIB_DOCH:
-                vymazaneCisla = prepocitatZaznamDochadzky(en)
+                let vymazaneCisla = prepocitatZaznamDochadzky(en)
                 appDB.setAttr("vymazané čísla", vymazaneCisla.join(','))
                 break;
         
