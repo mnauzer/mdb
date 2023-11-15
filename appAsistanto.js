@@ -25,6 +25,7 @@ function fltrDbByName(value, name) {
     }
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
+    //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
     let scriptName = "filterByDate 23.0.08"
     let variables = "user: " + user()
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript

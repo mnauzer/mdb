@@ -99,7 +99,7 @@ const prepocitatZaznamDochadzky = en => {
                 employees[z].set("Zarobené", libZarobene);
                 employees[z].set("Odpracované", libOdrobene);
                 employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
-                employees[z].set(FLD_DOCH, libHodnotenieD);
+                employees[z].set("Dochádzka", libHodnotenieD);
 
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
@@ -125,7 +125,7 @@ const prepocitatZaznamDochadzky = en => {
         en.set("Prestoje", prestojeCelkom);
         message("Hotovo...");
     } catch (error) {
-        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, 'appAsistanto.js', scriptName, error, variables, parameters);
     }
 }
 const aSalary = (en, NEW_ENTRY) => {
