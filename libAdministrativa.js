@@ -104,10 +104,10 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.03"
+    let scriptName = "newEntryZavazky 23.0.04"
     let parameters = "en: " + en
     let mementoLibrary = lib().title
-    let variables = "user: " + user()
+    let variables = "user: " + user() + "\nmemLib: " + mementoLibrary
     try {
         setEntry(en)
         let date = new Date()
@@ -128,7 +128,7 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry["info"] = "generované automaticky";
         newEntry["Popis"] = popis;
         newEntry["Zamestnanec"] = employee;
-        newEntry[FLD_DOCH] = en;
+        newEntry["Dochádzka"] = en;
         newEntry["Suma"] = sum;
         newEntry[SEASON]= season
         newEntry[CR] = user()
