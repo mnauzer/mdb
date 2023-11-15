@@ -171,15 +171,15 @@ const getLinkIndex = (link, remoteLinks) => {
 // KRAJINKA APP FUNCTIONS
 // získat údaje z Krajinka APP
 const getAppSeason = (season, mementoLibrary) => {
-    let scriptName = "getAppSeason 23.0.05"
-    let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\nmaxDate: " + maxDate
-    if(season === undefined || season == null){
-        msgGen(mementoLibrary, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
-        cancel()
-        exit()
-    }
+    let scriptName = "getAppSeason 23.0.06"
     try {
+        let variables = "Sezóna: " + season +  "\n"
+        let parameters = "season: " + season +  "\nmaxDate: " + maxDate
+        if(season === undefined || season == null){
+            msgGen(mementoLibrary, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
+            cancel()
+            exit()
+        }
         let entry = libByName(APP).find(season)[0]
         return entry
     } catch (error) {
@@ -202,16 +202,16 @@ const getAppSeasonDatabases = (season, mementoLibrary) => {
     }
 }
 const getAppSeasonDB = (season, mementoLibrary, inptScript) => {
-    let scriptName = "getAppSeasonDB 23.1.08"
-    let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n"
-    let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
-    let attributes = ""
-    if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
-        msgGen(mementoLibrary, "appAsistanto.js", scriptName, "season or mementoLibrary are undefined", variables, parameters )
-        cancel()
-        exit()
-    }
+    let scriptName = "getAppSeasonDB 23.1.09"
     try {
+        let variables = "Sezóna: " + season +  "\nKnižnica: " + mementoLibrary + "\n"
+        let parameters = "season: " + season +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
+        let attributes = ""
+        if(season == undefined || mementoLibrary == undefined || season == null || mementoLibrary == null){
+            msgGen(mementoLibrary, "appAsistanto.js", scriptName, "season or mementoLibrary are undefined", variables, parameters )
+            cancel()
+            exit()
+        }
         let entry = libByName(APP).find(season)[0]
         let databazy = entry.field("Databázy")
         for (var v = 0;v < databazy.length; v++) {
@@ -317,15 +317,15 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
 }
 const getNewNumber = (appDB, season, mementoLibrary, inptScript) => {
     // generuje nové číslo záznamu
-    let scriptName = "getNewNumber 23.1.08"
-    let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
-    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
-    if(appDB == undefined || appDB == null || season == undefined || season == null){
-        msgGen(APP, "appAsistanto.js", scriptName, "one or all parameters are undefined", variables, parameters )
-        cancel()
-        exit()
-    }
+    let scriptName = "getNewNumber 23.1.09"
     try {
+        let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
+        let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
+        if(appDB == undefined || appDB == null || season == undefined || season == null){
+            msgGen(APP, "appAsistanto.js", scriptName, "one or all parameters are undefined", variables, parameters )
+            cancel()
+            exit()
+        }
         let number = []
         let test = appDB.attr("test")
         let dbID =  appDB.field("ID")
@@ -397,12 +397,12 @@ const newEntry = en => {
     }
 }
 const updateEntry = en => {
-    let scriptName = "updateEntry 23.0.03"
-    let mementoLibrary = lib().title
-    let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
-    let parameters = "en: " + en
+    let scriptName = "updateEntry 23.0.04"
     message("Úprava záznamu - " + mementoLibrary);
     try {
+        let mementoLibrary = lib().title
+        let variables = "Záznam: " + en.name + "mementoLibrary: " + mementoLibrary
+        let parameters = "en: " + en
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(MOD, user())
@@ -722,10 +722,10 @@ const getLibFieldsNames = lib =>{
 // COLORS
 const setBckgColor = (en, field) => {
     let scriptName = "setBckgColor 23.0.01"
-    let libName = lib().title
-    let variables = "Library: " + libName + "\nEntry: " + entry.name + "\nField: " + field
-    let parameters = "lib: " + libName + "\nen:" + entry + "\nfield: " + field
     try {
+        let libName = lib().title
+        let variables = "Library: " + libName + "\nEntry: " + entry.name + "\nField: " + field
+        let parameters = "lib: " + libName + "\nen:" + entry + "\nfield: " + field
         switch (libName) {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
