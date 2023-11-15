@@ -31,13 +31,6 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
         let logTxt = "entries: " + entries.length
-        //let links = []
-        // for(var e = 0; e < entries.length; e++) {
-        //     if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
-        //         links.push(entries[e])
-        //     }
-        // }
-        // return links
         entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
         entries.sort((entryA, entryB) => entryA.field(dateField).getTime()/1000 - entryB.field(dateField).getTime()/1000)
         entries.reverse()

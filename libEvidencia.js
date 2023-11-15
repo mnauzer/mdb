@@ -53,7 +53,7 @@ const saveEntryDochadzka = en => {
     }
 }
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.04"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.05"
     let variables = "user: " + user()
     let parameters = "en: " + en
     try {

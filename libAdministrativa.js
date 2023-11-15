@@ -106,7 +106,7 @@ const updateObligations = en => {
 const newEntryZavazky = (employee, en, sum) => {
     let scriptName = "newEntryZavazky 23.0.06"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let mementoLibrary = lib().title
+    let mementoLibrary = LIB_ZVK
     let variables = "user: " + user() + "\nmemLib: " + mementoLibrary
     try {
         setEntry(en)
@@ -140,6 +140,7 @@ const newEntryZavazky = (employee, en, sum) => {
         let novyZavazok = zavazky.entries()[0]
         if (novyZavazok.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "\nNový záznam záväzku č. " + newNumber[0]
+            appDB.setAttr("posledné číslo", newNumber[0] + 1)
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
