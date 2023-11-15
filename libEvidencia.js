@@ -53,7 +53,7 @@ const saveEntryDochadzka = en => {
     }
 }
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.05"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.06"
     let variables = "user: " + user()
     let parameters = "en: " + en
     try {
@@ -69,40 +69,46 @@ const prepocitatZaznamDochadzky = en => {
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
         let prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-        let employees = en.field("Zamestnanci");
+        let zamestnanci = en.field("Zamestnanci");
         let evidenciaPrac = en.field("Práce");
-        if (employees.length > 0) {
-            for (let z = 0; z < employees.length; z++) {
-                let hodinovka = employees[z].attr("hodinovka") ? employees[z].attr("hodinovka") : sadzbaZamestnanca(employees[z], datum, scriptName);
-                employees[z].setAttr("hodinovka", hodinovka);
+        if (zamestnanci.length > 0) {
+            for (let z = 0; z < zamestnanci.length; z++) {
+                let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, scriptName);
+                zamestnanci[z].setAttr("hodinovka", hodinovka);
 
-                let hodnotenie = employees[z].attr("hodnotenie") ? employees[z].attr("hodnotenie") : 5;
-                let dennaMzda = employees[z].attr("denná mzda") ? employees[z].attr("denná mzda") : 0; // jedného zamestnanca
-                // premenné z knižnice employees
-                let libZarobene = employees[z].field("Zarobené") - dennaMzda;
-                let libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-                let libVyplatene = employees[z].field("Vyplatené");
-                let libHodnotenieD = employees[z].field("Dochádzka");
+                let hodnotenie = zamestnanci[z].attr("hodnotenie") ? zamestnanci[z].attr("hodnotenie") : 5;
+                let dennaMzda = zamestnanci[z].attr("denná mzda") ? zamestnanci[z].attr("denná mzda") : 0; // jedného zamestnanca
+                // premenné z knižnice zamestnanci
+                let Zarobene = zamestnanci[z].field("Zarobené") - dennaMzda;
+                let Odrobene = zamestnanci[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
+                let Vyplatene = zamestnanci[z].field("Vyplatené");
+                let HodnotenieD = zamestnanci[z].field("Dochádzka");
 
                 dennaMzda = (pracovnaDoba * (hodinovka
-                    + employees[z].attr("+príplatok (€/h)")))
-                    + employees[z].attr("+prémia (€)")
-                    - employees[z].attr("-pokuta (€)");
-                employees[z].setAttr("denná mzda", dennaMzda);
-                employees[z].setAttr("hodnotenie", hodnotenie);
-                // nastavenie v knižnici employees
-                libZarobene += dennaMzda;
-                libOdrobene += pracovnaDoba;
-                libHodnotenieD += hodnotenie;
-                var libNedoplatok = libZarobene - libVyplatene;
+                    + zamestnanci[z].attr("+príplatok (€/h)")))
+                    + zamestnanci[z].attr("+prémia (€)")
+                    - zamestnanci[z].attr("-pokuta (€)");
+                zamestnanci[z].setAttr("denná mzda", dennaMzda);
+                zamestnanci[z].setAttr("hodnotenie", hodnotenie);
+                // nastavenie v knižnici zamestnanci
+                Zarobene += dennaMzda;
+                Odrobene += pracovnaDoba;
+                HodnotenieD += hodnotenie;
+                let Nedoplatok = Zarobene - Vyplatene;
 
-                employees[z].set("Zarobené", libZarobene);
-                employees[z].set("Odpracované", libOdrobene);
-                employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
-                employees[z].set("Dochádzka", libHodnotenieD);
+                zamestnanci[z].set("Zarobené", Zarobene);
+                zamestnanci[z].set("Odpracované", Odrobene);
+                zamestnanci[z].set("Preplatok/Nedoplatok", Nedoplatok);
+                zamestnanci[z].set("Dochádzka", HodnotenieD);
                 if (zavazok) {
-                    if (z == 0 ) {message("Generujem závazky\nIN PROGRESS.....")}
-                    newEntryZavazky(employees[z], en, dennaMzda)
+                    let stareZavazky = zamestnanci[z].linksFrom(LIB_ZVK, "Dochádzka")
+                    if(stareZavazky){
+                        for (let i in stareZavazky)
+                        stareZavazky[i].trash()
+                    } else {
+                        if (z == 0 ) {message("Generujem záväzky......")} // message only once
+                        newEntryZavazky(zamestnanci[z], en, dennaMzda)
+                    }
                 }
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
@@ -112,7 +118,7 @@ const prepocitatZaznamDochadzky = en => {
                         var zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
                         var naZakazke = evidenciaPrac[ep].field("Odpracované/os");
                         for (var znz in zamNaZakazke) {
-                            if (employees[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
+                            if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                                 evidenciaCelkom += naZakazke;
                             }
                         }
@@ -121,6 +127,7 @@ const prepocitatZaznamDochadzky = en => {
             }
         }
         prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
+        // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", mzdyCelkom.toFixed(2));
         en.set("Pracovná doba", pracovnaDoba);
         en.set("Odpracované", odpracovaneCelkom);
@@ -137,7 +144,7 @@ const aSalary = (en, NEW_ENTRY) => {
     let parameters = "en: " + en + "\nNEW_ENTRY: " + NEW_ENTRY
     try {
         var salaries = libByName(DBA_SAL);
-        var employees = en.field(DOCH_EMPLOYEES);
+        var zamestnanci = en.field(DOCH_zamestnanci);
         if (NEW_ENTRY) {
 
         } else {
@@ -151,23 +158,23 @@ const aSalary = (en, NEW_ENTRY) => {
                 }
             }
         }
-        for (var z = 0; z < employees.length; z++) {
+        for (var z = 0; z < zamestnanci.length; z++) {
             var newEntry = new Object();
             newEntry[DATE] = en.field(DATE);
-            newEntry[NICK] =  employees[z].field(NICK);
+            newEntry[NICK] =  zamestnanci[z].field(NICK);
             newEntry["Odpracované"] = en.field("Pracovná doba");
-            newEntry["Sadzba"] =  employees[z].attr("hodinovka");
-            newEntry["Mzda"] =  employees[z].attr("denná mzda");
-            newEntry["Vyplatiť"] =  employees[z].attr("denná mzda");
+            newEntry["Sadzba"] =  zamestnanci[z].attr("hodinovka");
+            newEntry["Mzda"] =  zamestnanci[z].attr("denná mzda");
+            newEntry["Vyplatiť"] =  zamestnanci[z].attr("denná mzda");
             newEntry[SEASON] = en.field(DATE).getFullYear();
             newEntry[FLD_DOCH] = en;
-            newEntry["Zamestnanec"] = employees[z];
+            newEntry["Zamestnanec"] = zamestnanci[z];
             salaries.create(newEntry);
             var entrySalaries = en.linksFrom(DBA_SAL,FLD_DOCH)[0];
             entrySalaries.field(FLD_DOCH)[0].setAttr("odpracované", en.field("Pracovná doba"));
-            entrySalaries.field("Zamestnanec")[0].setAttr("sadzba", employees[z].attr("hodinovka"));
+            entrySalaries.field("Zamestnanec")[0].setAttr("sadzba", zamestnanci[z].attr("hodinovka"));
             // zauctuj preplatok ak je
-            var preplatokLinks = employees[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
+            var preplatokLinks = zamestnanci[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
             if (preplatokLinks.length > 0) {
                 message("Účtujem preplatky");
                 for (var l = 0; l < preplatokLinks.length; l++) {
