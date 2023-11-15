@@ -40,7 +40,6 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
         logTxt += "\nfiltered entries: " + entries.length
         logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters )
-
         return entries
     } catch (error) {
         variables += "\nlinks: " + entries.length
