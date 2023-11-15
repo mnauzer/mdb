@@ -373,10 +373,10 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 const newEntry = en => {
     let scriptName = "newEntry 23.0.03"
     let mementoLibrary = lib().title
-  //  let variables = "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
+    let variables = ""
     let parameters = "en: " + en
-    message("Nový záznam - " + mementoLibrary)
     try {
+        message("Nový záznam - " + mementoLibrary)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
@@ -392,6 +392,7 @@ const newEntry = en => {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
+        variables += "Záznam: " + en.name + "\nmementoLibrary: " + mementoLibrary
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
