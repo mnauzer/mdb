@@ -44,8 +44,8 @@ const saveEntryDochadzka = en => {
     let variables = "Záznam: " + en.name + "memLib: " + memLib
     let parameters = "en: " + en
     try {
-        prepocitatZaznamDochadzky(en)
-        saveEntry(en, memLib)
+        prepocitatZaznamDochadzky(en, scriptName)
+        saveEntry(en, scriptName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, memLib)

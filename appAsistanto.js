@@ -463,23 +463,22 @@ const saveEntry = (en, inptScript) => {
         variables += "\nappDB: " + appDB
         let newNumber = getNewNumber(appDB, season, memLib, scriptName)
         variables += "\nnewNumber: " + newNumber
-        createdEntry = lib().entries()[0]
+        let createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
             appDB.setAttr("posledné číslo", newNumber[1])
+            switch (memLib) {
+            case LIB_DOCH:
+                let vymazaneCisla = prepocitatZaznamDochadzky(en)
+                appDB.setAttr("vymazané čísla", vymazaneCisla.toString())
+                break;
+            default:
+                break;
+            }
             createdEntry.set(VIEW, VIEW_PRINT)
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
-        }
-        switch (memLib) {
-            case LIB_DOCH:
-                let vymazaneCisla = prepocitatZaznamDochadzky(en)
-                appDB.setAttr("vymazané čísla", vymazaneCisla.join())
-                break;
-
-            default:
-                break;
         }
         logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
