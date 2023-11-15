@@ -426,7 +426,7 @@ const updateEntry = en => {
     }
 }
 const setEntry = (en, inptScript) => {
-    let scriptName = "setEntry 23.0.08"
+    let scriptName = "setEntry 23.0.09"
     let memLib = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + memLib
     let parameters = "en: " + "\ninptScript: " + inptScript
@@ -449,11 +449,12 @@ const saveEntry = (en,  inptScript) => {
         variables += "\nseason: " + season
         let appDB = getAppSeasonDB(season, memLib, scriptName)
         variables += "\nappDB: " + appDB
-        variables += "\nnextNumber: " + nextNumber
-        appDB.setAttr("nasledujúce číslo", nextNumber + 1)
+        let newNumber = getNewNumber(appDB, season, memLib, scriptName)
+        variables += "\nnewNumber: " + newNumber
+        appDB.setAttr("nasledujúce číslo", newNumber + 1)
         let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + memLib
-        en.setAttr("nasledujúce číslo", nextNumber[1])
-        en.setAttr("posledné číslo", nextNumber[1] + 1)
+        en.setAttr("nasledujúce číslo", newNumber[1])
+        en.setAttr("posledné číslo", newNumber[1] + 1)
         switch (memLib) {
             case LIB_DOCH:
                 prepocitatZaznamDochadzky(en)
