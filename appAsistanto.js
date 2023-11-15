@@ -453,8 +453,8 @@ const saveEntry = (en,  inptScript) => {
         variables += "\nnewNumber: " + newNumber
         appDB.setAttr("nasledujúce číslo", newNumber + 1)
         let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + memLib
-        en.setAttr("nasledujúce číslo", newNumber[1])
-        en.setAttr("posledné číslo", newNumber[1] + 1)
+        appDB.setAttr("nasledujúce číslo", newNumber[1])
+        appDB.setAttr("posledné číslo", newNumber[1] + 1)
         switch (memLib) {
             case LIB_DOCH:
                 prepocitatZaznamDochadzky(en)
