@@ -53,7 +53,7 @@ const saveEntryDochadzka = en => {
     }
 }
 const prepocitatZaznamDochadzky = en => {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.02"
+    let scriptName = "prepocitatZaznamDochadzky 23.0.03"
     let variables = "user: " + user()
     let parameters = "en: " + en
     try {
@@ -61,7 +61,7 @@ const prepocitatZaznamDochadzky = en => {
         let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         let odchod = roundTimeQ(en.field("Odchod"));
         let datum = en.field(DATE)
-
+        let zavazok = en.field("Generovať záväzky")
         let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
@@ -100,7 +100,10 @@ const prepocitatZaznamDochadzky = en => {
                 employees[z].set("Odpracované", libOdrobene);
                 employees[z].set("Preplatok/Nedoplatok", libNedoplatok);
                 employees[z].set("Dochádzka", libHodnotenieD);
-
+                if (zavazok) {
+                    if (z == 0 ) {message("Generujem závazky\nIN PROGRESS.....")}
+                    newEntryZavazok(employees[z])
+                }
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii

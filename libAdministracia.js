@@ -102,5 +102,32 @@ const updateObligations = en => {
 
 // FAKTÚRY PRIJATÉ
 
+// ZÁVAZKY
+const newEntryZavazky = en => {
+    let scriptName = "newEntryZavazky 23.0.0"
+    let parameters = "en: " + en
+    let mementoLibrary = lib().title
+    let variables = "user: " + user()
+    try {
+        setEntry(en)
+        let date = new Date()
+        let season = getSeason(en, mementoLibrary, scriptName)
+        variables += "\nseason: " + season
+        let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        variables += "\nappDB: " + appDB
+        let number = getNewNumber(appDB, season, mementoLibrary, scriptName)
+        variables += "\nnumber: " + number
+        en.set(DATE, date)
+        en.set(NUMBER, number[0])
+        en.set(NUMBER_ENTRY, number[1])
+        en.set(SEASON, season)
+        let msgTxt = "nový záznam dochádzky č. " + number[0]
+        msgGen(mementoLibrary, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
+        return sadzba;
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        errorGen(mementoLibrary, "libDochadzka.js", scriptName, error, variables, parameters)
+    }
+}
 
 // End of file: 09.04.2023, 12:14
