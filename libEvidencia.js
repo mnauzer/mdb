@@ -3,7 +3,7 @@ const newEntryDochadzka = en => {
     let scriptName = "newEntryDochadzka 23.0.07"
     let parameters = "en: " + en
     let mementoLibrary = lib().title
-    let variables = "user: " + updateEntryDochadzkaser()
+    let variables = "user: " + user()
     try {
         setEntry(en)
         let date = new Date()
@@ -15,10 +15,10 @@ const newEntryDochadzka = en => {
         variables += "\nnumber: " + number
         en.set(DATE, date)
         en.set(NUMBER, number[0])
-        en.set("number", number[1])
+        en.set(NUMBER_ENTRY, number[1])
         en.set(SEASON, season)
         let msgTxt = "nový záznam dochádzky č. " + number[0]
-        msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
+        msgGen(mementoLibrary, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
@@ -54,7 +54,7 @@ const saveEntryDochadzka = en => {
 }
 const prepocitatZaznamDochadzky = en => {
     let scriptName = "prepocitatZaznamDochadzky 23.0.02"
-    let variables = "Záznam: " + en.name
+    let variables = "user: " + user()
     let parameters = "en: " + en
     try {
         // výpočet pracovnej doby

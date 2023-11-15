@@ -442,26 +442,28 @@ const setEntry = (en, inptScript) => {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const saveEntry = (en, mementoLibrary, inptScript) => {
-    let scriptName = "saveEntry 23.0.13"
+const saveEntry = (en,  inptScript) => {
+    let scriptName = "saveEntry 23.0.14"
     let variables = "user: " + user()
     let parameters = "en: " + en +  "\nmementoLibrary: " + mementoLibrary + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
-        en.set(VIEW, VIEW_PRINT)
+        let mementoLibrary = lib().title
+        variables += "\nlibrary: " + mementoLibrary
         let season = getSeason(en, mementoLibrary, scriptName)
+        variables += "\nseason: " + season
         let appDB = getAppSeasonDB(season, mementoLibrary, scriptName)
+        variables += "\nappDB: " + appDB
         let nextNumber = en.field(NUMBER_ENTRY)
-        appDB.setAttr("nasledujúce číslo", nextNumber++)
-        // let msgTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
-        // message(msgTxt)
-        // msgGen(APP, "appAsistanto.j", scriptName, msgTxt, variables, parameters)
+        variables += "\nnextNumber: " + nextNumber
+        appDB.setAttr("nasledujúce číslo", Number(nextNumber)  ++)
         let logTxt = "Nový záznam [" + en.field(NUMBER) + "] v knižnici " + mementoLibrary
-        logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters)
+        logGen(mementoLibrary, "appAsistanto.js", scriptName, logTxt, variables, parameters)
+        en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         variables += "\nentry: " + en.name + "\nmemento library: " + mementoLibrary
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(mementoLibrary, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS
