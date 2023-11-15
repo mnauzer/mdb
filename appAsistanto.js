@@ -29,7 +29,7 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
     let variables = "user: " + user()
     let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
     try {
-        let logTxt = "Záznamov: " + entries.length
+        let logTxt = "entries: " + entries.length
         //let links = []
         // for(var e = 0; e < entries.length; e++) {
         //     if (entries[e].field(dateField).getTime()/1000 <= maxDate.getTime()/1000) {
@@ -39,7 +39,7 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         // return links
         entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
         logTxt += "\nfiltered entries: " + entries.length
-        logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters, attributes )
+        logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters )
 
         return entries
     } catch (error) {
