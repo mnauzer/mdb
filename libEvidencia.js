@@ -82,7 +82,7 @@ const prepocitatZaznamDochadzky = en => {
                 let libZarobene = employees[z].field("Zarobené") - dennaMzda;
                 let libOdrobene = employees[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
                 let libVyplatene = employees[z].field("Vyplatené");
-                let libHodnotenieD = employees[z].field(FLD_DOCH);
+                let libHodnotenieD = employees[z].field("Dochádzka");
 
                 dennaMzda = (pracovnaDoba * (hodinovka
                     + employees[z].attr("+príplatok (€/h)")))
