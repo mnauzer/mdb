@@ -513,7 +513,8 @@ const removeEntry = (en, appDBName, inptScript) => {
         variables += '\nseason: ' + season
         let appDB = getAppSeasonDB(season, appDBName, scriptName)
         variables += '\nappDB: ' + appDB
-        let trashedNums = appDB.attr('vymazané čísla') || null
+       // let trashedNums = appDB.attr('vymazané čísla') || null
+        let trashedNums = '1,2,3,4'
         variables += '\ntrashed nums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
         variables += '\nnum to trash: ' + numToBeTrashed
