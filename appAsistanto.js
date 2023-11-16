@@ -477,6 +477,7 @@ const saveEntry = (en, inptScript) => {
         variables += "\nnewNumber: " + newNumber
         let createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
+            message("true")
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appDBName
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
             appDB.setAttr("posledné číslo", newNumber[1])
