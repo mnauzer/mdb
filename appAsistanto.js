@@ -525,7 +525,9 @@ const removeEntry = (en, appDBName, inptScript) => {
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
         logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice' + appDBName
         logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
-        en.trash()
+        if(inptScript != 'trigger remove_entry') {
+            en.trash()
+        }
     } catch (error) {
         errorGen(appDBName, 'appAsistanto.js', scriptName, error, variables, parameters)
     }

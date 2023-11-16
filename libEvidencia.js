@@ -38,6 +38,30 @@ const updateEntryDochadzka = en => {
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
+const  removeEntryDochadzka = (en) => {
+    // Created at: 16.11.2023, 07:55
+    // popis funkcie
+    let scriptName = 'removeEntryDochadzka 23.0.01'
+    let memLib = lib().title
+    let variables = 'user: ' + user()
+    let parameters = 'en: ' + en
+    try {
+        variables += ''
+        let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+        if(stareZavazky){
+            message("Mažem súvisiace záväzky...")
+            for (let i in stareZavazky) {
+                removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
+            }
+        }
+        removeEntry(en, lib().title, scriptName)
+    } catch (error) {
+        variables += ''
+        errorGen(memLib, 'libEvidencia.js', scriptName, error, variables, parameters)
+    }
+}
+
+
 const saveEntryDochadzka = en => {
     let scriptName = "saveEntryDochadzka 23.0.02"
     let appDBName = lib().title
@@ -105,7 +129,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                 if (zavazok) {
 
                     if(stareZavazky){
-                        message("Mažem staré záväzky...")
+                        message("Mažem súvisiace záväzky...")
                         for (let i in stareZavazky) {
                             removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
                           //  vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
