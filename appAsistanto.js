@@ -342,7 +342,7 @@ const getNewNumber = (appDB, season,inptScript) => {
         let test = appDB.attr("test")
         let dbID =  appDB.field("ID")
         let isPrefix = appDB.attr("prefix")
-        let attrTrailing = appDB.attr("trailing digit")
+        let trailingDigit = appDB.attr("trailing digit")
         let trim = appDB.attr("trim")
         //
         let prefix = appDB.field("Prefix")
@@ -359,7 +359,7 @@ const getNewNumber = (appDB, season,inptScript) => {
             appDB.setAttr("vymazané čísla", trashedNums.join())
         }
         appDB.setAttr("rezervované číslo", nextNum)
-        number[0] = isPrefix ? prefix + season.slice(trim) + pad(nextNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(nextNum, attrTrailing)
+        number[0] = isPrefix ? prefix + season.slice(trim) + pad(nextNum, trailingDigit) : dbID + season.slice(trim) + pad(nextNum, trailingDigit)
         number[1] = nextNum
         return number
     } catch (error) {
