@@ -235,7 +235,7 @@ const getAppSeasonDB = (season, appDBName, inptScript) => {
                 "\nlocked reason: " + databazy[v].attr("locked reason") +
                 "\ntest: " + databazy[v].attr("test") +
                 "\nprefix: " + databazy[v].attr("prefix") +
-                "\nseason trim: " + databazy[v].attr("season trim") +
+                "\ntrim: " + databazy[v].attr("trim") +
                 "\ntrailing digit: " + databazy[v].attr("trailing digit")
                 logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters, attributes )
                 return databazy[v]
