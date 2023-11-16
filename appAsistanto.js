@@ -499,10 +499,10 @@ const saveEntry = (en, inptScript) => {
         errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const  removeEntry = (en, appDBName, inptScript) => {
+const removeEntry = (en, appDBName, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    let scriptName = 'removeEntry 23.0.01'
+    let scriptName = 'removeEntry 23.0.02'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
@@ -514,16 +514,18 @@ const  removeEntry = (en, appDBName, inptScript) => {
         variables += '\nappDB: ' + appDB
         let trashedNums = appDB.attr('vymazané čísla')
         variables += '\ntrashed nums: ' + trashedNums
+        let numToBeTrashed = en.field(NUMBER_ENTRY)
+        variables += '\nnum to trash: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
         if (trashedNums) {
             trashedNums.split(',')
+            trashedNums.push(numToBeTrashed)
+            appDB.setAttr("vymazané čísla", trashedNums.join())
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
-        trashedNums.push(en.field(NUMBER_ENTRY))
-        logTxt += 'Záznam č.' + en.field(NUMBER_ENTRY) + ' bol vymazaný z knižnice' + appDBName
+        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice' + appDBName
         logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
         en.trash()
-        appDB.setAttr("vymazané čísla", trashedNums.join())
     } catch (error) {
         errorGen(appDBName, 'appAsistanto.js', scriptName, error, variables, parameters)
     }

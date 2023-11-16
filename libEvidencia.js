@@ -113,6 +113,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                         }
                     stareZavazky = false
                     }
+
                     if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                     newEntryZavazky(zamestnanci[z], en, dennaMzda)
                 }
