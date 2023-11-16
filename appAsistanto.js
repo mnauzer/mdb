@@ -178,52 +178,52 @@ const getLinkIndex = (link, remoteLinks) => {
 
 // KRAJINKA APP FUNCTIONS
 // získat údaje z Krajinka APP
-const getAppSeason = (season, memLib) => {
+const getAppSeason = (season, appDBName) => {
     let scriptName = "getAppSeason 23.0.06"
     try {
         let variables = "Sezóna: " + season +  "\n"
         let parameters = "season: " + season +  "\nmaxDate: " + maxDate
         if(season === undefined || season == null){
-            msgGen(memLib, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
+            msgGen(appDBName, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
             cancel()
             exit()
         }
         let entry = libByName(APP).find(season)[0]
         return entry
     } catch (error) {
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const getAppSeasonDatabases = (season, memLib) => {
+const getAppSeasonDatabases = (season, appDBName) => {
     let scriptName = "getAppSeasonDatabases 23.0.04"
     let variables = "Sezóna: " + season +  "\n"
-    let parameters = "season: " + season +  "\nmemLib: " + memLib
+    let parameters = "season: " + season +  "\nappDBName: " + appDBName
     try {
         if(season == undefined){
-            msgGen(memLib, "appAsistanto.js", scriptName, "", variables, parameters )
+            msgGen(appDBName, "appAsistanto.js", scriptName, "", variables, parameters )
             cancel()
             exit()
         }
         return getAppSeason(season).field("Databázy")
     } catch (error) {
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const getAppSeasonDB = (season, memLib, inptScript) => {
+const getAppSeasonDB = (season, appDBName, inptScript) => {
     let scriptName = "getAppSeasonDB 23.1.10"
-    let parameters = "season: " + season +  "\nmemLib: " + memLib + "\ninptScript: " + inptScript
+    let parameters = "season: " + season +  "\nappDBName: " + appDBName + "\ninptScript: " + inptScript
     let variables = "user: " + user()
     try {
         let attributes = ""
-        if(season == undefined || memLib == undefined || season == null || memLib == null){
-            msgGen(memLib, "appAsistanto.js", scriptName, "season or memLib are undefined", variables, parameters )
+        if(season == undefined || appDBName == undefined || season == null || appDBName == null){
+            msgGen(appDBName, "appAsistanto.js", scriptName, "season or appDBName are undefined", variables, parameters )
             cancel()
             exit()
         }
         let entry = libByName(APP).find(season)[0]
         let databazy = entry.field("Databázy")
         for (var v = 0;v < databazy.length; v++) {
-            if (databazy[v].field("Názov") == memLib) {
+            if (databazy[v].field("Názov") == appDBName) {
                 let logTxt = "Databáza " + databazy[v].name +" nájdená"
                 // TODO: make it js object
                 attributes =
@@ -237,40 +237,40 @@ const getAppSeasonDB = (season, memLib, inptScript) => {
                 "\nprefix: " + databazy[v].attr("prefix") +
                 "\nseason trim: " + databazy[v].attr("season trim") +
                 "\ntrailing digit: " + databazy[v].attr("trailing digit")
-                logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters, attributes )
+                logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters, attributes )
                 return databazy[v]
             }
         }
-        let logTxt = "Databáza " + memLib +" nenájdená v sezóne " + season
+        let logTxt = "Databáza " + appDBName +" nenájdená v sezóne " + season
         logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters, attributes )
         return 0
     } catch (error) {
         variables += ""
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const findAppDB = (season, memLib, inptScript) => {
+const findAppDB = (season, appDBName, inptScript) => {
     // get db from APP library
     let scriptName = "findAppDB 23.0.98"
     let variables = "Záznam: " + en.name
-    let parameters = "season: " + season  + "\ninptScript: " + inptScript + "\nmemLib: " + memLib
+    let parameters = "season: " + season  + "\ninptScript: " + inptScript + "\nappDBName: " + appDBName
     if(season === undefined || season == null){
-        msgGen(memLib, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
+        msgGen(appDBName, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
         cancel()
         exit()
     }
     try {
-        let entry = libByName(memLib).find(season)[0]
+        let entry = libByName(appDBName).find(season)[0]
         let databazy = entry.field("Databázy")
         for (var v = 0;v < databazy.length; v++) {
-            if (databazy[v].field("Názov") == memLib) {
+            if (databazy[v].field("Názov") == appDBName) {
                 return databazy[v]
             }
         }
-        message("Databáza " + memLib + " nenájdená v sezóne " + season)
+        message("Databáza " + appDBName + " nenájdená v sezóne " + season)
         return 0
     } catch (error) {
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const findAppDBbyName = (season, libTitle) => {
@@ -282,13 +282,13 @@ const findAppDBbyName = (season, libTitle) => {
     var filteredDB = databazy.filter(fltrDb)[0]
     return filteredDB
 }
-const getSeason = (en, memLib, inptScript) => {
+const getSeason = (en, appDBName, inptScript) => {
     // get entryDefault season from creation date
     let scriptName = "getSeason 23.1.0"
     let variables = "Záznam: " + en.name
-    let parameters = "en: " + en + "\nmemLib: " + memLib + "\ninptScript: " + inptScript
+    let parameters = "en: " + en + "\nappDBName: " + appDBName + "\ninptScript: " + inptScript
     if(en == undefined || en == null){
-        msgGen(memLib, "appAsistanto.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters )
+        msgGen(appDBName, "appAsistanto.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters )
         cancel()
         exit()
     }
@@ -296,10 +296,10 @@ const getSeason = (en, memLib, inptScript) => {
         let season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString()
         variables += "\nSezóna: " + season + "\n"
      //   let logMsg = "Setting season field to " + season
-     //  logGen(memLib, "appAsistanto.js", scriptName, logMsg, variables, parameters)
+     //  logGen(appDBName, "appAsistanto.js", scriptName, logMsg, variables, parameters)
         return season
     } catch (error) {
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const lastValid = (links, date, valueField, dateField, inptScript) => {
@@ -325,38 +325,50 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const getNewNumber = (appDB, season, memLib, inptScript) => {
+const getNewNumber = (appDB, season,inptScript) => {
     // generuje nové číslo záznamu
-    let scriptName = "getNewNumber 23.1.09"
+    let scriptName = "getNewNumber 23.1.10"
+    let variables = "user: " + user()
+    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
+    let appDBName = appDB.name
+    let logTxt = ""
     try {
-        let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
-        let parameters = "appDB: " + appDB+ "\nseason: " + season + "\nmemLib: " + memLib + "\ninptScript: " + inptScript
-        if(appDB == undefined || appDB == null || season == undefined || season == null){
-            msgGen(APP, "appAsistanto.js", scriptName, "one or all parameters are undefined", variables, parameters )
-            cancel()
-            exit()
-        }
         let number = []
+        // link to field attributes
+        let lastNum = appDB.attr("posledné číslo")
+        let nextNum = appDB.attr("nasledujúce číslo")
+        let reservedNum = appDB.attr("rezervované číslo")
+        let trashedNums = appDB.attr("vymazané čísla")
         let test = appDB.attr("test")
         let dbID =  appDB.field("ID")
-        let prefix = appDB.field("Prefix")
         let isPrefix = appDB.attr("prefix")
         let attrTrailing = appDB.attr("trailing digit")
-        let attrSeasonTrim = appDB.attr("season trim")
+        let trim = appDB.attr("trim")
+        //
+        let prefix = appDB.field("Prefix")
         if (test) {
-            dbID = "T!" + appDB.field("ID")
-            prefix = "T!" + appDB.field("Prefix")
+            dbID = "TEST" + appDB.field("ID")
+            prefix = "TEST"
             attr =  "číslo testu"
         }
-        let lastNum = appDB.attr("nasledujúce číslo")
-        appDB.setAttr("rezervované číslo", lastNum)
-        number[0] = isPrefix ? prefix + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(lastNum, attrTrailing)
-        number[1] = lastNum
+        // najprv získaj nasledujúce číslo
+        if (trashedNums) {
+            // ak existujú vymazané čísla
+            trashedNums.split(",")
+            nextNum = trashedNums.shift()
+            appDB.setAttr("vymazané čísla", trashedNums.join())
+        }
+        appDB.setAttr("rezervované číslo", nextNum)
+        number[0] = isPrefix ? prefix + season.slice(trim) + pad(nextNum, attrTrailing) : dbID + season.slice(attrSeasonTrim) + pad(nextNum, attrTrailing)
+        number[1] = nextNum
         return number
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, 'appAsistanto.js', scriptName, error, variables, parameters)
     }
 }
+
+
+
 const getSadzbaDPH = (appDB, season, inptScript) => {
       // zistí sadzby DPH v zadanej sezóne
     let scriptName = "getSadzbaDPH 23.0.02"
@@ -382,21 +394,21 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // new entry script TRIGGERS
 const newEntry = en => {
     let scriptName = "newEntry 23.0.05"
-    let memLib = lib().title
+    let appDBName = lib().title
     let variables = "user" + user()
     let parameters = "en: " + en
     try {
-        message("Nový záznam [" + memLib + "]")
+        message("Nový záznam [" + appDBName + "]")
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
         en.set(CR_DATE, new Date())
-        let season = getSeason(en, memLib, scriptName)
+        let season = getSeason(en, appDBName, scriptName)
         variables += "\nseason: " + season //msgGen log
-        let appDB = getAppSeasonDB(season, memLib, scriptName)
+        let appDB = getAppSeasonDB(season, appDBName, scriptName)
         if (appDB){
             variables += "\nappDB: " + appDB
-            let number = getNewNumber(appDB, season, memLib, scriptName)
+            let number = getNewNumber(appDB, season, appDBName, scriptName)
             variables += "\nnumber: " + number
             en.set(NUMBER, number[0])
             en.set(NUMBER_ENTRY, number[1])
@@ -405,74 +417,72 @@ const newEntry = en => {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        variables += "\nentry: " + en.name + "\nmemLib: " + memLib
+        variables += "\nentry: " + en.name + "\nappDBName: " + appDBName
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntry = en => {
     let scriptName = "updateEntry 23.0.05"
-    let memLib = lib().title
+    let appDBName = lib().title
     let variables = "user: " + user()
     let parameters = "en: " + en
     try {
-        message("Úprava záznamu - " + memLib);
+        message("Úprava záznamu - " + appDBName);
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, en.field(DATE) ? en.field(DATE) : new Date())
         en.set(MOD, user())
         en.set(MOD_DATE, new Date())
-        let season = getSeason(en, memLib, scriptName)
+        let season = getSeason(en, appDBName, scriptName)
         variables += "\nseason: " + season //msgGen log
-        let appDB = getAppSeasonDB(season, memLib, scriptName)
+        let appDB = getAppSeasonDB(season, appDBName, scriptName)
         if (appDB){
             variables += "\nappDB: " + appDB
         } else {
             message("Databáza nenájdená v APP")
         }
     } catch (error) {
-        variables += "\nentry: " + en.name + "memLib: " + memLib
+        variables += "\nentry: " + en.name + "appDBName: " + appDBName
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters);
     }
 }
 const setEntry = (en, inptScript) => {
     let scriptName = "setEntry 23.0.10"
-    let memLib = lib().title
-    let variables = "Záznam: " + en.name + "\nmemento library: " + memLib
+    let appDBName = lib().title
+    let variables = "Záznam: " + en.name + "\nmemento library: " + appDBName
     let parameters = "en: " + "\ninptScript: " + inptScript
     let logTxt = ""
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const saveEntry = (en, inptScript) => {
     let scriptName = "saveEntry 23.0.17"
     let variables = "user: " + user()
-    let memLib = lib().title
+    let appDBName = lib().title
     let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
         let logTxt = ""
-        variables += "\nlibrary: " + memLib
-        let season = getSeason(en, memLib, scriptName)
+        variables += "\nlibrary: " + appDBName
+        let season = getSeason(en, appDBName, scriptName)
         variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, memLib, scriptName)
+        let appDB = getAppSeasonDB(season, appDBName, scriptName)
         variables += "\nappDB: " + appDB
-        let newNumber = getNewNumber(appDB, season, memLib, scriptName)
+        let newNumber = getNewNumber(appDB, season, scriptName)
         variables += "\nnewNumber: " + newNumber
         let createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appDBName
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
             appDB.setAttr("posledné číslo", newNumber[1])
-            switch (memLib) {
+            switch (appDBName) {
             case LIB_DOCH:
-                let vymazaneCisla = prepocitatZaznamDochadzky(en)
-                appDB.setAttr("vymazané čísla", vymazaneCisla)
-
+                prepocitatZaznamDochadzky(en)
                 break;
             default:
                 break;
@@ -481,41 +491,56 @@ const saveEntry = (en, inptScript) => {
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
-        logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters)
+        logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        variables += "\nentry: " + en.name + "\nmemento library: " + memLib
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        variables += "\nentry: " + en.name + "\nmemento library: " + appDBName
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const  removeEntry = (en, memLib, inptScript) => {
+const  removeEntry = (en, appDBName, inptScript) => {
     // Created at: 16.11.2023, 00:50
-    // popis funkcie
+    // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
     let scriptName = 'removeEntry 23.0.01'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
-        variables += ''
-       //function code here
+        let logTxt = 'inptScript: ' + inptScript
+        variables += '\nlibrary: ' + appDBName
+        let season = getSeason(en, appDBName, scriptName)
+        variables += '\nseason: ' + season
+        let appDB = getAppSeasonDB(season, appDBName, scriptName)
+        variables += '\nappDB: ' + appDB
+        let trashedNums = appDB.attr('vymazané čísla')
+        variables += '\ntrashed nums: ' + trashedNums
+        // ak je záznam vymazaných čísiel, konvertuje na array
+        if (trashedNums) {
+            trashedNums.split(',')
+        }
+        // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
+        trashedNums.push(en.field(NUMBER_ENTRY))
+        logTxt += 'Záznam č.' + en.field(NUMBER_ENTRY) + ' bol vymazaný z knižnice' + appDBName
+        logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
+        en.trash()
+        appDB.setAttr("vymazané čísla", trashedNums.join())
     } catch (error) {
-        variables += ''
-        errorGen(memLib, 'appAsistanto.js', scriptName, error, variables, parameters)
+        errorGen(appDBName, 'appAsistanto.js', scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS
-const unlockDB = (season, memLib) => {
+const unlockDB = (season, appDBName) => {
     let scriptName = "unlockDB 23.0.04"
-    let variables = "Season: " + season + "\nDatabáza: " + memLib
-    let parameters = "season: " + season +  "\nmemLib" + memLib
+    let variables = "Season: " + season + "\nDatabáza: " + appDBName
+    let parameters = "season: " + season +  "\nappDBName" + appDBName
     try {
-        let appDB = getAppSeasonDB(season, memLib, scriptName)
+        let appDB = getAppSeasonDB(season, appDBName, scriptName)
         appDB.setAttr("locked", false)
         appDB.setAttr("locked reason", null)
-        //message("Databáza " + memLib + " odomknutá")
+        //message("Databáza " + appDBName + " odomknutá")
         return true
     } catch (error) {
-        errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const setID = entries => {
@@ -670,7 +695,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 
 // LOG AND ERROR
 //
-const errorGen = (memLib, library, script, error, variables, parameters) => {
+const errorGen = (appDBName, library, script, error, variables, parameters) => {
     // generátor chyby
     message("ERROR: " + script + "\n" + error)
     let errorLib = libByName(APP_ERROR)
@@ -678,7 +703,7 @@ const errorGen = (memLib, library, script, error, variables, parameters) => {
     newError["type"] = "error"
     newError["date"] = new Date()
     newError["library"] = library
-    newError["memento library"] = memLib
+    newError["memento library"] = appDBName
     newError["script"] = script
     newError["text"] = error
     newError["line"] = error.lineNumber
@@ -688,7 +713,7 @@ const errorGen = (memLib, library, script, error, variables, parameters) => {
     cancel()
     exit()
 }
-const msgGen = (memLib, library, script, msg, variables, parameters) => {
+const msgGen = (appDBName, library, script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
     let errorLib = libByName(APP_ERROR)
@@ -696,14 +721,14 @@ const msgGen = (memLib, library, script, msg, variables, parameters) => {
     newMsg["type"] = "message"
     newMsg["date"] = new Date()
     newMsg["library"] = library
-    newMsg["memento library"] = memLib
+    newMsg["memento library"] = appDBName
     newMsg["script"] = script
     newMsg["text"] = msg
     newMsg["variables"] = variables
     newMsg["parameters"] = parameters
     errorLib.create(newMsg)
 }
-const logGen = (memLib, library, script, log, variables, parameters, attributes) => {
+const logGen = (appDBName, library, script, log, variables, parameters, attributes) => {
     // generátor log
    // message("LOG: " + script + "\n" + log)
     let errorLib = libByName(APP_ERROR)
@@ -711,7 +736,7 @@ const logGen = (memLib, library, script, log, variables, parameters, attributes)
     newLog["type"] = "log"
     newLog["date"] = new Date()
     newLog["library"] = library
-    newLog["memento library"] = memLib
+    newLog["memento library"] = appDBName
     newLog["script"] = script
     newLog["text"] = log
     newLog["variables"] = variables

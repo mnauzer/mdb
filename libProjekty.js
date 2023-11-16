@@ -1,12 +1,12 @@
 // CENOVÉ PONUKY
 const saveEntryCenovePonuky = en => {
     let scriptName = "saveEntryCenovePonuky 23.0.01"
-    let memLib = lib().title
-    let variables = "Záznam: " + en.name + "memLib: " + memLib
+    let appDBName = lib().title
+    let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
     try {
         prepocitatCenovuPonuku(en)
-        saveEntry(en, memLib)
+        saveEntry(en, appDBName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);

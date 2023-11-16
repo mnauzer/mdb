@@ -106,16 +106,16 @@ const updateObligations = en => {
 const newEntryZavazky = (employee, en, sum) => {
     let scriptName = "newEntryZavazky 23.0.09"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let memLib = LIB_ZVK
-    let variables = "user: " + user() + "\nmemLib: " + memLib
+    let appDBName = LIB_ZVK
+    let variables = "user: " + user() + "\nappDBName: " + appDBName
     try {
         let date = new Date()
         let logTxt = ""
-        let season = getSeason(en, memLib, scriptName)
+        let season = getSeason(en, appDBName, scriptName)
         variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, memLib, scriptName)
+        let appDB = getAppSeasonDB(season, appDBName, scriptName)
         variables += "\nappDB: " + appDB.name
-        let newNumber = getNewNumber(appDB, season, memLib, scriptName)
+        let newNumber = getNewNumber(appDB, season, appDBName, scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
@@ -138,7 +138,7 @@ const newEntryZavazky = (employee, en, sum) => {
         // kontrola vytvorenia záznamu
         let createdEntry = zavazky.entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + memLib
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appDBName
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
             appDB.setAttr("posledné číslo", newNumber[1])
             createdEntry.set(VIEW, VIEW_PRINT)
@@ -146,10 +146,10 @@ const newEntryZavazky = (employee, en, sum) => {
             logTxt += "\nNový záznam nebol vytvorený"
         }
 
-        logGen(memLib, "appAsistanto.js", scriptName, logTxt, variables, parameters);
+        logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters);
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(memLib, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(appDBName, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
