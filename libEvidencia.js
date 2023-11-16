@@ -38,7 +38,7 @@ const updateEntryDochadzka = en => {
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
-const  removeEntryDochadzka = (en) => {
+const removeEntryDochadzka = (en) => {
     // Created at: 16.11.2023, 07:55
     // popis funkcie
     let scriptName = 'removeEntryDochadzka 23.0.01'
