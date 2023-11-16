@@ -147,7 +147,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                 if (evidenciaPrac) {
                     for (let ep in evidenciaPrac) {
                         let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                        let naZakazke = evidenciaPrac[ep].field("Odpracované/os");
+                        let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
                         for (let znz in zamNaZakazke) {
                             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                                 evidenciaCelkom += naZakazke;

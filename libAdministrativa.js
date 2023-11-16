@@ -136,17 +136,8 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[SEASON] = season;
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
-        let createdEntry = zavazky.entries()[0]
-        if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appDBName
-            appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
-            appDB.setAttr("posledné číslo", newNumber[1])
-            createdEntry.set(VIEW, VIEW_PRINT)
-        } else {
-            logTxt += "\nNový záznam nebol vytvorený"
-        }
+        saveNewNumber(en, zavazky, newNumber, scriptName)
 
-        logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters);
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen(appDBName, "libDochadzka.js", scriptName, error, variables, parameters)
