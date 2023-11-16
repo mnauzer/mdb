@@ -471,7 +471,8 @@ const saveEntry = (en, inptScript) => {
             switch (memLib) {
             case LIB_DOCH:
                 let vymazaneCisla = prepocitatZaznamDochadzky(en)
-                appDB.setAttr("vymazané čísla", vymazaneCisla.toString())
+                appDB.setAttr("vymazané čísla", vymazaneCisla)
+
                 break;
             default:
                 break;
@@ -486,6 +487,20 @@ const saveEntry = (en, inptScript) => {
         en.set(VIEW, VIEW_DEBUG)
         variables += "\nentry: " + en.name + "\nmemento library: " + memLib
         errorGen(memLib, "appAsistanto.js", scriptName, error, variables, parameters)
+    }
+}
+const  removeEntry = (en, memLib, inptScript) => {
+    // Created at: 16.11.2023, 00:50
+    // popis funkcie
+    let scriptName = 'removeEntry 23.0.01'
+    let variables = 'user: ' + user()
+    let parameters = 'en: ' + en
+    try {
+        variables += ''
+       //function code here
+    } catch (error) {
+        variables += ''
+        errorGen(memLib, 'appAsistanto.js', scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS

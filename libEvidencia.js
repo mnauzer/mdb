@@ -139,7 +139,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
         message("Hotovo...");
-        return vymazaneCisla
+        return vymazaneCisla.toString()
     } catch (error) {
         errorGen(LIB_DOCH, 'appAsistanto.js', scriptName, error, variables, parameters);
     }
