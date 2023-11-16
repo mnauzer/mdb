@@ -482,7 +482,7 @@ const saveEntry = (en, inptScript) => {
             appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
             appDB.setAttr("posledné číslo", newNumber[1])
             switch (appDBName) {
-            case LIB_DOCH:
+            case "Dochádzka":
                 prepocitatZaznamDochadzky(en)
                 break;
             default:
