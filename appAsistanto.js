@@ -522,8 +522,10 @@ const removeEntry = (en, appDBName, inptScript) => {
         // ak je záznam vymazaných čísiel, konvertuje na array
         if (trashedNums) {
             tnArray = trashedNums.split(',')
+            variables += '\ntnArray: ' + tnArray
             tnArray.push(numToBeTrashed)
             appDB.setAttr("vymazané čísla", tnArray.join())
+            variables += '\ntnArray+: ' + tnArray
             variables += '\nnew trashed nums: ' + trashedNums
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
