@@ -502,7 +502,7 @@ const saveEntry = (en, inptScript) => {
 const removeEntry = (en, appDBName, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    let scriptName = 'removeEntry 23.0.03'
+    let scriptName = 'removeEntry 23.0.04'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
