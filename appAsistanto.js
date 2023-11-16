@@ -515,14 +515,15 @@ const removeEntry = (en, appDBName, inptScript) => {
         variables += '\nappDB: ' + appDB
        // let trashedNums = appDB.attr('vymazané čísla') || null
         let trashedNums = '1,2,3,4'
+        let tnArray= []
         variables += '\ntrashed nums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
         variables += '\nnum to trash: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
-        if (trashedNums != null || trashedNums != '') {
-            trashedNums.split(',')
-            trashedNums.push(numToBeTrashed)
-            appDB.setAttr("vymazané čísla", trashedNums.join())
+        if (trashedNums) {
+            tnArray = trashedNums.split(',')
+            tnArray.push(numToBeTrashed)
+            appDB.setAttr("vymazané čísla", tnArray.join())
             variables += '\nnew trashed nums: ' + trashedNums
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
