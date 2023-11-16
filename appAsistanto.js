@@ -356,7 +356,7 @@ const getNewNumber = (appDB, season,inptScript) => {
             // ak existujú vymazané čísla
             let tnArray = trashedNums.split(",")
             nextNum = tnArray.shift()
-            appDB.setAttr("vymazané čísla", tnArray.join())
+            appDB.setAttr("vymazané čísla", tnArray)
         }
         appDB.setAttr("rezervované číslo", nextNum)
         number[0] = isPrefix ? prefix + season.slice(trim) + pad(nextNum, trailingDigit) : dbID + season.slice(trim) + pad(nextNum, trailingDigit)
