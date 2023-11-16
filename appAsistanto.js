@@ -284,7 +284,7 @@ const findAppDBbyName = (season, libTitle) => {
 }
 const getSeason = (en, appDBName, inptScript) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.1.0"
+    let scriptName = "getSeason 23.1.07"
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en + "\nappDBName: " + appDBName + "\ninptScript: " + inptScript
     if(en == undefined || en == null){
@@ -293,7 +293,8 @@ const getSeason = (en, appDBName, inptScript) => {
         exit()
     }
     try {
-        let season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString()
+//let season = en.field(SEASON) ? en.field(SEASON) : en.field(DATE).getFullYear().toString()
+        let season = en.field(DATE).getFullYear().toString()
         variables += "\nSezóna: " + season + "\n"
      //   let logMsg = "Setting season field to " + season
      //  logGen(appDBName, "appAsistanto.js", scriptName, logMsg, variables, parameters)
