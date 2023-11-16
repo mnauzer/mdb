@@ -502,7 +502,7 @@ const saveEntry = (en, inptScript) => {
 const removeEntry = (en, appDBName, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    let scriptName = 'removeEntry 23.0.04'
+    let scriptName = 'removeEntry 23.0.05'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
@@ -513,7 +513,7 @@ const removeEntry = (en, appDBName, inptScript) => {
         variables += '\nseason: ' + season
         let appDB = getAppSeasonDB(season, appDBName, scriptName)
         variables += '\nappDB: ' + appDB
-        let trashedNums = appDB.attr('vymazané čísla')
+        let trashedNums = appDB.attr('vymazané čísla') || null
         variables += '\ntrashed nums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
         variables += '\nnum to trash: ' + numToBeTrashed
