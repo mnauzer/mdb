@@ -327,7 +327,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
 }
 const getNewNumber = (appDB, season,inptScript) => {
     // generuje nové číslo záznamu
-    let scriptName = "getNewNumber 23.1.10"
+    let scriptName = "getNewNumber 23.1.1"
     let variables = "user: " + user()
     let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
     let appDBName = appDB.name
