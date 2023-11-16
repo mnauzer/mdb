@@ -524,7 +524,7 @@ const removeEntry = (en, appDBName, inptScript) => {
             tnArray = trashedNums.split(',')
             variables += '\ntnArray: ' + tnArray
             tnArray = tnArray.push(numToBeTrashed)
-            appDB.setAttr("vymazané čísla", tnArray.join())
+            appDB.setAttr("vymazané čísla", tnArray)
             variables += '\ntnArray+: ' + tnArray
             variables += '\nnew trashed nums: ' + trashedNums
         }
