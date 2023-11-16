@@ -513,14 +513,14 @@ const removeEntry = (en, appDBName, inptScript) => {
         variables += '\nseason: ' + season
         let appDB = getAppSeasonDB(season, appDBName, scriptName)
         variables += '\nappDB: ' + appDB
-       // let trashedNums = appDB.attr('vymazané čísla') || null
-        let trashedNums = "1,2,3,4"
+        let trashedNums = appDB.attr('vymazané čísla') || null
+    //    let trashedNums = "1,2,3,4"
         let tnArray= []
         variables += '\ntrashed nums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
         variables += '\nnum to trash: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
-        if (trashedNums) {
+        if (trashedNums>0) {
             tnArray = trashedNums.split(',')
             variables += '\ntnArray: ' + tnArray
             tnArray = tnArray.push(numToBeTrashed)
