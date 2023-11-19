@@ -9,12 +9,12 @@ const filterTest = () => {
 const appLIB = {
     name: "Dochádzka",
     season: function(){
-        return libByName("APP").field("default season")
+        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
     databases: function() {
         return "databases"
     },
     entry: function(){
-        return libByName("APP").find(this.season)[0]
+        return libByName(APP).find(this.season)[0]
     }
 }
