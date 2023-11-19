@@ -10,15 +10,15 @@ const appLIB = {
     name: function(){
         return lib().title
     },
-    season: function(){
-        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
+    season: function(tenant){
+        return libByName(APP_TENATNS).find(tenant)[0].field("default season")
         },
     entry: function(){
         return libByName(APP).find(this.season())[0]
     },
-    DB: function(){
-        return libByName(APP).find(this.season()).find(this.name())[0]
-    },
+    // DB: function(){
+    //     return libByName(APP).find(this.season()).find(this.name())[0]
+    // },
     lastNum: function(){
         return this.entry.find(this.name())[0].attr("posledné číslo")
     }
