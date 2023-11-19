@@ -1,10 +1,7 @@
 const filterTest = () => {
 
     let testArray = [1,2,3,15,25,11,7,18,125,3,4]
-    message(testArray)
-    const filtered = testArray.filter(entry => {return entry < 20})
-    message(filtered.sort())
-}
+ }
 
 const appLIB = {
     name: function(){
@@ -21,8 +18,8 @@ const appLIB = {
     // },
     lastNum: function(){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.name <= this.name())
-        return filtered.name
+        const filtered = db.filter(en => en.name == this.name())
+        return filtered
      //   return findDB.attr("posledné číslo")
     }
     //
