@@ -1,6 +1,6 @@
 const appLIB = {
     name: function(){
-        return lib().title
+        return lib.name()
     },
     season: function(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
@@ -8,9 +8,9 @@ const appLIB = {
     entry: function(){
         return libByName(APP).find(this.season())[0]
     },
-    DB: function(){
+    DB: function(name){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == this.name())
+        const filtered = db.filter(en => en.field("Názov") == name || this.name())
         return filtered[0]
     },
     getNextNum: function(){

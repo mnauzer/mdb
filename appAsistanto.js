@@ -294,54 +294,36 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    let scriptName = "newEntry 23.0.05"
-    let appDBName = lib().title
-    let variables = "user" + user()
-    let parameters = "en: " + en
+    const scriptName = "newEntry 23.0.06"
+    const variables = "user" + user()
+    const parameters = "en: " + en
     try {
-        message("Nový záznam [" + appDBName + "]")
+        message("Nový záznam >>" + appLIB.name())
+        const number = getNewNumber(appLIB.DB, appLIB.season(), appLIB.name(), scriptName)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
         en.set(CR_DATE, new Date())
-        let season = getSeason(en, appDBName, scriptName)
-        variables += "\nseason: " + season //msgGen log
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        if (appDB){
-            variables += "\nappDB: " + appDB
-            let number = getNewNumber(appDB, season, appDBName, scriptName)
-            variables += "\nnumber: " + number
-            en.set(NUMBER, number[0])
-            en.set(NUMBER_ENTRY, number[1])
-            en.set(SEASON, season)
-        } else {
-            message("Databáza nenájdená v APP")
-        }
+        en.set(NUMBER, number[0])
+        en.set(NUMBER_ENTRY, number[1])
+        en.set(SEASON, appLIB.season())
+
     } catch (error) {
-        variables += "\nentry: " + en.name + "\nappDBName: " + appDBName
+        variables += "\nentry: " + en.name + "\nappDBName: " + appLIB.name()
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntry = en => {
-    let scriptName = "updateEntry 23.0.05"
-    let appDBName = lib().title
-    let variables = "user: " + user()
-    let parameters = "en: " + en
+    const scriptName = "updateEntry 23.0.05"
+    const variables = "user: " + user()
+    const parameters = "en: " + en
     try {
-        message("Úprava záznamu - " + appDBName);
+        message("Úprava záznamu >>" + appLIB.name());
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, en.field(DATE) ? en.field(DATE) : new Date())
         en.set(MOD, user())
         en.set(MOD_DATE, new Date())
-        let season = getSeason(en, appDBName, scriptName)
-        variables += "\nseason: " + season //msgGen log
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        if (appDB){
-            variables += "\nappDB: " + appDB
-        } else {
-            message("Databáza nenájdená v APP")
-        }
     } catch (error) {
         variables += "\nentry: " + en.name + "appDBName: " + appDBName
         en.set(VIEW, VIEW_DEBUG)
@@ -362,15 +344,15 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    let scriptName = "saveEntry 23.0.18"
-    let variables = "user: " + user()
-    let parameters = "en: " + en + "\ninptScript: " + inptScript
+    const scriptName = "saveEntry 23.0.18"
+    const variables = "user: " + user()
+    const parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
-        let logTxt = ""
-        let newNumber = getNewNumber(appLIB.DB(), season, scriptName)
+        const logTxt = ""
+        const newNumber = getNewNumber(appLIB.DB(), appLIB.season(), scriptName)
         variables += "\nnewNumber: " + newNumber
-        let createdEntry = lib().entries()[0]
+        const createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             message("true")
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
@@ -415,7 +397,7 @@ const removeEntry = (en, appDBName, inptScript) => {
             tnArray = trashedNums.split(',')
             variables += '\ntnArray: ' + tnArray
             tnArray = tnArray.push(numToBeTrashed)
-            appLIB.setTrashedNums(tnArray)
+            appLIB.setTrashedNums(trashedNums)
             variables += '\ntnArray+: ' + tnArray
             variables += '\nnew trashed nums: ' + trashedNums
         }
