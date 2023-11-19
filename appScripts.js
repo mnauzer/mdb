@@ -21,8 +21,9 @@ const appLIB = {
     // },
     lastNum: function(){
         const db = this.entry().field("Databázy")
-        const findDB = db.filter(en => en.name <= this.name())
-        return findDB.attr("posledné číslo")
+        const filtered = db.filter(en => en.name <= this.name())
+        return filtered.name
+     //   return findDB.attr("posledné číslo")
     }
     //
 }
