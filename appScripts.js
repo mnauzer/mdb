@@ -13,10 +13,10 @@ const appLIB = {
     season: function(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
-    databases: function() {
-        return libByName(APP).find(this.season())
-    },
     entry: function(){
+        return libByName(APP).find(this.season())[0]
+    },
+    DB: function(){
         return libByName(APP).find(this.season()).find(this.name())[0]
     },
     lastNum: function(){
