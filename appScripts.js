@@ -34,5 +34,16 @@ const appLIB = {
         } catch (error) {
             return false
         }
+    },
+    getTrashedNums: function(){
+        return this.DB().attr("vymazané čísla")
+    },
+    setTrashedNums: function(newNum){
+        try {
+            this.DB().setAttr("vymazané čísla", newNum)
+            return true
+        } catch (error) {
+            return false
+        }
     }
 }

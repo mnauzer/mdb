@@ -399,18 +399,13 @@ const removeEntry = (en, appDBName, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
     let scriptName = 'removeEntry 23.0.1'
-    let variables = 'user: ' + user() + '\entry: ' + en.name + '\nappDBName: ' + appDBName
+    let variables = 'user: ' + user() + '\entry: ' + en.name + '\nappDBName: ' + appLIB.name()
     let parameters = 'en: ' + en
     try {
         variables = '\ninptScript: ' + inptScript
         let logTxt = ''
-        variables += '\nlibrary: ' + appDBName
-        let season = getSeason(en, appDBName, scriptName)
-        variables += '\nseason: ' + season
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        variables += '\nappDB: ' + appDB
-        let trashedNums = appDB.attr('vymazané čísla') || null
-    //    let trashedNums = "1,2,3,4"
+        variables += '\nlibrary: ' + appLIB.name()
+        let trashedNums = appLIB.getTrashedNums()
         let tnArray= []
         variables += '\ntrashed nums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
@@ -420,12 +415,12 @@ const removeEntry = (en, appDBName, inptScript) => {
             tnArray = trashedNums.split(',')
             variables += '\ntnArray: ' + tnArray
             tnArray = tnArray.push(numToBeTrashed)
-            appDB.setAttr("vymazané čísla", tnArray)
+            appLIB.setTrashedNums(tnArray)
             variables += '\ntnArray+: ' + tnArray
             variables += '\nnew trashed nums: ' + trashedNums
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
-        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + appDBName
+        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + appLIB.name()
         logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
         if(inptScript != 'trigger remove_entry') {
             en.trash()
