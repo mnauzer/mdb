@@ -245,13 +245,13 @@ const getNewNumber = (appDB, season,inptScript) => {
 const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
     // Created at: 16.11.2023, 17:19
     // popis funkcie
-    const scriptName = 'saveNewNumber 23.0.04'
+    const scriptName = 'saveNewNumber 23.0.05'
     const variables = 'user: ' + user()
     const parameters = 'en: ' + en + '\nappLIB: ' + appLIB.name() + '\ninptScript: ' + inptScript
     const logTxt = ''
     try {
         variables += ''
-        const createdEntry = libByName(appLib.name()).entries()[0]
+        const createdEntry = libByName(appLIB.name()).entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
             appLIB.setNextNum(newNumber[1] + 1)
