@@ -362,18 +362,13 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    let scriptName = "saveEntry 23.0.17"
+    let scriptName = "saveEntry 23.0.18"
     let variables = "user: " + user()
     let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
         let logTxt = ""
-        variables += "\nlibrary: " + appLIB.name()
-        let season = getSeason(en, appLIB.name(), scriptName)
-        variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, appLIB.name(), scriptName)
-        variables += "\nappDB: " + appDB
-        let newNumber = getNewNumber(appDB, season, scriptName)
+        let newNumber = getNewNumber(appLIB.DB(), season, scriptName)
         variables += "\nnewNumber: " + newNumber
         let createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
