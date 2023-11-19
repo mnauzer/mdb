@@ -380,8 +380,8 @@ const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
         const createdEntry = appDB.entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
-            appLib.setNewNum(newNumber[1] + 1)
-            appLib.setLastNum(newNumber[1])
+            appLIB.setNewNum(newNumber[1] + 1)
+            appLIB.setLastNum(newNumber[1])
             createdEntry.set(VIEW, VIEW_PRINT)
             logGen(appLIB.name(), "appAsistanto.js", scriptName, logTxt, variables, parameters);
 
