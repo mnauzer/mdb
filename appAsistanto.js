@@ -229,6 +229,7 @@ const getAppSeasonDB = (season, appDBName, inptScript) => {
                 attributes =
                 "\nnasledujúce číslo: " + databazy[v].attr("nasledujúce číslo") +
                 "\nčíslo testu: " + databazy[v].attr("číslo testu") +
+                "\nvymazané čísla: " + databazy[v].attr("vymazané čísla") +
                 "\nrezervované číslo: " + databazy[v].attr("rezervované číslo") +
                 "\ndebug: " + databazy[v].attr("debug") +
                 "\nlocked: " + databazy[v].attr("locked") +
@@ -251,17 +252,17 @@ const getAppSeasonDB = (season, appDBName, inptScript) => {
 }
 const findAppDB = (season, appDBName, inptScript) => {
     // get db from APP library
-    let scriptName = "findAppDB 23.0.98"
-    let variables = "Záznam: " + en.name
-    let parameters = "season: " + season  + "\ninptScript: " + inptScript + "\nappDBName: " + appDBName
+    const scriptName = "findAppDB 23.0.98"
+    const variables = "Záznam: " + en.name
+    const parameters = "season: " + season  + "\ninptScript: " + inptScript + "\nappDBName: " + appDBName
     if(season === undefined || season == null){
         msgGen(appDBName, "appAsistanto.js", scriptName, "season or dbName parameters are missing", variables, parameters )
         cancel()
         exit()
     }
     try {
-        let entry = libByName(appDBName).find(season)[0]
-        let databazy = entry.field("Databázy")
+        const entry = libByName(appDBName).find(season)[0]
+        const databazy = entry.field("Databázy")
         for (var v = 0;v < databazy.length; v++) {
             if (databazy[v].field("Názov") == appDBName) {
                 return databazy[v]
@@ -275,18 +276,18 @@ const findAppDB = (season, appDBName, inptScript) => {
 }
 const findAppDBbyName = (season, libTitle) => {
     // get db from APP library
-    var entry = libByName(APP).find(season)[0]
-    var databazy = entry.field("Databázy")
+    const entry = libByName(APP).find(season)[0]
+    const databazy = entry.field("Databázy")
     //message("Databáz 2: " + databazy.length)
-    // var filteredDB = databazy.filter(fltrDb(libTitle))[0]
-    var filteredDB = databazy.filter(fltrDb)[0]
+    // const filteredDB = databazy.filter(fltrDb(libTitle))[0]
+    const filteredDB = databazy.filter(fltrDb)[0]
     return filteredDB
 }
 const getSeason = (en, appDBName, inptScript) => {
     // get entryDefault season from creation date
-    let scriptName = "getSeason 23.1.07"
-    let variables = "Záznam: " + en.name
-    let parameters = "en: " + en + "\nappDBName: " + appDBName + "\ninptScript: " + inptScript
+    const scriptName = "getSeason 23.1.07"
+    const variables = "Záznam: " + en.name
+    const parameters = "en: " + en + "\nappDBName: " + appDBName + "\ninptScript: " + inptScript
     if(en == undefined || en == null){
         msgGen(appDBName, "appAsistanto.js", scriptName, "parameter en - záznam nie je zadaný", variables, parameters )
         cancel()
@@ -328,23 +329,23 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
 }
 const getNewNumber = (appDB, season,inptScript) => {
     // generuje nové číslo záznamu
-    let scriptName = "getNewNumber 23.1.1"
-    let variables = "user: " + user()
-    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
-    let appDBName = appDB.name
-    let logTxt = ""
+    const scriptName = "getNewNumber 23.1.1"
+    const variables = "user: " + user()
+    const parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
+    const appDBName = appDB.name
+    const logTxt = ""
     try {
-        let number = []
+        const number = []
         // link to field attributes
-        let lastNum = appDB.attr("posledné číslo")
-        let nextNum = appDB.attr("nasledujúce číslo")
-        let reservedNum = appDB.attr("rezervované číslo")
-        let trashedNums = appDB.attr("vymazané čísla")
-        let test = appDB.attr("test")
-        let dbID =  appDB.field("ID")
-        let isPrefix = appDB.attr("prefix")
-        let trailingDigit = appDB.attr("trailing digit")
-        let trim = appDB.attr("trim")
+        const lastNum = appDB.attr("posledné číslo")
+        const nextNum = appDB.attr("nasledujúce číslo")
+        const reservedNum = appDB.attr("rezervované číslo")
+        const trashedNums = appDB.attr("vymazané čísla")
+        const test = appDB.attr("test")
+        const dbID =  appDB.field("ID")
+        const isPrefix = appDB.attr("prefix")
+        const trailingDigit = appDB.attr("trailing digit")
+        const trim = appDB.attr("trim")
         //
         let prefix = appDB.field("Prefix")
         if (test) {
