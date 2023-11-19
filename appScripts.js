@@ -15,9 +15,7 @@ const appLIB = {
     },
     DB: function(){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => {
-            return en.field("Názov") == this.name()
-        })
+        const filtered = db.filter(en => en.field("Názov") == this.name())
         return filtered[0]
     },
     getLastNum: function(){
