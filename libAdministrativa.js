@@ -104,7 +104,7 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.09"
+    let scriptName = "newEntryZavazky 23.0.10"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
     let variables = "user: " + user() + "\nappDBName: " + appLIB.name()
     try {
@@ -118,7 +118,7 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[NUMBER] = newNumber[0];
         newEntry[NUMBER_ENTRY] = newNumber[1];
         newEntry[DATE] = date;
-        //
+        // TODO: zmeniť aj pre iných veriteľov ako zamestnanci
         newEntry["Typ"] = "Mzdy";
         newEntry["Zamestnanec"] = employee;
         newEntry["Dochádzka"] = en;
