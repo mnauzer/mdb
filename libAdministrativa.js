@@ -104,9 +104,9 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.10"
+    let scriptName = "newEntryZavazky 23.0.11"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let variables = "user: " + user() + "\nappDBName: " + appLIB.name()
+    let variables = "user: " + user() + "\nappLIB name: " + appLIB.name()
     try {
         let date = new Date()
         let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name(), scriptName)
