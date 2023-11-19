@@ -10,8 +10,8 @@ const appLIB = {
     name: function(){
         return lib().title
     },
-    season: function(tenant){
-        return libByName(APP_TENATNS).find(tenant)[0].field("default season")
+    season: function(){
+        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
     entry: function(){
         return libByName(APP).find(this.season())[0]
