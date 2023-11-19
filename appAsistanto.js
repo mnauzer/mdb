@@ -364,36 +364,35 @@ const setEntry = (en, inptScript) => {
 const saveEntry = (en, inptScript) => {
     let scriptName = "saveEntry 23.0.17"
     let variables = "user: " + user()
-    let appDBName = lib().title
     let parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
         let logTxt = ""
-        variables += "\nlibrary: " + appDBName
-        let season = getSeason(en, appDBName, scriptName)
+        variables += "\nlibrary: " + appLIB.name()
+        let season = getSeason(en, appLIB.name(), scriptName)
         variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
+        let appDB = getAppSeasonDB(season, appLIB.name(), scriptName)
         variables += "\nappDB: " + appDB
         let newNumber = getNewNumber(appDB, season, scriptName)
         variables += "\nnewNumber: " + newNumber
         let createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             message("true")
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appDBName
-            appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
-            appDB.setAttr("posledné číslo", newNumber[1])
-            switch (appDBName) {
-            case "Dochádzka":
-                prepocitatZaznamDochadzky(en)
-                break;
-            default:
-                break;
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
+            appLIB.setNextNum(newNumber[1] + 1)
+            appLIB.setLastNum(newNumber[1])
+            switch (appLIB.name()) {
+                case "Dochádzka":
+                    prepocitatZaznamDochadzky(en)
+                    break;
+                default:
+                    break;
             }
             createdEntry.set(VIEW, VIEW_PRINT)
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
-        logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters)
+        logGen(appLIB.name(), "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
