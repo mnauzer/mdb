@@ -21,10 +21,14 @@ const appLIB = {
         return filtered[0]
     },
     getLastNum: function(){
-        return this.DB.attr("posledné číslo")
+        return this.DB().attr("posledné číslo")
     },
     setLastNum: function(newNum){
-        this.DB.setAttr("posledné číslo", newNum)
-        return true
+        try {
+            this.DB().setAttr("posledné číslo", newNum)
+            return true
+        } catch (error) {
+            return false
+        }
     }
 }
