@@ -22,4 +22,5 @@ const appLIB = {
     lastNum: function(){
         return this.entry.find(this.name())[0].attr("posledné číslo")
     }
+    //
 }
