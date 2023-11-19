@@ -106,11 +106,10 @@ const updateObligations = en => {
 const newEntryZavazky = (employee, en, sum) => {
     let scriptName = "newEntryZavazky 23.0.09"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let appDBName = LIB_ZVK
     let variables = "user: " + user() + "\nappDBName: " + appLIB.name()
     try {
         let date = new Date()
-        let newNumber = getNewNumber(appLIB.DB(), season, appLIB.name(), scriptName)
+        let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name(), scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
@@ -119,16 +118,17 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[NUMBER] = newNumber[0];
         newEntry[NUMBER_ENTRY] = newNumber[1];
         newEntry[DATE] = date;
+        //
         newEntry["Typ"] = "Mzdy";
-        newEntry["Popis"] = popis;
         newEntry["Zamestnanec"] = employee;
         newEntry["Dochádzka"] = en;
-        newEntry["Suma"] = sum.toFixed(2);
         newEntry["info"] = "generované automaticky z dochádzky";
-        newEntry[SEASON]= season
+        //
+        newEntry["Popis"] = popis;
+        newEntry["Suma"] = sum.toFixed(2);
+        newEntry[SEASON]= appLIB.season()
         newEntry[CR] = user()
         newEntry[CR_DATE] = new Date()
-        newEntry[SEASON] = season;
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
         saveNewNumber(en, zavazky, newNumber, scriptName)
