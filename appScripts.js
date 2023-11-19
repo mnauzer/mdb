@@ -7,7 +7,9 @@ const filterTest = () => {
 }
 
 const appLIB = {
-    name: "Dochádzka",
+    name: function(){
+        return lib().title
+    },
     season: function(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
@@ -15,9 +17,9 @@ const appLIB = {
         return libByName(APP).find(this.season)
     },
     entry: function(){
-        return libByName(APP).find(this.season).find(lib().title)[0]
+        return libByName(APP).find(this.season).find(this.name)[0]
     },
     lastNum: function(){
-        return this.entry.find(lib().title)[0].attr("posledné číslo")
+        return this.entry.find(this.name)[0].attr("posledné číslo")
     }
 }
