@@ -12,10 +12,10 @@ const appLIB = {
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
     databases: function() {
-        return "databases"
+        return libByName(APP).find(this.season)
     },
     entry: function(){
-        return libByName(APP).find(this.season)[0]
+        return libByName(APP).find(this.season).find(lib().title)[0]
     },
     lastNum: function(){
         return this.entry.find(lib().title)[0].attr("posledné číslo")
