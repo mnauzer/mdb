@@ -20,7 +20,9 @@ const appLIB = {
     //     return libByName(APP).find(this.season()).find(this.name())[0]
     // },
     lastNum: function(){
-        return this.entry.find(this.name())[0].attr("posledné číslo")
+        const db = this.entry().field("Databázy")
+        const findDB = db.filter(en => en.name <= this.name())
+        return findDB.attr("posledné číslo")
     }
     //
 }
