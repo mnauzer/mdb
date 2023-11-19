@@ -1,7 +1,3 @@
-const filterTest = () => {
-    let testArray = [1,2,3,15,25,11,7,18,125,3,4]
-}
-
 const appLIB = {
     name: function(){
         return lib().title
@@ -16,6 +12,17 @@ const appLIB = {
         const db = this.entry().field("Databázy")
         const filtered = db.filter(en => en.field("Názov") == this.name())
         return filtered[0]
+    },
+    getNextNum: function(){
+        return this.DB().attr("nasledujúce číslo")
+    },
+    setNextNum: function(newNum){
+        try {
+            this.DB().setAttr("nasledujúce číslo", newNum)
+            return true
+        } catch (error) {
+            return false
+        }
     },
     getLastNum: function(){
         return this.DB().attr("posledné číslo")

@@ -371,19 +371,19 @@ const getNewNumber = (appDB, season,inptScript) => {
 const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
     // Created at: 16.11.2023, 17:19
     // popis funkcie
-    let scriptName = 'saveNewNumber 23.0.01'
-    let variables = 'user: ' + user()
-    let parameters = 'en: ' + en + '\nappDB: ' + appDB + '\ninptScript: ' + inptScript
-    let logTxt = ''
+    const scriptName = 'saveNewNumber 23.0.02'
+    const variables = 'user: ' + user()
+    const parameters = 'en: ' + en + '\nappDB: ' + appDB + '\ninptScript: ' + inptScript
+    const logTxt = ''
     try {
         variables += ''
-        let createdEntry = appDB.entries()[0]
+        const createdEntry = appDB.entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appDBName
-            appDB.setAttr("nasledujúce číslo", newNumber[1] + 1)
-            appDB.setAttr("posledné číslo", newNumber[1])
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
+            appLib.setNewNum(newNumber[1] + 1)
+            appLib.setLastNum(newNumber[1])
             createdEntry.set(VIEW, VIEW_PRINT)
-            logGen(appDBName, "appAsistanto.js", scriptName, logTxt, variables, parameters);
+            logGen(appLIB.name(), "appAsistanto.js", scriptName, logTxt, variables, parameters);
 
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
