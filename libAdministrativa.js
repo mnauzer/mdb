@@ -107,15 +107,10 @@ const newEntryZavazky = (employee, en, sum) => {
     let scriptName = "newEntryZavazky 23.0.09"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
     let appDBName = LIB_ZVK
-    let variables = "user: " + user() + "\nappDBName: " + appDBName
+    let variables = "user: " + user() + "\nappDBName: " + appLIB.name()
     try {
         let date = new Date()
-        let logTxt = ""
-        let season = getSeason(en, appDBName, scriptName)
-        variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        variables += "\nappDB: " + appDB.name
-        let newNumber = getNewNumber(appDB, season, appDBName, scriptName)
+        let newNumber = getNewNumber(appLIB.DB(), season, appLIB.name(), scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
@@ -140,7 +135,7 @@ const newEntryZavazky = (employee, en, sum) => {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(appDBName, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(appLIB.name(), "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
