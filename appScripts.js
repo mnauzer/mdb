@@ -13,16 +13,14 @@ const appLIB = {
     entry: function(){
         return libByName(APP).find(this.season())[0]
     },
-    // DB: function(){
-    //     return libByName(APP).find(this.season()).find(this.name())[0]
-    // },
-    lastNum: function(){
+    DB: function(){
         const db = this.entry().field("Databázy")
         const filtered = db.filter(en => {
             return en.field("Názov") == this.name()
         })
-        return filtered[0].attr("posledné číslo")
-     //   return findDB.attr("posledné číslo")
+        return filtered[0]
+    },
+    lastNum: function(){
+        return this.DB.attr("posledné číslo")
     }
-    //
 }
