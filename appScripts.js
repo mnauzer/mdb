@@ -16,5 +16,8 @@ const appLIB = {
     },
     entry: function(){
         return libByName(APP).find(this.season)[0]
+    },
+    lastNum: function(){
+        return this.entry.find(lib().title)[0].attr("posledné číslo")
     }
 }
