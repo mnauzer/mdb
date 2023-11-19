@@ -1,7 +1,6 @@
 const filterTest = () => {
-
     let testArray = [1,2,3,15,25,11,7,18,125,3,4]
- }
+}
 
 const appLIB = {
     name: function(){
