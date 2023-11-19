@@ -371,7 +371,7 @@ const getNewNumber = (appDB, season,inptScript) => {
 const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
     // Created at: 16.11.2023, 17:19
     // popis funkcie
-    const scriptName = 'saveNewNumber 23.0.02'
+    const scriptName = 'saveNewNumber 23.0.03'
     const variables = 'user: ' + user()
     const parameters = 'en: ' + en + '\nappDB: ' + appDB + '\ninptScript: ' + inptScript
     const logTxt = ''
@@ -380,7 +380,7 @@ const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
         const createdEntry = appDB.entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
-            appLIB.setNewNum(newNumber[1] + 1)
+            appLIB.setNextNum(newNumber[1] + 1)
             appLIB.setLastNum(newNumber[1])
             createdEntry.set(VIEW, VIEW_PRINT)
             logGen(appLIB.name(), "appAsistanto.js", scriptName, logTxt, variables, parameters);
