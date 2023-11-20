@@ -7,6 +7,9 @@ const testSet = new Set();
 const testMap = new Map();
 
 
+testMap.set("new", "second")
+message(testMap);
+
 
 
 
