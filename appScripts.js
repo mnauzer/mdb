@@ -9,13 +9,13 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-message('DB Arrays: ' + appLIB.attrs);
+message('Posledné číslo: ' + appLIB.attrs("posledné číslo"));
 
 
 
 
 const appLIB = {
-    attrs: function(){
+    attrs: function(a){
         const att = new Map(
         "posledné číslo", this.DB.attr("posledné číslo"),
         "nasledujúce číslo", this.DB.attr("nasledujúce číslo"),
@@ -27,7 +27,7 @@ const appLIB = {
         "trim", this.DB.attr("trim"),
         "trim", this.DB.attr("trim"),
         )
-        return att
+        return att.get(a)
     },
 
     newNumber: function(){
