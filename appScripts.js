@@ -42,11 +42,11 @@ const appLIB = {
     name: function(){
         return lib().name
     },
-    season(): function(){
-        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season()")
+    season: function(){
+        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
     entry: function(){
-        return libByName(APP).find(this.season()())[0]
+        return libByName(APP).find(this.season())[0]
     },
     DB: function(name){
         const db = this.entry().field("Databázy")
