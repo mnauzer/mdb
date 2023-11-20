@@ -31,24 +31,10 @@ const appLIB = {
 
     newNumber: function(){
         const number = []
-        // link to field attributes
-        let prefix = this.DB.field("Prefix")
-        if (test) {
-            dbID = "TEST" + this.attrs.get("ID")
-            prefix = "TEST"
-            attr =  "číslo testu"
-        }
-        // najprv získaj nasledujúce číslo
-        // if (trashedNumvys) {
-        //     // ak existujú vymazané čísla
-        //     let tnArray = trashedNums.split(",")
-        //     nextNum = tnArray.shift()
-        //     appDB.setAttr("vymazané čísla", tnArray)
-        // }
         this.DB.setAttr("rezervované číslo", this.attrs.get("nasledujúce číslo"))
         number[0] = this.attrs.get("prefix")
-        ? prefix + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
-        : dbID + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
+        ? this.DB.field("Prefix") + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
+        : this.attrs.get("ID") + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
         number[1] = this.attrs.get("nasledujúce číslo")
         return number
     },
