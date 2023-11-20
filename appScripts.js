@@ -10,6 +10,7 @@ const testMap = new Map();
 testMap.set("new", "second")
 message(testMap);
 
+message(`test`));
 
 
 
