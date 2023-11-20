@@ -9,7 +9,7 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-message('Posledné číslo: ' + appLIB.attrs("posledné číslo"));
+message('Posledné číslo: ' + appLIB.name());
 
 
 
@@ -24,7 +24,6 @@ const appLIB = {
         "ID", this.DB.attr("ID"),
         "prefix", this.DB.attr("prefix"),
         "trailing digit", this.DB.attr("trailing digit"),
-        "trim", this.DB.attr("trim"),
         "trim", this.DB.attr("trim"),
         )
         return att.get(a)
