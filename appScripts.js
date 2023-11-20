@@ -8,9 +8,9 @@ const testMap = new Map();
 
 
 testMap.set("new", "second")
-message(testMap);
+//message(testMap);
 
-message(`test ${testMap}`);
+message('DB arrays: ' + appLIB.arrays());
 
 
 

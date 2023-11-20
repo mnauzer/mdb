@@ -346,7 +346,7 @@ const setEntry = (en, inptScript) => {
 const saveEntry = (en, inptScript) => {
     const scriptName = "saveEntry 23.0.18"
     const variables = "user: " + user()
-    const parameters = "en: " + en + "\ninptScript: " + inptScript
+    const parameters = `en: ${en}` + "\ninptScript: " + inptScript
     try {
         message("Ukladám záznam...")
         const logTxt = ""
