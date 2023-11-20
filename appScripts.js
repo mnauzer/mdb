@@ -17,23 +17,23 @@ testMap.set("new", "second")
 const appLIB = {
     attrs: function(a){
         const att = new Map(
-        "posledné číslo", this.DB.attr("posledné číslo"),
-        "nasledujúce číslo", this.DB.attr("nasledujúce číslo"),
-        "vymazané čísla", this.DB.attr("vymazané čísla"),
-        "test", this.DB.attr("test"),
-        "ID", this.DB.attr("ID"),
-        "prefix", this.DB.attr("prefix"),
-        "trailing digit", this.DB.attr("trailing digit"),
-        "trim", this.DB.attr("trim"),
+        "posledné číslo", this.DB().attr("posledné číslo"),
+        "nasledujúce číslo", this.DB().attr("nasledujúce číslo"),
+        "vymazané čísla", this.DB().attr("vymazané čísla"),
+        "test", this.DB().attr("test"),
+        "ID", this.DB().attr("ID"),
+        "prefix", this.DB().attr("prefix"),
+        "trailing digit", this.DB().attr("trailing digit"),
+        "trim", this.DB().attr("trim"),
         )
         return att.get(a)
     },
 
     newNumber: function(){
         const number = []
-        this.DB.setAttr("rezervované číslo", this.attrs.get("nasledujúce číslo"))
+        this.DB().setAttr("rezervované číslo", this.attrs.get("nasledujúce číslo"))
         number[0] = this.attrs.get("prefix")
-        ? this.DB.field("Prefix") + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
+        ? this.DB().field("Prefix") + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
         : this.attrs.get("ID") + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
         number[1] = this.attrs.get("nasledujúce číslo")
         return number
@@ -50,7 +50,7 @@ const appLIB = {
     },
     DB: function(name){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == name || this.name())
+        const filtered = db().filter(en => en.field("Názov") == name || this.name())
         return filtered[0]
     },
     getNextNum: function(){
