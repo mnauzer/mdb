@@ -9,18 +9,46 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-message('DB Arrays: ' + appLIB.arrays());
+message('DB Arrays: ' + appLIB.arrays.get("nasledujúce číslo"));
 
 
 
 
 const appLIB = {
     arrays: new Map(
-        "posledné číslo", this.DB.attr("posledné číslo")
+        "posledné číslo", this.DB.attr("posledné číslo"),
+        "nasledujúce číslo", this.DB.attr("nasledujúce číslo"),
+        "vymazané čísla", this.DB.attr("vymazané čísla"),
+        "test", this.DB.attr("test"),
+        "ID", this.DB.attr("ID"),
+        "prefix", this.DB.attr("prefix"),
+        "trailing digit", this.DB.attr("trailing digit"),
+        "trim", this.DB.attr("trim"),
+        "trim", this.DB.attr("trim"),
     ),
 
     newNumber: function(){
-
+        const number = []
+        // link to field attributes
+        let prefix = this.DB.field("Prefix")
+        if (test) {
+            dbID = "TEST" + this.arrays.get("ID")
+            prefix = "TEST"
+            attr =  "číslo testu"
+        }
+        // najprv získaj nasledujúce číslo
+        // if (trashedNumvys) {
+        //     // ak existujú vymazané čísla
+        //     let tnArray = trashedNums.split(",")
+        //     nextNum = tnArray.shift()
+        //     appDB.setAttr("vymazané čísla", tnArray)
+        // }
+        this.DB.setAttr("rezervované číslo", this.arrays.get("nasledujúce číslo"))
+        number[0] = this.arrays.get("prefix")
+        ? prefix + this.season.slice(trim) + pad(this.arrays.get("nasledujúce číslo"), this.arrays.get("trailing digit"))
+        : dbID + this.season.slice(trim) + pad(this.arrays.get("nasledujúce číslo"), this.arrays.get("trailing digit"))
+        number[1] = this.arrays.get("nasledujúce číslo")
+        return number
     },
 
     name: function(){
