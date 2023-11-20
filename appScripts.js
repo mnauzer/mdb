@@ -9,7 +9,7 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-message('Posledné číslo: ' + appLIB.name());
+message('Posledné číslo: ' + appLIB.attrs("posledné číslo"));
 
 
 
