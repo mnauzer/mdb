@@ -16,6 +16,14 @@ message(`test ${testMap.get('new')}`);
 
 
 const appLIB = {
+    arrays: new Map(
+        "posledné číslo", this.DB.attr("posledné číslo")
+    ),
+
+    newNumber: function(){
+
+    },
+
     name: function(){
         return lib.name()
     },
