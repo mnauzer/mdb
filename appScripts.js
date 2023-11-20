@@ -9,13 +9,14 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-message('DB Arrays: ' + appLIB.arrays.get("nasledujúce číslo"));
+message('DB Arrays: ' + appLIB.attrs);
 
 
 
 
 const appLIB = {
-    arrays: new Map(
+    attrs: function(){
+        const att = new Map(
         "posledné číslo", this.DB.attr("posledné číslo"),
         "nasledujúce číslo", this.DB.attr("nasledujúce číslo"),
         "vymazané čísla", this.DB.attr("vymazané čísla"),
@@ -25,14 +26,16 @@ const appLIB = {
         "trailing digit", this.DB.attr("trailing digit"),
         "trim", this.DB.attr("trim"),
         "trim", this.DB.attr("trim"),
-    ),
+        )
+        return att
+    },
 
     newNumber: function(){
         const number = []
         // link to field attributes
         let prefix = this.DB.field("Prefix")
         if (test) {
-            dbID = "TEST" + this.arrays.get("ID")
+            dbID = "TEST" + this.attrs.get("ID")
             prefix = "TEST"
             attr =  "číslo testu"
         }
@@ -43,11 +46,11 @@ const appLIB = {
         //     nextNum = tnArray.shift()
         //     appDB.setAttr("vymazané čísla", tnArray)
         // }
-        this.DB.setAttr("rezervované číslo", this.arrays.get("nasledujúce číslo"))
-        number[0] = this.arrays.get("prefix")
-        ? prefix + this.season.slice(trim) + pad(this.arrays.get("nasledujúce číslo"), this.arrays.get("trailing digit"))
-        : dbID + this.season.slice(trim) + pad(this.arrays.get("nasledujúce číslo"), this.arrays.get("trailing digit"))
-        number[1] = this.arrays.get("nasledujúce číslo")
+        this.DB.setAttr("rezervované číslo", this.attrs.get("nasledujúce číslo"))
+        number[0] = this.attrs.get("prefix")
+        ? prefix + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
+        : dbID + this.season.slice(trim) + pad(this.attrs.get("nasledujúce číslo"), this.attrs.get("trailing digit"))
+        number[1] = this.attrs.get("nasledujúce číslo")
         return number
     },
 
