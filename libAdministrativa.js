@@ -104,18 +104,12 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.09"
+    let scriptName = "newEntryZavazky 23.0.11"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let appDBName = LIB_ZVK
-    let variables = "user: " + user() + "\nappDBName: " + appDBName
+    let variables = "user: " + user() + "\nappLIB name: " + appLIB.name()
     try {
         let date = new Date()
-        let logTxt = ""
-        let season = getSeason(en, appDBName, scriptName)
-        variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        variables += "\nappDB: " + appDB.name
-        let newNumber = getNewNumber(appDB, season, appDBName, scriptName)
+        let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name(), scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
@@ -124,23 +118,24 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[NUMBER] = newNumber[0];
         newEntry[NUMBER_ENTRY] = newNumber[1];
         newEntry[DATE] = date;
+        // TODO: zmeniť aj pre iných veriteľov ako zamestnanci
         newEntry["Typ"] = "Mzdy";
-        newEntry["Popis"] = popis;
         newEntry["Zamestnanec"] = employee;
         newEntry["Dochádzka"] = en;
-        newEntry["Suma"] = sum.toFixed(2);
         newEntry["info"] = "generované automaticky z dochádzky";
-        newEntry[SEASON]= season
+        //
+        newEntry["Popis"] = popis;
+        newEntry["Suma"] = sum.toFixed(2);
+        newEntry[SEASON]= appLIB.season()
         newEntry[CR] = user()
         newEntry[CR_DATE] = new Date()
-        newEntry[SEASON] = season;
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
         saveNewNumber(en, zavazky, newNumber, scriptName)
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(appDBName, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(appLIB.name(), "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 
