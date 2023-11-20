@@ -40,7 +40,7 @@ const appLIB = {
     },
 
     name: function(){
-        return lib.name()
+        return lib().name
     },
     season: function(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
