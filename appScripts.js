@@ -21,8 +21,9 @@ const appLIB = {
         "nasledujúce číslo", this.DB().attr("nasledujúce číslo"),
         "vymazané čísla", this.DB().attr("vymazané čísla"),
         "test", this.DB().attr("test"),
-        "ID", this.DB().attr("ID"),
-        "prefix", this.DB().attr("prefix"),
+        "ID", this.DB().field("ID"),
+        "prefix", this.DB().field("Prefix"),
+        "isPrefix", this.DB().attr("prefix"),
         "trailing digit", this.DB().attr("trailing digit"),
         "trim", this.DB().attr("trim"),
         )
@@ -30,10 +31,10 @@ const appLIB = {
     },
     newNumber(){
         const number = []
-        this.DB().setAttr("rezervované číslo", this.attrs().get("nasledujúce číslo"))
-        number[0] = this.attrs().get("prefix")
-        ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.attrs().get("nasledujúce číslo"), this.attrs().get("trailing digit"))
-        : this.attrs().get("ID") + this.season().slice(trim) + pad(this.attrs().get("nasledujúce číslo"), this.attrs().get("trailing digit"))
+        this.DB().setAttr("rezervované číslo", this.DB().attr("nasledujúce číslo"))
+        number[0] = this.DB().attr("isPrefix")
+        ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
+        : this.DB().field("D") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
         number[1] = this.attrs().get("nasledujúce číslo")
         return number
     },
