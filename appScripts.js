@@ -50,7 +50,7 @@ const appLIB = {
     },
     DB(name){
         const db = this.entry().field("Databázy")
-        const filtered = db().filter(en => en.field("Názov") == name || this.name())
+        const filtered = db.filter(en => en.field("Názov") == name || this.name())
         return filtered[0]
     },
     getNextNum(){
