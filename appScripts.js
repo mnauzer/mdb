@@ -28,7 +28,6 @@ const appLIB = {
         )
         return att.get(a)
     },
-
     newNumber(){
         const number = []
         this.DB().setAttr("rezervované číslo", this.attrs().get("nasledujúce číslo"))
@@ -38,9 +37,8 @@ const appLIB = {
         number[1] = this.attrs().get("nasledujúce číslo")
         return number
     },
-
     name(name){
-        return name ||lib().name
+        return name || lib().title
     },
     season(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
