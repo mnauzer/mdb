@@ -38,7 +38,8 @@ const appLIB = {
         return number
     },
     name(name){
-        return name || lib().title
+        return name || "second name"
+        //return name || lib().title
     },
     season(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
