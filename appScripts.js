@@ -15,7 +15,7 @@ testMap.set("new", "second")
 
 
 const appLIB = {
-    attrs: function(a){
+    attrs(a){
         const att = new Map(
         "posledné číslo", this.DB().attr("posledné číslo"),
         "nasledujúce číslo", this.DB().attr("nasledujúce číslo"),
@@ -29,7 +29,7 @@ const appLIB = {
         return att.get(a)
     },
 
-    newNumber: function(){
+    newNumber(){
         const number = []
         this.DB().setAttr("rezervované číslo", this.attrs().get("nasledujúce číslo"))
         number[0] = this.attrs().get("prefix")
@@ -39,24 +39,24 @@ const appLIB = {
         return number
     },
 
-    name: function(){
+    name(){
         return lib().name
     },
-    season: function(){
+    season(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
-    entry: function(){
+    entry(){
         return libByName(APP).find(this.season())[0]
     },
-    DB: function(name){
+    DB(name){
         const db = this.entry().field("Databázy")
         const filtered = db().filter(en => en.field("Názov") == name || this.name())
         return filtered[0]
     },
-    getNextNum: function(){
+    getNextNum(){
         return this.DB().attr("nasledujúce číslo")
     },
-    setNextNum: function(newNum){
+    setNextNum(newNum){
         try {
             this.DB().setAttr("nasledujúce číslo", newNum)
             return true
@@ -64,10 +64,10 @@ const appLIB = {
             return false
         }
     },
-    getLastNum: function(){
+    getLastNum(){
         return this.DB().attr("posledné číslo")
     },
-    setLastNum: function(newNum){
+    setLastNum(newNum){
         try {
             this.DB().setAttr("posledné číslo", newNum)
             return true
@@ -75,10 +75,10 @@ const appLIB = {
             return false
         }
     },
-    getTrashedNums: function(){
+    getTrashedNums(){
         return this.DB().attr("vymazané čísla")
     },
-    setTrashedNums: function(newNum){
+    setTrashedNums(newNum){
         try {
             this.DB().setAttr("vymazané čísla", newNum)
             return true
