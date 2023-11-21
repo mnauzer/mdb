@@ -39,8 +39,8 @@ const appLIB = {
         return number
     },
 
-    name(){
-        return lib().name
+    name(name){
+        return name ||lib().name
     },
     season(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
@@ -50,7 +50,7 @@ const appLIB = {
     },
     DB(name){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == name || this.name())
+        const filtered = db.filter(en => en.field("Názov") == this.name(name))
         return filtered[0]
     },
     getNextNum(){
