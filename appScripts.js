@@ -15,24 +15,27 @@ testMap.set("new", "second")
 
 
 const appLIB = {
-    attrs(a){
-        const att = new Map(
-        "posledné číslo", this.DB().attr("posledné číslo"),
-        "nasledujúce číslo", this.DB().attr("nasledujúce číslo"),
-        "vymazané čísla", this.DB().attr("vymazané čísla"),
-        "test", this.DB().attr("test"),
-        "ID", this.DB().field("ID"),
-        "prefix", this.DB().field("Prefix"),
-        "isPrefix", this.DB().attr("prefix"),
-        "trailing digit", this.DB().attr("trailing digit"),
-        "trim", this.DB().attr("trim"),
-        )
-        return att.get(a)
+    att: new Map(
+    "posledné číslo", this.DB().attr("posledné číslo"),
+    "nasledujúce číslo", this.DB().attr("nasledujúce číslo"),
+    "vymazané čísla", this.DB().attr("vymazané čísla"),
+    "test", this.DB().attr("test"),
+    "ID", this.DB().field("ID"),
+    "prefix", this.DB().field("Prefix"),
+    "isPrefix", this.DB().attr("prefix"),
+    "trailing digit", this.DB().attr("trailing digit"),
+    "trim", this.DB().attr("trim"),
+    ),
+    getAttr(a){
+        return this.att.get(a)
+    },
+    setAttr(key, value){
+        return this.att.set(key, value)
     },
     newNumber(){
         const number = []
         this.DB().setAttr("rezervované číslo", this.DB().attr("nasledujúce číslo"))
-        number[0] = this.DB().attr("isPrefix")
+        number[0] = this.DB().attrs("isPrefix")
         ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
         : this.DB().field("D") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
         number[1] = this.attrs().get("nasledujúce číslo")
