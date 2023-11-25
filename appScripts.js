@@ -9,7 +9,7 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-//message('Posledné číslo: ' + appLIB.attrs("posledné číslo"));
+//message('Posledné číslo: ' + appLIB.att("posledné číslo"));
 
 
 
@@ -35,10 +35,10 @@ const appLIB = {
     newNumber(){
         const number = []
         this.DB().setAttr("rezervované číslo", this.DB().attr("nasledujúce číslo"))
-        number[0] = this.DB().attrs("isPrefix")
+        number[0] = this.att("isPrefix")
         ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
         : this.DB().field("D") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
-        number[1] = this.attrs().get("nasledujúce číslo")
+        number[1] = this.att().get("nasledujúce číslo")
         return number
     },
     name: lib().title,
