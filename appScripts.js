@@ -51,7 +51,7 @@ const appLIB = {
     entry(){
         return libByName(APP).find(this.season())[0]
     },
-    DB(name){
+    DB(name=lib().title){
         const db = this.entry().field("Databázy")
         const filtered = db.filter(en => en.field("Názov") == this.name(name))
         return filtered[0]
