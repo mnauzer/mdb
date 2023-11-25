@@ -41,19 +41,17 @@ const appLIB = {
         number[1] = this.attrs().get("nasledujúce číslo")
         return number
     },
-    name(name){
-        //return name || "second name"
-        return name || lib().title
-    },
+    name: lib().title,
+
     season(){
         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
     entry(){
         return libByName(APP).find(this.season())[0]
     },
-    DB(name){
+    DB(){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == this.name(name))
+        const filtered = db.filter(en => en.field("Názov") == this.name())
         return filtered[0]
     },
     getNextNum(){
