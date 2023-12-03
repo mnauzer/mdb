@@ -308,7 +308,7 @@ const newEntry = en => {
         en.set(SEASON, appLIB.season())
 
     } catch (error) {
-        variables += "\nentry: " + en.name + "\nappDBName: " + appLIB.name()
+        variables += "\nentry: " + en.name + "\nappDBName: " + appLIB.name
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
