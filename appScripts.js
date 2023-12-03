@@ -14,80 +14,80 @@ testMap.set("new", "second")
 
 
 
-// const appLIB = {
-//     att: new Map(
-//     "posledné číslo", this.DB().attr("posledné číslo"),
-//     "nasledujúce číslo", this.DB().attr("nasledujúce číslo"),
-//     "vymazané čísla", this.DB().attr("vymazané čísla"),
-//     "test", this.DB().attr("test"),
-//     "ID", this.DB().field("ID"),
-//     "prefix", this.DB().field("Prefix"),
-//     "isPrefix", this.DB().attr("prefix"),
-//     "trailing digit", this.DB().attr("trailing digit"),
-//     "trim", this.DB().attr("trim"),
-//     ),
-//     getAttr(a){
-//         return this.att.get(a)
-//     },
-//     setAttr(key, value){
-//         return this.att.set(key, value)
-//     },
-//     newNumber(){
-//         const number = []
-//         this.DB().setAttr("rezervované číslo", this.DB().attr("nasledujúce číslo"))
-//         number[0] = this.att("isPrefix")
-//         ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
-//         : this.DB().field("D") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
-//         number[1] = this.att().get("nasledujúce číslo")
-//         return number
-//     },
-//     name: lib().title,
+const appLIB = {
+    att: new Map(
+    "posledné číslo", DB().attr("posledné číslo"),
+    "nasledujúce číslo", DB().attr("nasledujúce číslo"),
+    "vymazané čísla", DB().attr("vymazané čísla"),
+    "test", DB().attr("test"),
+    "ID", DB().field("ID"),
+    "prefix", DB().field("Prefix"),
+    "isPrefix", DB().attr("prefix"),
+    "trailing digit", DB().attr("trailing digit"),
+    "trim", DB().attr("trim"),
+    ),
+    getAttr(a){
+        return this.att.get(a)
+    },
+    setAttr(key, value){
+        return this.att.set(key, value)
+    },
+    newNumber(){
+        const number = []
+        this.DB().setAttr("rezervované číslo", this.DB().attr("nasledujúce číslo"))
+        number[0] = this.att("isPrefix")
+        ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
+        : this.DB().field("D") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
+        number[1] = this.att().get("nasledujúce číslo")
+        return number
+    },
+    name: lib().title,
 
-//     season(){
-//         return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
-//         },
-//     entry(){
-//         return libByName(APP).find(this.season())[0]
-//     },
-//     DB(){
-//         const db = this.entry().field("Databázy")
-//         const filtered = db.filter(en => en.field("Názov") == this.name())
-//         return filtered[0]
-//     },
-//     getNextNum(){
-//         return this.DB().attr("nasledujúce číslo")
-//     },
-//     // setNextNum(newNum){
-//     //     try {
-//     //         this.DB().setAttr("nasledujúce číslo", newNum)
-//     //         return true
-//     //     } catch (error) {
-//     //         return false
-//     //     }
-//     // },
-//     // getLastNum(){
-//     //     return this.DB().attr("posledné číslo")
-//     // },
-//     // setLastNum(newNum){
-//     //     try {
-//     //         this.DB().setAttr("posledné číslo", newNum)
-//     //         return true
-//     //     } catch (error) {
-//     //         return false
-//     //     }
-//     // },
-//     // getTrashedNums(){
-//     //     return this.DB().attr("vymazané čísla")
-//     // },
-//     // setTrashedNums(newNum){
-//     //     try {
-//     //         this.DB().setAttr("vymazané čísla", newNum)
-//     //         return true
-//     //     } catch (error) {
-//     //         return false
-//     //     }
-//     // }
-// }
+    season(){
+        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
+        },
+    entry(){
+        return libByName(APP).find(this.season())[0]
+    },
+    DB(){
+        const db = this.entry().field("Databázy")
+        const filtered = db.filter(en => en.field("Názov") == this.name())
+        return filtered[0]
+    },
+    getNextNum(){
+        return this.DB().attr("nasledujúce číslo")
+    },
+    setNextNum(newNum){
+        try {
+            this.DB().setAttr("nasledujúce číslo", newNum)
+            return true
+        } catch (error) {
+            return false
+        }
+    },
+    getLastNum(){
+        return this.DB().attr("posledné číslo")
+    },
+    setLastNum(newNum){
+        try {
+            this.DB().setAttr("posledné číslo", newNum)
+            return true
+        } catch (error) {
+            return false
+        }
+    },
+    getTrashedNums(){
+        return this.DB().attr("vymazané čísla")
+    },
+    setTrashedNums(newNum){
+        try {
+            this.DB().setAttr("vymazané čísla", newNum)
+            return true
+        } catch (error) {
+            return false
+        }
+    }
+}
 
 
 const setSeasonMaterialPrices = entries => {
@@ -116,4 +116,14 @@ const setSeasonMaterialPrices = entries => {
     }
     message('Úspešne pridaných ' + successCount + '/' + entries.length + ' záznamov')
     message('Záznamov na opravu ' + badEntries)
+}
+
+
+const updatePrice = en =>{
+    message('Prepočítavam cenu')
+    if (en.field("Prepočítať cenu")) {
+
+    } else {
+        message('Cena položky je pevná, \nak ju checeš prepočítať odškrtni "Prepočítať cen u"')
+    }
 }
