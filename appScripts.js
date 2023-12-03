@@ -47,33 +47,13 @@ const appLIB = {
     entry(){
         return libByName(APP).find(this.season())[0]
     },
-    DB(lib = this.name){
+    DB(lib){
+        const libName = lib || this.name
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == lib)
+        const filtered = db.filter(en => en.field("Názov") == libName)
         return filtered[0]
     },
-    getNextNum(){
-        return this.DB().attr("nasledujúce číslo")
-    },
-    setNextNum(newNum){
-        try {
-            this.DB().setAttr("nasledujúce číslo", newNum)
-            return true
-        } catch (error) {
-            return false
-        }
-    },
-    getLastNum(){
-        return this.DB().attr("posledné číslo")
-    },
-    setLastNum(newNum){
-        try {
-            this.DB().setAttr("posledné číslo", newNum)
-            return true
-        } catch (error) {
-            return false
-        }
-    },
+
     getTrashedNums(){
         return this.DB().attr("vymazané čísla")
     },
