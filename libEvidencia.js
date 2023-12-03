@@ -84,9 +84,8 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         let odchod = roundTimeQ(en.field("Odchod"));
         let datum = en.field(DATE)
-        let zavazok = en.field("Generovať záväzky")
         let vymazaneCisla = []
-        let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+
         let pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
@@ -125,21 +124,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                 zamestnanci[z].set("Odpracované", Odrobene);
                 zamestnanci[z].set("Preplatok/Nedoplatok", Nedoplatok);
                 zamestnanci[z].set("Dochádzka", HodnotenieD);
-                if (zavazok) {
 
-                    if(stareZavazky){
-                        message("Mažem súvisiace záväzky...")
-                        for (let i in stareZavazky) {
-                            removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
-                          //  vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
-                          //  stareZavazky[i].trash()
-                        }
-                    stareZavazky = false
-                    }
-
-                    if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-                    newEntryZavazky(zamestnanci[z], en, dennaMzda)
-                }
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
@@ -167,6 +152,28 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         return vymazaneCisla.toString()
     } catch (error) {
         errorGen(LIB_DOCH, 'appAsistanto.js', scriptName, error, variables, parameters);
+    }
+}
+const genDochadzkaZavazky = en => {
+    let zavazok = en.field("Generovať záväzky")
+    let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+    try {
+        if (zavazok) {
+            if(stareZavazky){
+                message("Mažem súvisiace záväzky...")
+                for (let i in stareZavazky) {
+                    removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
+                    //  vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
+                    //  stareZavazky[i].trash()
+                }
+            stareZavazky = false
+            }
+
+            if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+            newEntryZavazky(zamestnanci[z], en, dennaMzda)
+        }
+    } catch (error) {
+
     }
 }
 const aSalary = (en, NEW_ENTRY) => {
