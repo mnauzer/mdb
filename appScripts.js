@@ -19,18 +19,18 @@ const appLIB = {
         const number = []
         try {
             let trim = this.DB(lib).attr("trim")
-            let lastNum = this.DB(lib).attr("posledné číslo")
-            let nextNum = this.DB(lib).attr("nasledujúce číslo")
-            if (nextNum == this.DB(lib).attr("rezervované číslo")){
-                nextNum = Number(nextNum) + 1
+            let lastNum = Number(this.DB(lib).attr("posledné číslo"))
+            let nextNum = Number(this.DB(lib).attr("nasledujúce číslo"))
+            if (nextNum == Number(this.DB(lib).attr("rezervované číslo"))){
+                nextNum += 1
             }
             this.DB(lib).setAttr("rezervované číslo", nextNum)
             number[0] = this.DB(lib).attr("prefix")
             ? this.DB(lib).field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
             : this.DB(lib).field("ID") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
             number[1] = nextNum
-            this.DB(lib).setAttr("posledné číslo", Number(lastNum))
-            this.DB(lib).setAttr("nasledujúce číslo", Number(lastNum) + 1)
+            this.DB(lib).setAttr("posledné číslo", nextNum)
+            this.DB(lib).setAttr("nasledujúce číslo", nextNum + 1)
         } catch (error) {
             message(error)
             this.DB(lib).setAttr("rezervované číslo", null)
