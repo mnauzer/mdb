@@ -36,9 +36,9 @@ const appLIB = {
         this.DB(lib).setAttr("rezervované číslo", null)
         return number
     },
-    saveNewNumber(number, lib){
-        this.DB(lib).setAttr("posledné číslo", number)
-        this.DB(lib).setAttr("nasledujúce číslo", number + 1)
+    saveNewNumber(nmb, lib){
+        this.DB(lib).setAttr("posledné číslo", nmb)
+        this.DB(lib).setAttr("nasledujúce číslo", nmb + 1)
         this.DB(lib).setAttr("rezervované číslo", null)
     },
     name: lib().title,

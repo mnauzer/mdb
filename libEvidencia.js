@@ -41,7 +41,7 @@ const updateEntryDochadzka = en => {
 const removeEntryDochadzka = (en) => {
     // Created at: 16.11.2023, 07:55
     // popis funkcie
-    let scriptName = 'removeEntryDochadzka 23.0.02'
+    let scriptName = 'removeEntryDochadzka 23.0.03'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
