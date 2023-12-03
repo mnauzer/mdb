@@ -101,7 +101,7 @@ const setSeasonMaterialPrices = entries => {
         if ( nc != null || pc != null) {
             let newEntry = new Object()
             newEntry['Položka'] = entries[e]
-            newEntry['Platnosť od'] = new Date('1.1.2023')
+            newEntry['Platnosť od'] = new Date(2023, 0, 1)
             newEntry['nc'] = nc
             newEntry['pc'] = pc
             lib.create(newEntry)
@@ -110,6 +110,7 @@ const setSeasonMaterialPrices = entries => {
             entries[e].set('farba pozadia', '#E74307')
             badEntries += 1
         }
-    message('Úspešne pridaných ' + successCount + '/' + entries.length + ' záznamov')
     }
+    message('Úspešne pridaných ' + successCount + '/' + entries.length + ' záznamov')
+    message('Záznamov na opravu ' + badEntries)
 }
