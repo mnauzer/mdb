@@ -140,3 +140,7 @@ const updatePrice = en =>{
         message('Cena položky je pevná, \nak ju checeš prepočítať odškrtni "Prepočítať cen u"')
     }
 }
+
+const setNewEntryNumber = en => {
+    en.set("Číslo", appLIB.newNumber())
+}
