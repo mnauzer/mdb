@@ -26,6 +26,7 @@ const appLIB = {
             ? this.DB().field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB().attr("trailing digit"))
             : this.DB().field("ID") + this.season().slice(trim) + pad(nextNum, this.DB().attr("trailing digit"))
             number[1] = nextNum
+            this.DB().setAttr("posledné číslo", Number(lastNum))
             this.DB().setAttr("nasledujúce číslo", Number(lastNum) + 1)
         } catch (error) {
             message(error)
