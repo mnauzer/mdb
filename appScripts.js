@@ -105,9 +105,12 @@ const setSeasonMaterialPrices = entries => {
             newEntry['nc'] = nc
             newEntry['pc'] = pc
             lib.create(newEntry)
+            entries[e].set('farba pozadia', '#66BE79')
             successCount += 1
         } else {
-            entries[e].set('farba pozadia', '#E74307')
+            entries[e].set('farba pozadia', '#D19D9D')
+            entries[e].set('neúplný záznam', true)
+            entries[e].set('chyba záznamu', 'žiadna alebo nulová cena')
             badEntries += 1
         }
     }
