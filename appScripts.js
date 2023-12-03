@@ -29,15 +29,17 @@ const appLIB = {
             ? this.DB(lib).field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
             : this.DB(lib).field("ID") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
             number[1] = nextNum
-            this.DB(lib).setAttr("posledné číslo", nextNum)
-            this.DB(lib).setAttr("nasledujúce číslo", nextNum + 1)
         } catch (error) {
             message(error)
-            this.DB(lib).setAttr("rezervované číslo", null)
             return 0
         }
         this.DB(lib).setAttr("rezervované číslo", null)
         return number
+    },
+    saveNewNumber(number, lib){
+        this.DB(lib).setAttr("posledné číslo", number)
+        this.DB(lib).setAttr("nasledujúce číslo", number + 1)
+        this.DB(lib).setAttr("rezervované číslo", null)
     },
     name: lib().title,
 

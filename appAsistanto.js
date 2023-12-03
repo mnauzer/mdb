@@ -349,15 +349,14 @@ const saveEntry = (en, inptScript) => {
     try {
         message("Ukladám záznam...")
         const logTxt = ""
-        const newNumber = getNewNumber(appLIB.DB(), appLIB.season(), scriptName)
-        variables += "\nnewNumber: " + newNumber
+        const newNumber = appLIB.newNumber()
+        variables += "\nnewNumber: " + newNumber[0]
         const createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             message("true")
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
-            appLIB.setNextNum(newNumber[1] + 1)
-            appLIB.setLastNum(newNumber[1])
-            switch (appLIB.name()) {
+            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name
+            appLIB.saveNewNumber()
+            switch (appLIB.name) {
                 case "Dochádzka":
                     prepocitatZaznamDochadzky(en)
                     break;
@@ -372,7 +371,7 @@ const saveEntry = (en, inptScript) => {
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        variables += "\nentry: " + en.name + "\nmemento library: " + appDBName
+        variables += "\nentry: " + en.name + "\nmemento library: " + appLIB.name
         errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
