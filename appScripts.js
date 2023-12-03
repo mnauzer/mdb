@@ -21,6 +21,9 @@ const appLIB = {
             let trim = this.DB().attr("trim")
             let lastNum = this.DB().attr("posledné číslo")
             let nextNum = this.DB().attr("nasledujúce číslo")
+            if (nextNum == this.DB().attr("rezervované číslo")){
+                nextNum = Number(nextNum) + 1
+            }
             this.DB().setAttr("rezervované číslo", nextNum)
             number[0] = this.DB().attr("prefix")
             ? this.DB().field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB().attr("trailing digit"))
