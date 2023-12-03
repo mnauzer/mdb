@@ -36,12 +36,14 @@ const appLIB = {
         const number = []
         try {
             this.DB().setAttr("rezervované číslo", this.DB().attr("nasledujúce číslo"))
-            number[0] = this.DB().attr("isPrefix")
+            number[0] = this.DB().attr("prefix")
             ? this.DB().field("Prefix") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
             : this.DB().field("D") + this.season().slice(trim) + pad(this.DB().attr("nasledujúce číslo"), this.DB().attr("trailing digit"))
             number[1] = this.DB().attr("nasledujúce číslo")
+            this.DB().setAttr("nasledujúce číslo", Number(this.DB().attr("posledné číslo")) + 1)
         } catch (error) {
             message(error)
+            this.DB().setAttr("rezervované číslo", null)
             return 0
         }
         return number
