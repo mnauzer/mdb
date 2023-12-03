@@ -88,3 +88,24 @@ const appLIB = {
     //     }
     // }
 }
+
+
+const setSeasonMaterialPrices = entries => {
+    message('Kontrolujem ' + entries.length + ' záznamov')
+    const lib = libByName("sezónne ceny materiálu")
+    let successCount = 0
+    for (let e in entries) {
+        let nc = entry[e].field('NC bez DPH')
+        let pc = entry[e].field('PC bez DPH')
+        if ( nc != null || pc != null) {
+            let newEntry = new Object()
+            newEntry['Položka'] = entry[e]
+            newEntry['Platnosť od'] = new Date('1.1.2023')
+            newEntry['nc'] =
+            newEntry['pc'] = entry[e].field('PC bez DPH')
+            lib.create(newEntry)
+            successCount += 1
+        }
+    message('Úspešne pridaných ' + successCount + '/' + entries.length + ' záznamov')
+    }
+}
