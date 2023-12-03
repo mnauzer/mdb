@@ -298,7 +298,7 @@ const newEntry = en => {
     const variables = "user" + user()
     const parameters = "en: " + en
     try {
-        message("Nový záznam >>" + appLIB.name())
+        message("Nový záznam >>" + appLIB.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
