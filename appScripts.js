@@ -102,8 +102,8 @@ const setSeasonMaterialPrices = entries => {
             let newEntry = new Object()
             newEntry['Položka'] = entries[e]
             newEntry['Platnosť od'] = new Date(2023, 0, 1)
-            newEntry['nc'] = nc
-            newEntry['pc'] = pc
+            newEntry['nc'] = Number(nc).toFixed(2)
+            newEntry['pc'] = Number(pc).toFixed(2)
             lib.create(newEntry)
             successCount += 1
         } else {
