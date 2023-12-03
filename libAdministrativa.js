@@ -104,12 +104,13 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.11"
+    let scriptName = "newEntryZavazky 23.0.12"
     let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let variables = "user: " + user() + "\nappLIB name: " + appLIB.name()
+    let variables = "user: " + user() + "\nappLIB name: " + appLIB.name
     try {
         let date = new Date()
-        let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name(), scriptName)
+        let newNumber = appLIB.newNumber("Záväzky")
+        // let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name, scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         let zavazky = libByName(LIB_ZVK)
@@ -131,11 +132,12 @@ const newEntryZavazky = (employee, en, sum) => {
         newEntry[CR_DATE] = new Date()
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
-        saveNewNumber(en, zavazky, newNumber, scriptName)
+
+        appLIB.saveNewNumber(newNumber[1], "Záväzky")
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(appLIB.name(), "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen(appLIB.name, "libDochadzka.js", scriptName, error, variables, parameters)
     }
 }
 

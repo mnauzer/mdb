@@ -285,7 +285,7 @@ const saveEntry = (en, inptScript) => {
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             message("true")
             logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name
-            appLIB.saveNewNumber()
+            appLIB.saveNewNumber(newNumber[1])
             switch (appLIB.name) {
                 case "Dochádzka":
                     prepocitatZaznamDochadzky(en)
