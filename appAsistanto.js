@@ -317,27 +317,21 @@ const removeEntry = (en, trashLib, inptScript) => {
         variables += '\nlibrary: ' + trashLib
         let trashedNums = appLIB.getTrashedNums(trashLib)
         message('trash lib: ' + trashLib + '\ntrash num: ' + trashedNums)
-        let tnArray= []
         variables += '\ntrashed nums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
         variables += '\nnum to trash: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
-        if (trashedNums > 0) {
-            tnArray = trashedNums.split(',')
-            variables += '\ntnArray: ' + tnArray
-            tnArray = tnArray.push(numToBeTrashed)
-            appLIB.setTrashedNums(trashedNums)
-            variables += '\ntnArray+: ' + tnArray
+        if (trashedNums) {
+            trashedNums.push(numToBeTrashed)
+            appLIB.setTrashedNums(trashedNums, trashLib)
             variables += '\nnew trashed nums: ' + trashedNums
         } else {
             appLIB.setTrashedNums(numToBeTrashed, trashLib)
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
         logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + trashLib
-        logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
-        // if(inptScript != 'trigger remove_entry') {
+        logGen(trashLib, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
             en.trash()
-        // }
     } catch (error) {
         errorGen(appLIB.name, 'appAsistanto.js', scriptName, error, variables, parameters)
     }
