@@ -15,25 +15,25 @@ testMap.set("new", "second")
 
 
 const appLIB = {
-    newNumber(){
+    newNumber(lib){
         const number = []
         try {
-            let trim = this.DB().attr("trim")
-            let lastNum = this.DB().attr("posledné číslo")
-            let nextNum = this.DB().attr("nasledujúce číslo")
-            if (nextNum == this.DB().attr("rezervované číslo")){
+            let trim = this.DB(lib).attr("trim")
+            let lastNum = this.DB(lib).attr("posledné číslo")
+            let nextNum = this.DB(lib).attr("nasledujúce číslo")
+            if (nextNum == this.DB(lib).attr("rezervované číslo")){
                 nextNum = Number(nextNum) + 1
             }
-            this.DB().setAttr("rezervované číslo", nextNum)
-            number[0] = this.DB().attr("prefix")
-            ? this.DB().field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB().attr("trailing digit"))
-            : this.DB().field("ID") + this.season().slice(trim) + pad(nextNum, this.DB().attr("trailing digit"))
+            this.DB(lib).setAttr("rezervované číslo", nextNum)
+            number[0] = this.DB(lib).attr("prefix")
+            ? this.DB(lib).field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
+            : this.DB(lib).field("ID") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
             number[1] = nextNum
-            this.DB().setAttr("posledné číslo", Number(lastNum))
-            this.DB().setAttr("nasledujúce číslo", Number(lastNum) + 1)
+            this.DB(lib).setAttr("posledné číslo", Number(lastNum))
+            this.DB(lib).setAttr("nasledujúce číslo", Number(lastNum) + 1)
         } catch (error) {
             message(error)
-            this.DB().setAttr("rezervované číslo", null)
+            this.DB(lib).setAttr("rezervované číslo", null)
             return 0
         }
         return number
@@ -46,9 +46,9 @@ const appLIB = {
     entry(){
         return libByName(APP).find(this.season())[0]
     },
-    DB(){
+    DB(lib){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == this.name)
+        const filtered = db.filter(en => en.field("Názov") == lib.name || this.name)
         return filtered[0]
     },
     getNextNum(){
