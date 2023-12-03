@@ -38,7 +38,7 @@ const appLIB = {
     },
     saveNewNumber(nmb, lib){
         this.DB(lib).setAttr("posledné číslo", nmb)
-        this.DB(lib).setAttr("nasledujúce číslo", nmb + 1)
+        this.DB(lib).setAttr("nasledujúce číslo", Number(nmb) + 1)
         this.DB(lib).setAttr("rezervované číslo", null)
     },
     name: lib().title,
@@ -142,7 +142,7 @@ const updatePrice = en =>{
 }
 
 const setNewEntryNumber = en => {
-    let newNumber = appLIB.newNumber()[0]
+    let newNumber = Number(appLIB.newNumber()[0])
     en.set("Číslo", newNumber)
     appLIB.saveNewNumber(newNumber)
 }
