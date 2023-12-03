@@ -43,8 +43,8 @@ const appLIB = {
     },
     name: lib().title,
 
-    season(){
-        return libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
+    season(season){
+        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
     entry(){
         return libByName(APP).find(this.season())[0]
@@ -146,3 +146,4 @@ const setNewEntryNumber = en => {
     en.set("Číslo", newNumber[0])
     appLIB.saveNewNumber(newNumber[1])
 }
+
