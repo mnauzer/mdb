@@ -98,7 +98,7 @@ const setSeasonMaterialPrices = entries => {
     for (let e in entries) {
         let nc = Number(entries[e].field('NC bez DPH')).toFixed(2)
         let pc = Number(entries[e].field('PC bez DPH')).toFixed(2)
-        if ( nc != null || nc != 0.00 || pc != null || pc != 0.00) {
+        if ( nc != null || nc > 0 || pc != null || pc > 0) {
             let newEntry = new Object()
             newEntry['Položka'] = entries[e]
             newEntry['Platnosť od'] = new Date(2023, 0, 1)
