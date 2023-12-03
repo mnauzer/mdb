@@ -36,6 +36,7 @@ const appLIB = {
             this.DB(lib).setAttr("rezervované číslo", null)
             return 0
         }
+        this.DB(lib).setAttr("rezervované číslo", null)
         return number
     },
     name: lib().title,
