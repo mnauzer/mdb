@@ -201,74 +201,6 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const getNewNumber = (appDB, season,inptScript) => {
-    // generuje nové číslo záznamu
-    const scriptName = "getNewNumber 23.1.1"
-    const variables = "user: " + user()
-    const parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
-    const appLIB.name = appDB.name
-    const logTxt = ""
-    try {
-        const number = []
-        // link to field attributes
-        const lastNum = appDB.attr("posledné číslo")
-        const nextNum = appDB.attr("nasledujúce číslo")
-        const reservedNum = appDB.attr("rezervované číslo")
-        const trashedNums = appDB.attr("vymazané čísla")
-        const test = appDB.attr("test")
-        const dbID =  appDB.field("ID")
-        const isPrefix = appDB.attr("prefix")
-        const trailingDigit = appDB.attr("trailing digit")
-        const trim = appDB.attr("trim")
-        //
-        let prefix = appDB.field("Prefix")
-        if (test) {
-            dbID = "TEST" + appDB.field("ID")
-            prefix = "TEST"
-            attr =  "číslo testu"
-        }
-        // najprv získaj nasledujúce číslo
-        if (trashedNums) {
-            // ak existujú vymazané čísla
-            let tnArray = trashedNums.split(",")
-            nextNum = tnArray.shift()
-            appDB.setAttr("vymazané čísla", tnArray)
-        }
-        appDB.setAttr("rezervované číslo", nextNum)
-        number[0] = isPrefix ? prefix + season.slice(trim) + pad(nextNum, trailingDigit) : dbID + season.slice(trim) + pad(nextNum, trailingDigit)
-        number[1] = nextNum
-        return number
-    } catch (error) {
-        errorGen(appLIB.name, 'appAsistanto.js', scriptName, error, variables, parameters)
-    }
-}
-const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
-    // Created at: 16.11.2023, 17:19
-    // popis funkcie
-    const scriptName = 'saveNewNumber 23.0.05'
-    const variables = 'user: ' + user()
-    const parameters = 'en: ' + en + '\nappLIB: ' + appLIB.name() + '\ninptScript: ' + inptScript
-    const logTxt = ''
-    try {
-        variables += ''
-        const createdEntry = libByName(appLIB.name()).entries()[0]
-        if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name()
-            appLIB.setNextNum(newNumber[1] + 1)
-            appLIB.setLastNum(newNumber[1])
-            createdEntry.set(VIEW, VIEW_PRINT)
-            logGen(appLIB.name(), "appAsistanto.js", scriptName, logTxt, variables, parameters);
-
-        } else {
-            logTxt += "\nNový záznam nebol vytvorený"
-        }
-       //function code here
-    } catch (error) {
-        variables += ''
-        errorGen(appDB, 'appAsistanto.js', scriptName, error, variables, parameters)
-    }
-}
-
 
 const getSadzbaDPH = (appDB, season, inptScript) => {
       // zistí sadzby DPH v zadanej sezóne
@@ -289,7 +221,6 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-
 
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
@@ -331,7 +262,6 @@ const updateEntry = en => {
 }
 const setEntry = (en, inptScript) => {
     let scriptName = "setEntry 23.0.10"
-    let appLIB.name = lib().title
     let variables = "Záznam: " + en.name + "\nmemento library: " + appLIB.name
     let parameters = "en: " + "\ninptScript: " + inptScript
     let logTxt = ""
@@ -375,7 +305,7 @@ const saveEntry = (en, inptScript) => {
         errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const removeEntry = (en, appLIB.name, inptScript) => {
+const removeEntry = (en, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
     let scriptName = 'removeEntry 23.0.1'
@@ -410,7 +340,7 @@ const removeEntry = (en, appLIB.name, inptScript) => {
     }
 }
 // entry script ACTIONS
-const unlockDB = (season, appLIB.name) => {
+const unlockDB = (season) => {
     let scriptName = "unlockDB 23.0.04"
     let variables = "Season: " + season + "\nDatabáza: " + appLIB.name
     let parameters = "season: " + season +  "\nappLIB.name" + appLIB.name
@@ -576,7 +506,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 
 // LOG AND ERROR
 //
-const errorGen = (appLIB.name, library, script, error, variables, parameters) => {
+const errorGen = ( library, script, error, variables, parameters) => {
     // generátor chyby
     message("ERROR: " + script + "\n" + error)
     let errorLib = libByName(APP_ERROR)
@@ -594,7 +524,7 @@ const errorGen = (appLIB.name, library, script, error, variables, parameters) =>
     cancel()
     exit()
 }
-const msgGen = (appLIB.name, library, script, msg, variables, parameters) => {
+const msgGen = (library, script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
     let errorLib = libByName(APP_ERROR)
@@ -609,7 +539,7 @@ const msgGen = (appLIB.name, library, script, msg, variables, parameters) => {
     newMsg["parameters"] = parameters
     errorLib.create(newMsg)
 }
-const logGen = (appLIB.name, library, script, log, variables, parameters, attributes) => {
+const logGen = (library, script, log, variables, parameters, attributes) => {
     // generátor log
    // message("LOG: " + script + "\n" + log)
     let errorLib = libByName(APP_ERROR)
