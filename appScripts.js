@@ -15,17 +15,17 @@ testMap.set("new", "second")
 
 
 const appLIB = {
-    att: new Map(
-    "posledné číslo", DB().attr("posledné číslo"),
-    "nasledujúce číslo", DB().attr("nasledujúce číslo"),
-    "vymazané čísla", DB().attr("vymazané čísla"),
-    "test", DB().attr("test"),
-    "ID", DB().field("ID"),
-    "prefix", DB().field("Prefix"),
-    "isPrefix", DB().attr("prefix"),
-    "trailing digit", DB().attr("trailing digit"),
-    "trim", DB().attr("trim"),
-    ),
+    // att: new Map(
+    // "posledné číslo", DB().attr("posledné číslo"),
+    // "nasledujúce číslo", DB().attr("nasledujúce číslo"),
+    // "vymazané čísla", DB().attr("vymazané čísla"),
+    // "test", DB().attr("test"),
+    // "ID", DB().field("ID"),
+    // "prefix", DB().field("Prefix"),
+    // "isPrefix", DB().attr("prefix"),
+    // "trailing digit", DB().attr("trailing digit"),
+    // "trim", DB().attr("trim"),
+    // ),
     getAttr(a){
         return this.att.get(a)
     },
