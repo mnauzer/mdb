@@ -379,7 +379,7 @@ const removeEntry = (en, appLIB.name, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
     let scriptName = 'removeEntry 23.0.1'
-    let variables = 'user: ' + user() + '\entry: ' + en.name + '\nappLIB.name: ' + appLIB.name()
+    let variables = 'user: ' + user() + '\entry: ' + en.name + '\nappLIB.name: ' + appLIB.name
     let parameters = 'en: ' + en
     try {
         variables = '\ninptScript: ' + inptScript
