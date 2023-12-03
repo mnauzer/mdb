@@ -96,14 +96,14 @@ const setSeasonMaterialPrices = entries => {
     let successCount = 0
     let badEntries = 0
     for (let e in entries) {
-        let nc = entries[e].field('NC bez DPH')
-        let pc = entries[e].field('PC bez DPH')
-        if ( nc != null || pc != null) {
+        let nc = Number(entries[e].field('NC bez DPH')).toFixed(2)
+        let pc = Number(entries[e].field('PC bez DPH')).toFixed(2)
+        if ( nc != null || nc != 0 || pc != null || pc != 0) {
             let newEntry = new Object()
             newEntry['Položka'] = entries[e]
             newEntry['Platnosť od'] = new Date(2023, 0, 1)
-            newEntry['nc'] = Number(nc).toFixed(2)
-            newEntry['pc'] = Number(pc).toFixed(2)
+            newEntry['nc'] = nc
+            newEntry['pc'] = pc
             lib.create(newEntry)
             successCount += 1
         } else {
