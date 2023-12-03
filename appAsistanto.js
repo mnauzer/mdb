@@ -294,18 +294,17 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    const scriptName = "newEntry 23.0.06"
+    const scriptName = "newEntry 23.0.07"
     const variables = "user" + user()
     const parameters = "en: " + en
     try {
         message("Nový záznam >>" + appLIB.name())
-        const number = getNewNumber(appLIB.DB, appLIB.season(), appLIB.name(), scriptName)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
         en.set(CR_DATE, new Date())
-        en.set(NUMBER, number[0])
-        en.set(NUMBER_ENTRY, number[1])
+        en.set(NUMBER, appLIB.newNumber()[0])
+        en.set(NUMBER_ENTRY, appLIB.newNumber()[1])
         en.set(SEASON, appLIB.season())
 
     } catch (error) {
