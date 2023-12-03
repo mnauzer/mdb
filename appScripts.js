@@ -94,6 +94,7 @@ const setSeasonMaterialPrices = entries => {
     message('Kontrolujem ' + entries.length + ' záznamov')
     const lib = libByName("sezónne ceny materiálu")
     let successCount = 0
+    let badEntries = 0
     for (let e in entries) {
         let nc = entry[e].field('NC bez DPH')
         let pc = entry[e].field('PC bez DPH')
@@ -101,10 +102,13 @@ const setSeasonMaterialPrices = entries => {
             let newEntry = new Object()
             newEntry['Položka'] = entry[e]
             newEntry['Platnosť od'] = new Date('1.1.2023')
-            newEntry['nc'] =
-            newEntry['pc'] = entry[e].field('PC bez DPH')
+            newEntry['nc'] = nc
+            newEntry['pc'] = pc
             lib.create(newEntry)
             successCount += 1
+        } else {
+            entries[e].set('farba pozadia', '#E74307')
+            badEntries += 1
         }
     message('Úspešne pridaných ' + successCount + '/' + entries.length + ' záznamov')
     }
