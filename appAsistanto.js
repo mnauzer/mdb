@@ -206,7 +206,7 @@ const getNewNumber = (appDB, season,inptScript) => {
     const scriptName = "getNewNumber 23.1.1"
     const variables = "user: " + user()
     const parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
-    const appDBName = appDB.name
+    const appLIB.name = appDB.name
     const logTxt = ""
     try {
         const number = []
@@ -239,7 +239,7 @@ const getNewNumber = (appDB, season,inptScript) => {
         number[1] = nextNum
         return number
     } catch (error) {
-        errorGen(appDBName, 'appAsistanto.js', scriptName, error, variables, parameters)
+        errorGen(appLIB.name, 'appAsistanto.js', scriptName, error, variables, parameters)
     }
 }
 const saveNewNumber = (en, appDB, newNumber, inptScript ) => {
@@ -308,7 +308,7 @@ const newEntry = en => {
         en.set(SEASON, appLIB.season())
 
     } catch (error) {
-        variables += "\nentry: " + en.name + "\nappDBName: " + appLIB.name
+        variables += "\nentry: " + en.name + "\nappLIB.name: " + appLIB.name
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
     }
@@ -324,22 +324,22 @@ const updateEntry = en => {
         en.set(MOD, user())
         en.set(MOD_DATE, new Date())
     } catch (error) {
-        variables += "\nentry: " + en.name + "appDBName: " + appDBName
+        variables += "\nentry: " + en.name + "appLIB.name: " + appLIB.name
         en.set(VIEW, VIEW_DEBUG)
         errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters);
     }
 }
 const setEntry = (en, inptScript) => {
     let scriptName = "setEntry 23.0.10"
-    let appDBName = lib().title
-    let variables = "Záznam: " + en.name + "\nmemento library: " + appDBName
+    let appLIB.name = lib().title
+    let variables = "Záznam: " + en.name + "\nmemento library: " + appLIB.name
     let parameters = "en: " + "\ninptScript: " + inptScript
     let logTxt = ""
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const saveEntry = (en, inptScript) => {
@@ -372,14 +372,14 @@ const saveEntry = (en, inptScript) => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         variables += "\nentry: " + en.name + "\nmemento library: " + appLIB.name
-        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const removeEntry = (en, appDBName, inptScript) => {
+const removeEntry = (en, appLIB.name, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
     let scriptName = 'removeEntry 23.0.1'
-    let variables = 'user: ' + user() + '\entry: ' + en.name + '\nappDBName: ' + appLIB.name()
+    let variables = 'user: ' + user() + '\entry: ' + en.name + '\nappLIB.name: ' + appLIB.name()
     let parameters = 'en: ' + en
     try {
         variables = '\ninptScript: ' + inptScript
@@ -406,22 +406,22 @@ const removeEntry = (en, appDBName, inptScript) => {
             en.trash()
         }
     } catch (error) {
-        errorGen(appDBName, 'appAsistanto.js', scriptName, error, variables, parameters)
+        errorGen(appLIB.name, 'appAsistanto.js', scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS
-const unlockDB = (season, appDBName) => {
+const unlockDB = (season, appLIB.name) => {
     let scriptName = "unlockDB 23.0.04"
-    let variables = "Season: " + season + "\nDatabáza: " + appDBName
-    let parameters = "season: " + season +  "\nappDBName" + appDBName
+    let variables = "Season: " + season + "\nDatabáza: " + appLIB.name
+    let parameters = "season: " + season +  "\nappLIB.name" + appLIB.name
     try {
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
+        let appDB = getAppSeasonDB(season, appLIB.name, scriptName)
         appDB.setAttr("locked", false)
         appDB.setAttr("locked reason", null)
-        //message("Databáza " + appDBName + " odomknutá")
+        //message("Databáza " + appLIB.name + " odomknutá")
         return true
     } catch (error) {
-        errorGen(appDBName, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
 const setID = entries => {
@@ -576,7 +576,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 
 // LOG AND ERROR
 //
-const errorGen = (appDBName, library, script, error, variables, parameters) => {
+const errorGen = (appLIB.name, library, script, error, variables, parameters) => {
     // generátor chyby
     message("ERROR: " + script + "\n" + error)
     let errorLib = libByName(APP_ERROR)
@@ -584,7 +584,7 @@ const errorGen = (appDBName, library, script, error, variables, parameters) => {
     newError["type"] = "error"
     newError["date"] = new Date()
     newError["library"] = library
-    newError["memento library"] = appDBName
+    newError["memento library"] = appLIB.name
     newError["script"] = script
     newError["text"] = error
     newError["line"] = error.lineNumber
@@ -594,7 +594,7 @@ const errorGen = (appDBName, library, script, error, variables, parameters) => {
     cancel()
     exit()
 }
-const msgGen = (appDBName, library, script, msg, variables, parameters) => {
+const msgGen = (appLIB.name, library, script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
     let errorLib = libByName(APP_ERROR)
@@ -602,14 +602,14 @@ const msgGen = (appDBName, library, script, msg, variables, parameters) => {
     newMsg["type"] = "message"
     newMsg["date"] = new Date()
     newMsg["library"] = library
-    newMsg["memento library"] = appDBName
+    newMsg["memento library"] = appLIB.name
     newMsg["script"] = script
     newMsg["text"] = msg
     newMsg["variables"] = variables
     newMsg["parameters"] = parameters
     errorLib.create(newMsg)
 }
-const logGen = (appDBName, library, script, log, variables, parameters, attributes) => {
+const logGen = (appLIB.name, library, script, log, variables, parameters, attributes) => {
     // generátor log
    // message("LOG: " + script + "\n" + log)
     let errorLib = libByName(APP_ERROR)
@@ -617,7 +617,7 @@ const logGen = (appDBName, library, script, log, variables, parameters, attribut
     newLog["type"] = "log"
     newLog["date"] = new Date()
     newLog["library"] = library
-    newLog["memento library"] = appDBName
+    newLog["memento library"] = appLIB.name
     newLog["script"] = script
     newLog["text"] = log
     newLog["variables"] = variables
