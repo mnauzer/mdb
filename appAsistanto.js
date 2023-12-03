@@ -249,7 +249,7 @@ const updateEntry = en => {
     const variables = "user: " + user()
     const parameters = "en: " + en
     try {
-        message("Úprava záznamu >>" + appLIB.name());
+        message("Úprava záznamu >>" + appLIB.name);
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, en.field(DATE) ? en.field(DATE) : new Date())
         en.set(MOD, user())
@@ -297,7 +297,7 @@ const saveEntry = (en, inptScript) => {
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
-        logGen(appLIB.name(), "appAsistanto.js", scriptName, logTxt, variables, parameters)
+        logGen(appLIB.name, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
@@ -314,7 +314,7 @@ const removeEntry = (en, inptScript) => {
     try {
         variables = '\ninptScript: ' + inptScript
         let logTxt = ''
-        variables += '\nlibrary: ' + appLIB.name()
+        variables += '\nlibrary: ' + appLIB.name
         let trashedNums = appLIB.getTrashedNums()
         let tnArray= []
         variables += '\ntrashed nums: ' + trashedNums
@@ -330,7 +330,7 @@ const removeEntry = (en, inptScript) => {
             variables += '\nnew trashed nums: ' + trashedNums
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
-        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + appLIB.name()
+        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + appLIB.name
         logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
         if(inptScript != 'trigger remove_entry') {
             en.trash()
