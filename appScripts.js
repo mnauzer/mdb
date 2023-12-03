@@ -47,9 +47,9 @@ const appLIB = {
     entry(){
         return libByName(APP).find(this.season())[0]
     },
-    DB(lib){
+    DB(lib = this.name){
         const db = this.entry().field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == lib.name || this.name)
+        const filtered = db.filter(en => en.field("Názov") == lib)
         return filtered[0]
     },
     getNextNum(){
