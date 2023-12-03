@@ -41,8 +41,7 @@ const updateEntryDochadzka = en => {
 const removeEntryDochadzka = (en) => {
     // Created at: 16.11.2023, 07:55
     // popis funkcie
-    let scriptName = 'removeEntryDochadzka 23.0.01'
-    let memLib = lib().title
+    let scriptName = 'removeEntryDochadzka 23.0.02'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
@@ -54,10 +53,10 @@ const removeEntryDochadzka = (en) => {
                 removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
             }
         }
-        removeEntry(en, lib().title, scriptName)
+        removeEntry(en, appLIB.name, scriptName)
     } catch (error) {
         variables += ''
-        errorGen(memLib, 'libEvidencia.js', scriptName, error, variables, parameters)
+        errorGen(appLIB.name, 'libEvidencia.js', scriptName, error, variables, parameters)
     }
 }
 

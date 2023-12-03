@@ -56,12 +56,12 @@ const appLIB = {
         return filtered[0]
     },
 
-    getTrashedNums(){
+    getTrashedNums(lib){
         return this.DB().attr("vymazané čísla")
     },
-    setTrashedNums(newNum){
+    setTrashedNums(nums, lib){
         try {
-            this.DB().setAttr("vymazané čísla", newNum)
+            this.DB().setAttr("vymazané čísla", nums)
             return true
         } catch (error) {
             return false

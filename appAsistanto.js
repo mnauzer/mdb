@@ -305,17 +305,17 @@ const saveEntry = (en, inptScript) => {
         errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
     }
 }
-const removeEntry = (en, inptScript) => {
+const removeEntry = (en, trashLib, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    let scriptName = 'removeEntry 23.0.3'
-    let variables = 'user: ' + user() + '\nentry: ' + en.name + '\nappLIB.name: ' + appLIB.name
+    let scriptName = 'removeEntry 23.0.4'
+    let variables = 'user: ' + user() + '\nentry: ' + en.name + '\nappLIB.name: ' + trashLib
     let parameters = 'en: ' + en
     try {
         variables = '\ninptScript: ' + inptScript
         let logTxt = ''
-        variables += '\nlibrary: ' + appLIB.name
-        let trashedNums = appLIB.getTrashedNums()
+        variables += '\nlibrary: ' + trashLib
+        let trashedNums = appLIB.getTrashedNums(trashLib)
         message(trashedNums)
         let tnArray= []
         variables += '\ntrashed nums: ' + trashedNums
@@ -330,14 +330,13 @@ const removeEntry = (en, inptScript) => {
             variables += '\ntnArray+: ' + tnArray
             variables += '\nnew trashed nums: ' + trashedNums
         } else {
-            appLIB.setTrashedNums(numToBeTrashed)
+            appLIB.setTrashedNums(numToBeTrashed, trashLib)
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
-        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + appLIB.name
+        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + trashLib
         logGen(APP, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
-            en.trash()
         // if(inptScript != 'trigger remove_entry') {
-        //     en.trash()
+            en.trash()
         // }
     } catch (error) {
         errorGen(appLIB.name, 'appAsistanto.js', scriptName, error, variables, parameters)
