@@ -169,7 +169,7 @@ const genDochadzkaZavazky = en => {
             let zamestnanci = en.field("Zamestnanci")
             for (let z in zamestnanci) {
                 if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-                newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda");)
+                newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
             }
         }
     } catch (error) {
