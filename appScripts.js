@@ -57,11 +57,21 @@ const appLIB = {
     },
 
     getTrashedNums(lib){
-        return this.DB().attr("vymazané čísla")
+        let rmNum = this.DB(lib).attr("vymazané čísla")
+        let rmArray = []
+        if (rmNum.length > 1) {
+            rmArray = rmNum.split(',')
+            return rmArray
+        } else if (rmNum.length = 1) {
+            rmArray.push(rmNum)
+        } else {
+            message('nie sú vymazané čísla')
+            return null
+        }
     },
     setTrashedNums(nums, lib){
         try {
-            this.DB().setAttr("vymazané čísla", nums)
+            this.DB(lib).setAttr("vymazané čísla", nums)
             return true
         } catch (error) {
             return false

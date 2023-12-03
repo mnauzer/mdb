@@ -163,14 +163,14 @@ const genDochadzkaZavazky = en => {
                 message("Mažem súvisiace záväzky...")
                 for (let i in stareZavazky) {
                     removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
-                    //  vymazaneCisla.push(stareZavazky[i].field(NUMBER_ENTRY))
-                    //  stareZavazky[i].trash()
                 }
             stareZavazky = false
             }
-
-            if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-            newEntryZavazky(zamestnanci[z], en, dennaMzda)
+            let zamestnanci = en.field("Zamestnanci")
+            for (let z in zamestnanci) {
+                if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+                newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda");)
+            }
         }
     } catch (error) {
 
