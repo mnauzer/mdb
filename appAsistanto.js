@@ -273,7 +273,7 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    const scriptName = "saveEntry 23.0.18"
+    const scriptName = "saveEntry 23.0.19"
     const variables = "user: " + user()
     const parameters = "en: " + en + "\ninptScript: " + inptScript
     try {
