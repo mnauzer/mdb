@@ -69,6 +69,29 @@ const appLIB = {
     }
 }
 
+const debug = {
+    libFile: '',
+    scriptName: '',
+    memLib: '',
+    message: '',
+    addMessage(msg){
+        this.message = '' + msg.trim
+    },
+    postError(err) {
+        let errorLib = libByName(APP_ERROR)
+        let newError = new Object()
+        newError["type"] = "error"
+        newError["date"] = new Date()
+        newError["library"] = this.libFile
+        newError["memento library"] = this.memLib
+        newError["script"] = this.scriptName
+        newError["text"] = err
+        newError["line"] = err.lineNumber
+        //newError["variables"] = variables
+        //newError["parameters"] = parameters
+        errorLib.create(newError)
+    }
+}
 
 const setSeasonMaterialPrices = entries => {
     message('Kontrolujem ' + entries.length + ' záznamov')
