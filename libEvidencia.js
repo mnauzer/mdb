@@ -5,8 +5,8 @@ const newEntryDochadzka = en => {
     try {
         setEntry(en)
         const date = new Date()
-        const season = appLIB.defaultSeason()
-        const number = appLIB.newNumber()
+        const season = APP.defaultSeason()
+        const number = APP.newNumber()
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set(NUMBER_ENTRY, number[1])
@@ -30,7 +30,7 @@ const removeEntryDochadzka = (en, inptScript) => {
     scr.param.en = en
     scr.param.inptScript = inptScript
     try {
-        removeEntry(en, appLIB.name, scr.name)
+        removeEntry(en, APP.name, scr.name)
     } catch (error) {
         scr.error = error
         en.set(VIEW, VIEW_DEBUG)
@@ -157,7 +157,7 @@ const rmDochadzkaZavazky = (en, inptScript) => {
     scr.param.en = en
     scr.param.inptScript = inptScript
     try {
-        const stareZavazky = en.linksFrom(LIB_ZVK, appLIB.name)
+        const stareZavazky = en.linksFrom(LIB_ZVK, APP.name)
         if(stareZavazky.length > 0){
             message("Mažem súvisiace záväzky...")
             for (let i in stareZavazky) {
@@ -172,9 +172,9 @@ const rmDochadzkaZavazky = (en, inptScript) => {
 // EVIDENCIA PRÁC
 const newEntryEvidenciaPrac = en => {
     let scriptName = "newEntryEvidenciaPrac 23.0.02"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
-    message("Nový záznam - " + appLIB.name)
+    message("Nový záznam - " + APP.name)
     try {
         setEntry(en, scriptName)
     } catch (error) {
@@ -184,9 +184,9 @@ const newEntryEvidenciaPrac = en => {
 }
 const updateEntryEvidenciaPrac = en => {
     let scriptName = "updateEntryEvidenciaPrac 23.0.02"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
-    message("Úprava záznamu - " + appLIB.name);
+    message("Úprava záznamu - " + APP.name);
     try {
 
     } catch (error) {
@@ -196,11 +196,11 @@ const updateEntryEvidenciaPrac = en => {
 }
 const saveEntryEvidenciaPrac = en => {
     let scriptName = "saveEntryEvidenciaPrac 23.0.01"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
     try {
         prepocetZaznamuEvidenciePrac(en)
-        saveEntry(en, appLIB.name)
+        saveEntry(en, APP.name)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         errorGen( scriptName, error, variables, parameters);
@@ -368,48 +368,48 @@ const prepocetZaznamuEvidenciePrac = en => {
 // NEW AND UPDATE ENTRY
 const newEntryKnihaJazd= en => {
     let scriptName = "newEntryKnihaJazd23.0.01"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
-    message("Nový záznam - " + appLIB.name)
+    message("Nový záznam - " + APP.name)
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, appLIB.name, scriptName)
-        let appDB = getAppSeasonDB(season, appLIB.name, scriptName)
-        let number = getNewNumber(appDB, season, appLIB.name, scriptName)
+        let season = getSeason(en, APP.name, scriptName)
+        let appDB = getAppSeasonDB(season, APP.name, scriptName)
+        let number = getNewNumber(appDB, season, APP.name, scriptName)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
         en.set(SEASON, season)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
+        unlockDB(season, APP.name)
         errorGen(LIB_KJ, "libKnihaJazd.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntryKnihaJazd= en => {
     let scriptName = "updateEntryKnihaJazd23.0.01"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
-    message("Úprava záznamu - " + appLIB.name);
+    message("Úprava záznamu - " + APP.name);
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
+        unlockDB(season, APP.name)
         errorGen(LIB_KJ, "libKnihaJazd.js", scriptName, error, variables, parameters);
     }
 }
 const saveEntryKnihaJazd= en => {
     let scriptName = "saveEntryKnihaJazd23.0.01"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
     try {
         prepocitatZaznamDochadzky(en)
-        saveEntry(en, appLIB.name)
+        saveEntry(en, APP.name)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
+        unlockDB(season, APP.name)
         errorGen(LIB_KJ, "libKnihaJazd.js", scriptName, error, variables, parameters);
     }
 }
@@ -576,48 +576,48 @@ const prepocitatJazdu = jazda => {
 // POKLADŇA
 const newEntryPokladna = en => {
     let scriptName = "newEntryPokladna 23.0.01"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
-    message("Nový záznam - " + appLIB.name)
+    message("Nový záznam - " + APP.name)
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, appLIB.name, scriptName)
-        let appDB = getAppSeasonDB(season, appLIB.name, scriptName)
-        let number = getNewNumber(appDB, season, appLIB.name, scriptName)
+        let season = getSeason(en, APP.name, scriptName)
+        let appDB = getAppSeasonDB(season, APP.name, scriptName)
+        let number = getNewNumber(appDB, season, APP.name, scriptName)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
         en.set(SEASON, season)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
+        unlockDB(season, APP.name)
         errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
     }
 }
 const updateEntryPokladna = en => {
     let scriptName = "updateEntryPokladna 23.0.01"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
-    message("Úprava záznamu - " + appLIB.name);
+    message("Úprava záznamu - " + APP.name);
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
+        unlockDB(season, APP.name)
         errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
     }
 }
 const saveEntryPokladna = en => {
     let scriptName = "saveEntryPokladna 23.0.02"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
+    let variables = "Záznam: " + en.name + "APP.name: " + APP.name
     let parameters = "en: " + en + " /" + en.name
     try {
         prepocitatZaznamDochadzky(en)
-        saveEntry(en, appLIB.name)
+        saveEntry(en, APP.name)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
+        unlockDB(season, APP.name)
         errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
     }
 }

@@ -9,7 +9,7 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-const appLIB = {
+const APP = {
     version: '23.0.0003',
     name: lib().title,
     defaultSeason(season){
@@ -156,9 +156,9 @@ const updatePrice = en =>{
 }
 
 const setNewEntryNumber = (en) => {
-    let newNumber = appLIB.newNumber(lib().name, en.field("sezóna"))
+    let newNumber = APP.newNumber(lib().name, en.field("sezóna"))
     en.set("Číslo", newNumber[0])
-    appLIB.saveNewNumber(newNumber[1], lib().name, en.field("sezóna"))
+    APP.saveNewNumber(newNumber[1], lib().name, en.field("sezóna"))
 }
 
 const setNewEntriesNumber = (season) =>{
@@ -167,8 +167,8 @@ const setNewEntriesNumber = (season) =>{
     } else {
         message('Generujem nové čísla v celej knižnici')
     }
-    appLIB.DB(lib().title, season).setAttr("posledné číslo", 0)
-    appLIB.DB(lib().title, season).setAttr("nasledujúce číslo", 1)
+    APP.DB(lib().title, season).setAttr("posledné číslo", 0)
+    APP.DB(lib().title, season).setAttr("nasledujúce číslo", 1)
     let entries = lib().entries()
     let filtered = entries.filter(en => en.field("sezóna") == season)
     filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
@@ -188,9 +188,9 @@ const scr = {
     },
     var: {
         user: user(),
-        app: appLIB.name,
-        version: appLIB.version,
-        season: appLIB.defaultSeason(),
+        app: APP.name,
+        version: APP.version,
+        season: APP.defaultSeason(),
     },
     error: null,
     genMsgParams(){
@@ -212,7 +212,7 @@ const errorGen2 = (scr, error) => {
     const newError = new Object()
     newError['type'] = 'error'
     newError['date'] = new Date()
-    newError['memento library'] = appLIB.name
+    newError['memento library'] = APP.name
     newError['script'] = scr.name
     newError['text'] = error
     newError['line'] = error.lineNumber

@@ -1,11 +1,11 @@
 // libraries
 // APP
-const APP = "ASISTANTO"
-const APP_DB = "ASISTANTO DB"
-const APP_ERROR = "ASISTANTO Errors"
-const APP_TENATNS = "ASISTANTO Tenants"
-const APP_SCRIPTS = "ASISTANTO Scripts"
-const APP_TODO = "ASISTANTO ToDo"
+const LIBAPP = "ASISTANTO"
+const LIBAPP_DB = "ASISTANTO DB"
+const LIBAPP_ERROR = "ASISTANTO Errors"
+const LIBAPP_TENATNS = "ASISTANTO Tenants"
+const LIBAPP_SCRIPTS = "ASISTANTO Scripts"
+const LIBAPP_TODO = "ASISTANTO ToDo"
 
 // PROJEKTY
 const LIB_CPN = "Cenové ponuky"

@@ -222,15 +222,15 @@ const newEntry = en => {
     scr.name = "newEntry 23.0.08"
     scr.param.en = en
     try {
-        const newNumber = appLIB.newNumber()
-        message("Nový záznam >> " + appLIB.name)
+        const newNumber = APP.newNumber()
+        message("Nový záznam >> " + APP.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
         en.set(CR_DATE, new Date())
         en.set(NUMBER, newNumber[0])
         en.set(NUMBER_ENTRY, newNumber[1])
-        en.set(SEASON, appLIB.defaultSeason())
+        en.set(SEASON, APP.defaultSeason())
     } catch (error) {
         errorGen2(scr, error)
     }
@@ -238,7 +238,7 @@ const newEntry = en => {
 const updateEntry = en => {
     scr.name = "updateEntry 23.0.05"
     try {
-        message("Úprava záznamu >>" + appLIB.name);
+        message("Úprava záznamu >>" + APP.name);
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, en.field(DATE) ? en.field(DATE) : new Date())
         en.set(MOD, user())
@@ -263,11 +263,11 @@ const saveEntry = (en, inptScript) => {
     scr.param.inptScript = inptScript
     try {
         message("Ukladám záznam...")
-        const newNumber = appLIB.newNumber()
+        const newNumber = APP.newNumber()
         const createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            appLIB.saveNewNumber(newNumber[1])
-            switch (appLIB.name) {
+            APP.saveNewNumber(newNumber[1])
+            switch (APP.name) {
                 case "Dochádzka":
                     prepocitatZaznamDochadzky(en, scr.name)
                     break;
@@ -294,7 +294,7 @@ const removeEntry = (en, trashLib, inptScript) => {
         variables = '\ninptScript: ' + inptScript
         let logTxt = ''
         variables += '\nlibrary: ' + trashLib
-        let trashedNums = appLIB.getTrashedNums(trashLib)
+        let trashedNums = APP.getTrashedNums(trashLib)
         message('trashLib: ' + trashLib + '\nnumToBeTrashed: ' + en.field(NUMBER_ENTRY))
         variables += '\ntrashedNums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
@@ -302,10 +302,10 @@ const removeEntry = (en, trashLib, inptScript) => {
         // ak je záznam vymazaných čísiel, konvertuje na array
         if (trashedNums) {
             trashedNums.push(numToBeTrashed)
-            appLIB.setTrashedNums(trashedNums, trashLib)
+            APP.setTrashedNums(trashedNums, trashLib)
             variables += '\nnew trashed nums: ' + trashedNums
         } else {
-            appLIB.setTrashedNums(numToBeTrashed, trashLib)
+            APP.setTrashedNums(numToBeTrashed, trashLib)
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
         logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + trashLib
@@ -319,10 +319,10 @@ const removeEntry = (en, trashLib, inptScript) => {
 const unlockDB = (season) => {
     scr.name = "unlockDB 23.0.04"
     try {
-        let appDB = getAppSeasonDB(season, appLIB.name, scriptName)
+        let appDB = getAppSeasonDB(season, APP.name, scriptName)
         appDB.setAttr("locked", false)
         appDB.setAttr("locked reason", null)
-        //message("Databáza " + appLIB.name + " odomknutá")
+        //message("Databáza " + APP.name + " odomknutá")
         return true
     } catch (error) {
         errorGen2(scr, error)
@@ -350,7 +350,7 @@ const setIdentifikator = en => {
     scr.name = "setIdentifikator 23.0.03"
     let identifikator = ""
     try {
-        switch (appLIB.name) {
+        switch (APP.name) {
             case LIB_MIE:
                 identifikator =  en.field("Klient")[0].name
                 return identifikator
@@ -436,7 +436,7 @@ const errorGen = ( script, error, variables, parameters) => {
     let newError = new Object()
     newError["type"] = "error"
     newError["date"] = new Date()
-    newError["memento library"] = appLIB.name
+    newError["memento library"] = APP.name
     newError["script"] = script
     newError["text"] = error
     newError["line"] = error.lineNumber
@@ -454,7 +454,7 @@ const msgGen = (script, msg, variables, parameters) => {
     let newMsg = new Object()
     newMsg["type"] = "message"
     newMsg["date"] = new Date()
-    newMsg["memento library"] = appLIB.name
+    newMsg["memento library"] = APP.name
     newMsg["script"] = script
     newMsg["text"] = msg
     newMsg["variables"] = variables
@@ -468,7 +468,7 @@ const logGen = (script, log, variables, parameters, attributes) => {
     let newLog = new Object()
     newLog["type"] = "log"
     newLog["date"] = new Date()
-    newLog["memento library"] = appLIB.name
+    newLog["memento library"] = APP.name
     newLog["script"] = script
     newLog["text"] = log
     newLog["variables"] = variables
@@ -531,7 +531,7 @@ const setBckgColor = (en, field) => {
     scr.name = "setBckgColor 23.0.03"
     scr.param.field = field
     try {
-        switch (appLIB.name) {
+        switch (APP.name) {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
                     case "Čakajúca":

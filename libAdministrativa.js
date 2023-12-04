@@ -109,7 +109,7 @@ const newEntryZavazky = (employee, en, sum) => {
     scr.param.employee = employee
     scr.param.sum = sum
     try {
-        const newNumber = appLIB.newNumber("Záväzky")
+        const newNumber = APP.newNumber("Záväzky")
         const popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
         const zavazky = libByName(LIB_ZVK)
         // vytvorenie nového záznamu
@@ -125,13 +125,13 @@ const newEntryZavazky = (employee, en, sum) => {
         //
         newEntry["Popis"] = popis;
         newEntry["Suma"] = sum.toFixed(2);
-        newEntry[SEASON]= appLIB.defaultSeason()
+        newEntry[SEASON]= APP.defaultSeason()
         newEntry[CR] = user()
         newEntry[CR_DATE] = new Date()
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
         if (libByName(LIB_ZVK).entries()[0].field(NUMBER_ENTRY) = newNumber[1]){
-            appLIB.saveNewNumber(newNumber[1], LIB_ZVK)
+            APP.saveNewNumber(newNumber[1], LIB_ZVK)
         } else {
             message('Záznam nebol vytvorený')
         }
