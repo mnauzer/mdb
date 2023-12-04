@@ -13,7 +13,7 @@ const APP = {
     version: '23.0.0003',
     name: lib().title,
     defaultSeason(season){
-        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
+        return season || libByName(LIBAPP_TENATNS).find("KRAJINKA")[0].field("default season")
     },
     entry(season){
         season = this.defaultSeason(season)
