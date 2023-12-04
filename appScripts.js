@@ -190,9 +190,14 @@ const scr = {
         app: appLIB.name,
     },
     error: null,
-    genMsg(){
+    genMsgParams(){
         let msg = ''
         this.param.forEach((key, value) => msg += key + ': ' + value + '\n');
+        return msg
+    },
+    genMsgVars(){
+        let msg = ''
+        this.var.forEach((key, value) => msg += key + ': ' + value + '\n');
         return msg
     }
 }
