@@ -188,6 +188,8 @@ const scr = {
     var: {
         user: user(),
         app: appLIB.name,
+        version: appLIB.version,
+        season: appLIB.defaultSeason(),
     },
     error: null,
     genMsgParams(){
