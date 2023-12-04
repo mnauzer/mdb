@@ -308,7 +308,7 @@ const saveEntry = (en, inptScript) => {
 const removeEntry = (en, trashLib, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    let scriptName = 'removeEntry 23.0.07'
+    let scriptName = 'removeEntry 23.0.08'
     let variables = 'user: ' + user() + '\nentry: ' + en.name + '\nappLIB.name: ' + trashLib
     let parameters = 'en: ' + en + " /" + en.name
     try {
@@ -316,10 +316,10 @@ const removeEntry = (en, trashLib, inptScript) => {
         let logTxt = ''
         variables += '\nlibrary: ' + trashLib
         let trashedNums = appLIB.getTrashedNums(trashLib)
-        message('trash lib: ' + trashLib + '\ntrash num: ' + trashedNums)
-        variables += '\ntrashed nums: ' + trashedNums
+        message('trashLib: ' + trashLib + '\nnumToBeTrashed: ' + en.field(NUMBER_ENTRY))
+        variables += '\ntrashedNums: ' + trashedNums
         let numToBeTrashed = en.field(NUMBER_ENTRY)
-        variables += '\nnum to trash: ' + numToBeTrashed
+        variables += '\nnumToBeTrashed: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
         if (trashedNums) {
             trashedNums.push(numToBeTrashed)
