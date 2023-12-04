@@ -237,6 +237,7 @@ const newEntry = en => {
         en.set(NUMBER_ENTRY, appLIB.newNumber()[1])
         en.set(SEASON, appLIB.defaultSeason())
     } catch (error) {
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
         errorGen2(scr)
     }

@@ -180,16 +180,16 @@ const setNewEntriesNumber = (season) =>{
 const scr = {
     name: '',
     param: {
-        en: en,
-        inptScript: inptScript,
-        lib: lib,
-        season: season,
+        en: en || null,
+        inptScript: inptScript || null,
+        lib: lib || null,
+        season: season || null,
     },
     var: {
         user: user(),
         app: appLIB.name,
     },
-    error: error,
+    error: error || null,
 }
 
 const errorGen2 = scr => {
