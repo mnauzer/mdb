@@ -294,7 +294,7 @@ const saveEntry = (en, inptScript) => {
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         scr.error = error
-        en.set(VIEW, VIEW_DEBUG)
+
         errorGen2(scr)
     }
 }
