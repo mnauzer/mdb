@@ -10,8 +10,8 @@ const testMap = new Map();
 testMap.set("new", "second")
 
 const APP = {
-    version: '23.0.007',
-    name(lib){
+    version: '23.0.008',
+    defaultName(lib){
         return lib || lib().title
     },
     defaultSeason(season){
@@ -23,7 +23,7 @@ const APP = {
     },
     newNumber(lib, season){
         season = this.defaultSeason(season)
-        lib = this.name(lib)
+        lib = this.defaultName(lib)
         const number = []
         const trashedNums = this.getTrashedNums(lib, season)
         //message('1 trashed length: ' + trashedNums.length)
@@ -55,7 +55,7 @@ const APP = {
     },
     saveNewNumber(nmb, lib, season){
         season = this.defaultSeason(season)
-        lib = this.name(lib)
+        lib = this.defaultName(lib)
         this.DB(lib, season).setAttr("posledné číslo", Number(nmb))
         this.DB(lib, season).setAttr("nasledujúce číslo", Number(nmb) + 1)
         this.DB(lib, season).setAttr("rezervované číslo", null)
@@ -64,14 +64,14 @@ const APP = {
 
     DB(lib, season){
         season = this.defaultSeason(season)
-        lib = this.name(lib)
+        lib = this.defaultName(lib)
         const db = this.entry(season).field("Databázy")
         const filtered = db.filter(en => en.field("Názov") == lib)
         return filtered[0]
     },
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
-        lib = this.name(lib)
+        lib = this.defaultName(lib)
         const rmNum = this.DB(lib, season).attr("vymazané čísla")
         message('rmNum: ' + typeof(rmNum))
         let rmArray = []
@@ -95,7 +95,7 @@ const APP = {
     },
     setTrashedNums(nums, lib, season){
         season = this.defaultSeason(season)
-        lib = this.name(lib)
+        lib = this.defaultName(lib)
         try {
             this.DB(lib, season).setAttr("vymazané čísla", nums)
             return true
@@ -200,7 +200,7 @@ const scr = {
     },
     var: {
         user: user(),
-        app: APP.name,
+        app: APP.defaultName(),
         version: APP.version,
         season: APP.defaultSeason(),
     },
@@ -227,7 +227,7 @@ const errorGen2 = (scr, error) => {
     const newError = new Object()
     newError['type'] = 'error'
     newError['date'] = new Date()
-    newError['memento library'] = APP.name
+    newError['memento library'] = APP.defaultName()
     newError['script'] = scr.name
     newError['text'] = error
     newError['line'] = error.lineNumber
@@ -241,5 +241,5 @@ const errorGen2 = (scr, error) => {
     exit()
 }
 const libOpen = () => {
-    message('ASISTANTO' + ' v.' + APP.version + '\n' +  APP.name )
+    message('ASISTANTO' + ' v.' + APP.version + '\n' +  APP.defaultName() )
 }

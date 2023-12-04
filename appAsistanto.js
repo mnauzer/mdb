@@ -223,7 +223,7 @@ const newEntry = en => {
     scr.param.en = en
     try {
         const newNumber = APP.newNumber()
-        message("Nový záznam >> " + APP.name)
+        message("Nový záznam >> " + APP.defaultName())
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
@@ -238,7 +238,7 @@ const newEntry = en => {
 const updateEntry = en => {
     scr.name = "updateEntry 23.0.05"
     try {
-        message("Úprava záznamu >>" + APP.name);
+        message("Úprava záznamu >>" + APP.defaultName());
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, en.field(DATE) ? en.field(DATE) : new Date())
         en.set(MOD, user())
@@ -267,7 +267,7 @@ const saveEntry = (en, inptScript) => {
         const createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
             APP.saveNewNumber(newNumber[1])
-            switch (APP.name) {
+            switch (APP.defaultName()) {
                 case "Dochádzka":
                     prepocitatZaznamDochadzky(en, scr.name)
                     break;
@@ -317,10 +317,10 @@ const removeEntry = (en, trashLib, inptScript) => {
 const unlockDB = (season) => {
     scr.name = "unlockDB 23.0.04"
     try {
-        let appDB = getAppSeasonDB(season, APP.name, scriptName)
+        let appDB = getAppSeasonDB(season, APP.defaultName(), scriptName)
         appDB.setAttr("locked", false)
         appDB.setAttr("locked reason", null)
-        //message("Databáza " + APP.name + " odomknutá")
+        //message("Databáza " + APP.defaultName() + " odomknutá")
         return true
     } catch (error) {
         errorGen2(scr, error)
@@ -348,7 +348,7 @@ const setIdentifikator = en => {
     scr.name = "setIdentifikator 23.0.03"
     let identifikator = ""
     try {
-        switch (APP.name) {
+        switch (APP.defaultName()) {
             case LIB_MIE:
                 identifikator =  en.field("Klient")[0].name
                 return identifikator
@@ -434,7 +434,7 @@ const errorGen = ( script, error, variables, parameters) => {
     let newError = new Object()
     newError["type"] = "error"
     newError["date"] = new Date()
-    newError["memento library"] = APP.name
+    newError["memento library"] = APP.defaultName()
     newError["script"] = script
     newError["text"] = error
     newError["line"] = error.lineNumber
@@ -452,7 +452,7 @@ const msgGen = (script, msg, variables, parameters) => {
     let newMsg = new Object()
     newMsg["type"] = "message"
     newMsg["date"] = new Date()
-    newMsg["memento library"] = APP.name
+    newMsg["memento library"] = APP.defaultName()
     newMsg["script"] = script
     newMsg["text"] = msg
     newMsg["variables"] = variables
@@ -466,7 +466,7 @@ const logGen = (script, log, variables, parameters, attributes) => {
     let newLog = new Object()
     newLog["type"] = "log"
     newLog["date"] = new Date()
-    newLog["memento library"] = APP.name
+    newLog["memento library"] = APP.defaultName()
     newLog["script"] = script
     newLog["text"] = log
     newLog["variables"] = variables
@@ -529,7 +529,7 @@ const setBckgColor = (en, field) => {
     scr.name = "setBckgColor 23.0.03"
     scr.param.field = field
     try {
-        switch (APP.name) {
+        switch (APP.defaultName()) {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
                     case "Čakajúca":
