@@ -149,7 +149,7 @@ const genDochadzkaZavazky = (en, inptScript) => {
     scr.param.en = en
     scr.param.inptScript = inptScript
     //
-    let zavazok = en.field("Generovať záväzky")
+    const zavazok = en.field("Generovať záväzky")
     let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
     try {
         if (zavazok) {
@@ -160,8 +160,8 @@ const genDochadzkaZavazky = (en, inptScript) => {
                 }
             stareZavazky = false
             }
-            let zamestnanci = en.field("Zamestnanci")
-            for (let z in zamestnanci) {
+            const zamestnanci = en.field("Zamestnanci")
+            for (const z in zamestnanci) {
                 if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                 newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
             }
