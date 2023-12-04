@@ -10,7 +10,7 @@ const testMap = new Map();
 testMap.set("new", "second")
 
 const APP = {
-    version: '23.0.008',
+    version: '23.0.009',
     defaultName(lib){
         lib = lib || lib().title
         return lib
