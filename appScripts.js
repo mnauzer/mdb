@@ -15,6 +15,7 @@ testMap.set("new", "second")
 
 
 const appLIB = {
+    name: lib().title,
     newNumber(lib, season){
         season = this.defaultSeason(season)
         const number = []
@@ -50,11 +51,10 @@ const appLIB = {
         this.DB(lib, season).setAttr("nasledujúce číslo", Number(nmb) + 1)
         this.DB(lib, season).setAttr("rezervované číslo", null)
     },
-    name: lib().title,
-    defaultSeason(season){
-        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season"),
-    },
 
+    defaultSeason(season){
+        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
+    },
     entry(season){
         season = this.defaultSeason(season)
         return libByName(APP).find(season)[0]
@@ -66,7 +66,6 @@ const appLIB = {
         const filtered = db.filter(en => en.field("Názov") == libName)
         return filtered[0]
     },
-
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
         let rmNum = this.DB(lib, season).attr("vymazané čísla")
@@ -77,7 +76,7 @@ const appLIB = {
             rmArray.push(rmNum)
         } else {
             message('nie sú vymazané čísla')
-            rmArray = null
+            return null
         }
         return rmArray
     },
