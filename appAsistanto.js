@@ -230,11 +230,11 @@ const newEntry = en => {
         en.set(NUMBER_ENTRY, newNumber[1])
         en.set(SEASON, APP.defaultSeason())
     } catch (error) {
-        APP.appErrorGen(error)
+        APP.errorGen(error)
     }
 }
 const updateEntry = en => {
-    scr.name = "updateEntry 23.0.05"
+    APP.scr.name = "updateEntry 23.0.05"
     try {
         message("Úprava záznamu >>" + APP.defaultName());
         en.set(VIEW, VIEW_EDIT)
@@ -242,7 +242,7 @@ const updateEntry = en => {
         en.set(MOD, user())
         en.set(MOD_DATE, new Date())
     } catch (error) {
-        errorGen2(scr, error);
+        APP.errorGen(error);
     }
 }
 const setEntry = (en, inptScript) => {
@@ -256,9 +256,9 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    scr.name = "saveEntry 23.0.21"
-    scr.param.en = en
-    scr.param.inptScript = inptScript
+    APP.scr.name = "saveEntry 23.0.21"
+    APP.scr.param.en = en
+    APP.scr.param.inptScript = inptScript
     try {
         message("Ukladám záznam...")
         const newNumber = APP.newNumber()
@@ -267,7 +267,7 @@ const saveEntry = (en, inptScript) => {
             APP.saveNewNumber(newNumber[1])
             switch (APP.defaultName()) {
                 case "Dochádzka":
-                    prepocitatZaznamDochadzky(en, scr.name)
+                    prepocitatZaznamDochadzky(en, APP.scr.name)
                     break;
                 default:
                     break;
@@ -276,16 +276,16 @@ const saveEntry = (en, inptScript) => {
         }
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
-        errorGen2(scr, error)
+        APP.errorGen(error)
     }
 }
 const removeEntry = (en, trashFromLib, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    scr.name = 'removeEntry 23.0.09'
-    scr.param.en = en
-    scr.param.trashFromLib = trashFromLib
-    scr.param.inptScript = inptScript
+    APP.scr.name = 'removeEntry 23.0.09'
+    APP.scr.param.en = en
+    APP.scr.param.trashFromLib = trashFromLib
+    APP.scr.param.inptScript = inptScript
     try {
         const trashedNums = APP.getTrashedNums(trashFromLib)
         message('trashFromLib: ' + trashFromLib + '\nnumToBeTrashed: ' + en.field(NUMBER_ENTRY))
@@ -300,7 +300,7 @@ const removeEntry = (en, trashFromLib, inptScript) => {
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
        //     en.trash()
     } catch (error) {
-        errorGen2(scr, error)
+        APP.errorGen2(error)
     }
 }
 // entry script ACTIONS
