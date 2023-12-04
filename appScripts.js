@@ -66,14 +66,15 @@ const APP = {
     },
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
-        const rmNum = this.DB(lib, season).attr("vymazané čísla")
+        const rmNum = null
+        rmNum = this.DB(lib, season).attr("vymazané čísla")
         message('rmNum: ' + rmNum.length)
         let rmArray = []
         if (rmNum.length > 1) {
-            message('rmNum>1: ' + rmNum)
+            message('rmNum > 1: ' + rmNum)
             rmArray = rmNum.split(',')
         } else if (rmNum.length = 1) {
-            message('rmNum=1: ' + rmNum)
+            message('rmNum = 1: ' + rmNum)
             rmArray.push(rmNum)
         } else {
             message('nie sú vymazané čísla')
@@ -203,7 +204,7 @@ const scr = {
     },
     genMsgVars(){
         let msg = ''
-        Object.entries(this.var).forEach(item => {[key, value] = msg += key + ': ' + value + '\n'})
+       // Object.entries(this.var).forEach(item => {[key, value] = msg += key + ': ' + value + '\n'})
         // for (let [key, value] of this.var) {
         //     msg += key + ': ' + value + '\n';
         // }
