@@ -19,11 +19,13 @@ const appLIB = {
         const number = []
 
         const trashedNums = this.getTrashedNums(lib, season)
+        message(trashedNums.length)
         let nextNum = null;
         let trim = this.DB(lib, season).attr("trim")
         let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
         // najprv použi vymazané čísla
         if (trashedNums.length > 0){
+            message('využívam vymazané číslo')
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
 
