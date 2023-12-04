@@ -51,12 +51,11 @@ const appLIB = {
         this.DB(lib, season).setAttr("rezervované číslo", null)
     },
     name: lib().title,
+    defaultSeason: libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season"),
 
-    defaultSeason: libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
-    },
     entry(season){
         season = season || this.defaultSeason
-        return libByName(APP).find(this.season(season))[0]
+        return libByName(APP).find(season)[0]
     },
     DB(lib, season){
         season = season || this.defaultSeason
