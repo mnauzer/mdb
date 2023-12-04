@@ -40,7 +40,6 @@ const APP = {
             message('3 využívam nasledujúce číslo: ' + season)
             // ak nie sú žiadne vymazané čísla použi následujúce
             nextNum = Number(this.DB(lib, season).attr("nasledujúce číslo"))
-            message
             if (nextNum == Number(this.DB(lib, season).attr("rezervované číslo"))){
                 nextNum += 1
             }
