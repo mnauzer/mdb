@@ -38,22 +38,15 @@ const updateEntryDochadzka = en => {
 }
 const removeEntryDochadzka = (en, inptScript) => {
     // Created at: 16.11.2023, 07:55
-    // popis funkcie
     let scriptName = 'removeEntryDochadzka 23.0.04'
-    let variables = 'user: ' + user()
+    let variables = 'user: ' + user() + '\ninptScript: ' + inptScript
     let parameters = 'en: ' + en + ' /' + en.name
     try {
         variables += ''
-        let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
-        if(stareZavazky.length > 0){
-            message("Mažem súvisiace záväzky...")
-            for (let i in stareZavazky) {
-                removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
-            }
-        }
         removeEntry(en, appLIB.name, scriptName)
     } catch (error) {
         variables += ''
+        en.set(VIEW, VIEW_DEBUG)
         errorGen( scriptName, error, variables, parameters)
     }
 }
@@ -68,7 +61,6 @@ const saveEntryDochadzka = en => {
         saveEntry(en, scriptName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        unlockDB(season, appLIB.name)
         errorGen(scriptName, error, variables, parameters);
     }
 }
@@ -152,9 +144,12 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
     }
 }
 const genDochadzkaZavazky = (en, inptScript) => {
+    let scriptName = "genDochadzkaZavazky 23.0.01"
+    let variables = ''
+    let parameters = '\ninptScript: ' + inptScript
+    //
     let zavazok = en.field("Generovať záväzky")
     let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
-    let variables = "Input script: " + inptScript
     try {
         if (zavazok) {
             if(stareZavazky.length > 0){
@@ -171,7 +166,25 @@ const genDochadzkaZavazky = (en, inptScript) => {
             }
         }
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters);
+        en.set(VIEW, VIEW_DEBUG)
+        errorGen(scriptName, error, variables, parameters);
+    }
+}
+const rmDochadzkaZavazky = (en, inptScript) => {
+    let scriptName = "rmDochadzkaZavazky 23.0.01"
+
+    let variables = "inptScript: " + inptScript
+    try {
+        let stareZavazky = en.linksFrom(LIB_ZVK, appLIB.name)
+        if(stareZavazky.length > 0){
+            message("Mažem súvisiace záväzky...")
+            for (let i in stareZavazky) {
+                removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
+            }
+        }
+    } catch (error) {
+        en.set(VIEW, VIEW_DEBUG)
+        errorGen(scriptName, error, variables, parameters);
     }
 }
 const aSalary = (en, NEW_ENTRY) => {

@@ -171,3 +171,10 @@ const setNewEntriesNumber = (season) =>{
         setNewEntryNumber(filtered[e])
     }
 }
+
+const script = {
+    name: '',
+    param: [],
+    var: [],
+    err: {}
+}
