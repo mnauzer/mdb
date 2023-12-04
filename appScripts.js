@@ -17,11 +17,19 @@ testMap.set("new", "second")
 const appLIB = {
     newNumber(lib, season){
         const number = []
+        const trashedNums = this.getTrashedNums()
+        let nextNum = null;
         let trim = this.DB(lib, season).attr("trim")
         let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
-        let nextNum = Number(this.DB(lib, season).attr("nasledujúce číslo"))
-        if (nextNum == Number(this.DB(lib, season).attr("rezervované číslo"))){
-            nextNum += 1
+        if (trashedNums.length > 0){
+            nextNum = trashedNums.pop()
+            this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
+
+        } else {
+            let nextNum = Number(this.DB(lib, season).attr("nasledujúce číslo"))
+            if (nextNum == Number(this.DB(lib, season).attr("rezervované číslo"))){
+                nextNum += 1
+            }
         }
         this.DB(lib, season).setAttr("rezervované číslo", nextNum)
         number[0] = this.DB(lib, season).attr("prefix")
