@@ -38,16 +38,16 @@ const updateEntryDochadzka = en => {
         errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
     }
 }
-const removeEntryDochadzka = (en) => {
+const removeEntryDochadzka = (en, inptScript) => {
     // Created at: 16.11.2023, 07:55
     // popis funkcie
-    let scriptName = 'removeEntryDochadzka 23.0.03'
+    let scriptName = 'removeEntryDochadzka 23.0.04'
     let variables = 'user: ' + user()
     let parameters = 'en: ' + en
     try {
         variables += ''
         let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
-        if(stareZavazky){
+        if(stareZavazky.length > 0){
             message("Mažem súvisiace záväzky...")
             for (let i in stareZavazky) {
                 removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
