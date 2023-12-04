@@ -15,16 +15,15 @@ testMap.set("new", "second")
 
 
 const appLIB = {
-    newNumber(lib, season){
-        const season = season || this.defaultSeason()
+    newNumber(lib, season = this.defaultSeason()){
         const number = []
-        const trashedNums = this.getTrashedNums(lib, season)
+        const trashedNums = this.getTrashedNums(lib, season) - 1
         message('trashed length: ' + trashedNums.length)
         let nextNum = null;
         const trim = this.DB(lib, season).attr("trim")
         const lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
         // najprv použi vymazané čísla
-        if (trashedNums.length - 1 > 0){
+        if (trashedNums.length -1 > 0){
             message('využívam vymazané číslo')
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
@@ -38,8 +37,8 @@ const appLIB = {
         }
         this.DB(lib, season).setAttr("rezervované číslo", nextNum)
         number[0] = this.DB(lib, season).attr("prefix")
-        ? this.DB(lib, season).field("Prefix") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
-        : this.DB(lib, season).field("ID") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+        ? this.DB(lib, season).field("Prefix") + season.slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+        : this.DB(lib, season).field("ID") + season.slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
         number[1] = nextNum
 
         this.DB(lib).setAttr("rezervované číslo", null)
