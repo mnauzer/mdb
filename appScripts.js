@@ -149,6 +149,8 @@ const setNewEntriesNumber = (season) =>{
     } else {
         message('Generujem nové čísla v celej knižnici')
     }
+    appLIB.DB(lib().title, season).setAttr("posledné číslo", 0)
+    appLIB.DB(lib().title, season).setAttr("nasledujúce číslo", 1)
     let entries = lib().entries()
     let filtered = entries.filter(en => en.field("sezóna") == season)
     filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
