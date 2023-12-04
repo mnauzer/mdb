@@ -195,16 +195,16 @@ const scr = {
     error: null,
     genMsgParams(){
         let msg = ''
-        for (let [key, value] of this.param) {
-            msg += key + ': ' + value + '\n'
-        }
+        // for (let [key, value] of this.param) {
+        //     msg += key + ': ' + value + '\n'
+        // }
         return msg
     },
     genMsgVars(){
         let msg = ''
-        for (let [key, value] of this.var) {
-            msg += key + ': ' + value + '\n';
-        }
+        // for (let [key, value] of this.var) {
+        //     msg += key + ': ' + value + '\n';
+        // }
         return msg
     }
 }
@@ -220,7 +220,7 @@ const errorGen2 = (scr, error) => {
     newError['script'] = scr.name
     newError['text'] = error
     newError['line'] = error.lineNumber
-    newError['variables'] = scr.genMsgVars()
+    //newError['variables'] = scr.genMsgVars()
    // newError['parameters'] = scr.genMsgParams()
     newError['note'] = 'generované scriptom errorGen2'
     errorLib.create(newError)
