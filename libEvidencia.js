@@ -152,7 +152,7 @@ const genDochadzkaZavazky = (en, inptScript) => {
             if(stareZavazky.length > 0){
                 message("Mažem súvisiace záväzky...")
                 for (let i in stareZavazky) {
-                    removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
+                    removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
                 }
             stareZavazky = false
             }
@@ -174,8 +174,8 @@ const rmDochadzkaZavazky = (en, inptScript) => {
         const stareZavazky = en.linksFrom(LIB_ZVK, appLIB.name)
         if(stareZavazky.length > 0){
             message("Mažem súvisiace záväzky...")
-            for (const i in stareZavazky) {
-                removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
+            for (let i in stareZavazky) {
+                removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
             }
         }
     } catch (error) {
