@@ -208,7 +208,7 @@ const scr = {
 const errorGen2 = (scr, error) => {
     // generátor chyby
     message('ERROR: ' + scr.name + '\n' + error)
-    const errorLib = libByName(APP_ERROR)
+    const errorLib = libByName(LIBAPP_ERROR)
     const newError = new Object()
     newError['type'] = 'error'
     newError['date'] = new Date()
