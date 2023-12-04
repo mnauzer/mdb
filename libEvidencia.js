@@ -1,39 +1,27 @@
 // DOCHÁDZKA
 const newEntryDochadzka = en => {
-    let scriptName = "newEntryDochadzka 23.0.07"
-    let parameters = "en: " + en + " /" + en.name
-    let variables = "user: " + user()
+    scr.name = "newEntryDochadzka 23.0.07"
+    scr.param.en = en
     try {
         setEntry(en)
-        let date = new Date()
-        let season = getSeason(en, appLIB.name, scriptName)
-        variables += "\nseason: " + season
-        let appDB = getAppSeasonDB(season, appLIB.name, scriptName)
-        variables += "\nappDB: " + appDB
-        let number = getNewNumber(appDB, season, appLIB.name, scriptName)
-        variables += "\nnumber: " + number
+        const date = new Date()
+        const season = appLIB.defaultSeason()
+        const number = appLIB.newNumber()
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set(NUMBER_ENTRY, number[1])
         en.set(SEASON, season)
-        let msgTxt = "nový záznam dochádzky č. " + number[0]
-        msgGen(appLIB.name, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
-        return sadzba;
     } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen(scriptName, error, variables, parameters)
+        errorGen2(scr, error)
     }
 }
 const updateEntryDochadzka = en => {
-    let scriptName = "updateEntryDochadzka 23.0.01"
-    let variables = "Záznam: " + en.name + "\nappLIB.name: " + appLIB.name
-    let parameters = "en: " + en + " /" + en.name
-    message("Úprava záznamu - " + appLIB.name);
+    scr.name = "newEntryDochadzka 23.0.01"
+    scr.param.en = en
     try {
 
     } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen(scriptName, error, variables, parameters);
+        errorGen(scr, error);
     }
 }
 const removeEntryDochadzka = (en, inptScript) => {
@@ -49,8 +37,6 @@ const removeEntryDochadzka = (en, inptScript) => {
         errorGen2(scr)
     }
 }
-
-
 const saveEntryDochadzka = en => {
     scr.name = "saveEntryDochadzka 23.0.02"
     scr.param.en = en
@@ -180,69 +166,6 @@ const rmDochadzkaZavazky = (en, inptScript) => {
         }
     } catch (error) {
         errorGen2(scr, error);
-    }
-}
-const aSalary = (en, NEW_ENTRY) => {
-    const scriptName = "aSalary 23.0.01"
-    const variables = "Záznam: " + en.name + "\nNEW_ENTRY: " + NEW_ENTRY
-    const parameters = "en: " + en + " /" + en.name + "\nNEW_ENTRY: " + NEW_ENTRY
-    try {
-        var salaries = libByName(DBA_SAL);
-        var zamestnanci = en.field(DOCH_zamestnanci);
-        if (NEW_ENTRY) {
-
-        } else {
-            var links = en.linksFrom(DBA_SAL, FLD_DOCH)
-            // skontrolovať či je už záznam nalinkovaný
-            if (links.length > 0){
-                //vymaž nalinkované záznamy
-                message("Mažem už nalinkované záznamy");
-                for (var l = 0; l < links.length; l++){
-                    links[l].trash();
-                }
-            }
-        }
-        for (var z = 0; z < zamestnanci.length; z++) {
-            var newEntry = new Object();
-            newEntry[DATE] = en.field(DATE);
-            newEntry[NICK] =  zamestnanci[z].field(NICK);
-            newEntry["Odpracované"] = en.field("Pracovná doba");
-            newEntry["Sadzba"] =  zamestnanci[z].attr("hodinovka");
-            newEntry["Mzda"] =  zamestnanci[z].attr("denná mzda");
-            newEntry["Vyplatiť"] =  zamestnanci[z].attr("denná mzda");
-            newEntry[SEASON] = en.field(DATE).getFullYear();
-            newEntry[FLD_DOCH] = en;
-            newEntry["Zamestnanec"] = zamestnanci[z];
-            salaries.create(newEntry);
-            var entrySalaries = en.linksFrom(DBA_SAL,FLD_DOCH)[0];
-            entrySalaries.field(FLD_DOCH)[0].setAttr("odpracované", en.field("Pracovná doba"));
-            entrySalaries.field("Zamestnanec")[0].setAttr("sadzba", zamestnanci[z].attr("hodinovka"));
-            // zauctuj preplatok ak je
-            var preplatokLinks = zamestnanci[z].linksFrom("Pokladňa", "Zamestnanec").filter(e => e.field("Preplatok na mzde") == true);
-            if (preplatokLinks.length > 0) {
-                message("Účtujem preplatky");
-                for (var l = 0; l < preplatokLinks.length; l++) {
-                    var preplatok = preplatokLinks[l].field("Preplatok");
-                    var vyplata = entrySalaries.field("Vyplatiť");
-                    if (preplatok >= vyplata) {
-                        entrySalaries.set("Vyplatiť", vyplata);
-                        entrySalaries.link("Platby", preplatokLinks[l]);
-                        entrySalaries.field("Platby")[0].setAttr("suma", vyplata);
-                        preplatok -= vyplata;
-                        preplatokLinks[l].set("Preplatok", preplatok);
-                    } else if ( preplatok != 0 && preplatok < vyplata){
-                        entrySalaries.set("Vyplatená mzda", preplatok);
-                        entrySalaries.set("Vyplatiť", vyplata - preplatok);
-                        entrySalaries.link("Platby", en);
-                        entrySalaries.field("Platby")[0].setAttr("suma", preplatok);
-
-                    }
-                }
-
-            }
-        }
-    } catch (error) {
-        errorGen( scriptName, error, variables, parameters);
     }
 }
 
