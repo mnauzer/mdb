@@ -9,11 +9,6 @@ const testMap = new Map();
 
 testMap.set("new", "second")
 
-//message('Posledné číslo: ' + appLIB.att("posledné číslo"));
-
-
-
-
 const appLIB = {
     name: lib().title,
     defaultSeason(season){

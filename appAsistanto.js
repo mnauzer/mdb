@@ -130,8 +130,7 @@ const checkDebug = season => {
     try {
         return getAppSeason(season).field("debug")
     } catch (error) {
-        var variables = ""
-        errorGen2(APP, "appAsistanto.js", scriptName, error, variables)
+        errorGen2(scr, error)
     }
 }
 const pullAddress = klient => {
@@ -236,9 +235,7 @@ const newEntry = en => {
     }
 }
 const updateEntry = en => {
-    const scriptName = "updateEntry 23.0.05"
-    const variables = "user: " + user()
-    const parameters = "en: " + en
+    scr.name = "updateEntry 23.0.05"
     try {
         message("Úprava záznamu >>" + appLIB.name);
         en.set(VIEW, VIEW_EDIT)
@@ -246,9 +243,7 @@ const updateEntry = en => {
         en.set(MOD, user())
         en.set(MOD_DATE, new Date())
     } catch (error) {
-        variables += "\nentry: " + en.name + "appLIB.name: " + appLIB.name
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen2(APP, "appAsistanto.js",scr, error);
+        errorGen2(scr, error);
     }
 }
 const setEntry = (en, inptScript) => {
@@ -349,7 +344,6 @@ const setID = entries => {
         errorGen2(scr, error)
     }
 }
-
 const setIdentifikator = en => {
     // nastaví pole identifikátor
     scr.name = "setIdentifikator 23.0.03"
@@ -372,8 +366,6 @@ const setIdentifikator = en => {
         errorGen2(scr, error)
     }
 }
-
-
 
 // PRICE FUNCTIONS
 //
@@ -490,8 +482,6 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
     scr.name = "sadzbaZamestnanca 23.0.12"
-    let variables = "user: " + user()
-    let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         let links = employee.linksFrom(LIB_SZ, FLD_ZAM);
@@ -528,18 +518,17 @@ const getLibFieldsNames = lib =>{
         for (let f in fields) {
             fieldsNames.push(fields[f] + "\n")
         }
-        let msgTxt = "App DB: " + appDB + "\nEntryToSet: " + entryToSet.name
-        msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         entryToSet.set("Fields", fieldsNames)
 
     } catch (error) {
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 
 // COLORS
 const setBckgColor = (en, field) => {
     scr.name = "setBckgColor 23.0.03"
+    scr.param.field = field
     try {
         switch (appLIB.name) {
             case LIB_ZKZ: // Zákazky
@@ -563,8 +552,7 @@ const setBckgColor = (en, field) => {
                 break;
 }
     } catch (error) {
-        en.set("view", VIEW_DEBUG)
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 // End of file: 25.03.2022, 16:16
