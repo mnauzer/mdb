@@ -109,7 +109,7 @@ const newEntryZavazky = (employee, en, sum) => {
     let variables = "user: " + user() + "\nappLIB name: " + appLIB.name
     try {
         let date = new Date()
-        let newNumber = appLIB.newNumber("Záväzky")
+        let newNumber = appLIB.newNumber("Záväzky", )
         // let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name, scriptName)
         variables += "\nnumber: " + newNumber[0]
         let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
@@ -137,7 +137,7 @@ const newEntryZavazky = (employee, en, sum) => {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(appLIB.name, "libDochadzka.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 

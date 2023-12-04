@@ -16,15 +16,15 @@ testMap.set("new", "second")
 
 const appLIB = {
     newNumber(lib, season){
+        const season = season || this.defaultSeason()
         const number = []
-
         const trashedNums = this.getTrashedNums(lib, season)
         message(trashedNums.length)
         let nextNum = null;
         let trim = this.DB(lib, season).attr("trim")
         let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
         // najprv použi vymazané čísla
-        if (trashedNums.length > 0){
+        if (trashedNums.length - 1 > 0){
             message('využívam vymazané číslo')
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
@@ -52,9 +52,9 @@ const appLIB = {
     },
     name: lib().title,
 
-    season(season){
+    defaultSeason(season){
         return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
-        },
+    },
     entry(season){
         return libByName(APP).find(this.season(season))[0]
     },
