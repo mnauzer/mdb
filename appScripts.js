@@ -15,49 +15,45 @@ testMap.set("new", "second")
 
 
 const appLIB = {
-    newNumber(lib){
+    newNumber(lib, season){
         const number = []
-        try {
-            let trim = this.DB(lib).attr("trim")
-            let lastNum = Number(this.DB(lib).attr("posledné číslo"))
-            let nextNum = Number(this.DB(lib).attr("nasledujúce číslo"))
-            if (nextNum == Number(this.DB(lib).attr("rezervované číslo"))){
-                nextNum += 1
-            }
-            this.DB(lib).setAttr("rezervované číslo", nextNum)
-            number[0] = this.DB(lib).attr("prefix")
-            ? this.DB(lib).field("Prefix") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
-            : this.DB(lib).field("ID") + this.season().slice(trim) + pad(nextNum, this.DB(lib).attr("trailing digit"))
-            number[1] = nextNum
-        } catch (error) {
-            message(error)
-            return 0
+        let trim = this.DB(lib, season).attr("trim")
+        let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
+        let nextNum = Number(this.DB(lib, season).attr("nasledujúce číslo"))
+        if (nextNum == Number(this.DB(lib, season).attr("rezervované číslo"))){
+            nextNum += 1
         }
+        this.DB(lib).setAttr("rezervované číslo", nextNum)
+        number[0] = this.DB(lib).attr("prefix")
+        ? this.DB(lib).field("Prefix") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+        : this.DB(lib).field("ID") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+        number[1] = nextNum
+
         this.DB(lib).setAttr("rezervované číslo", null)
         return number
     },
-    saveNewNumber(nmb, lib){
-        this.DB(lib).setAttr("posledné číslo", Number(nmb))
-        this.DB(lib).setAttr("nasledujúce číslo", Number(nmb) + 1)
-        this.DB(lib).setAttr("rezervované číslo", null)
+    saveNewNumber(nmb, lib, season){
+        this.DB(lib, season).setAttr("posledné číslo", Number(nmb))
+        this.DB(lib, season).setAttr("nasledujúce číslo", Number(nmb) + 1)
+        this.DB(lib, season).setAttr("rezervované číslo", null)
     },
     name: lib().title,
 
     season(season){
         return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
         },
-    entry(){
-        return libByName(APP).find(this.season())[0]
+    entry(season){
+        return libByName(APP).find(this.season(season))[0]
     },
-    DB(lib){
+    DB(lib, season){
         const libName = lib || this.name
-        const db = this.entry().field("Databázy")
+        const db = this.entry(season).field("Databázy")
         const filtered = db.filter(en => en.field("Názov") == libName)
         return filtered[0]
     },
 
-    getTrashedNums(lib){
-        let rmNum = this.DB(lib).attr("vymazané čísla")
+    getTrashedNums(lib, season){
+        let rmNum = this.DB(lib, season).attr("vymazané čísla")
         let rmArray = []
         if (rmNum.length > 1) {
             rmArray = rmNum.split(',')
@@ -69,9 +65,9 @@ const appLIB = {
             return null
         }
     },
-    setTrashedNums(nums, lib){
+    setTrashedNums(nums, lib, season){
         try {
-            this.DB(lib).setAttr("vymazané čísla", nums)
+            this.DB(lib, season).setAttr("vymazané čísla", nums)
             return true
         } catch (error) {
             return false
