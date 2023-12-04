@@ -74,8 +74,13 @@ const APP = {
             message('rmNum > 1: ' + rmNum)
             rmArray = rmNum.split(',')
         } else if (rmNum.length = 1) {
-            message('rmNum = 1: ' + rmNum)
-            rmArray.push(rmNum)
+            const num = Number(rmNum)
+            if (num <= 0) {
+                message('rmNum = 1: ' + rmNum)
+                return null
+            } else {
+                rmArray.push(num)
+            }
         } else {
             message('nie sú vymazané čísla')
             return null
@@ -205,10 +210,6 @@ const scr = {
     genMsgVars(){
         let msg = ''
         Object.entries(this.var).forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
-       // Object.entries(this.var).forEach(item => {[key, value] = msg += key + ': ' + value + '\n'})
-        // for (let [key, value] of this.var) {
-        //     msg += key + ': ' + value + '\n';
-        // }
         return msg
     }
 }
