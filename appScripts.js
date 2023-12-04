@@ -195,12 +195,16 @@ const scr = {
     error: null,
     genMsgParams(){
         let msg = ''
-        this.param.forEach((key, value) => msg += key + ': ' + value + '\n');
+        for (const [key, value] of Object.entries(this.param)) {
+            msg += key + ': ' + value + '\n'
+        }
         return msg
     },
     genMsgVars(){
         let msg = ''
-        this.var.forEach((key, value) => msg += key + ': ' + value + '\n');
+        for (const [key, value] of Object.entries(this.var)) {
+            msg += key + ': ' + value + '\n';
+        }
         return msg
     }
 }
