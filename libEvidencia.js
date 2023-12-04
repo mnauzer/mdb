@@ -160,7 +160,7 @@ const genDochadzkaZavazky = (en, inptScript) => {
             stareZavazky = false
             }
             const zamestnanci = en.field("Zamestnanci")
-            for (const z in zamestnanci) {
+            for (let z in zamestnanci) {
                 if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                 newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
             }
