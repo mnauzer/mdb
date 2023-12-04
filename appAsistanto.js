@@ -43,7 +43,7 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         filtered.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
         filtered.reverse()
         logTxt += "\nfiltered entries: " + filtered.length
-        logGen(APP, "appAsistanto.js", scriptName, logTxt, variables, parameters )
+        logGen(APP, "appAsistanto.js", scr.name, logTxt, variables, parameters )
         return filtered
     } catch (error) {
         variables += "\nlinks: " + entries.length
@@ -176,21 +176,22 @@ const getLinkIndex = (link, remoteLinks) => {
 // KRAJINKA APP FUNCTIONS
 // získat údaje z Krajinka APP
 const lastValid = (links, date, valueField, dateField, inptScript) => {
-    //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
     scr.name = "lastValid 23.0.07"
+    scr.param.links = links
+    scr.param.date = date
+    scr.param.valueField = valueField
+    scr.param.dateField = dateField
+    scr.param.inptScript = inptScript
     try {
         // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
         //links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
-               // ✅ Sort in Ascending order (low to high)
+        // ✅ Sort in Ascending order (low to high)
         let sadzby = []
-        filteredLinks = filterByDate(links, date, dateField, scriptName)
+        filteredLinks = filterByDate(links, date, dateField, scr.name)
         filteredLinks.sort((objA, objB) => Number(objA.field(dateField) - Number(objB.field(dateField))))
         filteredLinks.reverse()
-        // for (let i = 0; filteredLinks.length; i++) {
-        //     sadzby.push(filteredLinks.field(valueField))
-        // }
-        //return sadzby[0]
+
         return filteredLinks[0].field(valueField)
     } catch (error) {
         errorGen2(scr, error)
@@ -200,12 +201,9 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
 const getSadzbaDPH = (appDB, season, inptScript) => {
       // zistí sadzby DPH v zadanej sezóne
     scr.name = "getSadzbaDPH 23.0.02"
-    scr.param.en = en
-    if(appDB == undefined || appDB == null || season == undefined || season == null){
-        msgGen(APP, "appAsistanto.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
-        cancel()
-        exit()
-    }
+    scr.param.appDB = appDB
+    scr.param.season = season
+    scr.param.inptScript = inptScript
     try {
         let sadzbyDPH = []
         sadzbyDPH.push(appDB.field("Základná sadzba DPH"))
@@ -292,10 +290,10 @@ const removeEntry = (en, trashLib, inptScript) => {
         variables = '\ninptScript: ' + inptScript
         let logTxt = ''
         variables += '\nlibrary: ' + trashLib
-        let trashedNums = APP.getTrashedNums(trashLib)
+        const trashedNums = APP.getTrashedNums(trashLib)
         message('trashLib: ' + trashLib + '\nnumToBeTrashed: ' + en.field(NUMBER_ENTRY))
         variables += '\ntrashedNums: ' + trashedNums
-        let numToBeTrashed = en.field(NUMBER_ENTRY)
+        const numToBeTrashed = en.field(NUMBER_ENTRY)
         variables += '\nnumToBeTrashed: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
         if (trashedNums) {
@@ -307,7 +305,7 @@ const removeEntry = (en, trashLib, inptScript) => {
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
         logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + trashLib
-        logGen(trashLib, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
+        logGen(trashLib, 'appAsistanto.js', scr.name, logTxt, variables, parameters )
        //     en.trash()
     } catch (error) {
         errorGen2(scr, error)
@@ -317,7 +315,7 @@ const removeEntry = (en, trashLib, inptScript) => {
 const unlockDB = (season) => {
     scr.name = "unlockDB 23.0.04"
     try {
-        let appDB = getAppSeasonDB(season, APP.defaultName(), scriptName)
+        let appDB = getAppSeasonDB(season, APP.defaultName(), scr.name)
         appDB.setAttr("locked", false)
         appDB.setAttr("locked reason", null)
         //message("Databáza " + APP.defaultName() + " odomknutá")
@@ -488,7 +486,7 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
         let msgTxt = ""
         let sadzba = 0
         variables += "\nZáznamov: " + links.length
-        filteredLinks = filterByDate(links, date, dateField, scriptName);
+        filteredLinks = filterByDate(links, date, dateField, scr.name);
         variables += "\nFiltrovaných záznamov: " + filteredLinks.length
         if (filteredLinks.length < 0) {
             msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu'
@@ -500,7 +498,7 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
         }
         //vyberie a vráti sadzbu z prvého záznamu
         variables += "\nZamestnanec: " + employee.name + "\nSadzba: " + sadzba
-        msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
+        msgGen(APP, "appAsistanto.js", scr.name, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
         errorGen2(scr, error);

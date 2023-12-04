@@ -1,6 +1,6 @@
 // CENOVÉ PONUKY
 const saveEntryCenovePonuky = en => {
-    let scriptName = "saveEntryCenovePonuky 23.0.01"
+    let scr.name = "saveEntryCenovePonuky 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -9,11 +9,11 @@ const saveEntryCenovePonuky = en => {
         saveEntry(en, appDBName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 const prepocitatCenovuPonuku = en => {
-    let scriptName ="prepocitatCenovuPonuku 23.0.04";
+    let scr.name ="prepocitatCenovuPonuku 23.0.04";
     let variables = "Záznam: " + en.name
     let parameters = "en: " + en
     try {
@@ -29,7 +29,7 @@ const prepocitatCenovuPonuku = en => {
         var cenaSDPH = 0;
         var dph = 0;
         var dopravaCelkom = 0;
-        var season = getSeason(en, LIB_CPN, scriptName);
+        var season = getSeason(en, LIB_CPN, scr.name);
         var sadzbaDPH = libByName(APP).find(season)[0].field("Základná sadzba DPH") / 100;
         // nastaviť splatnosť
         var datum = new Date(en.field(DATE));
@@ -105,14 +105,14 @@ const prepocitatCenovuPonuku = en => {
         en.set("Identifikátor", identifikator)
         let msgTxt = "Hotovo...\nCena ponuky bez DPH je: " + cenaCelkomBezDPH.toFixed(1) + "€"
         message(msgTxt)
-        msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+        msgGen(LIB_CPN, "libCenovePonuky.js", scr.name, msgTxt, variables, parameters)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters)
     }
 }
 const generujZakazku = cp => {
-    var scriptName ="generujZakazku 23.1.09";
+    var scr.name ="generujZakazku 23.1.09";
     let variables = "Záznam: " + cp.name + "\n"
     let parameters = "cp: " + cp + "\n"
     try {
@@ -120,9 +120,9 @@ const generujZakazku = cp => {
         if (stav == "Schválená") {
             // vygenerovať novú zákazku
             let zakazky = libByName(LIB_ZKZ);
-            let season = getSeason(en, LIB_CPN, scriptName)
-            let appDB = getAppSeasonDB(season, zakazky.title, scriptName);
-            let newNumber = getNewNumber(appDB, season, LIB_CPN, scriptName);
+            let season = getSeason(en, LIB_CPN, scr.name)
+            let appDB = getAppSeasonDB(season, zakazky.title, scr.name);
+            let newNumber = getNewNumber(appDB, season, LIB_CPN, scr.name);
             // vyber diely zákazky podľa typu cp
             if (cp.field("Typ cenovej ponuky") == "Hodinovka") {
                 var dielyZakazky = cp.field("Diely cenovej ponuky hzs");
@@ -164,7 +164,7 @@ const generujZakazku = cp => {
             appDB.setAttr("nasledujúce číslo", nextNumber++)
 
             message(msgTxt)
-            msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            msgGen(LIB_CPN, "libCenovePonuky.js", scr.name, msgTxt, variables, parameters)
 
             // generovanie výkazov
             let evidovat = cp.field("Evidovať")
@@ -201,18 +201,18 @@ const generujZakazku = cp => {
         } else if (cp.linksFrom(LIB_ZKZ, FLD_CPN)[0]) {
             let msgTxt = "Z cenovej ponuky už je vytvorená zákazka č." + cp.linksFrom(LIB_ZKZ, FLD_CPN)[0]
             message(msgTxt)
-            msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            msgGen(LIB_CPN, "libCenovePonuky.js", scr.name, msgTxt, variables, parameters)
             cancel()
             exit()
         } else {
             let msgTxt = "Cenová ponuka musí byť schválená"
-            msgGen(LIB_CPN, "libCenovePonuky.js", scriptName, msgTxt, variables, parameters)
+            msgGen(LIB_CPN, "libCenovePonuky.js", scr.name, msgTxt, variables, parameters)
             message(msgTxt)
             cancel()
             exit()
         }
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters)
         cancel()
         exit()
     }
@@ -221,7 +221,7 @@ const generujZakazku = cp => {
 // VÝDAJKY
 // generuj nové výdajky
 const generujVykazyMaterialu = zakazka => {
-    let scriptName ="generujVykazyMaterialu 23.0.03";
+    let scr.name ="generujVykazyMaterialu 23.0.03";
     let variables = "Zákazka: " + zakazka.name;
     let parameters = "zakazka: " + zakazka
     try {
@@ -255,11 +255,11 @@ const generujVykazyMaterialu = zakazka => {
         }
         return vydajka;
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 const linkItems = (vydajkaMaterialu, polozky) => {
-    let scriptName ="linkItems 23.0.05";
+    let scr.name ="linkItems 23.0.05";
     let variables = "Záznam: " + vydajkaMaterialu.name + "\n"
     let parameters = "vydajkaMaterialu: " + vydajkaMaterialu + "\npolozky: " + polozky
     try {
@@ -270,13 +270,13 @@ const linkItems = (vydajkaMaterialu, polozky) => {
             vydajkaMaterialu.field("Materiál")[p].setAttr("cena", polozky[p].attr("cena"));
         }
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 // VÝKAZY PRÁC
 // vytvorí nový záznam
 const generujVykazyPrac = zakazka => {
-    let scriptName = "generujVykazyPrac 23.0.09";
+    let scr.name = "generujVykazyPrac 23.0.09";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
@@ -327,11 +327,11 @@ const generujVykazyPrac = zakazka => {
         }
         return vykazPrac; //suma
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
-    let scriptName = "nalinkujPolozkyPonukyPrace 23.0.01";
+    let scr.name = "nalinkujPolozkyPonukyPrace 23.0.01";
     let variables = "Výkaz prác: " +  vykazPrac.name
     let parameters = "vykazPrac: " +  vykazPrac + "\npolozky: " + polozky
     try {
@@ -342,11 +342,11 @@ const nalinkujPolozkyPonukyPrace = (vykazPrac, polozky) => {
             vykazPrac.field("Práce")[p].setAttr("cena", polozky[p].attr("cena"));
         }
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
-    let scriptName = "nalinkujPolozkyPonukyPraceHZS 23.0.01";
+    let scr.name = "nalinkujPolozkyPonukyPraceHZS 23.0.01";
     let variables = "Výkaz prác: " +  vykazPrac.name
     let parameters = "vykazPrac: " +  vykazPrac + "\npolozky: " + polozky
     try {
@@ -357,11 +357,11 @@ const nalinkujPolozkyPonukyPraceHZS = (vykazPrac, polozky) => {
             vykazPrac.field("Práce sadzby")[p].setAttr("základná sadzba", polozky[p].attr("sadzba"));
         }
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 const generujVykazStrojov = zakazka => {
-    let scriptName = "generujVykazStrojov 23.0.01";
+    let scr.name = "generujVykazStrojov 23.0.01";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka
     try {
@@ -373,11 +373,11 @@ const generujVykazStrojov = zakazka => {
         spocitajVykaz(vykaz, FLD_STR);                      // výkaz , názov poľa položiek
         return vykaz;
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 const nalinkujPolozkyStrojov = (vykaz, polozky) => {
-    let scriptName = "nalinkujPolozkyStrojov 23.0.01";
+    let scr.name = "nalinkujPolozkyStrojov 23.0.01";
     let variables = "Výkaz : " +  vykaz.name
     let parameters = "vykaz: " +  vykaz + "\npolozky: " + polozky
     try {
@@ -388,12 +388,12 @@ const nalinkujPolozkyStrojov = (vykaz, polozky) => {
             vykaz.field(FLD_STR)[m].setAttr("účtovaná sadzba", polozky[m].attr("sadzba"));
         }
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 // SPOČÍTAŤ VÝKAZY
 const spocitajVykaz = (doklad, field) => {
-    let scriptName = "spocitajVykaz 23.0.01"
+    let scr.name = "spocitajVykaz 23.0.01"
     let variables = "Doklad : " +  doklad.name + "\nfield: " + field
     let parameters = "doklad: " +  doklad + "\nfield: " + field
     try {
@@ -419,13 +419,13 @@ const spocitajVykaz = (doklad, field) => {
         doklad.set("CP Suma s DPH", sumaCelkomSDPH)
 
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 }
 // OBSOLETE
 // prepočet dielov cenovej ponuky - Položky
 const prepocetDielPolozky = (cp, diel) => {
-    let scriptName = "prepocetDielPolozky 23.0.01"
+    let scr.name = "prepocetDielPolozky 23.0.01"
     let variables = "Cenová ponuka : " +  cp.name
     let parameters = "cp: " +  cp + "\ndiel: " + diel
     try {
@@ -456,7 +456,7 @@ const prepocetDielPolozky = (cp, diel) => {
         cp.set(diel, dielCelkom);
         return dielCelkom;
     } catch (error) {
-        errorGen(LIB_CPN, "libCenovePonuky.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_CPN, "libCenovePonuky.js", scr.name, error, variables, parameters);
     }
 };
 const prepocetDielHZS = (cp, diel) => {
@@ -1127,7 +1127,7 @@ const setBackgroudColor = (contract, stav) => {
 }
 // VYÚČTOVANIA
 const btnVyuctovania1 = () => {
-    let scriptName ="btnVyuctovania1 23.0.31"
+    let scr.name ="btnVyuctovania1 23.0.31"
     let variables = "Záznam: " + entry().name
     let parameters = "en: " + entry()
     let txtMsg = ""
@@ -1139,9 +1139,9 @@ const btnVyuctovania1 = () => {
         }
         txtMsg = "Zákazka: " + entry().name
         //zakazka.set("Typ zákazky", zakazka.field(FLD_CPN)[0].field("Typ cenovej ponuky"))
-        msgGen(LIB_EP, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
+        msgGen(LIB_EP, "libEvidenciaPrac.js", scr.name, txtMsg, variables, parameters )
 
-        message("nastavujem záznam..." + scriptName)
+        message("nastavujem záznam..." + scr.name)
 
         entry().set("Typ zákazky", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Evidovať"))
@@ -1159,7 +1159,7 @@ const btnVyuctovania1 = () => {
             entry().set(element, entry().field(FLD_ZKZ)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_EP, "libEvidenciaPrac.js", scr.name, error, variables, parameters);
     }
 }
 const noveVyuctovanie = zakazka => {

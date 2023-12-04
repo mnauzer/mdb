@@ -1,13 +1,13 @@
 // VÝKAZY PRÁC
 const novyVykazPrac = (zakazka, popis) => {
-    let scriptName = "novyVykazPrac 23.1.04";
+    let scr.name = "novyVykazPrac 23.1.04";
     let variables = "Zákazka: " +  zakazka.name + "\n"
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
-        let season = getSeason(zakazka, LIB_VP, scriptName);
-        let appDB = getAppSeasonDB(season, LIB_VP, scriptName);
-        let newNumber = getNewNumber(appDB, season, LIB_VP, scriptName);
+        let season = getSeason(zakazka, LIB_VP, scr.name);
+        let appDB = getAppSeasonDB(season, LIB_VP, scr.name);
+        let newNumber = getNewNumber(appDB, season, LIB_VP, scr.name);
         let vykazy = libByName(LIB_VP);
         let cp = zakazka.field(FLD_CPN)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
@@ -32,14 +32,14 @@ const novyVykazPrac = (zakazka, popis) => {
         let vykazPrac = vykazy.find(newNumber[0])[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
-        msgGen(LIB_VP, "libVykazPrac.js", scriptName, msgTxt, variables, parameters )
+        msgGen(LIB_VP, "libVykazPrac.js", scr.name, msgTxt, variables, parameters )
         return vykazPrac;
     } catch (error) {
-        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VP, "libVykazPrac.js", scr.name, error, variables, parameters);
     }
 }
 const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
-    let scriptName = "prepocitatVykazPrac 23.1.01";
+    let scr.name = "prepocitatVykazPrac 23.1.01";
     let variables = "Záznam: " +  vykaz.name + "\n"
     let parameters = "vykaz: " +  vykaz + "\nuctovatDPH: " + uctovatDPH
     try {
@@ -160,11 +160,11 @@ const prepocitatVykazPrac = (vykaz, uctovatDPH) => {
         vykaz.set("Suma s DPH", sumaCelkom);
         return [sumaBezDPH, sumaDPH]
     } catch (error) {
-        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VP, "libVykazPrac.js", scr.name, error, variables, parameters);
 }
 }
 const newEntryVykazPrac = en => {
-    let scriptName = "newEntryVykazPrac 23.0.01"
+    let scr.name = "newEntryVykazPrac 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -172,9 +172,9 @@ const newEntryVykazPrac = en => {
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, appDBName, scriptName)
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        let number = getNewNumber(appDB, season, appDBName, scriptName)
+        let season = getSeason(en, appDBName, scr.name)
+        let appDB = getAppSeasonDB(season, appDBName, scr.name)
+        let number = getNewNumber(appDB, season, appDBName, scr.name)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
@@ -182,11 +182,11 @@ const newEntryVykazPrac = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_VP, "libVykazPrac.js", scr.name, error, variables, parameters)
     }
 }
 const updateEntryVykazPrac = en => {
-    let scriptName = "updateEntryVykazPrac 23.0.01"
+    let scr.name = "updateEntryVykazPrac 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -196,11 +196,11 @@ const updateEntryVykazPrac = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VP, "libVykazPrac.js", scr.name, error, variables, parameters);
     }
 }
 const saveEntryVykazPrac = en => {
-    let scriptName = "saveEntryVykazPrac 23.0.01"
+    let scr.name = "saveEntryVykazPrac 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -210,13 +210,13 @@ const saveEntryVykazPrac = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VP, "libVykazPrac.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VP, "libVykazPrac.js", scr.name, error, variables, parameters);
     }
 }
 
 // VÝKAZY STROJOV
 const newEntryVykazStrojov = en => {
-    let scriptName = "newEntryVykazStrojov 23.0.01"
+    let scr.name = "newEntryVykazStrojov 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -224,9 +224,9 @@ const newEntryVykazStrojov = en => {
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, appDBName, scriptName)
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        let number = getNewNumber(appDB, season, appDBName, scriptName)
+        let season = getSeason(en, appDBName, scr.name)
+        let appDB = getAppSeasonDB(season, appDBName, scr.name)
+        let number = getNewNumber(appDB, season, appDBName, scr.name)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
@@ -234,11 +234,11 @@ const newEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_VS, "libVykazStrojov.js", scr.name, error, variables, parameters)
     }
 }
 const updateEntryVykazStrojov = en => {
-    let scriptName = "updateEntryVykazStrojov 23.0.01"
+    let scr.name = "updateEntryVykazStrojov 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -248,11 +248,11 @@ const updateEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VS, "libVykazStrojov.js", scr.name, error, variables, parameters);
     }
 }
 const saveEntryVykazStrojov = en => {
-    let scriptName = "saveEntryVykazStrojov 23.0.01"
+    let scr.name = "saveEntryVykazStrojov 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -262,22 +262,22 @@ const saveEntryVykazStrojov = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VS, "libVykazStrojov.js", scr.name, error, variables, parameters);
     }
 }
 const novyVykazStrojov = (zakazka, popis) => {
-    let scriptName = "novyVykazStrojov 23.0.04";
+    let scr.name = "novyVykazStrojov 23.0.04";
     let variables = "Zákazka: " +  zakazka.name + "\nPopis: " + popis
     let parameters = "zakazka: " +  zakazka + "\npopis: " + popis
     try {
         // inicializácia
-        let season = getSeason(zakazka, LIB_VS, scriptName);
+        let season = getSeason(zakazka, LIB_VS, scr.name);
         let vykazy = libByName(LIB_VS);
-        let appDB = getAppSeasonDB(season, LIB_VS, scriptName);
+        let appDB = getAppSeasonDB(season, LIB_VS, scr.name);
         let cp = zakazka.field(FLD_CPN)[0];
         let typVykazu = cp.field("Typ cenovej ponuky");
         let datum = zakazka.field(DATE);
-        let newNumber = getNewNumber(appDB, season, LIB_VS, scriptName);
+        let newNumber = getNewNumber(appDB, season, LIB_VS, scr.name);
         // vytvoriť novú výdajku
         let novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
@@ -296,14 +296,14 @@ const novyVykazStrojov = (zakazka, popis) => {
         let vykazPrac = vykazy.find(newNumber[0])[0];
         let msgTxt = "Vygenovaný nový výkaz prác č." + newNumber[0]
         message(msgTxt)
-        msgGen(LIB_VS, "libVykazStrojov.js", scriptName, msgTxt, variables, parameters )
+        msgGen(LIB_VS, "libVykazStrojov.js", scr.name, msgTxt, variables, parameters )
         return vykazPrac;
     } catch (error) {
-        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VS, "libVykazStrojov.js", scr.name, error, variables, parameters);
     }
 }
 const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
-    let scriptName = "prepocitatVykazStrojov 23.0.01";
+    let scr.name = "prepocitatVykazStrojov 23.0.01";
     let variables = "Záznam: " +  vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
     let parameters = "vykaz: " +  vykaz + "\nuctovatDPH: " + ucnuctovatDPH
     try {
@@ -374,14 +374,14 @@ const prepocitatVykazStrojov = (vykaz, uctovatDPH) => {
         setTlac(vykaz);
         return [sumaBezDPH, sumaDPH, sumaCelkom];
     } catch (error) {
-        errorGen(LIB_VS, "libVykazStrojov.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VS, "libVykazStrojov.js", scr.name, error, variables, parameters);
 
     }
 }
 
 // VÝKAZY MATERIÁLU
 const newEntryVykazMaterialu = en => {
-    let scriptName = "newEntryVykazMaterialu 23.0.01"
+    let scr.name = "newEntryVykazMaterialu 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -389,9 +389,9 @@ const newEntryVykazMaterialu = en => {
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, appDBName, scriptName)
-        let appDB = getAppSeasonDB(season, appDBName, scriptName)
-        let number = getNewNumber(appDB, season, appDBName, scriptName)
+        let season = getSeason(en, appDBName, scr.name)
+        let appDB = getAppSeasonDB(season, appDBName, scr.name)
+        let number = getNewNumber(appDB, season, appDBName, scr.name)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
@@ -399,11 +399,11 @@ const newEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_VM, "libVykazMaterialu.js", scr.name, error, variables, parameters)
     }
 }
 const updateEntryVykazMaterialu = en => {
-    let scriptName = "updateEntryVykazMaterialu 23.0.01"
+    let scr.name = "updateEntryVykazMaterialu 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -413,11 +413,11 @@ const updateEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VM, "libVykazMaterialu.js", scr.name, error, variables, parameters);
     }
 }
 const saveEntryVykazMaterialu = en => {
-    let scriptName = "saveEntryVykazMaterialu 23.0.01"
+    let scr.name = "saveEntryVykazMaterialu 23.0.01"
     let appDBName = lib().title
     let variables = "Záznam: " + en.name + "appDBName: " + appDBName
     let parameters = "en: " + en
@@ -427,23 +427,23 @@ const saveEntryVykazMaterialu = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, appDBName)
-        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_VM, "libVykazMaterialu.js", scr.name, error, variables, parameters);
     }
 }
 const novyVykazMaterialu = (zakazka, popis) => {
-    let scriptName = "novyVykazMaterialu 23.1.04";
+    let scr.name = "novyVykazMaterialu 23.1.04";
     let variables = "Zákazka: " + zakazka.name + "\n"
     let parameters = "zakazka: " + zakazka + "\npopis: "+ popis
     if(zakazka === undefined ){
-        msgGen("libVykazMaterialu.js", scriptName, "zakazka entry is undefined", variables, parameters);
+        msgGen("libVykazMaterialu.js", scr.name, "zakazka entry is undefined", variables, parameters);
         cancel();
         exit();
     }
     try {
         var lib = libByName(LIB_VM);
-        var season = getSeason(zakazka, LIB_VM, scriptName)
-        var appDB = getAppSeasonDB(season, LIB_VM, scriptName);
-        var newNumber = getNewNumber(appDB, season, LIB_VM, scriptName);
+        var season = getSeason(zakazka, LIB_VM, scr.name)
+        var appDB = getAppSeasonDB(season, LIB_VM, scr.name);
+        var newNumber = getNewNumber(appDB, season, LIB_VM, scr.name);
         // vytvoriť novú výdajku
         var novyVykaz = new Object();
         novyVykaz[NUMBER] = newNumber[0];
@@ -461,14 +461,14 @@ const novyVykazMaterialu = (zakazka, popis) => {
         var vydajkaMaterialu = lib.find(newNumber[0])[0];
         let msgTxt = "Vygenerovaná nová výdajka materiálu č." + newNumber[0]
         message(msgTxt)
-        msgGen(LIB_VM, "libVykazMaterialu.js", scriptName, msgTxt, variables, parameters)
+        msgGen(LIB_VM, "libVykazMaterialu.js", scr.name, msgTxt, variables, parameters)
         return vydajkaMaterialu;
     } catch (error) {
-        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_VM, "libVykazMaterialu.js", scr.name, error, variables, parameters)
     }
 }
 const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
-    let scriptName = "prepocitatVykazMaterialu 23.0.01";
+    let scr.name = "prepocitatVykazMaterialu 23.0.01";
     let variables = "Záznam: " + vykaz.name + "\nÚčtovať DPH: " + uctovatDPH
     let parameters = "vykaz: " + vykaz + "\nuctovatDPH: "+ uctovatDPH
     try {
@@ -506,7 +506,7 @@ const prepocitatVykazMaterialu = (vykaz, uctovatDPH) => {
         }
         return [sumaBezDPH, sumaDPH];
     } catch (error) {
-        errorGen(LIB_VM, "libVykazMaterialu.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_VM, "libVykazMaterialu.js", scr.name, error, variables, parameters)
     }
 
 }

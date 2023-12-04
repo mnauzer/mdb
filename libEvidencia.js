@@ -21,7 +21,7 @@ const updateEntryDochadzka = en => {
     try {
 
     } catch (error) {
-        errorGen(scr, error);
+        errorGen2(scr, error);
     }
 }
 const removeEntryDochadzka = (en, inptScript) => {
@@ -41,8 +41,8 @@ const saveEntryDochadzka = en => {
     scr.name = "saveEntryDochadzka 23.0.02"
     scr.param.en = en
     try {
-        prepocitatZaznamDochadzky(en, scriptName)
-        saveEntry(en, scriptName)
+        prepocitatZaznamDochadzky(en, scr.name)
+        saveEntry(en, scr.name)
     } catch (error) {
         errorGen2(scr, error);
     }
@@ -53,31 +53,31 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
     scr.param.inptScript = inptScript
     try {
         // výpočet pracovnej doby
-        let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
-        let odchod = roundTimeQ(en.field("Odchod"));
-        let datum = en.field(DATE)
-        let vymazaneCisla = []
+        const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
+        const odchod = roundTimeQ(en.field("Odchod"));
+        const datum = en.field(DATE)
+        const vymazaneCisla = []
 
-        let pracovnaDoba = (odchod - prichod) / 3600000;
+        const pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
         let prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
-        let zamestnanci = en.field("Zamestnanci");
-        let evidenciaPrac = en.field("Práce");
+        const zamestnanci = en.field("Zamestnanci");
+        const evidenciaPrac = en.field("Práce");
         if (zamestnanci.length > 0) {
-            for (let z = 0; z < zamestnanci.length; z++) {
-                let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, scriptName);
+            for (let z in zamestnanci ) {
+                const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, scr.name);
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
-                let hodnotenie = zamestnanci[z].attr("hodnotenie") ? zamestnanci[z].attr("hodnotenie") : 5;
+                const hodnotenie = zamestnanci[z].attr("hodnotenie") ? zamestnanci[z].attr("hodnotenie") : 5;
                 let dennaMzda = zamestnanci[z].attr("denná mzda") ? zamestnanci[z].attr("denná mzda") : 0; // jedného zamestnanca
                 // premenné z knižnice zamestnanci
                 let Zarobene = zamestnanci[z].field("Zarobené") - dennaMzda;
                 let Odrobene = zamestnanci[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-                let Vyplatene = zamestnanci[z].field("Vyplatené");
+                const Vyplatene = zamestnanci[z].field("Vyplatené");
                 let HodnotenieD = zamestnanci[z].field("Dochádzka");
 
                 dennaMzda = (pracovnaDoba * (hodinovka
@@ -90,7 +90,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                 Zarobene += dennaMzda;
                 Odrobene += pracovnaDoba;
                 HodnotenieD += hodnotenie;
-                let Nedoplatok = Zarobene - Vyplatene;
+                const Nedoplatok = Zarobene - Vyplatene;
 
                 zamestnanci[z].set("Zarobené", Zarobene);
                 zamestnanci[z].set("Odpracované", Odrobene);
@@ -102,8 +102,8 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac) {
                     for (let ep in evidenciaPrac) {
-                        let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                        let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
+                        const zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
+                        const naZakazke = evidenciaPrac[ep].field("Pracovná doba");
                         for (let znz in zamNaZakazke) {
                             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                                 evidenciaCelkom += naZakazke;
@@ -171,47 +171,42 @@ const rmDochadzkaZavazky = (en, inptScript) => {
 
 // EVIDENCIA PRÁC
 const newEntryEvidenciaPrac = en => {
-    let scriptName = "newEntryEvidenciaPrac 23.0.02"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "newEntryEvidenciaPrac 23.0.02"
+    scr.param.en = en
     message("Nový záznam - " + APP.defaultName())
     try {
-        setEntry(en, scriptName)
+        setEntry(en, scr.name)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2( scr.name, error, variables, parameters)
     }
 }
 const updateEntryEvidenciaPrac = en => {
-    let scriptName = "updateEntryEvidenciaPrac 23.0.02"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "updateEntryEvidenciaPrac 23.0.02"
+    scr.param.en = en
     message("Úprava záznamu - " + APP.defaultName());
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters);
+        errorGen2( scr.name, error, variables, parameters);
     }
 }
 const saveEntryEvidenciaPrac = en => {
-    let scriptName = "saveEntryEvidenciaPrac 23.0.01"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.param.en = en
+    scr.name = "saveEntryEvidenciaPrac 23.0.01"
     try {
         prepocetZaznamuEvidenciePrac(en)
         saveEntry(en, APP.defaultName())
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters);
+        errorGen2( scr.name, error, variables, parameters);
     }
 }
 const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
-    let scriptName ="evidenciaSadzbaPrace 23.0.01";
-    let variables = "Záznam: " + vykazPrac.name + "\n"
-    let parameters = "vykazPrac: " + vykazPrac + "\nhodinyCelkom: " + hodinyCelkom
+    scr.name ="evidenciaSadzbaPrace 23.0.01";
     if(vykazPrac == undefined){
-        msgGen( scriptName, "chýba parameter vykazPrac", variables, parameters )
+        msgGen( scr.name, "chýba parameter vykazPrac", variables, parameters )
         cancel()
         exit()
     }
@@ -228,16 +223,13 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
         let sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100)
         return sadzba
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2( scr.name, error, variables, parameters)
         cancel()
         exit()
     }
 };
 const btnFill = () => {
-    let scriptName ="btnFill 23.0.05"
-    let variables = "Záznam: " + entry().name
-    let parameters = "en: " + en + " /" + en.nametry()
-    let txtMsg = ""
+    scr.name ="btnFill 23.0.05"
     try {
         if (!entry().field(FLD_ZKZ)[0]) {
             message("Najprv vyber zákazku...")
@@ -246,14 +238,14 @@ const btnFill = () => {
         }
         txtMsg = "Zákazka: " + entry().name
         //zakazka.set("Typ zákazky", zakazka.field(FLD_CPN)[0].field("Typ cenovej ponuky"))
-        msgGen( scriptName, txtMsg, variables, parameters )
+        msgGen( scr.name, txtMsg, variables, parameters )
 
-        message("nastavujem záznam..." + scriptName)
+        message("nastavujem záznam..." + scr.name)
 
         entry().set("Typ zákazky", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Typ cenovej ponuky"))
         entry().set("Evidovať", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Evidovať"))
         entry().set("Výkazy", entry().field(FLD_ZKZ)[0].field(FLD_CPN)[0].field("Výkazy"))
-        let evidovat = entry().field("Evidovať")
+        const evidovat = entry().field("Evidovať")
         // for(let i=0; i<evidovat.length; i++) {
         //     message(links[i])
         //     let links = entry().field(FLD_ZKZ)[0].linksFrom(evidovat[i], "Zákazka")
@@ -266,13 +258,11 @@ const btnFill = () => {
             entry().set(element, entry().field(FLD_ZKZ)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters);
+        errorGen2( scr.name, error, variables, parameters);
     }
 }
 const prepocetZaznamuEvidenciePrac = en => {
-    let scriptName ="prepocetZaznamuEvidenciePrac 23.0.08";
-    let variables = "Záznam: " + en.name
-    let parameters = "en: " + en + " /" + en.name
+    scr.name ="prepocetZaznamuEvidenciePrac 23.0.08";
     try {
         let date = en.field(DATE)
         let typ = en.field("Typ zákazky");
@@ -282,7 +272,7 @@ const prepocetZaznamuEvidenciePrac = en => {
             if (vykaz != undefined) {
                 en.set(FLD_ZKZ, vykaz.field(FLD_ZKZ)[0]);
             } else {
-                msgGen(  scriptName, "nie je zadaná zákazka", variables, parameters)
+                msgGen(  scr.name, "nie je zadaná zákazka", variables, parameters)
             }
         } else if (typ == "Položky") {
         }
@@ -297,7 +287,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         for (let z = 0; z < zamestnanci.length; z++) {
             // sadzba buď tá zadaná, alebo zisti zo záznamu zamestnanca
 
-            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_SZ, FLD_ZAM), date,"Sadzba", "Platnosť od", scriptName );
+            let hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : lastValid(zamestnanci[z].linksFrom(LIB_SZ, FLD_ZAM), date,"Sadzba", "Platnosť od", scr.name );
             zamestnanci[z].setAttr("hodinovka", hodinovka);
             odpracovane += trvanie;
             nakladyZamestnatec = trvanie * hodinovka;
@@ -358,7 +348,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters);
+        errorGen2( scr.name, error, variables, parameters);
     }
 
 }
@@ -367,16 +357,15 @@ const prepocetZaznamuEvidenciePrac = en => {
 
 // NEW AND UPDATE ENTRY
 const newEntryKnihaJazd= en => {
-    let scriptName = "newEntryKnihaJazd23.0.01"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "newEntryKnihaJazd23.0.01"
+    scr.param.en = en
     message("Nový záznam - " + APP.defaultName())
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, APP.defaultName(), scriptName)
-        let appDB = getAppSeasonDB(season, APP.defaultName(), scriptName)
-        let number = getNewNumber(appDB, season, APP.defaultName(), scriptName)
+        let season = getSeason(en, APP.defaultName(), scr.name)
+        let appDB = getAppSeasonDB(season, APP.defaultName(), scr.name)
+        let number = getNewNumber(appDB, season, APP.defaultName(), scr.name)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
@@ -384,33 +373,31 @@ const newEntryKnihaJazd= en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, APP.defaultName())
-        errorGen(LIB_KJ, "libKnihaJazd.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_KJ, "libKnihaJazd.js", scr.name, error, variables, parameters)
     }
 }
 const updateEntryKnihaJazd= en => {
-    let scriptName = "updateEntryKnihaJazd23.0.01"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "updateEntryKnihaJazd23.0.01"
+    scr.param.en = en
     message("Úprava záznamu - " + APP.defaultName());
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, APP.defaultName())
-        errorGen(LIB_KJ, "libKnihaJazd.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_KJ, "libKnihaJazd.js", scr.name, error, variables, parameters);
     }
 }
 const saveEntryKnihaJazd= en => {
-    let scriptName = "saveEntryKnihaJazd23.0.01"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "saveEntryKnihaJazd23.0.01"
+    scr.param.en = en
     try {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, APP.defaultName())
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, APP.defaultName())
-        errorGen(LIB_KJ, "libKnihaJazd.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_KJ, "libKnihaJazd.js", scr.name, error, variables, parameters);
     }
 }
 const spocitatDopravu = (zakazka, cenaCelkomBezDPH) => {
@@ -575,16 +562,15 @@ const prepocitatJazdu = jazda => {
 
 // POKLADŇA
 const newEntryPokladna = en => {
-    let scriptName = "newEntryPokladna 23.0.01"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "newEntryPokladna 23.0.01"
+    scr.param.en = en
     message("Nový záznam - " + APP.defaultName())
     try {
         setEntry(en)
         let date = new Date()
-        let season = getSeason(en, APP.defaultName(), scriptName)
-        let appDB = getAppSeasonDB(season, APP.defaultName(), scriptName)
-        let number = getNewNumber(appDB, season, APP.defaultName(), scriptName)
+        let season = getSeason(en, APP.defaultName(), scr.name)
+        let appDB = getAppSeasonDB(season, APP.defaultName(), scr.name)
+        let number = getNewNumber(appDB, season, APP.defaultName(), scr.name)
         en.set(DATE, date)
         en.set(NUMBER, number[0])
         en.set("number", number[1])
@@ -592,39 +578,36 @@ const newEntryPokladna = en => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, APP.defaultName())
-        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_POKLADNA, "libPokladna.js", scr.name, error, variables, parameters)
     }
 }
 const updateEntryPokladna = en => {
-    let scriptName = "updateEntryPokladna 23.0.01"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "updateEntryPokladna 23.0.01"
+    scr.param.en = en
     message("Úprava záznamu - " + APP.defaultName());
     try {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, APP.defaultName())
-        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_POKLADNA, "libPokladna.js", scr.name, error, variables, parameters);
     }
 }
 const saveEntryPokladna = en => {
-    let scriptName = "saveEntryPokladna 23.0.02"
-    let variables = "Záznam: " + en.name + "APP.defaultName(): " + APP.defaultName()
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "saveEntryPokladna 23.0.02"
+    scr.param.en = en
     try {
         prepocitatZaznamDochadzky(en)
         saveEntry(en, APP.defaultName())
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         unlockDB(season, APP.defaultName())
-        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters);
+        errorGen2(LIB_POKLADNA, "libPokladna.js", scr.name, error, variables, parameters);
     }
 }
 const fillPopis = en => {
-    let scriptName = "fillPopis 23.0.01";
-    let variables = "Záznam: " +  en.name + "\n"
-    let parameters = "en: " +  en
+    scr.name = "fillPopis 23.0.01";
+    scr.param.en = en
     try {
         let popis = en.field("Popis platby");
         if (!popis) {
@@ -675,13 +658,12 @@ const fillPopis = en => {
             message(popis);
         }
     } catch (error) {
-        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_POKLADNA, "libPokladna.js", scr.name, error, variables, parameters)
     }
 }
 const prepocetPlatby = en => {
-    let scriptName = "prepocetPlatby 23.0.01";
-    let variables = "Záznam: " +  en.name + "\n"
-    let parameters = "en: " +  en
+    scr.name = "prepocetPlatby 23.0.01";
+    scr.param.en = en
     try {
         let datum = en.field(DATE);
         let db = lib();
@@ -748,7 +730,7 @@ const prepocetPlatby = en => {
         fillPopis(en);
         message("Hotovo...");
     } catch (error) {
-        errorGen(LIB_POKLADNA, "libPokladna.js", scriptName, error, variables, parameters)
+        errorGen2(LIB_POKLADNA, "libPokladna.js", scr.name, error, variables, parameters)
     }
 }
 const vyplataMzdy = zaznam => {
