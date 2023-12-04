@@ -1,14 +1,3 @@
-const filterTest = () => {
-    let testArray = [1,2,3,15,25,11,7,18,125,3,4]
-}
-
-const testSet = new Set();
-
-const testMap = new Map();
-
-
-testMap.set("new", "second")
-
 const APP = {
     version: '23.0.010',
     defaultName(lib){
@@ -59,8 +48,6 @@ const APP = {
         this.DB(lib, season).setAttr("nasledujúce číslo", Number(nmb) + 1)
         this.DB(lib, season).setAttr("rezervované číslo", null)
     },
-
-
     DB(lib, season){
         season = this.defaultSeason(season)
         lib = this.defaultName(lib)
@@ -150,122 +137,57 @@ const APP = {
         scr.param.en.set(VIEW, VIEW_DEBUG)
         cancel()
         exit()
-}
-}
-
-
-
-const setSeasonMaterialPrices = entries => {
-    message('Kontrolujem ' + entries.length + ' záznamov')
-    const lib = libByName("sezónne ceny materiálu")
-    let successCount = 0
-    let badEntries = 0
-    for (let e in entries) {
-        let nc = Number(entries[e].field('NC bez DPH')).toFixed(2)
-        let pc = Number(entries[e].field('PC bez DPH')).toFixed(2)
-        if ( nc > 0 && pc > 0) {
-            let newEntry = new Object()
-            newEntry['Položka'] = entries[e]
-            newEntry['Platnosť od'] = new Date(2023, 0, 1)
-            newEntry['nc'] = nc
-            newEntry['pc'] = pc
-            lib.create(newEntry)
-            entries[e].set('farba pozadia', '#C5E2CB')
-            successCount += 1
-        } else {
-            entries[e].set('farba pozadia', FIREBRICK)
-            entries[e].set('neúplný záznam', true)
-            entries[e].set('chyba záznamu', 'žiadna alebo nulová cena')
-            badEntries += 1
-        }
-    }
-    message('Úspešne pridaných ' + successCount + '/' + entries.length + ' záznamov')
-    message('Záznamov na opravu ' + badEntries)
-}
-
-
-const updatePrice = en =>{
-    message('Prepočítavam cenu')
-    if (en.field("Prepočítať cenu")) {
-
-    } else {
-        message('Cena položky je pevná, \nak ju checeš prepočítať odškrtni "Prepočítať cen u"')
-    }
-}
-
-const setNewEntryNumber = (en) => {
-    const newNumber = APP.newNumber(lib().name, en.field("sezóna"))
-    en.set("Číslo", newNumber[0])
-    APP.saveNewNumber(newNumber[1], lib().name, en.field("sezóna"))
-}
-
-const setNewEntriesNumber = (season) =>{
-    if (season) {
-        message('Generujem nové čísla pre sezónu ' + season)
-    } else {
-        message('Generujem nové čísla v celej knižnici')
-    }
-    APP.DB(lib().title, season).setAttr("posledné číslo", 0)
-    APP.DB(lib().title, season).setAttr("nasledujúce číslo", 1)
-    const entries = lib().entries()
-    const filtered = entries.filter(en => en.field("sezóna") == season)
-    filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
-   // filtered.reverse()
-    for(let e in filtered){
-        setNewEntryNumber(filtered[e])
-    }
-}
-
-const scr = {
-    name: '',
-    param: {
-        en: null,
-        inptScript: null,
-        lib: null,
-        season: null,
     },
-    var: {
-        user: user(),
-        app: APP.defaultName(),
-        version: APP.version,
-        season: APP.defaultSeason(),
-    },
-    error: null,
-    genMsgParams(){
-        let msg = ''
-        Object.entries(this.param).forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
-        // for (let [key, value] of this.param) {
-        //     msg += key + ': ' + value + '\n'
-        // }
-        return msg
-    },
-    genMsgVars(){
-        let msg = ''
-        this.var.entries().forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
-        return msg
-    }
 }
 
-const errorGen2 = (scr, error) => {
-    // generátor chyby
-    message('ERROR: ' + scr.name + '\n' + error)
-    const errorLib = libByName(LIBAPP_ERROR)
-    const newError = new Object()
-    newError['type'] = 'error'
-    newError['date'] = new Date()
-    newError['memento library'] = APP.defaultName()
-    newError['script'] = scr.name
-    newError['text'] = error
-    newError['line'] = error.lineNumber
-    newError['variables'] = scr.var
-    newError['parameters'] = scr.param
-    newError['note'] = 'generované scriptom errorGen2'
-    errorLib.create(newError)
-
-    scr.param.en.set(VIEW, VIEW_DEBUG)
-    cancel()
-    exit()
+const app = {
+    // app store
+    name: 'ASISTANTO',
+    version: '23.1.0001',
+    season: null,
+    openLib: {
+        name: null,
+        db: null,
+    },
+    lib: {
+        app: "ASISTANTO",
+        db: "ASISTANTO DB",
+        error: "ASISTANTO Errors",
+        tenants: "ASISTANTO Tenants",
+        scripts: "ASISTANTO Scripts",
+        todo: "ASISTANTO ToDo",
+    },
 }
+
+const get = {
+    // app getters
+    season(){
+        app.season = libByName(app.lib.tenants).find("KRAJINKA")[0].field("default season")
+    },
+    name(){
+        app.openLib.name = lib().name
+    },
+    db(){
+        const dbLib = libByName(app.lib.app).find(app.season)[0].field("Databázy")
+        app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
+    },
+    library(){
+
+    },
+}
+
+const set = {
+    // app setters
+}
+
+const calc = {
+    // app mutators
+}
+
 const libOpen = () => {
-    message('ASISTANTO' + ' v.' + APP.version + '\n' +  APP.defaultName() )
+    get.season()
+    get.name()
+    get.db()
+
+    message(app.name + ' v.' + app.version + '\n' +  app.openLib.name )
 }
