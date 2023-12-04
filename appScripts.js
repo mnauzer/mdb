@@ -23,7 +23,7 @@ const appLIB = {
         let nextNum = null;
         const trim = this.DB(lib, season).attr("trim")
         // najprv použi vymazané čísla
-        if (trashedNums.length != undefined || trashedNums != null){
+        if (trashedNums.length !== undefined || trashedNums !== null){
             message('využívam vymazané číslo')
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
