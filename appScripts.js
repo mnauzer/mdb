@@ -215,6 +215,7 @@ const errorGen2 = scr => {
     newError['line'] = scr.error.lineNumber
     newError['variables'] = scr.genMsgVars()
     newError['parameters'] = scr.genMsgParams()
+    newError['note'] = 'generované scriptom errorGen2'
     errorLib.create(newError)
     cancel()
     exit()
