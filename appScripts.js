@@ -21,6 +21,7 @@ const APP = {
     },
     newNumber(lib, season){
         season = this.defaultSeason(season)
+        lib = lib || this.name
         const number = []
         const trashedNums = this.getTrashedNums(lib, season)
         //message('1 trashed length: ' + trashedNums.length)
@@ -32,7 +33,6 @@ const APP = {
             message('3 využívam vymazané číslo: ' + season)
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
-
         } else {
             // ak nie sú žiadne vymazané čísla použi následujúce
             let nextNum = Number(this.DB(lib, season).attr("nasledujúce číslo"))
@@ -51,6 +51,7 @@ const APP = {
     },
     saveNewNumber(nmb, lib, season){
         season = this.defaultSeason(season)
+        lib = lib || this.name
         this.DB(lib, season).setAttr("posledné číslo", Number(nmb))
         this.DB(lib, season).setAttr("nasledujúce číslo", Number(nmb) + 1)
         this.DB(lib, season).setAttr("rezervované číslo", null)
@@ -59,14 +60,14 @@ const APP = {
 
     DB(lib, season){
         season = this.defaultSeason(season)
-        const libName = lib || this.name
+        lib = lib || this.name
         const db = this.entry(season).field("Databázy")
-        const filtered = db.filter(en => en.field("Názov") == libName)
+        const filtered = db.filter(en => en.field("Názov") == lib)
         return filtered[0]
     },
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
-
+        lib = lib || this.name
         const rmNum = this.DB(lib, season).attr("vymazané čísla")
         message('rmNum: ' + typeof(rmNum))
         let rmArray = []
@@ -90,6 +91,7 @@ const APP = {
     },
     setTrashedNums(nums, lib, season){
         season = this.defaultSeason(season)
+        lib = lib || this.name
         try {
             this.DB(lib, season).setAttr("vymazané čísla", nums)
             return true
