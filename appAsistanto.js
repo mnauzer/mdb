@@ -522,6 +522,23 @@ const errorGen = ( script, error, variables, parameters) => {
     cancel()
     exit()
 }
+const errorGen2 = scr => {
+    // generátor chyby
+    message('ERROR: ' + scr.name + '\n' + error)
+    const errorLib = libByName(APP_ERROR)
+    const newError = new Object()
+    newError['type'] = 'error'
+    newError['date'] = new Date()
+    newError['memento library'] = appLIB.name
+    newError['script'] = scr.name
+    newError['text'] = scr.error
+    newError['line'] = scr.error.lineNumber
+    newError['variables'] = scr.var
+    newError['parameters'] = scr.param
+    errorLib.create(newError)
+    cancel()
+    exit()
+}
 const msgGen = (script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
@@ -587,10 +604,7 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
 }
 
 const getLibFieldsNames = lib =>{
-    let scriptName = "getLibFieldsNames 23.0.14"
-    let libName = lib.title
-    let variables = "Library: " + libName
-    let parameters = "lib: " + libName
+    scr.name  = "getLibFieldsNames 23.0.14"
     try {
         let fields = lib.fields()
         let fieldsNames = []
@@ -604,15 +618,13 @@ const getLibFieldsNames = lib =>{
         entryToSet.set("Fields", fieldsNames)
 
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 
 // COLORS
 const setBckgColor = (en, field) => {
-    let scriptName = "setBckgColor 23.0.02"
-    let variables = "user: " + user()
-    let parameters = "en:" + en + "\nfield: " + field
+    scr.name = "setBckgColor 23.0.02"
     try {
         let libName = lib().title
         switch (libName) {
@@ -638,8 +650,8 @@ const setBckgColor = (en, field) => {
 }
     } catch (error) {
         en.set("view", VIEW_DEBUG)
-        variables += "\nLibrary: " + libName + "\nEntry: " + entry.name + "\nField: " + field
         errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 // End of file: 25.03.2022, 16:16

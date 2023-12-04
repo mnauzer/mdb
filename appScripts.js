@@ -177,7 +177,7 @@ const setNewEntriesNumber = (season) =>{
     }
 }
 
-const script = {
+const scr = {
     name: '',
     param: {
         en,
@@ -190,8 +190,5 @@ const script = {
         user: user(),
         app: appLIB.name,
     },
-    err: {
-        desc: error,
-        line: error.line,
-    }
+    error,
 }
