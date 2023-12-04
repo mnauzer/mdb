@@ -213,8 +213,8 @@ const errorGen2 = scr => {
     newError['script'] = scr.name
     newError['text'] = scr.error
     newError['line'] = scr.error.lineNumber
-    newError['variables'] = scr.var
-    newError['parameters'] = scr.param
+    newError['variables'] = scr.genMsgVars()
+    newError['parameters'] = scr.genMsgParams()
     errorLib.create(newError)
     cancel()
     exit()
