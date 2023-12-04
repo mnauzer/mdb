@@ -10,7 +10,7 @@ const testMap = new Map();
 testMap.set("new", "second")
 
 const APP = {
-    version: '23.0.009',
+    version: '23.0.010',
     defaultName(){
         return lib().title
     },
@@ -72,7 +72,7 @@ const APP = {
         season = this.defaultSeason(season)
         lib = this.defaultName(lib)
         const rmNum = this.DB(lib, season).attr("vymazané čísla")
-        message('rmNum: ' + typeof(rmNum))
+        //message('rmNum: ' + typeof(rmNum))
         let rmArray = []
         if (rmNum.length > 1) {
             message('rmNum > 1: ' + rmNum)
@@ -101,7 +101,56 @@ const APP = {
         } catch (error) {
             return false
         }
-    }
+    },
+    scr: {
+        name: '',
+        param: {
+            en: null,
+            inptScript: null,
+            lib: null,
+            season: null,
+        },
+        var: {
+            user: user(),
+            app: this.defaultName(),
+            version: this.version,
+            season: this.defaultSeason(),
+        },
+        error: null,
+        genMsgParams(){
+            let msg = ''
+            Object.entries(this.param).forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
+            // for (let [key, value] of this.param) {
+            //     msg += key + ': ' + value + '\n'
+            // }
+            return msg
+        },
+        genMsgVars(){
+            let msg = ''
+            this.var.entries().forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
+            return msg
+        }
+    },
+    errorGen2(scr, error){
+        // generátor chyby
+        message('ERROR: ' + this.scr.name + '\n' + error)
+        const errorLib = libByName(LIBAPP_ERROR)
+        const newError = new Object()
+        newError['type'] = 'error'
+        newError['date'] = new Date()
+        newError['memento library'] = this.defaultName()
+        newError['script'] = this.scr.name
+        newError['text'] = error
+        newError['line'] = error.lineNumber
+        newError['variables'] = this.scr.var
+        newError['parameters'] = this.scr.param
+        newError['note'] = 'generované scriptom appEerrorGen'
+        errorLib.create(newError)
+
+        scr.param.en.set(VIEW, VIEW_DEBUG)
+        cancel()
+        exit()
+}
 }
 
 
