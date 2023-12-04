@@ -75,7 +75,7 @@ const appLIB = {
             rmArray.push(rmNum)
         } else {
             message('nie sú vymazané čísla')
-            rmArray =
+            rmArray = null
         }
         return rmArray
     },
