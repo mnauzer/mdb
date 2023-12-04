@@ -21,8 +21,8 @@ const appLIB = {
         const trashedNums = this.getTrashedNums(lib, season)
         message('trashed length: ' + trashedNums.length)
         let nextNum = null;
-        let trim = this.DB(lib, season).attr("trim")
-        let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
+        const trim = this.DB(lib, season).attr("trim")
+        const lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
         // najprv použi vymazané čísla
         if (trashedNums.length - 1 > 0){
             message('využívam vymazané číslo')
