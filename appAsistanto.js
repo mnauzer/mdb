@@ -26,9 +26,7 @@ function fltrDbByName(value, name) {
 }
 const filterByDate = (entries, maxDate, dateField, inptScript) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    let scriptName = "filterByDate 23.0.15"
-    let variables = "user: " + user()
-    let parameters = "entries: " + entries.length + "\nmaxDate: " + maxDate + "\ndateField: " + dateField +"\ninptScript: " + inptScript
+    scr.name = "filterByDate 23.0.15"
     try {
         let logTxt = "entries: " + entries.length
         //entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
@@ -49,7 +47,7 @@ const filterByDate = (entries, maxDate, dateField, inptScript) => {
         return filtered
     } catch (error) {
         variables += "\nlinks: " + entries.length
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen2(APP, "appAsistanto.js",scr, error)
     }
 }
 
@@ -128,12 +126,12 @@ const lteClear = lte => {
     }
 }
 const checkDebug = season => {
-    let scriptName = "checkDebug 0.23.05"
+    scr.name = "checkDebug 0.23.05"
     try {
         return getAppSeason(season).field("debug")
     } catch (error) {
         var variables = ""
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables)
+        errorGen2(APP, "appAsistanto.js", scriptName, error, variables)
     }
 }
 const pullAddress = klient => {
@@ -181,9 +179,7 @@ const getLinkIndex = (link, remoteLinks) => {
 const lastValid = (links, date, valueField, dateField, inptScript) => {
     //message(new Date(links[0].field(dateField)).getTime())
     // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "lastValid 23.0.07"
-    let variables = "Links: " + links.length + "\nDátum: " + date
-    let parameters = "links: " + links.length + "\ndate: " + date + "\nvalueField: " + valueField + "\ndateField: " + dateField  + "\ninptScript: " + inptScript
+    scr.name = "lastValid 23.0.07"
     try {
         // vráti poslednú hodnotu poľa valueField zo záznamov links podľa dátumu date (dateField poľe)
         //links.filter(e => new Date(e.field(dateField)).getTime()/1000 <= new Date(date).getTime()/1000)
@@ -198,15 +194,14 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
         //return sadzby[0]
         return filteredLinks[0].field(valueField)
     } catch (error) {
-        errorGen(scriptName, error, variables, parameters)
+        errorGen2(scr, error)
     }
 }
 
 const getSadzbaDPH = (appDB, season, inptScript) => {
       // zistí sadzby DPH v zadanej sezóne
-    let scriptName = "getSadzbaDPH 23.0.02"
-    let variables = "Knižnica: " + appDB.name + "\nSezóna: " + season
-    let parameters = "appDB: " + appDB+ "\nseason: " + season + "\ninptScript: " + inptScript
+    scr.name = "getSadzbaDPH 23.0.02"
+    scr.param.en = en
     if(appDB == undefined || appDB == null || season == undefined || season == null){
         msgGen(APP, "appAsistanto.js", scriptName, "one or all parameters are undefined or null", variables, parameters )
         cancel()
@@ -218,7 +213,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
         sadzbyDPH.push(appDB.field("Znížená sadzba DPH"))
         return sadzbyDPH
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr, error)
     }
 }
 
@@ -237,9 +232,7 @@ const newEntry = en => {
         en.set(NUMBER_ENTRY, appLIB.newNumber()[1])
         en.set(SEASON, appLIB.defaultSeason())
     } catch (error) {
-        scr.error = error
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 const updateEntry = en => {
@@ -255,7 +248,7 @@ const updateEntry = en => {
     } catch (error) {
         variables += "\nentry: " + en.name + "appLIB.name: " + appLIB.name
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters);
+        errorGen2(APP, "appAsistanto.js",scr, error);
     }
 }
 const setEntry = (en, inptScript) => {
@@ -265,9 +258,7 @@ const setEntry = (en, inptScript) => {
     try {
 
     } catch (error) {
-        scr.error = error
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 const saveEntry = (en, inptScript) => {
@@ -293,8 +284,7 @@ const saveEntry = (en, inptScript) => {
         }
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
-        scr.error = error
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 const removeEntry = (en, trashLib, inptScript) => {
@@ -326,15 +316,12 @@ const removeEntry = (en, trashLib, inptScript) => {
         logGen(trashLib, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
        //     en.trash()
     } catch (error) {
-        scr.error = error
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 // entry script ACTIONS
 const unlockDB = (season) => {
-    let scriptName = "unlockDB 23.0.04"
-    let variables = "Season: " + season + "\nDatabáza: " + appLIB.name
-    let parameters = "season: " + season +  "\nappLIB.name" + appLIB.name
+    scr.name = "unlockDB 23.0.04"
     try {
         let appDB = getAppSeasonDB(season, appLIB.name, scriptName)
         appDB.setAttr("locked", false)
@@ -342,13 +329,11 @@ const unlockDB = (season) => {
         //message("Databáza " + appLIB.name + " odomknutá")
         return true
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr, error)
     }
 }
 const setID = entries => {
-    let scriptName = "setID 23.0.04"
-    let variables = "Počet záznamov: " + entries.length
-    let parameters = "entries: " + entries
+    scr.name = "setID 23.0.04"
     try {
         message("Clearing old ID's")
         for (var e = 0; e < entries.length; e++) {
@@ -361,62 +346,16 @@ const setID = entries => {
         }
         message("ID's is set")
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr, error)
     }
+}
 
-}
-const setNumber = entries => {
-    let scriptName = "setNumber 23.0.02"
-    let variables = "Počet záznamov: " + entries.length
-    let parameters = "entries: " + entries
-    try {
-        entries.sort(orderDate)
-        message("Clearing old numbers")
-        for (var e = 0; e < entries.length; e++) {
-            entries[e].set("number", null)
-        }
-        entries.reverse()
-        for (var e = 0; e < entries.length; e++) {
-            entries[e].set("number", e++)
-        }
-        message("new number's is set")
-    } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
-    }
-
-}
-const setTEST = en => {
-    message("Set TEST v.0.23.01")
-    let season = getSeason(en)
-    let db = findAppDB(season)
-    db.setAttr("test", !db.attr("test"))
-    if (db.attr("test")) {
-        en.set(BKG_COLOR, MEM_LIGHT_YELLOW)
-        message("Databáza v testovacom režime")
-    } else {
-        en.set(BKG_COLOR, MEM_DEFAULT)
-        message("Databáza v normálnom režime")
-    }
-    return true
-}
-const setDEBUG = en => {
-    message("Set DEBUG v.0.23.01")
-    en.set(DBG, !en.field(DBG))
-    if (en.field(DBG)) {
-        en.set(BKG_COLOR, MEM_LIGHT_BLUE)
-    } else {
-        en.set(BKG_COLOR, MEM_DEFAULT)
-    }
-}
 const setIdentifikator = en => {
     // nastaví pole identifikátor
-    let scriptName = "setIdentifikator 23.0.03"
-    let libName = lib().name
-    let variables = "Záznam: " + en.name
-    let parameters = "en: " + en
+    scr.name = "setIdentifikator 23.0.03"
     let identifikator = ""
     try {
-        switch (libName) {
+        switch (appLIB.name) {
             case LIB_MIE:
                 identifikator =  en.field("Klient")[0].name
                 return identifikator
@@ -430,7 +369,7 @@ const setIdentifikator = en => {
         }
         en.set("Identifikátor", identifikator)
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr, error)
     }
 }
 
@@ -550,7 +489,7 @@ const logGen = (script, log, variables, parameters, attributes) => {
 const sadzbaZamestnanca = (employee, date, inptScript) => {
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
-    let scriptName = "sadzbaZamestnanca 23.0.12"
+    scr.name = "sadzbaZamestnanca 23.0.12"
     let variables = "user: " + user()
     let parameters = "employee: " + employee + "\ndate: " + date + "\ninptScript: " + inptScript
     try {
@@ -575,7 +514,7 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters);
+        errorGen2(scr, error);
     }
 }
 
