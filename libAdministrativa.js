@@ -104,21 +104,19 @@ const updateObligations = en => {
 
 // ZÁVAZKY
 const newEntryZavazky = (employee, en, sum) => {
-    let scriptName = "newEntryZavazky 23.0.12"
-    let parameters = "employee: " + employee + "\nen: " + en + "\nsum: " + sum
-    let variables = "user: " + user() + "\nappLIB name: " + appLIB.name
+    scr.name = "newEntryZavazky 23.0.13"
+    scr.param.en = en
+    scr.param.employee = employee
+    scr.param.sum = sum
     try {
-        let date = new Date()
-        let newNumber = appLIB.newNumber("Záväzky", )
-        // let newNumber = getNewNumber(appLIB.DB(), appLIB.season(), appLIB.name, scriptName)
-        variables += "\nnumber: " + newNumber[0]
-        let popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
-        let zavazky = libByName(LIB_ZVK)
+        const newNumber = appLIB.newNumber("Záväzky")
+        const popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
+        const zavazky = libByName(LIB_ZVK)
         // vytvorenie nového záznamu
-        let newEntry = new Object();
+        const newEntry = new Object();
         newEntry[NUMBER] = newNumber[0];
         newEntry[NUMBER_ENTRY] = newNumber[1];
-        newEntry[DATE] = date;
+        newEntry[DATE] =  new Date();
         // TODO: zmeniť aj pre iných veriteľov ako zamestnanci
         newEntry["Typ"] = "Mzdy";
         newEntry["Zamestnanec"] = employee;
@@ -127,17 +125,20 @@ const newEntryZavazky = (employee, en, sum) => {
         //
         newEntry["Popis"] = popis;
         newEntry["Suma"] = sum.toFixed(2);
-        newEntry[SEASON]= appLIB.season()
+        newEntry[SEASON]= appLIB.defaultSeason()
         newEntry[CR] = user()
         newEntry[CR_DATE] = new Date()
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
-
-        appLIB.saveNewNumber(newNumber[1], "Záväzky")
-
+        if (libByName(LIB_ZVK).entries()[0].field(NUMBER_ENTRY) = newNumber[1]){
+            appLIB.saveNewNumber(newNumber[1], "Záväzky")
+        } else {
+            message('Záznam nebol vytvorený')
+        }
     } catch (error) {
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 
