@@ -235,5 +235,5 @@ const errorGen2 = (scr, error) => {
     exit()
 }
 const libOpen = () => {
-    message(APP.name + ' ' + APP.version)
+    message('ASISTANTO' + ' v.' + APP.version + '\n' +  + APP.name )
 }
