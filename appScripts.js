@@ -65,7 +65,7 @@ const appLIB = {
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
         const rmNum = this.DB(lib, season).attr("vymazané čísla")
-        message('rmNum '+ rmNum)
+        message('rmNum: ' + rmNum)
         let rmArray = []
         if (rmNum.length > 1) {
             rmArray = rmNum.split(',')
@@ -75,6 +75,7 @@ const appLIB = {
             message('nie sú vymazané čísla')
             return null
         }
+        message('rmArray: ' + rmArray)
         return rmArray
     },
     setTrashedNums(nums, lib, season){
