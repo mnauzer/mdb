@@ -217,8 +217,8 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    APP.scr.name = "newEntry 23.0.08"
-    APP.scr.param.en = en
+    scr.name = "newEntry 23.0.08"
+    scr.param.en = en
     try {
         message("Nový záznam >> " + APP.defaultName())
         const newNumber = APP.newNumber()
@@ -230,11 +230,11 @@ const newEntry = en => {
         en.set(NUMBER_ENTRY, newNumber[1])
         en.set(SEASON, APP.defaultSeason())
     } catch (error) {
-        APP.errorGen(error)
+        errorGen2(error)
     }
 }
 const updateEntry = en => {
-    APP.scr.name = "updateEntry 23.0.05"
+    scr.name = "updateEntry 23.0.05"
     try {
         message("Úprava záznamu >>" + APP.defaultName());
         en.set(VIEW, VIEW_EDIT)
