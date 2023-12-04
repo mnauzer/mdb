@@ -23,10 +23,10 @@ const appLIB = {
         if (nextNum == Number(this.DB(lib, season).attr("rezervované číslo"))){
             nextNum += 1
         }
-        this.DB(lib).setAttr("rezervované číslo", nextNum)
-        number[0] = this.DB(lib).attr("prefix")
-        ? this.DB(lib).field("Prefix") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
-        : this.DB(lib).field("ID") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+        this.DB(lib, season).setAttr("rezervované číslo", nextNum)
+        number[0] = this.DB(lib, season).attr("prefix")
+        ? this.DB(lib, season).field("Prefix") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+        : this.DB(lib, season).field("ID") + this.season(season).slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
         number[1] = nextNum
 
         this.DB(lib).setAttr("rezervované číslo", null)
