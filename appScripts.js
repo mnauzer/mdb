@@ -19,7 +19,7 @@ const appLIB = {
         const season = season || this.defaultSeason()
         const number = []
         const trashedNums = this.getTrashedNums(lib, season)
-        message(trashedNums.length)
+        message('trashed length: ' + trashedNums.length)
         let nextNum = null;
         let trim = this.DB(lib, season).attr("trim")
         let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
