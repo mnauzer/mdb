@@ -136,9 +136,7 @@ const newEntryZavazky = (employee, en, sum) => {
             message('Záznam nebol vytvorený')
         }
     } catch (error) {
-        scr.error = error
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen2(scr)
+        errorGen2(scr, error)
     }
 }
 

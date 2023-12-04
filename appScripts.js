@@ -202,7 +202,7 @@ const scr = {
     }
 }
 
-const errorGen2 = scr => {
+const errorGen2 = (scr, error) => {
     // generátor chyby
     message('ERROR: ' + scr.name + '\n' + error)
     const errorLib = libByName(APP_ERROR)
@@ -211,8 +211,8 @@ const errorGen2 = scr => {
     newError['date'] = new Date()
     newError['memento library'] = appLIB.name
     newError['script'] = scr.name
-    newError['text'] = scr.error
-    newError['line'] = scr.error.lineNumber
+    newError['text'] = error
+    newError['line'] = error.lineNumber
     newError['variables'] = scr.genMsgVars()
     newError['parameters'] = scr.genMsgParams()
     newError['note'] = 'generované scriptom errorGen2'

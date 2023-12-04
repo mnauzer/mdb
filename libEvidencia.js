@@ -52,15 +52,13 @@ const removeEntryDochadzka = (en, inptScript) => {
 
 
 const saveEntryDochadzka = en => {
-    let scriptName = "saveEntryDochadzka 23.0.02"
-    let variables = "Záznam: " + en.name + "appLIB.name: " + appLIB.name
-    let parameters = "en: " + en + " /" + en.name
+    scr.name = "saveEntryDochadzka 23.0.02"
+    scr.param.en = en
     try {
         prepocitatZaznamDochadzky(en, scriptName)
         saveEntry(en, scriptName)
     } catch (error) {
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen(scriptName, error, variables, parameters);
+        errorGen2(scr, error);
     }
 }
 const prepocitatZaznamDochadzky = (en, inptScript)=> {
@@ -139,8 +137,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         message("Hotovo...");
         return vymazaneCisla.toString()
     } catch (error) {
-        scr.error = error
-        errorGen2(scr);
+        errorGen2(scr, error);
     }
 }
 const genDochadzkaZavazky = (en, inptScript) => {
@@ -166,9 +163,7 @@ const genDochadzkaZavazky = (en, inptScript) => {
             }
         }
     } catch (error) {
-        scr.error = error
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen2(scr);
+        errorGen2(scr, error);
     }
 }
 const rmDochadzkaZavazky = (en, inptScript) => {
@@ -184,9 +179,7 @@ const rmDochadzkaZavazky = (en, inptScript) => {
             }
         }
     } catch (error) {
-        scr.error = error
-        en.set(VIEW, VIEW_DEBUG)
-        errorGen2(scr);
+        errorGen2(scr, error);
     }
 }
 const aSalary = (en, NEW_ENTRY) => {
