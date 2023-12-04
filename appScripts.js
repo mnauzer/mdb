@@ -190,6 +190,11 @@ const scr = {
         app: appLIB.name,
     },
     error: error || null,
+    genMsg(){
+        let msg = ''
+        this.param.forEach((key, value) => msg += key + ': ' + value + '\n');
+        return msg
+    }
 }
 
 const errorGen2 = scr => {
