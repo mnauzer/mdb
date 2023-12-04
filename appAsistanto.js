@@ -222,13 +222,14 @@ const newEntry = en => {
     scr.name = "newEntry 23.0.08"
     scr.param.en = en
     try {
+        const newNumber = appLIB.newNumber()
         message("Nový záznam >> " + appLIB.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
         en.set(CR_DATE, new Date())
-        en.set(NUMBER, appLIB.newNumber()[0])
-        en.set(NUMBER_ENTRY, appLIB.newNumber()[1])
+        en.set(NUMBER, newNumber[0])
+        en.set(NUMBER_ENTRY, newNumber[1])
         en.set(SEASON, appLIB.defaultSeason())
     } catch (error) {
         errorGen2(scr, error)

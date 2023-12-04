@@ -27,7 +27,7 @@ const appLIB = {
         const trim = this.DB(lib, season).attr("trim")
         // najprv použi vymazané čísla
         if (trashedNums.length !== undefined || trashedNums !== null){
-            message('využívam vymazané číslo')
+            message('využívam vymazané číslo ' + season)
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
 
@@ -65,6 +65,7 @@ const appLIB = {
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
         const rmNum = this.DB(lib, season).attr("vymazané čísla")
+        message('rmNum '+ rmNum)
         let rmArray = []
         if (rmNum.length > 1) {
             rmArray = rmNum.split(',')
