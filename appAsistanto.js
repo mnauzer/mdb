@@ -258,7 +258,7 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    scr.name = "saveEntry 23.0.20"
+    scr.name = "saveEntry 23.0.21"
     scr.param.en = en
     scr.param.inptScript = inptScript
     try {
@@ -275,8 +275,6 @@ const saveEntry = (en, inptScript) => {
                     break;
             }
             createdEntry.set(VIEW, VIEW_PRINT)
-        } else {
-            logTxt += "\nNový záznam nebol vytvorený"
         }
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
