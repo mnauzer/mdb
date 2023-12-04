@@ -135,7 +135,7 @@ const setSeasonMaterialPrices = entries => {
             entries[e].set('farba pozadia', '#C5E2CB')
             successCount += 1
         } else {
-            entries[e].set('farba pozadia', '#D1CBCB')
+            entries[e].set('farba pozadia', FIREBRICK)
             entries[e].set('neúplný záznam', true)
             entries[e].set('chyba záznamu', 'žiadna alebo nulová cena')
             badEntries += 1
@@ -156,7 +156,7 @@ const updatePrice = en =>{
 }
 
 const setNewEntryNumber = (en) => {
-    let newNumber = APP.newNumber(lib().name, en.field("sezóna"))
+    const newNumber = APP.newNumber(lib().name, en.field("sezóna"))
     en.set("Číslo", newNumber[0])
     APP.saveNewNumber(newNumber[1], lib().name, en.field("sezóna"))
 }
@@ -169,8 +169,8 @@ const setNewEntriesNumber = (season) =>{
     }
     APP.DB(lib().title, season).setAttr("posledné číslo", 0)
     APP.DB(lib().title, season).setAttr("nasledujúce číslo", 1)
-    let entries = lib().entries()
-    let filtered = entries.filter(en => en.field("sezóna") == season)
+    const entries = lib().entries()
+    const filtered = entries.filter(en => en.field("sezóna") == season)
     filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
    // filtered.reverse()
     for(let e in filtered){
