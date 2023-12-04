@@ -236,7 +236,7 @@ const newEntry = en => {
         en.set(CR_DATE, new Date())
         en.set(NUMBER, appLIB.newNumber()[0])
         en.set(NUMBER_ENTRY, appLIB.newNumber()[1])
-        en.set(SEASON, appLIB.season())
+        en.set(SEASON, appLIB.defaultSeason)
 
     } catch (error) {
         variables += "\nentry: " + en.name + "\nappLIB.name: " + appLIB.name
