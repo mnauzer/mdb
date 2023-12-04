@@ -28,7 +28,7 @@ const APP = {
         let nextNum = null;
         const trim = this.DB(lib, season).attr("trim")
         // najprv použi vymazané čísla
-        if (trashedNums[0] !== undefined || trashedNums[0] !== null){
+        if (trashedNums !== undefined || trashedNums !== null){
             message('3 využívam vymazané číslo: ' + season)
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
@@ -225,8 +225,8 @@ const errorGen2 = (scr, error) => {
     newError['script'] = scr.name
     newError['text'] = error
     newError['line'] = error.lineNumber
-    newError['variables'] = scr.genMsgVars()
-    newError['parameters'] = scr.genMsgParams()
+    newError['variables'] = scr.var
+    newError['parameters'] = scr.param
     newError['note'] = 'generované scriptom errorGen2'
     errorLib.create(newError)
 
