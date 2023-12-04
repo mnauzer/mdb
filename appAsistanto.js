@@ -271,22 +271,18 @@ const setEntry = (en, inptScript) => {
     }
 }
 const saveEntry = (en, inptScript) => {
-    const scriptName = "saveEntry 23.0.19"
-    const variables = "user: " + user()
-    const parameters = "en: " + en + "\ninptScript: " + inptScript
+    scr.name = "saveEntry 23.0.20"
+    scr.param.en = en
+    scr.param.inptScript = inptScript
     try {
         message("Ukladám záznam...")
-        const logTxt = ""
         const newNumber = appLIB.newNumber()
-        variables += "\nnewNumber: " + newNumber[0]
         const createdEntry = lib().entries()[0]
         if (createdEntry.field(NUMBER_ENTRY) == newNumber[1]) {
-            message("true")
-            logTxt += "Nový záznam [" + newNumber[0] + "] v knižnici " + appLIB.name
             appLIB.saveNewNumber(newNumber[1])
             switch (appLIB.name) {
                 case "Dochádzka":
-                    prepocitatZaznamDochadzky(en)
+                    prepocitatZaznamDochadzky(en, scr.name)
                     break;
                 default:
                     break;
@@ -295,12 +291,11 @@ const saveEntry = (en, inptScript) => {
         } else {
             logTxt += "\nNový záznam nebol vytvorený"
         }
-        logGen(appLIB.name, "appAsistanto.js", scriptName, logTxt, variables, parameters)
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
-        variables += "\nentry: " + en.name + "\nmemento library: " + appLIB.name
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 const removeEntry = (en, trashLib, inptScript) => {
