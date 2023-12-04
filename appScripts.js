@@ -16,7 +16,7 @@ testMap.set("new", "second")
 
 const appLIB = {
     newNumber(lib, season){
-        season = season || this.defaultSeason
+        season = this.defaultSeason(season)
         const number = []
         const trashedNums = this.getTrashedNums(lib, season)
         message('trashed length: ' + trashedNums.length)
@@ -45,20 +45,22 @@ const appLIB = {
         return number
     },
     saveNewNumber(nmb, lib, season){
-        season = season || this.defaultSeason
+        season = this.defaultSeason(season)
         this.DB(lib, season).setAttr("posledné číslo", Number(nmb))
         this.DB(lib, season).setAttr("nasledujúce číslo", Number(nmb) + 1)
         this.DB(lib, season).setAttr("rezervované číslo", null)
     },
     name: lib().title,
-    defaultSeason: libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season"),
+    defaultSeason(season){
+        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season"),
+    },
 
     entry(season){
-        season = season || this.defaultSeason
+        season = this.defaultSeason(season)
         return libByName(APP).find(season)[0]
     },
     DB(lib, season){
-        season = season || this.defaultSeason
+        season = this.defaultSeason(season)
         const libName = lib || this.name
         const db = this.entry(season).field("Databázy")
         const filtered = db.filter(en => en.field("Názov") == libName)
@@ -66,7 +68,7 @@ const appLIB = {
     },
 
     getTrashedNums(lib, season){
-        season = season || this.defaultSeason
+        season = this.defaultSeason(season)
         let rmNum = this.DB(lib, season).attr("vymazané čísla")
         let rmArray = []
         if (rmNum.length > 1) {
@@ -80,7 +82,7 @@ const appLIB = {
         return rmArray
     },
     setTrashedNums(nums, lib, season){
-        season = season || this.defaultSeason
+        season = this.defaultSeason(season)
         try {
             this.DB(lib, season).setAttr("vymazané čísla", nums)
             return true
