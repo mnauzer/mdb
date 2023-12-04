@@ -68,7 +68,7 @@ const APP = {
         season = this.defaultSeason(season)
 
         const rmNum = this.DB(lib, season).attr("vymazané čísla")
-        message('rmNum: ' + rmNum.isArray)
+        message('rmNum: ' + typeof(rmNum))
         let rmArray = []
         if (rmNum.length > 1) {
             message('rmNum > 1: ' + rmNum)
