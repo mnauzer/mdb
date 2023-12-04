@@ -68,7 +68,7 @@ const appLIB = {
     },
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
-        let rmNum = this.DB(lib, season).attr("vymazané čísla")
+        const rmNum = this.DB(lib, season).attr("vymazané čísla")
         let rmArray = []
         if (rmNum.length > 1) {
             rmArray = rmNum.split(',')
