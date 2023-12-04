@@ -16,6 +16,13 @@ testMap.set("new", "second")
 
 const appLIB = {
     name: lib().title,
+    defaultSeason(season){
+        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
+    },
+    entry(season){
+        season = this.defaultSeason(season)
+        return libByName(APP).find(season)[0]
+    },
     newNumber(lib, season){
         season = this.defaultSeason(season)
         const number = []
@@ -52,13 +59,7 @@ const appLIB = {
         this.DB(lib, season).setAttr("rezervované číslo", null)
     },
 
-    defaultSeason(season){
-        return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
-    },
-    entry(season){
-        season = this.defaultSeason(season)
-        return libByName(APP).find(season)[0]
-    },
+
     DB(lib, season){
         season = this.defaultSeason(season)
         const libName = lib || this.name
@@ -178,7 +179,19 @@ const setNewEntriesNumber = (season) =>{
 
 const script = {
     name: '',
-    param: [],
-    var: [],
-    err: {}
+    param: {
+        en,
+        inptScript,
+        lib,
+        season,
+
+    },
+    var: {
+        user: user(),
+        app: appLIB.name,
+    },
+    err: {
+        desc: error,
+        line: error.line,
+    }
 }
