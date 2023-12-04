@@ -191,3 +191,21 @@ const scr = {
     },
     error: error,
 }
+
+const errorGen2 = scr => {
+    // generátor chyby
+    message('ERROR: ' + scr.name + '\n' + error)
+    const errorLib = libByName(APP_ERROR)
+    const newError = new Object()
+    newError['type'] = 'error'
+    newError['date'] = new Date()
+    newError['memento library'] = appLIB.name
+    newError['script'] = scr.name
+    newError['text'] = scr.error
+    newError['line'] = scr.error.lineNumber
+    newError['variables'] = scr.var
+    newError['parameters'] = scr.param
+    errorLib.create(newError)
+    cancel()
+    exit()
+}

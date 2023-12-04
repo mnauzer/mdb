@@ -225,23 +225,19 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // ENTRY SCRIPT HELPERS
 // new entry script TRIGGERS
 const newEntry = en => {
-    const scriptName = "newEntry 23.0.07"
-    const variables = "user" + user()
-    const parameters = "en: " + en
+    scr.name = "newEntry 23.0.08"
     try {
-        message("Nový záznam >>" + appLIB.name)
+        message("Nový záznam >> " + appLIB.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
         en.set(CR_DATE, new Date())
         en.set(NUMBER, appLIB.newNumber()[0])
         en.set(NUMBER_ENTRY, appLIB.newNumber()[1])
-        en.set(SEASON, appLIB.defaultSeason)
-
+        en.set(SEASON, appLIB.defaultSeason())
     } catch (error) {
-        variables += "\nentry: " + en.name + "\nappLIB.name: " + appLIB.name
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 const updateEntry = en => {
@@ -522,23 +518,7 @@ const errorGen = ( script, error, variables, parameters) => {
     cancel()
     exit()
 }
-const errorGen2 = scr => {
-    // generátor chyby
-    message('ERROR: ' + scr.name + '\n' + error)
-    const errorLib = libByName(APP_ERROR)
-    const newError = new Object()
-    newError['type'] = 'error'
-    newError['date'] = new Date()
-    newError['memento library'] = appLIB.name
-    newError['script'] = scr.name
-    newError['text'] = scr.error
-    newError['line'] = scr.error.lineNumber
-    newError['variables'] = scr.var
-    newError['parameters'] = scr.param
-    errorLib.create(newError)
-    cancel()
-    exit()
-}
+
 const msgGen = (script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
@@ -624,10 +604,9 @@ const getLibFieldsNames = lib =>{
 
 // COLORS
 const setBckgColor = (en, field) => {
-    scr.name = "setBckgColor 23.0.02"
+    scr.name = "setBckgColor 23.0.03"
     try {
-        let libName = lib().title
-        switch (libName) {
+        switch (appLIB.name) {
             case LIB_ZKZ: // Zákazky
                 switch (field) {
                     case "Čakajúca":
@@ -650,7 +629,6 @@ const setBckgColor = (en, field) => {
 }
     } catch (error) {
         en.set("view", VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters)
         errorGen2(scr)
     }
 }
