@@ -226,6 +226,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
 // new entry script TRIGGERS
 const newEntry = en => {
     scr.name = "newEntry 23.0.08"
+    scr.param.en = en
     try {
         message("Nový záznam >> " + appLIB.name)
         en.set(VIEW, VIEW_EDIT)
