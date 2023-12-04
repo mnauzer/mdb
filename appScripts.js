@@ -195,6 +195,7 @@ const scr = {
     error: null,
     genMsgParams(){
         let msg = ''
+        Object.entries(this.param).forEach(item => {[key, value] = msg += key + ': ' + value + '\n'})
         // for (let [key, value] of this.param) {
         //     msg += key + ': ' + value + '\n'
         // }
