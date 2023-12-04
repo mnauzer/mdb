@@ -23,7 +23,7 @@ const APP = {
         season = this.defaultSeason(season)
         const number = []
         const trashedNums = this.getTrashedNums(lib, season)
-        message('1 trashed length: ' + trashedNums.length)
+        //message('1 trashed length: ' + trashedNums.length)
         message('2 trashed: ' + trashedNums)
         let nextNum = null;
         const trim = this.DB(lib, season).attr("trim")
