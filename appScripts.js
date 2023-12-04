@@ -12,7 +12,8 @@ testMap.set("new", "second")
 const APP = {
     version: '23.0.008',
     defaultName(lib){
-        return lib || lib().title
+        lib = lib || lib().title
+        return lib
     },
     defaultSeason(season){
         return season || libByName(LIBAPP_TENATNS).find("KRAJINKA")[0].field("default season")
