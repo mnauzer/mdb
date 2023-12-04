@@ -151,15 +151,16 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         message("Hotovo...");
         return vymazaneCisla.toString()
     } catch (error) {
-        errorGen(LIB_DOCH, 'appAsistanto.js', scriptName, error, variables, parameters);
+        errorGen(LIB_DOCH, 'libEvidencia.js', scriptName, error, variables, parameters);
     }
 }
-const genDochadzkaZavazky = en => {
+const genDochadzkaZavazky = (en, inptScript) => {
     let zavazok = en.field("Generovať záväzky")
     let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+    let variables = "Input script: " + inptScript
     try {
         if (zavazok) {
-            if(stareZavazky){
+            if(stareZavazky.length > 0){
                 message("Mažem súvisiace záväzky...")
                 for (let i in stareZavazky) {
                     removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
@@ -173,7 +174,7 @@ const genDochadzkaZavazky = en => {
             }
         }
     } catch (error) {
-
+        errorGen(LIB_DOCH, 'libEvidencia.js', scriptName, error, variables, parameters);
     }
 }
 const aSalary = (en, NEW_ENTRY) => {
