@@ -220,8 +220,8 @@ const newEntry = en => {
     APP.scr.name = "newEntry 23.0.08"
     APP.scr.param.en = en
     try {
-        const newNumber = APP.newNumber()
         message("Nový záznam >> " + APP.defaultName())
+        const newNumber = APP.newNumber()
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())

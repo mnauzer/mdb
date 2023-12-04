@@ -11,8 +11,8 @@ testMap.set("new", "second")
 
 const APP = {
     version: '23.0.010',
-    defaultName(){
-        return lib().title
+    defaultName(lib){
+        return lib || lib().title
     },
     defaultSeason(season){
         return season || libByName(LIBAPP_TENATNS).find("KRAJINKA")[0].field("default season")
@@ -144,7 +144,7 @@ const APP = {
         newError['line'] = error.lineNumber
         newError['variables'] = this.scr.var
         newError['parameters'] = this.scr.param
-        newError['note'] = 'generované scriptom appEerrorGen'
+        newError['note'] = 'generované scriptom APP.errorGen'
         errorLib.create(newError)
 
         scr.param.en.set(VIEW, VIEW_DEBUG)
