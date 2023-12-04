@@ -17,7 +17,7 @@ testMap.set("new", "second")
 const appLIB = {
     newNumber(lib, season){
         const number = []
-        const trashedNums = this.getTrashedNums()
+        const trashedNums = this.getTrashedNums(lib, season)
         let nextNum = null;
         let trim = this.DB(lib, season).attr("trim")
         let lastNum = Number(this.DB(lib, season).attr("posledné číslo"))
