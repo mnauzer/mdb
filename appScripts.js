@@ -180,15 +180,14 @@ const setNewEntriesNumber = (season) =>{
 const scr = {
     name: '',
     param: {
-        en,
-        inptScript,
-        lib,
-        season,
-
+        en: en,
+        inptScript: inptScript,
+        lib: lib,
+        season: season,
     },
     var: {
         user: user(),
         app: appLIB.name,
     },
-    error,
+    error: error,
 }
