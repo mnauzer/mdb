@@ -230,7 +230,7 @@ const newEntry = en => {
         en.set(NUMBER_ENTRY, newNumber[1])
         en.set(SEASON, APP.defaultSeason())
     } catch (error) {
-        appErrorGen(APP.scr, error)
+        APP.appErrorGen(error)
     }
 }
 const updateEntry = en => {

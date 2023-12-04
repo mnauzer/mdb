@@ -131,7 +131,7 @@ const APP = {
             return msg
         }
     },
-    errorGen2(scr, error){
+    errorGen2(error){
         // generátor chyby
         message('ERROR: ' + this.scr.name + '\n' + error)
         const errorLib = libByName(LIBAPP_ERROR)
