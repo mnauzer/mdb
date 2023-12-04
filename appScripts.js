@@ -147,7 +147,7 @@ const setNewEntriesNumber = (season) =>{
     let entries = lib().entries()
     let filtered = entries.filter(en => en.field("sezóna") == season)
     filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
-    filtered.reverse()
+   // filtered.reverse()
     for(let e in filtered){
         setNewEntryNumber(filtered[e])
     }
