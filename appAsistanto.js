@@ -331,7 +331,7 @@ const removeEntry = (en, trashLib, inptScript) => {
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
         logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + trashLib
         logGen(trashLib, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
-            en.trash()
+       //     en.trash()
     } catch (error) {
         errorGen( scriptName, error, variables, parameters)
     }
