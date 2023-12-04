@@ -65,9 +65,9 @@ const saveEntryDochadzka = en => {
     }
 }
 const prepocitatZaznamDochadzky = (en, inptScript)=> {
-    let scriptName = "prepocitatZaznamDochadzky 23.0.09"
-    let variables = "user: " + user()
-    let parameters = "en: " + en + " /" + en.name + "\ninptScript: " + inptScript
+    scr.name = "prepocitatZaznamDochadzky 23.0.10"
+    scr.param.en = en
+    scr.param.inptScript = inptScript
     try {
         // výpočet pracovnej doby
         let prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
@@ -140,13 +140,14 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         message("Hotovo...");
         return vymazaneCisla.toString()
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters);
+        scr.error = error
+        errorGen2(scr);
     }
 }
 const genDochadzkaZavazky = (en, inptScript) => {
-    let scriptName = "genDochadzkaZavazky 23.0.01"
-    let variables = ''
-    let parameters = '\ninptScript: ' + inptScript
+    scr.name = "genDochadzkaZavazky 23.0.02"
+    scr.param.en = en
+    scr.param.inptScript = inptScript
     //
     let zavazok = en.field("Generovať záväzky")
     let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
@@ -166,31 +167,33 @@ const genDochadzkaZavazky = (en, inptScript) => {
             }
         }
     } catch (error) {
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(scriptName, error, variables, parameters);
+        errorGen2(scr);
     }
 }
 const rmDochadzkaZavazky = (en, inptScript) => {
-    let scriptName = "rmDochadzkaZavazky 23.0.01"
-
-    let variables = "inptScript: " + inptScript
+    scr.name = "rmDochadzkaZavazky 23.0.03"
+    scr.param.en = en
+    scr.param.inptScript = inptScript
     try {
-        let stareZavazky = en.linksFrom(LIB_ZVK, appLIB.name)
+        const stareZavazky = en.linksFrom(LIB_ZVK, appLIB.name)
         if(stareZavazky.length > 0){
             message("Mažem súvisiace záväzky...")
-            for (let i in stareZavazky) {
+            for (const i in stareZavazky) {
                 removeEntry(stareZavazky[i], LIB_ZVK, scriptName)
             }
         }
     } catch (error) {
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(scriptName, error, variables, parameters);
+        errorGen2(scr);
     }
 }
 const aSalary = (en, NEW_ENTRY) => {
-    let scriptName = "aSalary 23.0.01"
-    let variables = "Záznam: " + en.name + "\nNEW_ENTRY: " + NEW_ENTRY
-    let parameters = "en: " + en + " /" + en.name + "\nNEW_ENTRY: " + NEW_ENTRY
+    const scriptName = "aSalary 23.0.01"
+    const variables = "Záznam: " + en.name + "\nNEW_ENTRY: " + NEW_ENTRY
+    const parameters = "en: " + en + " /" + en.name + "\nNEW_ENTRY: " + NEW_ENTRY
     try {
         var salaries = libByName(DBA_SAL);
         var zamestnanci = en.field(DOCH_zamestnanci);
