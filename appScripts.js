@@ -180,16 +180,16 @@ const setNewEntriesNumber = (season) =>{
 const scr = {
     name: '',
     param: {
-        en: en || null,
-        inptScript: inptScript || null,
-        lib: lib || null,
-        season: season || null,
+        en: null,
+        inptScript: null,
+        lib: null,
+        season: null,
     },
     var: {
         user: user(),
         app: appLIB.name,
     },
-    error: error || null,
+    error: null,
     genMsg(){
         let msg = ''
         this.param.forEach((key, value) => msg += key + ': ' + value + '\n');
