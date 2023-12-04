@@ -38,16 +38,15 @@ const updateEntryDochadzka = en => {
 }
 const removeEntryDochadzka = (en, inptScript) => {
     // Created at: 16.11.2023, 07:55
-    let scriptName = 'removeEntryDochadzka 23.0.04'
-    let variables = 'user: ' + user() + '\ninptScript: ' + inptScript
-    let parameters = 'en: ' + en + ' /' + en.name
+    scr.name = "removeEntryDochadzka 23.0.05"
+    scr.param.en = en
+    scr.param.inptScript = inptScript
     try {
-        variables += ''
-        removeEntry(en, appLIB.name, scriptName)
+        removeEntry(en, appLIB.name, scr.name)
     } catch (error) {
-        variables += ''
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
-        errorGen( scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 
