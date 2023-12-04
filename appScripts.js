@@ -125,12 +125,12 @@ const APP = {
         const newError = new Object()
         newError['type'] = 'error'
         newError['date'] = new Date()
-        newError['memento library'] = this.defaultName()
-        newError['script'] = this.scr.name
+        newError['memento library'] = APP.defaultName()
+        newError['script'] = APP.scr.name
         newError['text'] = error
         newError['line'] = error.lineNumber
-        newError['variables'] = this.scr.var
-        newError['parameters'] = this.scr.param
+        newError['variables'] = APP.scr.var
+        newError['parameters'] = APP.scr.param
         newError['note'] = 'generované scriptom APP.errorGen'
         errorLib.create(newError)
 
