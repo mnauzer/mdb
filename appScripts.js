@@ -144,6 +144,11 @@ const setNewEntryNumber = (en) => {
 }
 
 const setNewEntriesNumber = (season) =>{
+    if (season) {
+        message('Generujem nové čísla pre sezónu ' + season)
+    } else {
+        message('Generujem nové čísla v celej knižnici')
+    }
     let entries = lib().entries()
     let filtered = entries.filter(en => en.field("sezóna") == season)
     filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
