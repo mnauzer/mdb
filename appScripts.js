@@ -66,9 +66,9 @@ const APP = {
     },
     getTrashedNums(lib, season){
         season = this.defaultSeason(season)
-        const rmNum = null
-        //rmNum = this.DB(lib, season).attr("vymazané čísla")
-        message('rmNum: ' + rmNum.length)
+
+        const rmNum = this.DB(lib, season).attr("vymazané čísla")
+        message('rmNum: ' + rmNum.isArray)
         let rmArray = []
         if (rmNum.length > 1) {
             message('rmNum > 1: ' + rmNum)
