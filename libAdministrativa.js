@@ -131,7 +131,7 @@ const newEntryZavazky = (employee, en, sum) => {
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
         if (libByName(LIB_ZVK).entries()[0].field(NUMBER_ENTRY) = newNumber[1]){
-            appLIB.saveNewNumber(newNumber[1], "Záväzky")
+            appLIB.saveNewNumber(newNumber[1], LIB_ZVK)
         } else {
             message('Záznam nebol vytvorený')
         }
