@@ -241,7 +241,7 @@ const newEntry = en => {
     } catch (error) {
         variables += "\nentry: " + en.name + "\nappLIB.name: " + appLIB.name
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 const updateEntry = en => {
@@ -302,7 +302,7 @@ const saveEntry = (en, inptScript) => {
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
         variables += "\nentry: " + en.name + "\nmemento library: " + appLIB.name
-        errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 const removeEntry = (en, trashLib, inptScript) => {
@@ -333,7 +333,7 @@ const removeEntry = (en, trashLib, inptScript) => {
         logGen(trashLib, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
             en.trash()
     } catch (error) {
-        errorGen(appLIB.name, 'appAsistanto.js', scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 // entry script ACTIONS
@@ -348,7 +348,7 @@ const unlockDB = (season) => {
         //message("Databáza " + appLIB.name + " odomknutá")
         return true
     } catch (error) {
-        errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 const setID = entries => {
@@ -367,7 +367,7 @@ const setID = entries => {
         }
         message("ID's is set")
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 
 }
@@ -387,7 +387,7 @@ const setNumber = entries => {
         }
         message("new number's is set")
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 
 }
@@ -503,14 +503,14 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 
 // LOG AND ERROR
 //
-const errorGen = ( library, script, error, variables, parameters) => {
+const errorGen = ( script, error, variables, parameters) => {
     // generátor chyby
     message("ERROR: " + script + "\n" + error)
     let errorLib = libByName(APP_ERROR)
     let newError = new Object()
     newError["type"] = "error"
     newError["date"] = new Date()
-    newError["library"] = library
+    newError["library"] = appLIB.name
     newError["memento library"] = appLIB.name
     newError["script"] = script
     newError["text"] = error
