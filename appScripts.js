@@ -10,7 +10,7 @@ const testMap = new Map();
 testMap.set("new", "second")
 
 const appLIB = {
-    version: '23.0.0002',
+    version: '23.0.0003',
     name: lib().title,
     defaultSeason(season){
         return season || libByName(APP_TENATNS).find("KRAJINKA")[0].field("default season")
@@ -23,12 +23,13 @@ const appLIB = {
         season = this.defaultSeason(season)
         const number = []
         const trashedNums = this.getTrashedNums(lib, season)
-        message('trashed length: ' + trashedNums.length)
+        message('1 trashed length: ' + trashedNums.length)
+        message('2 trashed: ' + trashedNums)
         let nextNum = null;
         const trim = this.DB(lib, season).attr("trim")
         // najprv použi vymazané čísla
         if (trashedNums[0] !== undefined || trashedNums[0] !== null){
-            message('využívam vymazané číslo ' + season)
+            message('3 využívam vymazané číslo: ' + season)
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
 
@@ -69,10 +70,10 @@ const appLIB = {
         message('rmNum: ' + rmNum.length)
         let rmArray = []
         if (rmNum.length > 1) {
-            message('rmNum: ' + rmNum)
+            message('rmNum>1: ' + rmNum)
             rmArray = rmNum.split(',')
         } else if (rmNum.length = 1) {
-            message('rmNum: ' + rmNum)
+            message('rmNum=1: ' + rmNum)
             rmArray.push(rmNum)
         } else {
             message('nie sú vymazané čísla')
