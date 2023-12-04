@@ -143,9 +143,12 @@ const setNewEntryNumber = (en) => {
     appLIB.saveNewNumber(newNumber[1], lib().name, en.field("sezóna"))
 }
 
-const setNewEntriesNumber = () =>{
+const setNewEntriesNumber = (season) =>{
     let entries = lib().entries()
-    for(let e in entries){
-        setNewEntryNumber(entries[e])
+    let filtered = entries.filter(en => en.field("sezóna") == season)
+    filtered.sort((entryA, entryB) => (entryA.field("Dátum").getTime()/1000) - (entryB.field("Dátum").getTime()/1000))
+    filtered.reverse()
+    for(let e in filtered){
+        setNewEntryNumber(filtered[e])
     }
 }
