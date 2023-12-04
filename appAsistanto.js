@@ -259,15 +259,15 @@ const updateEntry = en => {
     }
 }
 const setEntry = (en, inptScript) => {
-    let scriptName = "setEntry 23.0.10"
-    let variables = "Záznam: " + en.name + "\nmemento library: " + appLIB.name
-    let parameters = "en: " + "\ninptScript: " + inptScript
-    let logTxt = ""
+    scr.name = "setEntry 23.0.11"
+    scr.param.en = en
+    scr.param.inptScript = inptScript
     try {
 
     } catch (error) {
+        scr.error = error
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(appLIB.name, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen2(scr)
     }
 }
 const saveEntry = (en, inptScript) => {
