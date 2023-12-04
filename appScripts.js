@@ -10,7 +10,7 @@ const testMap = new Map();
 testMap.set("new", "second")
 
 const APP = {
-    version: '23.0.0006',
+    version: '23.0.007',
     name: lib().title,
     defaultSeason(season){
         return season || libByName(LIBAPP_TENATNS).find("KRAJINKA")[0].field("default season")
@@ -28,7 +28,7 @@ const APP = {
         let nextNum = null;
         const trim = this.DB(lib, season).attr("trim")
         // najprv použi vymazané čísla
-        if (trashedNums !== undefined || trashedNums !== null){
+        if (trashedNums !== undefined || trashedNums != null){
             message('3 využívam vymazané číslo: ' + season)
             nextNum = trashedNums.pop()
             this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
@@ -235,5 +235,5 @@ const errorGen2 = (scr, error) => {
     exit()
 }
 const libOpen = () => {
-    message('ASISTANTO' + ' v.' + APP.version + '\n' +  + APP.name )
+    message('ASISTANTO' + ' v.' + APP.version + '\n' +  APP.name )
 }
