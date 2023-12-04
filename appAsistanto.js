@@ -294,18 +294,16 @@ const saveEntry = (en, inptScript) => {
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         scr.error = error
-
         errorGen2(scr)
     }
 }
 const removeEntry = (en, trashLib, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    script.name = 'removeEntry 23.0.08'
-    script.var.user = user()
-    let scriptName = 'removeEntry 23.0.08'
-    let variables = 'user: ' + user() + '\nentry: ' + en.name + '\nappLIB.name: ' + trashLib
-    let parameters = 'en: ' + en + " /" + en.name
+    scr.name = 'removeEntry 23.0.08'
+    scr.param.en = en
+    scr.param.trashLib = trashLib
+    scr.param.inptScript = inptScript
     try {
         variables = '\ninptScript: ' + inptScript
         let logTxt = ''
@@ -328,7 +326,8 @@ const removeEntry = (en, trashLib, inptScript) => {
         logGen(trashLib, 'appAsistanto.js', scriptName, logTxt, variables, parameters )
        //     en.trash()
     } catch (error) {
-        errorGen( scriptName, error, variables, parameters)
+        scr.error = error
+        errorGen2(scr)
     }
 }
 // entry script ACTIONS
