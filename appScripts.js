@@ -138,7 +138,7 @@ const updatePrice = en =>{
 }
 
 const setNewEntryNumber = (en) => {
-    let newNumber = appLIB.newNumber()
+    let newNumber = appLIB.newNumber(lib().name, en.field("sezóna"))
     en.set("Číslo", newNumber[0])
     appLIB.saveNewNumber(newNumber[1], lib().name, en.field("sezóna"))
 }
