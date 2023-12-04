@@ -198,7 +198,7 @@ const lastValid = (links, date, valueField, dateField, inptScript) => {
         //return sadzby[0]
         return filteredLinks[0].field(valueField)
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen(scriptName, error, variables, parameters)
     }
 }
 
@@ -218,7 +218,7 @@ const getSadzbaDPH = (appDB, season, inptScript) => {
         sadzbyDPH.push(appDB.field("Znížená sadzba DPH"))
         return sadzbyDPH
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 
@@ -436,7 +436,7 @@ const setIdentifikator = en => {
         }
         en.set("Identifikátor", identifikator)
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 
@@ -510,7 +510,6 @@ const errorGen = ( script, error, variables, parameters) => {
     let newError = new Object()
     newError["type"] = "error"
     newError["date"] = new Date()
-    newError["library"] = appLIB.name
     newError["memento library"] = appLIB.name
     newError["script"] = script
     newError["text"] = error
@@ -521,14 +520,13 @@ const errorGen = ( script, error, variables, parameters) => {
     cancel()
     exit()
 }
-const msgGen = (library, script, msg, variables, parameters) => {
+const msgGen = (script, msg, variables, parameters) => {
     // generátor message
   //  message("MSG: " + script + "\n" + msg)
     let errorLib = libByName(APP_ERROR)
     let newMsg = new Object()
     newMsg["type"] = "message"
     newMsg["date"] = new Date()
-    newMsg["library"] = library
     newMsg["memento library"] = appLIB.name
     newMsg["script"] = script
     newMsg["text"] = msg
@@ -536,14 +534,13 @@ const msgGen = (library, script, msg, variables, parameters) => {
     newMsg["parameters"] = parameters
     errorLib.create(newMsg)
 }
-const logGen = (library, script, log, variables, parameters, attributes) => {
+const logGen = (script, log, variables, parameters, attributes) => {
     // generátor log
    // message("LOG: " + script + "\n" + log)
     let errorLib = libByName(APP_ERROR)
     let newLog = new Object()
     newLog["type"] = "log"
     newLog["date"] = new Date()
-    newLog["library"] = library
     newLog["memento library"] = appLIB.name
     newLog["script"] = script
     newLog["text"] = log
@@ -583,7 +580,7 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
         msgGen(APP, "appAsistanto.js", scriptName, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 
@@ -605,7 +602,7 @@ const getLibFieldsNames = lib =>{
         entryToSet.set("Fields", fieldsNames)
 
     } catch (error) {
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 
@@ -640,7 +637,7 @@ const setBckgColor = (en, field) => {
     } catch (error) {
         en.set("view", VIEW_DEBUG)
         variables += "\nLibrary: " + libName + "\nEntry: " + entry.name + "\nField: " + field
-        errorGen(APP, "appAsistanto.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 // End of file: 25.03.2022, 16:16

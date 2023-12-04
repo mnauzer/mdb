@@ -151,7 +151,7 @@ const prepocitatZaznamDochadzky = (en, inptScript)=> {
         message("Hotovo...");
         return vymazaneCisla.toString()
     } catch (error) {
-        errorGen(LIB_DOCH, 'libEvidencia.js', scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 const genDochadzkaZavazky = (en, inptScript) => {
@@ -174,7 +174,7 @@ const genDochadzkaZavazky = (en, inptScript) => {
             }
         }
     } catch (error) {
-        errorGen(LIB_DOCH, 'libEvidencia.js', scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 const aSalary = (en, NEW_ENTRY) => {
@@ -237,7 +237,7 @@ const aSalary = (en, NEW_ENTRY) => {
             }
         }
     } catch (error) {
-        errorGen(LIB_DOCH, "libDochadzka.js", scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 
@@ -252,7 +252,7 @@ const newEntryEvidenciaPrac = en => {
         setEntry(en, scriptName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
     }
 }
 const updateEntryEvidenciaPrac = en => {
@@ -265,7 +265,7 @@ const updateEntryEvidenciaPrac = en => {
 
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 const saveEntryEvidenciaPrac = en => {
@@ -278,7 +278,7 @@ const saveEntryEvidenciaPrac = en => {
         saveEntry(en, appDBName)
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
@@ -286,7 +286,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
     let variables = "Záznam: " + vykazPrac.name + "\n"
     let parameters = "vykazPrac: " + vykazPrac + "\nhodinyCelkom: " + hodinyCelkom
     if(vykazPrac == undefined){
-        msgGen(LIB_EP, "libEvidenciaPrac.js", scriptName, "chýba parameter vykazPrac", variables, parameters )
+        msgGen( scriptName, "chýba parameter vykazPrac", variables, parameters )
         cancel()
         exit()
     }
@@ -303,7 +303,7 @@ const evidenciaSadzbaPrace = (vykazPrac, hodinyCelkom) => {
         let sadzba = zakladnaSadzba - (zakladnaSadzba * zlava / 100)
         return sadzba
     } catch (error) {
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters)
+        errorGen( scriptName, error, variables, parameters)
         cancel()
         exit()
     }
@@ -321,7 +321,7 @@ const btnFill = () => {
         }
         txtMsg = "Zákazka: " + entry().name
         //zakazka.set("Typ zákazky", zakazka.field(FLD_CPN)[0].field("Typ cenovej ponuky"))
-        msgGen(LIB_EP, "libEvidenciaPrac.js", scriptName, txtMsg, variables, parameters )
+        msgGen( scriptName, txtMsg, variables, parameters )
 
         message("nastavujem záznam..." + scriptName)
 
@@ -341,7 +341,7 @@ const btnFill = () => {
             entry().set(element, entry().field(FLD_ZKZ)[0].linksFrom(element, "Zákazka")[0])
         })
     } catch (error) {
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 }
 const prepocetZaznamuEvidenciePrac = en => {
@@ -357,7 +357,7 @@ const prepocetZaznamuEvidenciePrac = en => {
             if (vykaz != undefined) {
                 en.set(FLD_ZKZ, vykaz.field(FLD_ZKZ)[0]);
             } else {
-                msgGen(LIB_EP, "libEvidenciaPrac.js",  scriptName, "nie je zadaná zákazka", variables, parameters)
+                msgGen(  scriptName, "nie je zadaná zákazka", variables, parameters)
             }
         } else if (typ == "Položky") {
         }
@@ -433,7 +433,7 @@ const prepocetZaznamuEvidenciePrac = en => {
         }
     } catch (error) {
         en.set(VIEW, VIEW_DEBUG)
-        errorGen(LIB_EP, "libEvidenciaPrac.js", scriptName, error, variables, parameters);
+        errorGen( scriptName, error, variables, parameters);
     }
 
 }
