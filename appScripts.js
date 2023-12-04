@@ -209,7 +209,7 @@ const scr = {
     },
     genMsgVars(){
         let msg = ''
-        Object.entries(this.var).forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
+        this.var.entries().forEach(([key, value]) => {msg += key + ': ' + value + '\n'})
         return msg
     }
 }
