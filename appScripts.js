@@ -17,7 +17,7 @@ const APP = {
     },
     entry(season){
         season = this.defaultSeason(season)
-        return libByName(APP).find(season)[0]
+        return libByName(LIBAPP).find(season)[0]
     },
     newNumber(lib, season){
         season = this.defaultSeason(season)
@@ -195,7 +195,7 @@ const scr = {
     error: null,
     genMsgParams(){
         let msg = ''
-        Object.entries(this.param).forEach(item => {[key, value] = msg += key + ': ' + value + '\n'})
+       // Object.entries(this.param).forEach([key, value] => {msg += key + ': ' + value + '\n'})
         // for (let [key, value] of this.param) {
         //     msg += key + ': ' + value + '\n'
         // }
@@ -203,6 +203,7 @@ const scr = {
     },
     genMsgVars(){
         let msg = ''
+        Object.entries(this.var).forEach(item => {[key, value] = msg += key + ': ' + value + '\n'})
         // for (let [key, value] of this.var) {
         //     msg += key + ': ' + value + '\n';
         // }
