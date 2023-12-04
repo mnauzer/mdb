@@ -279,33 +279,25 @@ const saveEntry = (en, inptScript) => {
         errorGen2(scr, error)
     }
 }
-const removeEntry = (en, trashLib, inptScript) => {
+const removeEntry = (en, trashFromLib, inptScript) => {
     // Created at: 16.11.2023, 00:50
     // vymaže záznam a updatuje číslo vymazaného záznamu v appDB
-    scr.name = 'removeEntry 23.0.08'
+    scr.name = 'removeEntry 23.0.09'
     scr.param.en = en
-    scr.param.trashLib = trashLib
+    scr.param.trashFromLib = trashFromLib
     scr.param.inptScript = inptScript
     try {
-        variables = '\ninptScript: ' + inptScript
-        let logTxt = ''
-        variables += '\nlibrary: ' + trashLib
-        const trashedNums = APP.getTrashedNums(trashLib)
-        message('trashLib: ' + trashLib + '\nnumToBeTrashed: ' + en.field(NUMBER_ENTRY))
-        variables += '\ntrashedNums: ' + trashedNums
+        const trashedNums = APP.getTrashedNums(trashFromLib)
+        message('trashFromLib: ' + trashFromLib + '\nnumToBeTrashed: ' + en.field(NUMBER_ENTRY))
         const numToBeTrashed = en.field(NUMBER_ENTRY)
-        variables += '\nnumToBeTrashed: ' + numToBeTrashed
         // ak je záznam vymazaných čísiel, konvertuje na array
         if (trashedNums) {
             trashedNums.push(numToBeTrashed)
-            APP.setTrashedNums(trashedNums, trashLib)
-            variables += '\nnew trashed nums: ' + trashedNums
+            APP.setTrashedNums(trashedNums, trashFromLib)
         } else {
-            APP.setTrashedNums(numToBeTrashed, trashLib)
+            APP.setTrashedNums(numToBeTrashed, trashFromLib)
         }
         // pridá číslo d´mazaného záznamu do trashedNums a vymaže záznam
-        logTxt += 'Záznam č.' + numToBeTrashed + ' bol vymazaný z knižnice ' + trashLib
-        logGen(trashLib, 'appAsistanto.js', scr.name, logTxt, variables, parameters )
        //     en.trash()
     } catch (error) {
         errorGen2(scr, error)
@@ -479,26 +471,20 @@ const sadzbaZamestnanca = (employee, date, inptScript) => {
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
     scr.name = "sadzbaZamestnanca 23.0.12"
+    scr.param.employee = employee
+    scr.param.date = date
+    scr.param.inptScript = inptScript
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-        let links = employee.linksFrom(LIB_SZ, FLD_ZAM);
-        let dateField ="Platnosť od"
-        let msgTxt = ""
+        const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
+        const dateField ="Platnosť od"
         let sadzba = 0
-        variables += "\nZáznamov: " + links.length
         filteredLinks = filterByDate(links, date, dateField, scr.name);
-        variables += "\nFiltrovaných záznamov: " + filteredLinks.length
         if (filteredLinks.length < 0) {
             msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu'
         } else {
-            //filteredLinks.sort({ compare: function(a,b) { return b.field(dateField).getTime()/1000 - a.field(dateField).getTime()/1000 }})
-            //filteredLinks.reverse();
             sadzba = filteredLinks[0].field("Sadzba");
-            msgTxt = "Nájdená sadzba zamestnanca " + employee.name
         }
-        //vyberie a vráti sadzbu z prvého záznamu
-        variables += "\nZamestnanec: " + employee.name + "\nSadzba: " + sadzba
-        msgGen(APP, "appAsistanto.js", scr.name, msgTxt, variables, parameters);
         return sadzba;
     } catch (error) {
         errorGen2(scr, error);
