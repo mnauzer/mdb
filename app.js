@@ -18,7 +18,7 @@ const app = {
     season: null,
     log: false,
     debug: false,
-    openLib: {
+    openLib: { // library nastavenia v knižnici ASISTANTO
         name: null,
         db: null,
         ID: null,
@@ -33,7 +33,7 @@ const app = {
         number: null,
     },
     en: null,
-    enD: null,
+    enD: lib().defaultEntry(),
     lib: null,
     dph: {
         zakladna: null,
