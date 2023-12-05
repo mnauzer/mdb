@@ -222,8 +222,9 @@ const set = {
     number(){
         app.runningScript = 'set.number()'
         try {
-            app.openLib.db.setAttr("poslené číslo", app.nextNum)
-            app.openLib.db.setAttr("nasledujúce číslo", Number(app.nextNum) += 1)
+            if (app.log) {message("...set.number()")}
+            app.openLib.db.setAttr("poslené číslo", app.openLib.nextNum)
+            app.openLib.db.setAttr("nasledujúce číslo", Number(app.openLib.nextNum) += 1)
             initApp()
             app.runningScript = null
         } catch (error) {
