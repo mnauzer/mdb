@@ -32,7 +32,7 @@ const app = {
         number: null,
     },
     en: null,
-    enD: lib().entryDefault(),
+    enD: null,
     lib: null,
     dph: {
         zakladna: null,
