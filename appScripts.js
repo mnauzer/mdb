@@ -11,6 +11,8 @@ const app = {
         scripts: "ASISTANTO Scripts",
         todo: "ASISTANTO ToDo",
     },
+    msg: null,
+    runningScript: null,
     season: null,
     openLib: {
         name: null,
@@ -45,7 +47,7 @@ const get = {
         app.openLib.name = app.openLib.db.name // lib().title
     },
     openDb(season){
-
+        app.runningScript = 'get.openDb()'
         try {
             get.library()
             get.season(season)
@@ -62,7 +64,7 @@ const get = {
             app.openLib.trim = app.openLib.db[0].atrr("trim")
             app.openLib.trailingDigit = app.openLib.db[0].atrr("trailing digit")
         } catch (error) {
-            createErrorEntry('openDb', error)
+            createErrorEntry(app.runningScript, error)
         }
 
     },
@@ -120,14 +122,13 @@ const createLogEntry = (msg) => {
         newError['type'] = 'log'
         newError['date'] = new Date()
         newError['memento library'] = app.openLib.name
-        newError['script'] = 'logAppVariableStore'
+        newError['script'] = app.runningScript
         newError['text'] = 'app store variables'
         newError['variables'] = logAppVariableStore(msg)
         newError['note'] = 'generované scriptom createLogEntry'
         errorLib.create(newError)
 }
 const createErrorEntry = (msg, error) => {
-        message("msg " + app.data.version)
         message(error)
         message(error.lineNumber)
         const errorLib = libByName(app.data.errors)
@@ -135,7 +136,7 @@ const createErrorEntry = (msg, error) => {
         newError['type'] = 'error'
         newError['date'] = new Date()
         newError['memento library'] = app.openLib.name
-        newError['script'] = 'logAppVariableStore'
+        newError['script'] = app.runningScript
         newError['text'] = error
         newError['line'] = error.lineNumber
         newError['variables'] = logAppVariableStore(msg)
