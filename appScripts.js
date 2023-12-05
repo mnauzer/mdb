@@ -172,9 +172,3 @@ const createErrorEntry = (msg, error) => {
         newError['note'] = 'generované scriptom createErrorEntry'
         errorLib.create(newError)
 }
-// TRIGGERS
-const libOpen = () => {
-    initApp()
-    message(app.data.name + ' v.' + app.data.version +
-    '\n' +  app.openLib.name +' ' +  app.season )
-}
