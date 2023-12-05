@@ -3,7 +3,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '23.1.0008',
+        version: '23.1.0009',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -153,6 +153,7 @@ const set = {
             storeDB.set("openLib.isPrefix", app.openLib.isPrefix)
             storeDB.set("openLib.trailingDigit", app.openLib.trailingDigit)
             storeDB.set("openLib.trim", app.openLib.trim)
+            storeDB.set("openLib.number", app.openLib.number)
             storeDB.set("dph.zakladna", app.dph.zakladna)
             storeDB.set("dph.znizena", app.dph.znizena)
             storeDB.set("en", app.en ? app.en.id : null)
@@ -229,6 +230,7 @@ const initApp = () => {
     get.openDb()
     get.openLibName()
     get.sadzbyDPH()
+    set.storeDb()
 }
 const logAppVariableStore = (msg) => {
     const storeVariables =
