@@ -11,7 +11,7 @@ const app = {
     lib: {
         app: "ASISTANTO",
         db: "ASISTANTO DB",
-        error: "ASISTANTO Errors",
+        errors: "ASISTANTO Errors",
         tenants: "ASISTANTO Tenants",
         scripts: "ASISTANTO Scripts",
         todo: "ASISTANTO ToDo",
@@ -49,6 +49,24 @@ const libOpen = () => {
     get.db()
 
     message(app.name + ' v.' + app.version +
-    '\n' +  app.openLib.name +
-    '\n' +  app.season )
+    '\nopenLib.name: ' +  app.openLib.name +
+    '\nseason: ' +  app.season )
+}
+
+const logAppVariableStore = () => {
+        const storeVariables =
+        'app.name: ' + app.name
+        +'\napp.version: ' + app.version
+        +'\napp.season: ' +  app.season
+        +'\napp.openLib.name: ' +  app.openLib.name
+        const errorLib = libByName(app.lib.errors)
+        const newError = new Object()
+        newError['type'] = 'log'
+        newError['date'] = new Date()
+        newError['memento library'] = app.name
+        newError['script'] = 'logAppVariableStore'
+        newError['text'] = 'app store variables'
+        newError['variables'] = storeVariables
+        newError['note'] = 'generované scriptom logAppVariableStore'
+        errorLib.create(newError)
 }
