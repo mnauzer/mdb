@@ -15,6 +15,15 @@ const app = {
     openLib: {
         name: null,
         db: null,
+        ID: null,
+        prefix: null,
+        lastNum: null,
+        nextNum: null,
+        reservedNum: null,
+        removedNums: null,
+        isPrefix: null,
+        trim: null,
+        trailingDigit: null,
     },
     en: null,
     enD: null,
@@ -41,6 +50,17 @@ const get = {
         get.openLibName()
         const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy")
         app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
+        app.openLib.ID = app.openLib.db.field("ID")
+        app.openLib.prefix = app.openLib.db.field("Prefix")
+        // entry attributes
+        app.openLib.lastNum = app.openLib.db.atrr("posledné číslo")
+        app.openLib.nextNum = app.openLib.db.atrr("naseledujúce číslo")
+        app.openLib.reservedNum = app.openLib.db.atrr("rezervované číslo")
+        app.openLib.removedNums = app.openLib.db.atrr("vymazané čísla")
+        app.openLib.isPrefix = app.openLib.db.atrr("prefix")
+        app.openLib.trim = app.openLib.db.atrr("trim")
+        app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
+
     },
     sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
@@ -69,16 +89,16 @@ const runGetters = () => {
 }
 const logAppVariableStore = () => {
     const storeVariables =
-        'app.name: ' + app.data.name
-        +'\napp.version: ' + app.data.version
-        +'\napp.season: ' +  app.season
-        +'\napp.openLib.name: ' +  app.openLib.name
-        +'\napp.openLib.db: ' +  app.openLib.db
-        +'\napp.en: ' +  app.en
-        +'\napp.enD: ' +  app.enD
-        +'\napp.lib: ' +  app.lib
-        +'\napp.dph.zakladna: ' +  app.dph.zakladna
-        +'\napp.dph.znizena: ' +  app.dph.znizena
+        'name: ' + app.data.name
+        +'\nversion: ' + app.data.version
+        +'\nseason: ' +  app.season
+        +'\nopenLib.name: ' +  app.openLib.name
+        +'\nopenLib.db: ' +  app.openLib.db
+        +'\nen: ' +  app.en
+        +'\nenD: ' +  app.enD
+        +'\nlib: ' +  app.lib
+        +'\ndph.zakladna: ' +  app.dph.zakladna
+        +'\ndph.znizena: ' +  app.dph.znizena
 
     createLogEntry(storeVariables)
 }
