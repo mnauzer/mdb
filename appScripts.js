@@ -18,7 +18,6 @@ const app = {
     enD: null,
     lib: null,
 }
-
 const get = {
     // app getters
     season(){
@@ -36,39 +35,30 @@ const get = {
         app.lib = lib()
     },
 }
-
 const set = {
     // app setters
 }
-
 const calc = {
     // app mutators
 }
 
-const libOpen = () => {
-    get.season()
-    get.name()
-    get.db()
-    get.library()
-
-    message(app.name + ' v.' + app.version +
-    '\nopenLib.name: ' +  app.openLib.name +
-    '\nseason: ' +  app.season )
-}
-
-const testGetters = () => {
+const runGetters = () => {
     get.season()
     get.name()
     get.db()
     get.library()
 }
 const logAppVariableStore = () => {
-        const storeVariables =
+    const storeVariables =
         'app.name: ' + app.name
         +'\napp.version: ' + app.version
         +'\napp.season: ' +  app.season
         +'\napp.openLib.name: ' +  app.openLib.name
         +'\napp.lib: ' +  app.lib
+
+    createLogEntry(storeVariables)
+}
+const createLogEntry = (msg) =>{
         const errorLib = libByName(app.errors)
         const newError = new Object()
         newError['type'] = 'log'
@@ -76,7 +66,14 @@ const logAppVariableStore = () => {
         newError['memento library'] = app.openLib.name
         newError['script'] = 'logAppVariableStore'
         newError['text'] = 'app store variables'
-        newError['variables'] = storeVariables
+        newError['variables'] = msg
         newError['note'] = 'generované scriptom logAppVariableStore'
         errorLib.create(newError)
+}
+// TRIGGERS
+const libOpen = () => {
+    runGetters()
+    message(app.name + ' v.' + app.version +
+    '\nopenLib.name: ' +  app.openLib.name +
+    '\nseason: ' +  app.season )
 }
