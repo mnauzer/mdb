@@ -51,3 +51,27 @@ const pad = (number, length) => {
     }
     return str
 }
+
+// ARRAY FUNCTIONS
+const filterByDate = (entries, maxDate, dateField, initScript) => {
+    //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
+    app.runningScript = 'filterByDate()'
+    app.libFile = 'helpers.js'
+    app.initScript = initScript
+    try {
+        const filtered = []
+        for(let i in entries) {
+            if(Number(entries[i].field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000)) {
+                filtered.push(entries[i])
+            }
+        }
+        filtered.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
+        filtered.reverse()
+        app.runningScript = null
+        app.libFile = null
+        app.initScript = null
+        return filtered
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}

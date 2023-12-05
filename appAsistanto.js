@@ -166,32 +166,6 @@ function fltrDbByName(value, name) {
         return arr
     }
 }
-const filterByDate = (entries, maxDate, dateField, inptScript) => {
-    //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    scr.name = "filterByDate 23.0.15"
-    scr.param.entries = entries
-    scr.param.maxDate = maxDate
-    scr.param.dateField = dateField
-    scr.param.inptScript = inptScript
-    try {
-        //entries.filter(entry => entry.field(dateField).getTime()/1000 <= maxDate.getTime()/1000)
-        //entries.filter(entry => Number(entry.field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000))
-        //entries.sort((entryA, entryB) => entryA.field(dateField).getTime()/1000 - entryB.field(dateField).getTime()/1000)
-
-        // metóda filter tu asi nefunguje tak to skúsim oldway :
-        let filtered = []
-        for(let i in entries) {
-            if(Number(entries[i].field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000)) {
-                filtered.push(entries[i])
-            }
-        }
-        filtered.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
-        filtered.reverse()
-        return filtered
-    } catch (error) {
-        errorGen2(scr, error)
-    }
-}
 
 
 
@@ -556,30 +530,7 @@ const logGen = (script, log, variables, parameters, attributes) => {
 }
 
 
-// ZAMESTNANCI
-const sadzbaZamestnanca = (employee, date, inptScript) => {
-    // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
-    // v databáze "LIB_SZ - sadzby zamestnancov"
-    scr.name = "sadzbaZamestnanca 23.0.12"
-    scr.param.employee = employee
-    scr.param.date = date
-    scr.param.inptScript = inptScript
-    try {
-        // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-        const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
-        const dateField ="Platnosť od"
-        let sadzba = 0
-        filteredLinks = filterByDate(links, date, dateField, scr.name);
-        if (filteredLinks.length < 0) {
-            msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu'
-        } else {
-            sadzba = filteredLinks[0].field("Sadzba");
-        }
-        return sadzba;
-    } catch (error) {
-        errorGen2(scr, error);
-    }
-}
+
 
 const getLibFieldsNames = lib =>{
     scr.name  = "getLibFieldsNames 23.0.14"
