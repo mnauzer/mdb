@@ -79,8 +79,8 @@ const newEntryAfterSave = (initScript) => {
     }
 }
 
-const removeEntry = (en, initScript) => {
-    app.runningScript = 'removeEntry()'
+const removeEntryBefore = (en, initScript) => {
+    app.runningScript = 'removeEntryBefore()'
     app.libFile = 'triggers.js'
     app.initScript = initScript
     try {
