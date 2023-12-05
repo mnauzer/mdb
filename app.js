@@ -1,4 +1,3 @@
-
 const app = {
     // app store
     data: {
@@ -33,7 +32,7 @@ const app = {
         number: null,
     },
     en: null,
-    enD: lib().defaultEntry(),
+    enD: lib().entryDefault(),
     lib: null,
     dph: {
         zakladna: null,
@@ -263,8 +262,6 @@ const logAppVariableStore = (msg) => {
         +'\ndph.zakladna: ' +  app.dph.zakladna
         +'\ndph.znizena: ' +  app.dph.znizena
         +'\nmsg: ' +  msg
-
-
     return storeVariables
 }
 const createLogEntry = (msg) => {

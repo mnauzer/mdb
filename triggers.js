@@ -8,6 +8,7 @@ const libOpen = () => {
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.openLib.name +' ' +  app.season )
         app.runningScript = null
+        app.libFile = null
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -24,7 +25,6 @@ const newEntry = en => {
         en.set(NUMBER, app.openLib.number)
         en.set(NUMBER_ENTRY, app.openLib.nextNum)
         en.set(SEASON, app.season)
-
         // code here
         app.runningScript = null
         app.libFile = null
