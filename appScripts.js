@@ -1,14 +1,16 @@
 
 const app = {
     // app store
-    name: 'ASISTANTO',
-    version: '23.1.0002',
-    app: "ASISTANTO",
-    db: "ASISTANTO DB",
-    errors: "ASISTANTO Errors",
-    tenants: "ASISTANTO Tenants",
-    scripts: "ASISTANTO Scripts",
-    todo: "ASISTANTO ToDo",
+    data: {
+        name: 'ASISTANTO',
+        version: '23.1.0002',
+        app: "ASISTANTO",
+        db: "ASISTANTO DB",
+        errors: "ASISTANTO Errors",
+        tenants: "ASISTANTO Tenants",
+        scripts: "ASISTANTO Scripts",
+        todo: "ASISTANTO ToDo",
+    },
     season: null,
     openLib: {
         name: null,
@@ -27,8 +29,8 @@ const get = {
     library(){
         app.lib = lib()
     },
-    season(){
-        app.season = libByName(app.tenants).find("KRAJINKA")[0].field("default season")
+    season(season){
+        app.season = season || libByName(app.data.tenants).find("KRAJINKA")[0].field("default season")
     },
     openLibName(){
         get.library()
@@ -37,14 +39,14 @@ const get = {
     openDb(){
         get.season()
         get.openLibName()
-        const dbLib = libByName(app.app).find(app.season)[0].field("Databázy")
+        const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy")
         app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
     },
     sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
         get.season()
-        app.dph.zakladna = libByName(app.app).find(app.season)[0].field("Základná sadzba DPH")
-        app.dph.znizena = libByName(app.app).find(app.season)[0].field("Znížená sadzba DPH")
+        app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
+        app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
     },
     sadzbaZamestnanca(zamestnanec, datum){
         // nájdi poslednú aktuálnu zamestnanca
@@ -67,10 +69,13 @@ const runGetters = () => {
 }
 const logAppVariableStore = () => {
     const storeVariables =
-        'app.name: ' + app.name
-        +'\napp.version: ' + app.version
+        'app.name: ' + app.data.name
+        +'\napp.version: ' + app.data.version
         +'\napp.season: ' +  app.season
         +'\napp.openLib.name: ' +  app.openLib.name
+        +'\napp.openLib.db: ' +  app.openLib.db
+        +'\napp.en: ' +  app.en
+        +'\napp.enD: ' +  app.enD
         +'\napp.lib: ' +  app.lib
         +'\napp.dph.zakladna: ' +  app.dph.zakladna
         +'\napp.dph.znizena: ' +  app.dph.znizena
@@ -78,7 +83,7 @@ const logAppVariableStore = () => {
     createLogEntry(storeVariables)
 }
 const createLogEntry = (msg) =>{
-        const errorLib = libByName(app.errors)
+        const errorLib = libByName(app.data.errors)
         const newError = new Object()
         newError['type'] = 'log'
         newError['date'] = new Date()
@@ -92,7 +97,7 @@ const createLogEntry = (msg) =>{
 // TRIGGERS
 const libOpen = () => {
     runGetters()
-    message(app.name + ' v.' + app.version +
+    message(app.data.name + ' v.' + app.data.version +
     '\nopenLib.name: ' +  app.openLib.name +
     '\nseason: ' +  app.season )
 }
