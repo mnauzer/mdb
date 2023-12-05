@@ -43,19 +43,19 @@ const get = {
     library(){
         app.lib = lib()
     },
-    season(season){
-        app.season = season || libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
+    season(){
+        app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
     },
     openLibName(){
         app.openLib.name = app.openLib.db.title // lib().title
     },
-    openDb(season){
+    openDb(){
         app.runningScript = 'get.openDb()'
         try {
             get.library()
-            get.season(season)
+            get.season()
             const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
-            if (dbLib){
+            if (dbLib !== null && dbLib !== undefined){
                 app.openLib.db = dbLib[0]
                 app.openLib.ID = app.openLib.db.field("ID")
                 app.openLib.prefix = app.openLib.db.field("Prefix")
