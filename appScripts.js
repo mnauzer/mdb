@@ -10,6 +10,7 @@ const app = {
         tenants: "ASISTANTO Tenants",
         scripts: "ASISTANTO Scripts",
         todo: "ASISTANTO ToDo",
+        tenant: "KRAJINKA"
     },
     msg: null,
     runningScript: null,
@@ -42,7 +43,7 @@ const get = {
         app.lib = lib()
     },
     season(season){
-        app.season = season || libByName(app.data.tenants).find("KRAJINKA")[0].field("default season")
+        app.season = season || libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
     },
     openLibName(){
         app.openLib.name = app.openLib.db.title // lib().title
@@ -95,6 +96,17 @@ const get = {
 }
 const set = {
     // app setters
+    season(arg){
+        app.runningScript = 'set.season()'
+        try {
+            libByName(app.data.tenants).find(app.data.tenant)[0].set("default season", arg)
+            initApp()
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
+
+    }
 }
 const calc = {
     // app mutators
