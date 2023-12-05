@@ -32,7 +32,7 @@ const get = {
     },
     openLibName(){
         get.library()
-        app.openLib.name = app.lib.name
+        app.openLib.name = app.lib.title // lib().title
     },
     openDb(){
         get.season()
