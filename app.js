@@ -227,10 +227,16 @@ const calc = {
 }
 
 const initApp = () => {
-    get.openDb()
-    get.openLibName()
-    get.sadzbyDPH()
-    set.storeDb()
+    app.runningScript = 'get.sadzbaZamestnanca()'
+    try {
+        get.openDb()
+        get.openLibName()
+        get.sadzbyDPH()
+        set.storeDb()
+        app.runningScript = null
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
 }
 const logAppVariableStore = (msg) => {
     const storeVariables =
