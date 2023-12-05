@@ -45,7 +45,7 @@ const get = {
         app.season = season || libByName(app.data.tenants).find("KRAJINKA")[0].field("default season")
     },
     openLibName(){
-        app.openLib.name = app.openLib.db.name // lib().title
+        app.openLib.name = app.openLib.db.title // lib().title
     },
     openDb(season){
         app.runningScript = 'get.openDb()'
@@ -57,13 +57,13 @@ const get = {
             app.openLib.ID = app.openLib.db[0].field("ID")
             app.openLib.prefix = app.openLib.db[0].field("Prefix")
             // entry attributes
-            app.openLib.lastNum = app.openLib.db.atrr("posledné číslo")
-            app.openLib.nextNum = app.openLib.db.atrr("naseledujúce číslo")
-            app.openLib.reservedNum = app.openLib.db.atrr("rezervované číslo")
-            app.openLib.removedNums = app.openLib.db.atrr("vymazané čísla")
-            app.openLib.isPrefix = app.openLib.db.atrr("prefix")
-            app.openLib.trim = app.openLib.db.atrr("trim")
-            app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
+            app.openLib.lastNum = dbLib.atrr("posledné číslo")
+            app.openLib.nextNum = dbLib.atrr("naseledujúce číslo")
+            app.openLib.reservedNum = dbLib.atrr("rezervované číslo")
+            app.openLib.removedNums = dbLib.atrr("vymazané čísla")
+            app.openLib.isPrefix = dbLib.atrr("prefix")
+            app.openLib.trim = dbLib.atrr("trim")
+            app.openLib.trailingDigit = dbLib.atrr("trailing digit")
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
