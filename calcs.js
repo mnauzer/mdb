@@ -17,8 +17,10 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
         let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
         const zamestnanci = en.field("Zamestnanci");
+        if (app.log) {message("...zamestnancov: " + zamestnanci.length)}
         const evidenciaPrac = en.field("Práce");
-        if (zamestnanci.length > 0) {
+        if (app.log) {message("...evidencia prác: " + evidenciaPrac.length)}
+        if (zamestnanci) {
             if (app.log) {message("...prepočítavam zamestnancov")}
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript);
@@ -27,10 +29,10 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
                 const hodnotenie = zamestnanci[z].attr("hodnotenie") ? zamestnanci[z].attr("hodnotenie") : 5;
                 let dennaMzda = zamestnanci[z].attr("denná mzda") ? zamestnanci[z].attr("denná mzda") : 0; // jedného zamestnanca
                 // premenné z knižnice zamestnanci
-                let Zarobene = zamestnanci[z].field("Zarobené") - dennaMzda;
-                let Odrobene = zamestnanci[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-                const Vyplatene = zamestnanci[z].field("Vyplatené");
-                let HodnotenieD = zamestnanci[z].field("Dochádzka");
+                let zarobene = zamestnanci[z].field("Zarobené") - dennaMzda;
+                let odrobene = zamestnanci[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
+                const vyplatene = zamestnanci[z].field("Vyplatené");
+                let hodnotenieD = zamestnanci[z].field("Dochádzka");
 
                 dennaMzda = (pracovnaDoba * (hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)")))
@@ -39,15 +41,15 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
                 zamestnanci[z].setAttr("denná mzda", dennaMzda);
                 zamestnanci[z].setAttr("hodnotenie", hodnotenie);
                 // nastavenie v knižnici zamestnanci
-                Zarobene += dennaMzda;
-                Odrobene += pracovnaDoba;
-                HodnotenieD += hodnotenie;
-                const Nedoplatok = Zarobene - Vyplatene;
+                zarobene += dennaMzda;
+                odrobene += pracovnaDoba;
+                hodnotenieD += hodnotenie;
+                const nedoplatok = zarobene - vyplatene;
 
-                zamestnanci[z].set("Zarobené", Zarobene);
-                zamestnanci[z].set("Odpracované", Odrobene);
-                zamestnanci[z].set("Preplatok/Nedoplatok", Nedoplatok);
-                zamestnanci[z].set("Dochádzka", HodnotenieD);
+                zamestnanci[z].set("Zarobené", zarobene);
+                zamestnanci[z].set("Odpracované", odrobene);
+                zamestnanci[z].set("Preplatok/Nedoplatok", nedoplatok);
+                zamestnanci[z].set("Dochádzka", hodnotenieD);
 
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
