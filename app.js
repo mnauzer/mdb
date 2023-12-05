@@ -14,7 +14,7 @@ const app = {
     },
     msg: null,
     runningScript: null,
-    libFile: 'appScripts.js',
+    libFile: 'app.js',
     season: null,
     log: false,
     debug: false,
@@ -59,6 +59,7 @@ const get = {
             get.library()
             get.season()
             const dbEntry = libByName(app.data.app).find(app.season)[0]
+            if (app.log) {message('dbEntry: ' + dbEntry)}
             if (dbEntry !== undefined){
                 const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.lib.title)
                 app.openLib.db = dbLib[0]
