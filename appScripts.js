@@ -101,6 +101,7 @@ const set = {
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set("default season", arg)
             initApp()
+            message('Nastavená sezóna: ' + app.season)
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
