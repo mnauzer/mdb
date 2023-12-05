@@ -42,15 +42,12 @@ const get = {
         app.season = season || libByName(app.data.tenants).find("KRAJINKA")[0].field("default season")
     },
     openLibName(){
-        get.library()
-        get.openDb()
         app.openLib.name = app.openLib.db.name // lib().title
     },
-    openDb(){
+    openDb(season){
         message("getting DB")
         try {
-            get.season()
-            get.openLibName()
+            get.season(season)
             const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
             app.openLib.db = dbLib[0]
             app.openLib.ID = app.openLib.db.field("ID")
@@ -87,6 +84,7 @@ const calc = {
 }
 
 const runGetters = () => {
+    get.openDb()
     get.openLibName()
     get.sadzbyDPH()
 }
