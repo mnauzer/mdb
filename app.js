@@ -62,6 +62,7 @@ const get = {
             if (app.log) {message('dbEntry: ' + dbEntry)}
             if (dbEntry !== undefined){
                 const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.lib.title)
+                if (app.log) {message('dbLib: ' + dbLib)}
                 app.openLib.db = dbLib[0]
                 app.openLib.ID = app.openLib.db.field("ID")
                 app.openLib.prefix = app.openLib.db.field("Prefix")
