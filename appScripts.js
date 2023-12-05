@@ -3,7 +3,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '23.1.0002',
+        version: '23.1.0003',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -47,6 +47,7 @@ const get = {
     openDb(season){
         message("getting DB")
         try {
+            get.library()
             get.season(season)
             const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
             app.openLib.db = dbLib[0]
