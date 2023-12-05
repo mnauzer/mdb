@@ -14,6 +14,7 @@ const app = {
     msg: null,
     runningScript: null,
     libFile: 'app.js',
+    initScript: null,
     season: null,
     log: false,
     debug: false,
@@ -215,6 +216,17 @@ const set = {
             } else {
                 message('prefix čísla vypnutý')
             }
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
+    },
+    number(){
+        app.runningScript = 'set.number()'
+        try {
+            app.openLib.db.setAttr("poslené číslo", app.nextNum)
+            app.openLib.db.setAttr("nasledujúce číslo", Number(app.nextNum) += 1)
+            initApp()
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)

@@ -9,13 +9,15 @@ const libOpen = () => {
         '\n' +  app.openLib.name +' ' +  app.season )
         app.runningScript = null
         app.libFile = null
+        app.initScript = null
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
 }
-const newEntry = en => {
+const newEntry = (en, initScript)  => {
     app.runningScript = 'newEntry()'
     app.libFile = 'triggers.js'
+    app.initScript = initScript
     try {
         message("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
@@ -28,6 +30,47 @@ const newEntry = en => {
         // code here
         app.runningScript = null
         app.libFile = null
+        app.initScript = null
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}
+
+const newEntryBeforeSave = (en, initScript) => {
+    app.runningScript = 'newEntryBeforeSave()'
+    app.libFile = 'triggers.js'
+    app.initScript = initScript
+    try {
+        if (app.log) {message("...before save")}
+        switch (app.openLib.name) {
+            case "Dochádzka":
+                prepocitatZaznamDochadzky(en, app.runningScript)
+                break;
+            default:
+                break;
+        }
+        app.runningScript = null
+        app.libFile = null
+        app.initScript = null
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}
+
+const newEntryAfterSave = (initScript) => {
+    app.runningScript = 'newEntryAfterSave()'
+    app.libFile = 'triggers.js'
+    app.initScript = initScript
+    try {
+        if (app.log) {message("...after save")}
+        const createdEntry = lib().entries()[0]
+        if (createdEntry.field(NUMBER_ENTRY) == app.nextNum) {
+            set.number()
+            createdEntry.set(VIEW, VIEW_PRINT)
+        }
+        app.runningScript = null
+        app.libFile = null
+        app.initScript = null
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
