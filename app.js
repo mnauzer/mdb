@@ -54,8 +54,9 @@ const get = {
         try {
             get.library()
             get.season()
-            const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
-            if (dbLib !== null && dbLib !== undefined){
+            const dbLib = libByName(app.data.app).find(app.season)[0]
+            if (dbLib !== undefined){
+                dbLib = dbLib.field("Databázy").filter(en => en.field("Názov") == app.lib.title)
                 app.openLib.db = dbLib[0]
                 app.openLib.ID = app.openLib.db.field("ID")
                 app.openLib.prefix = app.openLib.db.field("Prefix")
