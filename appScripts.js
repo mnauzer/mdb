@@ -98,6 +98,5 @@ const createLogEntry = (msg) =>{
 const libOpen = () => {
     runGetters()
     message(app.data.name + ' v.' + app.data.version +
-    '\nopenLib.name: ' +  app.openLib.name +
-    '\nseason: ' +  app.season )
+    '\n' +  app.openLib.name +' ' +  app.season )
 }
