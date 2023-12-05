@@ -53,6 +53,11 @@ const libOpen = () => {
     '\nseason: ' +  app.season )
 }
 
+const testGetters = () => {
+    get.season()
+    get.name()
+    get.db()
+}
 const logAppVariableStore = () => {
         const storeVariables =
         'app.name: ' + app.name
