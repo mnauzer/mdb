@@ -15,11 +15,12 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
-        let prestojeCelkom = 0; //TODO ak sa budú evidovať prestojeCelkom
+        let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
         const zamestnanci = en.field("Zamestnanci");
         const evidenciaPrac = en.field("Práce");
         if (zamestnanci.length > 0) {
             for (let z in zamestnanci ) {
+                if (app.log) {message("...prepočítavam zamestnancov")}
                 const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript);
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
@@ -71,7 +72,7 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
         en.set("Odpracované", odpracovaneCelkom);
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
-        message("Hotovo...");
+        if (app.log) {message("...hotovo")}
         app.runningScript = null
         app.libFile = null
         app.initScript = null
