@@ -45,7 +45,7 @@ const get = {
         app.openLib.name = app.openLib.db.name // lib().title
     },
     openDb(season){
-        message("getting DB " + app.data.version)
+
         try {
             get.library()
             get.season(season)
@@ -127,6 +127,9 @@ const createLogEntry = (msg) => {
         errorLib.create(newError)
 }
 const createErrorEntry = (msg, error) => {
+        message("msg " + app.data.version)
+        message(error)
+        message(error.lineNumber)
         const errorLib = libByName(app.data.errors)
         const newError = new Object()
         newError['type'] = 'error'
