@@ -3,7 +3,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '23.1.0003',
+        version: '23.1.0004',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -45,7 +45,7 @@ const get = {
         app.openLib.name = app.openLib.db.name // lib().title
     },
     openDb(season){
-        message("getting DB")
+        message("getting DB " + app.data.version)
         try {
             get.library()
             get.season(season)
