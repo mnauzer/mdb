@@ -76,7 +76,8 @@ const get = {
         // vyskladaj nové číslo záznamu
         app.runningScript = 'get.number()'
         try {
-            app.openLib.isPrefix ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
+            app.openLib.number = app.openLib.isPrefix
+            ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             app.runningScript = null
         } catch (error) {
