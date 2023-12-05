@@ -224,7 +224,7 @@ const set = {
         try {
             if (app.log) {message("...set.number()")}
             app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
-            app.openLib.db.setAttr("nasledujúce číslo", Number(app.openLib.nextNum) += 1)
+            app.openLib.db.setAttr("nasledujúce číslo", Number(app.openLib.nextNum) + 1)
             initApp()
             app.runningScript = null
         } catch (error) {
@@ -237,7 +237,7 @@ const calc = {
 }
 
 const initApp = () => {
-    app.runningScript = 'get.sadzbaZamestnanca()'
+    app.runningScript = 'initApp()'
     try {
         get.openDb()
         get.openLibName()
