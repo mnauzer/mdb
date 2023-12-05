@@ -19,8 +19,8 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
         const zamestnanci = en.field("Zamestnanci");
         const evidenciaPrac = en.field("Práce");
         if (zamestnanci.length > 0) {
-            for (let z in zamestnanci ) {
-                if (app.log) {message("...prepočítavam zamestnancov")}
+            if (app.log) {message("...prepočítavam zamestnancov")}
+            for (let z = 0; z < zamestnanci.length; z++ ) {
                 const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript);
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
@@ -53,7 +53,8 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
                 odpracovaneCelkom += pracovnaDoba;
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac) {
-                    for (let ep in evidenciaPrac) {
+                    if (app.log) {message("...prepočítavam evidenciu prác")}
+                    for (let ep = 0; ep < evidenciaPrac.length; ep++) {
                         const zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
                         const naZakazke = evidenciaPrac[ep].field("Pracovná doba");
                         for (let znz in zamNaZakazke) {
