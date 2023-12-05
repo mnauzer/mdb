@@ -43,25 +43,26 @@ const get = {
     },
     openLibName(){
         get.library()
-        app.openLib.name = app.lib.title // lib().title
+        get.openDb()
+        app.openLib.name = app.openLib.db.name // lib().title
     },
     openDb(){
         message("getting DB")
         try {
             get.season()
             get.openLibName()
-            const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
-            app.openLib.db = dbLib
-            app.openLib.ID = dbLib[0].field("ID")
-            app.openLib.prefix = dbLib[0].field("Prefix")
+            const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
+            app.openLib.db = dbLib[0]
+            app.openLib.ID = app.openLib.db.field("ID")
+            app.openLib.prefix = app.openLib.db.field("Prefix")
             // entry attributes
-            app.openLib.lastNum = dbLib[0].atrr("posledné číslo")
-            app.openLib.nextNum = dbLib[0].atrr("naseledujúce číslo")
-            app.openLib.reservedNum = dbLib[0].atrr("rezervované číslo")
-            app.openLib.removedNums = dbLib[0].atrr("vymazané čísla")
-            app.openLib.isPrefix = dbLib[0].atrr("prefix")
-            app.openLib.trim = dbLib[0].atrr("trim")
-            app.openLib.trailingDigit = dbLib[0].atrr("trailing digit")
+            app.openLib.lastNum = app.openLib.db.atrr("posledné číslo")
+            app.openLib.nextNum = app.openLib.db.atrr("naseledujúce číslo")
+            app.openLib.reservedNum = app.openLib.db.atrr("rezervované číslo")
+            app.openLib.removedNums = app.openLib.db.atrr("vymazané čísla")
+            app.openLib.isPrefix = app.openLib.db.atrr("prefix")
+            app.openLib.trim = app.openLib.db.atrr("trim")
+            app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
         } catch (error) {
             message(error)
             message(error.lineNumber)
@@ -70,7 +71,6 @@ const get = {
     },
     sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
-        get.season()
         app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
         app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
     },
@@ -87,10 +87,7 @@ const calc = {
 }
 
 const runGetters = () => {
-    get.library()
-    get.season()
     get.openLibName()
-    get.openDb()
     get.sadzbyDPH()
 }
 const logAppVariableStore = () => {
