@@ -136,9 +136,9 @@ const set = {
     },
     log(){
         app.runningScript = 'set.log()'
-        const current = app.log
+        const current = !app.log
         try {
-            libByName(app.data.tenants).find(app.data.tenant)[0].set("log", !current)
+            libByName(app.data.tenants).find(app.data.tenant)[0].set("log", current)
             initApp()
             if (app.log) {
                 message('log zapnutý')
