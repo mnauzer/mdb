@@ -48,5 +48,7 @@ const libOpen = () => {
     get.name()
     get.db()
 
-    message(app.name + ' v.' + app.version + '\n' +  app.openLib.name )
+    message(app.name + ' v.' + app.version +
+    '\n' +  app.openLib.name +
+    '\n' +  app.season )
 }
