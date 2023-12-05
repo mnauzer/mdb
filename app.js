@@ -82,6 +82,7 @@ const get = {
             message(newNumber)
             app.openLib.number = newNumber
             app.runningScript = null
+            return newNumber
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
