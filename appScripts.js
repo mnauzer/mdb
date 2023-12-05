@@ -33,7 +33,7 @@ const get = {
         app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
     },
     library(){
-
+        app.lib = lib()
     },
 }
 
@@ -49,6 +49,7 @@ const libOpen = () => {
     get.season()
     get.name()
     get.db()
+    get.library()
 
     message(app.name + ' v.' + app.version +
     '\nopenLib.name: ' +  app.openLib.name +
@@ -59,6 +60,7 @@ const testGetters = () => {
     get.season()
     get.name()
     get.db()
+    get.library()
 }
 const logAppVariableStore = () => {
         const storeVariables =
@@ -66,6 +68,7 @@ const logAppVariableStore = () => {
         +'\napp.version: ' + app.version
         +'\napp.season: ' +  app.season
         +'\napp.openLib.name: ' +  app.openLib.name
+        +'\napp.lib: ' +  app.lib
         const errorLib = libByName(app.errors)
         const newError = new Object()
         newError['type'] = 'log'
