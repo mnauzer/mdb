@@ -5,6 +5,7 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
     app.initScript = initScript
     try {
         // výpočet pracovnej doby
+        if (app.log) {message("...prepocitatZaznamDochadzky()")}
         const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         const odchod = roundTimeQ(en.field("Odchod"));
         const datum = en.field(DATE)
@@ -87,6 +88,7 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
     app.initScript = initScript
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+        if (app.log) {message("...sadzbaZamestnanca()")}
         const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
         const dateField ="Platnosť od"
         let sadzba = 0
