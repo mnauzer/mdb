@@ -54,13 +54,13 @@ const get = {
             app.openLib.ID = app.openLib.db[0].field("ID")
             app.openLib.prefix = app.openLib.db[0].field("Prefix")
             // entry attributes
-            app.openLib.lastNum = app.openLib.db.atrr("posledné číslo")
-            app.openLib.nextNum = app.openLib.db.atrr("naseledujúce číslo")
-            app.openLib.reservedNum = app.openLib.db.atrr("rezervované číslo")
-            app.openLib.removedNums = app.openLib.db.atrr("vymazané čísla")
-            app.openLib.isPrefix = app.openLib.db.atrr("prefix")
-            app.openLib.trim = app.openLib.db.atrr("trim")
-            app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
+            app.openLib.lastNum = app.openLib.db[0].atrr("posledné číslo")
+            app.openLib.nextNum = app.openLib.db[0].atrr("naseledujúce číslo")
+            app.openLib.reservedNum = app.openLib.db[0].atrr("rezervované číslo")
+            app.openLib.removedNums = app.openLib.db[0].atrr("vymazané čísla")
+            app.openLib.isPrefix = app.openLib.db[0].atrr("prefix")
+            app.openLib.trim = app.openLib.db[0].atrr("trim")
+            app.openLib.trailingDigit = app.openLib.db[0].atrr("trailing digit")
         } catch (error) {
             createErrorEntry(logAppVariableStore(), error)
         }
