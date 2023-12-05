@@ -32,7 +32,7 @@ const app = {
         zakladna: null,
         znizena: null,
     }
-    }
+}
 const get = {
     // app getters
     library(){
