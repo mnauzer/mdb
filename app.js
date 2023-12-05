@@ -16,6 +16,8 @@ const app = {
     runningScript: null,
     libFile: 'appScripts.js',
     season: null,
+    log: false,
+    debug: false,
     openLib: {
         name: null,
         db: null,
@@ -45,6 +47,8 @@ const get = {
     },
     season(){
         app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
+        app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
+        app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
     },
     openLibName(){
         app.openLib.name = app.openLib.db.title // lib().title
@@ -127,7 +131,38 @@ const set = {
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
-
+    },
+    log(){
+        app.runningScript = 'set.log()'
+        const current = app.log
+        try {
+            libByName(app.data.tenants).find(app.data.tenant)[0].set("log", !current)
+            initApp()
+            if (app.log) {
+                message('log zapnutý')
+            } else {
+                message('log vypnutý')
+            }
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
+    },
+    debug(){
+        app.runningScript = 'set.debug()'
+        const current = app.debug
+        try {
+            libByName(app.data.tenants).find(app.data.tenant)[0].set("debug", !current)
+            initApp()
+            if (app.log) {
+                message('debug zapnutý')
+            } else {
+                message('debug vypnutý')
+            }
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
     }
 }
 const calc = {
