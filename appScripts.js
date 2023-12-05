@@ -57,13 +57,13 @@ const get = {
             app.openLib.ID = app.openLib.db[0].field("ID")
             app.openLib.prefix = app.openLib.db[0].field("Prefix")
             // entry attributes
-            app.openLib.lastNum = dbLib.atrr("posledné číslo")
-            app.openLib.nextNum = dbLib.atrr("naseledujúce číslo")
-            app.openLib.reservedNum = dbLib.atrr("rezervované číslo")
-            app.openLib.removedNums = dbLib.atrr("vymazané čísla")
-            app.openLib.isPrefix = dbLib.atrr("prefix")
-            app.openLib.trim = dbLib.atrr("trim")
-            app.openLib.trailingDigit = dbLib.atrr("trailing digit")
+            app.openLib.lastNum = app.openLib.db[0].attr("posledné číslo")
+            app.openLib.nextNum = app.openLib.db[0].attr("naseledujúce číslo")
+            app.openLib.reservedNum = app.openLib.db[0].attr("rezervované číslo")
+            app.openLib.removedNums = app.openLib.db[0].attr("vymazané čísla")
+            app.openLib.isPrefix = app.openLib.db[0].attr("prefix")
+            app.openLib.trim = app.openLib.db[0].attr("trim")
+            app.openLib.trailingDigit = app.openLib.db[0].attr("trailing digit")
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
