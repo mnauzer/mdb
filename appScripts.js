@@ -3,7 +3,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '23.1.0004',
+        version: '23.1.0005',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -13,6 +13,7 @@ const app = {
     },
     msg: null,
     runningScript: null,
+    libFile: 'appScripts.js',
     season: null,
     openLib: {
         name: null,
@@ -56,13 +57,13 @@ const get = {
             app.openLib.ID = app.openLib.db[0].field("ID")
             app.openLib.prefix = app.openLib.db[0].field("Prefix")
             // entry attributes
-            app.openLib.lastNum = app.openLib.db[0].atrr("posledné číslo")
-            app.openLib.nextNum = app.openLib.db[0].atrr("naseledujúce číslo")
-            app.openLib.reservedNum = app.openLib.db[0].atrr("rezervované číslo")
-            app.openLib.removedNums = app.openLib.db[0].atrr("vymazané čísla")
-            app.openLib.isPrefix = app.openLib.db[0].atrr("prefix")
-            app.openLib.trim = app.openLib.db[0].atrr("trim")
-            app.openLib.trailingDigit = app.openLib.db[0].atrr("trailing digit")
+            app.openLib.lastNum = app.openLib.db.atrr("posledné číslo")
+            app.openLib.nextNum = app.openLib.db.atrr("naseledujúce číslo")
+            app.openLib.reservedNum = app.openLib.db.atrr("rezervované číslo")
+            app.openLib.removedNums = app.openLib.db.atrr("vymazané čísla")
+            app.openLib.isPrefix = app.openLib.db.atrr("prefix")
+            app.openLib.trim = app.openLib.db.atrr("trim")
+            app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
@@ -118,15 +119,16 @@ const logAppVariableStore = (msg) => {
 }
 const createLogEntry = (msg) => {
         const errorLib = libByName(app.data.errors)
-        const newError = new Object()
-        newError['type'] = 'log'
-        newError['date'] = new Date()
-        newError['memento library'] = app.openLib.name
-        newError['script'] = app.runningScript
-        newError['text'] = 'app store variables'
-        newError['variables'] = logAppVariableStore(msg)
-        newError['note'] = 'generované scriptom createLogEntry'
-        errorLib.create(newError)
+        const newLog = new Object()
+        newLog['type'] = 'log'
+        newLog['date'] = new Date()
+        newLog['memento library'] = app.openLib.name
+        newLog['library'] = app.libFile
+        newLog['script'] = app.runningScript
+        newLog['text'] = 'app store variables'
+        newLog['variables'] = logAppVariableStore(msg)
+        newLog['note'] = 'generované scriptom createLogEntry'
+        errorLib.create(newLog)
 }
 const createErrorEntry = (msg, error) => {
         message(error)
@@ -136,6 +138,7 @@ const createErrorEntry = (msg, error) => {
         newError['type'] = 'error'
         newError['date'] = new Date()
         newError['memento library'] = app.openLib.name
+        newError['library'] = app.libFile
         newError['script'] = app.runningScript
         newError['text'] = error
         newError['line'] = error.lineNumber
