@@ -3,7 +3,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '23.1.0005',
+        version: '23.1.0006',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -64,6 +64,7 @@ const get = {
             app.openLib.isPrefix = app.openLib.db.attr("prefix")
             app.openLib.trim = app.openLib.db.attr("trim")
             app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
+            app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
@@ -75,6 +76,7 @@ const get = {
         try {
             app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
+            app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
@@ -84,6 +86,7 @@ const get = {
         app.runningScript = 'get.sadzbaZamestnanca()'
         try {
             // code here
+            app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
