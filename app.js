@@ -89,7 +89,7 @@ const get = {
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             app.openLib.number = newNumber
-            message('Nové číslo: ' + newNumber)
+            if (app.log) {message('Nové číslo: ' + newNumber)}
             app.runningScript = null
             return newNumber
         } catch (error) {
@@ -179,6 +179,8 @@ const logAppVariableStore = (msg) => {
         'name: ' + app.data.name
         +'\nversion: ' + app.data.version
         +'\nseason: ' +  app.season
+        +'\nlog: ' +  app.log
+        +'\ndebug: ' +  app.debug
         +'\nopenLib.name: ' +  app.openLib.name
         +'\nopenLib.db: ' +  app.openLib.db
         +'\nopenLib.ID: ' +  app.openLib.ID
