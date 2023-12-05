@@ -66,7 +66,7 @@ const get = {
             app.openLib.isPrefix = app.openLib.db.attr("prefix")
             app.openLib.trim = app.openLib.db.attr("trim")
             app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
-            app.openLib.number = get.number()
+            app.openLib.number = this.get.number()
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -76,9 +76,10 @@ const get = {
         // vyskladaj nové číslo záznamu
         app.runningScript = 'get.number()'
         try {
-            app.openLib.number = app.openLib.isPrefix
+            const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
+            message(newNumber)
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
