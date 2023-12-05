@@ -66,7 +66,7 @@ const get = {
             app.openLib.isPrefix = app.openLib.db.attr("prefix")
             app.openLib.trim = app.openLib.db.attr("trim")
             app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
-            app.openLib.number = this.get.number()
+            app.openLib.number = this.number()
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
