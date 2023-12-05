@@ -71,11 +71,22 @@ const get = {
     },
     sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
-        app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
-        app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
+        app.runningScript = 'get.sadzbyDPH()'
+        try {
+            app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
+            app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
     },
     sadzbaZamestnanca(zamestnanec, datum){
         // nájdi poslednú aktuálnu zamestnanca
+        app.runningScript = 'get.sadzbaZamestnanca()'
+        try {
+            // code here
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
     },
 
 }
