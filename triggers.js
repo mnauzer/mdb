@@ -64,7 +64,8 @@ const newEntryAfterSave = (initScript) => {
     try {
         if (app.log) {message("...after save")}
         const createdEntry = lib().entries()[0]
-        if (app.log) {message("...entry name: " + createdEntry.name)}
+        if (app.log) {message("...entry number: " + createdEntry.field(NUMBER_ENTRY) )}
+        if (app.log) {message("...app.openLib.nextNum: " + Number(app.openLib.nextNum) )}
         if (createdEntry.field(NUMBER_ENTRY) == Number(app.openLib.nextNum)) {
             if (app.log) {message("...entry successfully created")}
             set.number()
