@@ -80,6 +80,7 @@ const get = {
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             message(newNumber)
+            app.openLib.number = newNumber
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
