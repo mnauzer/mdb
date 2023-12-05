@@ -165,6 +165,22 @@ const set = {
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
+    },
+    numberPrefix(){
+        app.runningScript = 'set.numberPrefix()'
+        const current = app.openLib.isPrefix
+        try {
+            app.openLib.db.setAttr("prefix", !current)
+            initApp()
+            if (app.log) {
+                message('prefix čísla zapnutý')
+            } else {
+                message('prefix čísla vypnutý')
+            }
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
     }
 }
 const calc = {
