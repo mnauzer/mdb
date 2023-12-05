@@ -17,7 +17,11 @@ const app = {
     en: null,
     enD: null,
     lib: null,
-}
+    dph: {
+        zakladna: null,
+        znizena: null,
+    }
+    }
 const get = {
     // app getters
     library(){
@@ -36,6 +40,15 @@ const get = {
         const dbLib = libByName(app.app).find(app.season)[0].field("Databázy")
         app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
     },
+    sadzbyDPH(){
+        // nájdi sadzby DPH pre sezónu
+        get.season()
+        app.dph.zakladna = libByName(app.app).find(app.season)[0].field("Základná sadzba DPH")
+        app.dph.znizena = libByName(app.app).find(app.season)[0].field("Znížená sadzba DPH")
+    },
+    sadzbaZamestnanca(zamestnanec, datum){
+        // nájdi poslednú aktuálnu zamestnanca
+    },
 
 }
 const set = {
@@ -50,6 +63,7 @@ const runGetters = () => {
     get.season()
     get.openLibName()
     get.openDb()
+    get.sadzbyDPH()
 }
 const logAppVariableStore = () => {
     const storeVariables =
@@ -58,6 +72,8 @@ const logAppVariableStore = () => {
         +'\napp.season: ' +  app.season
         +'\napp.openLib.name: ' +  app.openLib.name
         +'\napp.lib: ' +  app.lib
+        +'\napp.dph.zakladna: ' +  app.dph.zakladna
+        +'\napp.dph.znizena: ' +  app.dph.znizena
 
     createLogEntry(storeVariables)
 }
