@@ -144,7 +144,7 @@ const set = {
             storeDB.set("log", app.log)
             storeDB.set("debug", app.debug)
             storeDB.set("openLib.name", app.openLib.name)
-            storeDB.set("openLib.db", app.openLib.db ? app.openLib.db.id : null)
+            storeDB.set("openLib.db.id", app.openLib.db ? app.openLib.db.id : null)
             storeDB.set("openLib.prefix", app.openLib.prefix)
             storeDB.set("openLib.lastNum", app.openLib.lastNum)
             storeDB.set("openLib.nextNum", app.openLib.nextNum)
@@ -156,7 +156,7 @@ const set = {
             storeDB.set("openLib.number", app.openLib.number)
             storeDB.set("dph.zakladna", app.dph.zakladna)
             storeDB.set("dph.znizena", app.dph.znizena)
-            storeDB.set("en", app.en ? app.en.id : null)
+            storeDB.set("en.id", app.en ? app.en.id : null)
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
