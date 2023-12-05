@@ -53,17 +53,17 @@ const get = {
             get.library()
             get.season(season)
             const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
-            app.openLib.db = dbLib
-            app.openLib.ID = app.openLib.db[0].field("ID")
-            app.openLib.prefix = app.openLib.db[0].field("Prefix")
+            app.openLib.db = dbLib[0]
+            app.openLib.ID = app.openLib.db.field("ID")
+            app.openLib.prefix = app.openLib.db.field("Prefix")
             // entry attributes
-            app.openLib.lastNum = app.openLib.db[0].attr("posledné číslo")
-            app.openLib.nextNum = app.openLib.db[0].attr("naseledujúce číslo")
-            app.openLib.reservedNum = app.openLib.db[0].attr("rezervované číslo")
-            app.openLib.removedNums = app.openLib.db[0].attr("vymazané čísla")
-            app.openLib.isPrefix = app.openLib.db[0].attr("prefix")
-            app.openLib.trim = app.openLib.db[0].attr("trim")
-            app.openLib.trailingDigit = app.openLib.db[0].attr("trailing digit")
+            app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
+            app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
+            app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
+            app.openLib.removedNums = app.openLib.db.attr("vymazané čísla")
+            app.openLib.isPrefix = app.openLib.db.attr("prefix")
+            app.openLib.trim = app.openLib.db.attr("trim")
+            app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
