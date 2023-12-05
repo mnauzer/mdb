@@ -78,6 +78,7 @@ const get = {
             } else {
                 message('Nie je vytvorený záznam v app pre sezónu ' + app.season)
             }
+            set.storeDb()
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -123,6 +124,40 @@ const get = {
 }
 const set = {
     // app setters
+    storeDb(){
+        app.runningScript = 'get.storeDb()'
+        try {
+            const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
+            storeDB.set("data.name", app.data.name)
+            storeDB.set("data.version", app.data.version)
+            storeDB.set("data.app", app.data.app)
+            storeDB.set("data.db", app.data.db)
+            storeDB.set("data.errors", app.data.errors)
+            storeDB.set("data.tenants", app.data.tenants)
+            storeDB.set("data.scripts", app.data.scripts)
+            storeDB.set("data.todo", app.data.todo)
+            storeDB.set("data.tenant", app.data.tenant)
+            storeDB.set("msg", app.msg)
+            storeDB.set("runningScript", app.runningScript)
+            storeDB.set("libFile", app.libFile)
+            storeDB.set("season", app.season)
+            storeDB.set("log", app.log)
+            storeDB.set("debug", app.debug)
+            storeDB.set("openLib.name", app.openLib.name)
+            storeDB.set("openLib.db", app.openLib.db)
+            storeDB.set("openLib.prefix", app.openLib.prefix)
+            storeDB.set("openLib.lastNum", app.openLib.lastNum)
+            storeDB.set("openLib.nextNum", app.openLib.nextNum)
+            storeDB.set("openLib.reservedNum", app.openLib.reservedNum)
+            storeDB.set("openLib.removedNums", app.openLib.removedNums)
+            storeDB.set("openLib.isPrefix", app.openLib.isPrefix)
+            storeDB.set("openLib.trailingDigit", app.openLib.trailingDigit)
+            storeDB.set("openLib.trim", app.openLib.trim)
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
+    },
     season(arg){
         app.runningScript = 'set.season()'
         try {
