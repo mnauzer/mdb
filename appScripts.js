@@ -97,7 +97,7 @@ const calc = {
     // app mutators
 }
 
-const runGetters = () => {
+const initApp = () => {
     get.openDb()
     get.openLibName()
     get.sadzbyDPH()
@@ -159,7 +159,7 @@ const createErrorEntry = (msg, error) => {
 }
 // TRIGGERS
 const libOpen = () => {
-    runGetters()
+    initApp()
     message(app.data.name + ' v.' + app.data.version +
     '\n' +  app.openLib.name +' ' +  app.season )
 }
