@@ -221,10 +221,11 @@ const set = {
     },
     number(){
         app.runningScript = 'set.number()'
+        app.libFile = 'app.js'
         try {
             if (app.log) {message("...set.number()")}
             app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
-            app.openLib.db.setAttr("nasledujúce číslo", Number(app.openLib.nextNum) + 1)
+            app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
             initApp()
             app.runningScript = null
         } catch (error) {
