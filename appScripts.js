@@ -62,7 +62,7 @@ const get = {
             app.openLib.trim = app.openLib.db.atrr("trim")
             app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
         } catch (error) {
-            createErrorEntry(msg, error)
+            createErrorEntry(logAppVariableStore(), error)
         }
 
     },
@@ -88,7 +88,7 @@ const runGetters = () => {
     get.openLibName()
     get.sadzbyDPH()
 }
-const logAppVariableStore = () => {
+const logAppVariableStore = (msg) => {
     const storeVariables =
         'name: ' + app.data.name
         +'\nversion: ' + app.data.version
@@ -109,8 +109,10 @@ const logAppVariableStore = () => {
         +'\nlib: ' +  app.lib
         +'\ndph.zakladna: ' +  app.dph.zakladna
         +'\ndph.znizena: ' +  app.dph.znizena
+        +'\nmsg: ' +  msg
 
-    createLogEntry(storeVariables)
+
+    return storeVariables
 }
 const createLogEntry = (msg) => {
         const errorLib = libByName(app.data.errors)
@@ -120,7 +122,7 @@ const createLogEntry = (msg) => {
         newError['memento library'] = app.openLib.name
         newError['script'] = 'logAppVariableStore'
         newError['text'] = 'app store variables'
-        newError['variables'] = msg
+        newError['variables'] = logAppVariableStore(msg)
         newError['note'] = 'generované scriptom createLogEntry'
         errorLib.create(newError)
 }
@@ -133,7 +135,7 @@ const createErrorEntry = (msg, error) => {
         newError['script'] = 'logAppVariableStore'
         newError['text'] = error
         newError['line'] = error.lineNumber
-        newError['variables'] = msg
+        newError['variables'] = logAppVariableStore(msg)
         newError['note'] = 'generované scriptom createErrorEntry'
         errorLib.create(newError)
 }
