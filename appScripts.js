@@ -2,7 +2,7 @@
 const app = {
     // app store
     name: 'ASISTANTO',
-    version: '23.1.0001',
+    version: '23.1.0002',
     app: "ASISTANTO",
     db: "ASISTANTO DB",
     errors: "ASISTANTO Errors",
@@ -20,20 +20,23 @@ const app = {
 }
 const get = {
     // app getters
-    season(){
-        app.season = libByName(app.tenants).find("KRAJINKA")[0].field("default season")
-    },
-    name(){
-        app.openLib.name = lib().name
-    },
-    db(){
-        const dbLib = libByName(app.app).find(app.season)[0].field("Databázy")
-        app.openLib.name = lib().name;
-        app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
-    },
     library(){
         app.lib = lib()
     },
+    season(){
+        app.season = libByName(app.tenants).find("KRAJINKA")[0].field("default season")
+    },
+    openLibName(){
+        get.library()
+        app.openLib.name = app.lib.name
+    },
+    openDb(){
+        get.season()
+        get.openLibName()
+        const dbLib = libByName(app.app).find(app.season)[0].field("Databázy")
+        app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
+    },
+
 }
 const set = {
     // app setters
@@ -43,10 +46,10 @@ const calc = {
 }
 
 const runGetters = () => {
-    get.season()
-    get.name()
-    get.db()
     get.library()
+    get.season()
+    get.openLibName()
+    get.openDb()
 }
 const logAppVariableStore = () => {
     const storeVariables =
