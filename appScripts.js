@@ -24,10 +24,11 @@ const app = {
         lastNum: null,
         nextNum: null,
         reservedNum: null,
-        removedNums: null,
+        removedNums: [],
         isPrefix: null,
         trim: null,
         trailingDigit: null,
+        number: null,
     },
     en: null,
     enD: null,
@@ -65,11 +66,22 @@ const get = {
             app.openLib.isPrefix = app.openLib.db.attr("prefix")
             app.openLib.trim = app.openLib.db.attr("trim")
             app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
+            app.openLib.number = get.number()
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
-
+    },
+    number(){
+        // vyskladaj nové číslo záznamu
+        app.runningScript = 'get.number()'
+        try {
+            // code here
+            return null
+            app.runningScript = null
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
     },
     sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
@@ -134,6 +146,7 @@ const logAppVariableStore = (msg) => {
         +'\nopenLib.isPrefix: ' +  app.openLib.isPrefix
         +'\nopenLib.trim: ' +  app.openLib.trim
         +'\nopenLib.trailingDigit: ' +  app.openLib.trailingDigit
+        +'\nopenLib.number: ' +  app.openLib.number
         +'\nen: ' +  app.en
         +'\nenD: ' +  app.enD
         +'\nlib: ' +  app.lib
@@ -145,6 +158,7 @@ const logAppVariableStore = (msg) => {
     return storeVariables
 }
 const createLogEntry = (msg) => {
+        message("Nový záznam vytvorený")
         const errorLib = libByName(app.data.errors)
         const newLog = new Object()
         newLog['type'] = 'log'
