@@ -28,7 +28,7 @@ const get = {
     },
     db(){
         const dbLib = libByName(app.lib.app).find(app.season)[0].field("Databázy")
-        app.openLib.db = dbLib.filter(en => en.field("Názov") == app.openLib.name)
+        app.openLib.db = dbLib.filter(en => en.field("Názov") == lib().name)
     },
     library(){
 
