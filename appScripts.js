@@ -62,8 +62,7 @@ const get = {
             app.openLib.trim = app.openLib.db.atrr("trim")
             app.openLib.trailingDigit = app.openLib.db.atrr("trailing digit")
         } catch (error) {
-            message(error)
-            message(error.lineNumber)
+            createErrorEntry(msg, error)
         }
 
     },
@@ -113,7 +112,7 @@ const logAppVariableStore = () => {
 
     createLogEntry(storeVariables)
 }
-const createLogEntry = (msg) =>{
+const createLogEntry = (msg) => {
         const errorLib = libByName(app.data.errors)
         const newError = new Object()
         newError['type'] = 'log'
@@ -122,7 +121,20 @@ const createLogEntry = (msg) =>{
         newError['script'] = 'logAppVariableStore'
         newError['text'] = 'app store variables'
         newError['variables'] = msg
-        newError['note'] = 'generované scriptom logAppVariableStore'
+        newError['note'] = 'generované scriptom createLogEntry'
+        errorLib.create(newError)
+}
+const createErrorEntry = (msg, error) => {
+        const errorLib = libByName(app.data.errors)
+        const newError = new Object()
+        newError['type'] = 'error'
+        newError['date'] = new Date()
+        newError['memento library'] = app.openLib.name
+        newError['script'] = 'logAppVariableStore'
+        newError['text'] = error
+        newError['line'] = error.lineNumber
+        newError['variables'] = msg
+        newError['note'] = 'generované scriptom createErrorEntry'
         errorLib.create(newError)
 }
 // TRIGGERS
