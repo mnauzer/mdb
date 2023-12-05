@@ -100,6 +100,15 @@ const logAppVariableStore = () => {
         +'\nseason: ' +  app.season
         +'\nopenLib.name: ' +  app.openLib.name
         +'\nopenLib.db: ' +  app.openLib.db
+        +'\nopenLib.ID: ' +  app.openLib.ID
+        +'\nopenLib.prefix: ' +  app.openLib.prefix
+        +'\nopenLib.lastNum: ' +  app.openLib.lastNum
+        +'\nopenLib.nextNum: ' +  app.openLib.nextNum
+        +'\nopenLib.reservedNum: ' +  app.openLib.reservedNum
+        +'\nopenLib.removedNums: ' +  app.openLib.removedNums
+        +'\nopenLib.isPrefix: ' +  app.openLib.isPrefix
+        +'\nopenLib.trim: ' +  app.openLib.trim
+        +'\nopenLib.trailingDigit: ' +  app.openLib.trailingDigit
         +'\nen: ' +  app.en
         +'\nenD: ' +  app.enD
         +'\nlib: ' +  app.lib
