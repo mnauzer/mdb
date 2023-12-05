@@ -276,7 +276,7 @@ const logAppVariableStore = (msg) => {
     return storeVariables
 }
 const createLogEntry = (msg) => {
-        message("Nový záznam vytvorený")
+        if (app.log) {message("Nový záznam vytvorený")}
         const errorLib = libByName(app.data.errors)
         const newLog = new Object()
         newLog['type'] = 'log'
@@ -290,8 +290,8 @@ const createLogEntry = (msg) => {
         errorLib.create(newLog)
 }
 const createErrorEntry = (msg, error) => {
-        message(error)
-        message(error.lineNumber)
+        if (app.log) {message(error)}
+        if (app.log) {message(error.lineNumber)}
         const errorLib = libByName(app.data.errors)
         const newError = new Object()
         newError['type'] = 'error'
