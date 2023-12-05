@@ -46,6 +46,7 @@ const get = {
         app.openLib.name = app.lib.title // lib().title
     },
     openDb(){
+        message("getting DB")
         try {
             get.season()
             get.openLibName()
