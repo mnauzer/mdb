@@ -55,18 +55,22 @@ const get = {
             get.library()
             get.season(season)
             const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.lib.title)
-            app.openLib.db = dbLib[0]
-            app.openLib.ID = app.openLib.db.field("ID")
-            app.openLib.prefix = app.openLib.db.field("Prefix")
-            // entry attributes
-            app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
-            app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
-            app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
-            app.openLib.removedNums = app.openLib.db.attr("vymazané čísla")
-            app.openLib.isPrefix = app.openLib.db.attr("prefix")
-            app.openLib.trim = app.openLib.db.attr("trim")
-            app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
-            app.openLib.number = this.number()
+            if (dbLib){
+                app.openLib.db = dbLib[0]
+                app.openLib.ID = app.openLib.db.field("ID")
+                app.openLib.prefix = app.openLib.db.field("Prefix")
+                // entry attributes
+                app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
+                app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
+                app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
+                app.openLib.removedNums = app.openLib.db.attr("vymazané čísla")
+                app.openLib.isPrefix = app.openLib.db.attr("prefix")
+                app.openLib.trim = app.openLib.db.attr("trim")
+                app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
+                app.openLib.number = this.number()
+            } else {
+                message('Nie je vytvorený záznam v app pre sezónu ' + app.season)
+            }
             app.runningScript = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
