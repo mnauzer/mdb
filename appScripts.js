@@ -46,20 +46,25 @@ const get = {
         app.openLib.name = app.lib.title // lib().title
     },
     openDb(){
-        get.season()
-        get.openLibName()
-        const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
-        app.openLib.db = dbLib
-        app.openLib.ID = dbLib.field("ID")
-        app.openLib.prefix = dbLib.field("Prefix")
-        // entry attributes
-        app.openLib.lastNum = dbLib.atrr("posledné číslo")
-        app.openLib.nextNum = dbLib.atrr("naseledujúce číslo")
-        app.openLib.reservedNum = dbLib.atrr("rezervované číslo")
-        app.openLib.removedNums = dbLib.atrr("vymazané čísla")
-        app.openLib.isPrefix = dbLib.atrr("prefix")
-        app.openLib.trim = dbLib.atrr("trim")
-        app.openLib.trailingDigit = dbLib.atrr("trailing digit")
+        try {
+            get.season()
+            get.openLibName()
+            const dbLib = libByName(app.data.app).find(app.season)[0].field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
+            app.openLib.db = dbLib
+            app.openLib.ID = dbLib.field("ID")
+            app.openLib.prefix = dbLib.field("Prefix")
+            // entry attributes
+            app.openLib.lastNum = dbLib.atrr("posledné číslo")
+            app.openLib.nextNum = dbLib.atrr("naseledujúce číslo")
+            app.openLib.reservedNum = dbLib.atrr("rezervované číslo")
+            app.openLib.removedNums = dbLib.atrr("vymazané čísla")
+            app.openLib.isPrefix = dbLib.atrr("prefix")
+            app.openLib.trim = dbLib.atrr("trim")
+            app.openLib.trailingDigit = dbLib.atrr("trailing digit")
+        } catch (error) {
+            message(error)
+            message(error.lineNumber)
+        }
 
     },
     sadzbyDPH(){
