@@ -78,3 +78,18 @@ const newEntryAfterSave = (initScript) => {
         createErrorEntry(app.runningScript, error)
     }
 }
+
+const removeEntry = (en, initScript) => {
+    app.runningScript = 'removeEntry()'
+    app.libFile = 'triggers.js'
+    app.initScript = initScript
+    try {
+        if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
+        app.openLib.removedNums.push(en.field(NUMBER_ENTRY))
+        app.runningScript = null
+        app.libFile = null
+        app.initScript = null
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}

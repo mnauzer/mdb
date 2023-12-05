@@ -86,6 +86,10 @@ const get = {
         // vyskladaj nové číslo záznamu
         app.runningScript = 'get.number()'
         try {
+            // najprv zisti či nie sú vymazané čísla
+            if (app.openLib.removedNums){
+                if (app.log) {message("...removedNums: " + app.openLib.removedNums)}
+            }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
@@ -291,8 +295,8 @@ const createLogEntry = (msg) => {
         errorLib.create(newLog)
 }
 const createErrorEntry = (msg, error) => {
-        if (app.log) {message(error)}
-        if (app.log) {message(error.lineNumber)}
+        if (app.debug) {message(error)}
+        if (app.debug) {message(error.lineNumber)}
         const errorLib = libByName(app.data.errors)
         const newError = new Object()
         newError['type'] = 'error'
