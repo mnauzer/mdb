@@ -62,7 +62,7 @@ const get = {
             app.openLib.trim = app.openLib.db[0].atrr("trim")
             app.openLib.trailingDigit = app.openLib.db[0].atrr("trailing digit")
         } catch (error) {
-            createErrorEntry(logAppVariableStore(), error)
+            createErrorEntry('openDb', error)
         }
 
     },
