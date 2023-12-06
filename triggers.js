@@ -86,6 +86,7 @@ const removeEntryBefore = (en, initScript) => {
     app.initScript = initScript
     try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
+        message('remove before')
         app.openLib.removedNums.push(29)
         app.runningScript = null
         app.libFile = null
