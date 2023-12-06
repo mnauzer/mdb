@@ -44,7 +44,6 @@ const newEntryBeforeSave = (en, initScript) => {
 }
 
 const newEntryAfterSave = (en, initScript) => {
-    message('after save')
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message(app.runningScript)}
@@ -80,9 +79,9 @@ const newEntryAfterSave = (en, initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
+    if (app.log) {message(app.runningScript)}
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     try {
-        if (app.log) {message(app.runningScript)}
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
             case "Dochádzka":
@@ -103,9 +102,9 @@ const removeEntryBefore = (en, initScript) => {
     }
 }
 const removeEntryAfter = (en, initScript) => {
+    if (app.log) {message(app.runningScript)}
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
-        if (app.log) {message(app.runningScript)}
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(29)
         nullAppScripts()
