@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '1.02.0014',
+        version: '1.02.0015',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -144,9 +144,11 @@ const set = {
             createErrorEntry(app.runningScript, error)
         }
     },
-    storeDb(){
-        app.runningScript = 'get.storeDb()'
+    storeDb(initScript){
+        setAppScripts('set.storeDb()', 'app.js', initScript)
         try {
+            // Store to ASISTANTO Tenants
+            if (app.log) {message(app.runningScript)}
             const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
             storeDB.set("data.name", app.data.name)
             storeDB.set("data.version", app.data.version)
@@ -177,7 +179,15 @@ const set = {
             storeDB.set("dph.zakladna", app.dph.zakladna)
             storeDB.set("dph.znizena", app.dph.znizena)
             storeDB.set("en.id", app.en ? app.en.id : null)
-            app.runningScript = null
+
+            // Store to ASISTANTO open database
+            app.openLib.db.setAttr('názov', app.openLib.name)
+            app.openLib.db.setAttr('posledné číslo', app.openLib.lastNum)
+            app.openLib.db.setAttr('nasledujúce číslo', app.openLib.nextNum)
+            app.openLib.db.setAttr('rezervované číslo', app.openLib.reservedNum)
+            app.openLib.db.setAttr('vymazané čísla', app.openLib.removedNums)
+            app.openLib.db.setAttr('vygenerované číslo', app.openLib.number)
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
