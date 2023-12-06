@@ -14,7 +14,7 @@ const libOpen = (initScript) => {
 }
 const newEntry = (en, initScript)  => {
     setAppScripts('newEntry()', 'triggers.js', initScript)
-    try {
+  //  try {
         if (app.log) {message(app.runningScript)}
         ("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
@@ -26,9 +26,9 @@ const newEntry = (en, initScript)  => {
         en.set(SEASON, app.season)
         // code here
         nullAppScripts()
-    } catch (error) {
-        createErrorEntry(app.runningScript, error)
-    }
+    // } catch (error) {
+    //     createErrorEntry(app.runningScript, error)
+    // }
 }
 
 const newEntryBeforeSave = (en, initScript) => {
@@ -81,7 +81,7 @@ const newEntryAfterSave = (en, initScript) => {
 const removeEntryBefore = (en, initScript) => {
     if (app.log) {message(app.runningScript)}
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
-    try {
+    //try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
             case "Dochádzka":
@@ -97,9 +97,9 @@ const removeEntryBefore = (en, initScript) => {
                 break;
         }
         nullAppScripts()
-    } catch (error) {
-        createErrorEntry(app.runningScript, error)
-    }
+    // } catch (error) {
+    //     createErrorEntry(app.runningScript, error)
+    // }
 }
 const removeEntryAfter = (en, initScript) => {
     if (app.log) {message(app.runningScript)}
