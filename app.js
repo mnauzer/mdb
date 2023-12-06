@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '1.02.0011',
+        version: '1.02.0012',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -51,19 +51,19 @@ const get = {
     // app getters
     library(){
         app.openLib.lib = lib()
-        app.openLib.entries = app.openLib.lib.entries()
+        app.openLib.name = lib().title
+        app.openLib.entries = lib().entries()
         app.openLib.en = entry()
-        app.openLib.enD = entryDefault()
-
+        //app.openLib.enD = entryDefault()
     },
     season(){
         app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
     },
-    openLibName(){
-        app.openLib.name = app.openLib.db.title // lib().title
-    },
+    //openLibName(){
+    //     app.openLib.name = app.openLib.db.title // lib().title
+    // },
     openDb(){
         app.runningScript = 'get.openDb()'
         app.libFile = 'app.js'
@@ -72,7 +72,7 @@ const get = {
             get.season()
             const dbEntry = libByName(app.data.app).find(app.season)[0]
             if (dbEntry !== undefined){
-                const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.lib.title)
+                const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
                 app.openLib.db = dbLib[0]
                 app.openLib.ID = app.openLib.db.field("ID")
                 app.openLib.prefix = app.openLib.db.field("Prefix")
@@ -86,7 +86,7 @@ const get = {
                 app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
                 app.openLib.number = this.number()
             } else {
-                message('Nie je vytvorený záznam v app pre sezónu ' + app.season)
+                message('Nie je vytvorený záznam knižnice ' + app.openLib.name + ' pre sezónu ' + app.season)
             }
             set.storeDb()
             nullAppScripts()
@@ -125,17 +125,6 @@ const get = {
             createErrorEntry(app.runningScript, error)
         }
     },
-    sadzbaZamestnanca(zamestnanec, datum){
-        // nájdi poslednú aktuálnu zamestnanca
-        app.runningScript = 'get.sadzbaZamestnanca()'
-        try {
-            // code here
-            app.runningScript = null
-        } catch (error) {
-            createErrorEntry(app.runningScript, error)
-        }
-    },
-
 }
 const set = {
     // app setters
@@ -260,7 +249,7 @@ const initApp = () => {
     app.libFile = 'app.js'
     try {
         get.openDb()
-        get.openLibName()
+        //get.openLibName()
         get.sadzbyDPH()
         set.storeDb()
         nullAppScripts()
