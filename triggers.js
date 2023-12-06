@@ -42,14 +42,14 @@ const newEntryBeforeSave = (en, initScript) => {
             default:
                 break;
         }
-        createdEntry.set(VIEW, VIEW_PRINT)
+        en.set(VIEW, VIEW_PRINT)
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
 }
 
-const newEntryAfterSave = (initScript) => {
+const newEntryAfterSave = (en, initScript) => {
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message("...after save")}
