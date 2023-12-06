@@ -99,6 +99,7 @@ const removeEntryBefore = (en, initScript) => {
     //try {
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(en.field(NUMBER_ENTRY))
+        if (app.log) {message("BF...removedNums: " + app.openLib.removedNums)}
         switch (app.openLib.name) {
             case "Dochádzka":
                 break;
