@@ -16,7 +16,7 @@ const newEntry = (en, initScript)  => {
     setAppScripts('newEntry()', 'triggers.js', initScript)
   //  try {
         if (app.log) {message(app.runningScript)}
-        ("Nový záznam >> " + app.openLib.name)
+        message("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
