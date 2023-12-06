@@ -107,6 +107,19 @@ const removeEntryAfter = (en, initScript) => {
     try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(29)
+        switch (app.openLib.name) {
+            case "Dochádzka":
+                app.openLib.removedNums.push(29)
+                break;
+            case "Evidencia prác":
+                break;
+            case "Pokladňa":
+                break;
+            case "Kniha jázd":
+                break;
+            default:
+                break;
+        }
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
