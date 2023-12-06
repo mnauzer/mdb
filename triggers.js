@@ -3,6 +3,7 @@ const libOpen = (initScript) => {
     // trigger lib_open
     setAppScripts('libOpen()', 'triggers.js', initScript)
     try {
+        if (app.log) {message(app.runningScript)}
         initApp()
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.openLib.name +' ' +  app.season )
@@ -14,6 +15,7 @@ const libOpen = (initScript) => {
 const newEntry = (en, initScript)  => {
     setAppScripts('newEntry()', 'triggers.js', initScript)
     try {
+        if (app.log) {message(app.runningScript)}
         ("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
@@ -32,7 +34,7 @@ const newEntry = (en, initScript)  => {
 const newEntryBeforeSave = (en, initScript) => {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript)
     try {
-        if (app.log) {message("...before save")}
+        if (app.log) {message(app.runningScript)}
         switch (app.openLib.name) {
             case "Dochádzka":
                 prepocitatZaznamDochadzky(en, app.runningScript)
@@ -56,7 +58,7 @@ const newEntryBeforeSave = (en, initScript) => {
 const newEntryAfterSave = (en, initScript) => {
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
     try {
-        if (app.log) {message("...after save")}
+        if (app.log) {message(app.runningScript)}
         set.number()
         en.set(VIEW, VIEW_PRINT)
 
@@ -78,9 +80,21 @@ const newEntryAfterSave = (en, initScript) => {
 const removeEntryBefore = (en, initScript) => {
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     try {
+        if (app.log) {message(app.runningScript)}
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
-        message('remove before')
-        app.openLib.removedNums.push(29)
+        switch (app.openLib.name) {
+            case "Dochádzka":
+                app.openLib.removedNums.push(29)
+                break;
+            case "Evidencia prác":
+                break;
+            case "Pokladňa":
+                break;
+            case "Kniha jázd":
+                break;
+            default:
+                break;
+        }
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
@@ -89,6 +103,7 @@ const removeEntryBefore = (en, initScript) => {
 const removeEntryAfter = (en, initScript) => {
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
+        if (app.log) {message(app.runningScript)}
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(29)
         nullAppScripts()
