@@ -4,7 +4,7 @@ const libOpen = (initScript) => {
     setAppScripts('libOpen()', 'triggers.js', initScript)
     try {
         if (app.log) {message(app.runningScript)}
-        initApp()
+        set.app(app.runningScript)
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.openLib.name +' ' +  app.season )
         nullAppScripts()

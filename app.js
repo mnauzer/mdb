@@ -131,8 +131,8 @@ const get = {
 }
 // SETTERS
 const set = {
-    app(){
-        setAppScripts('set.app()', 'app.js')
+    app(initScript){
+        setAppScripts('set.app()', 'app.js', initScript)
         try {
             get.openDb()
             //get.openLibName()
