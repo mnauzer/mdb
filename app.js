@@ -276,9 +276,10 @@ const logAppVariableStore = (msg) => {
         +'\nopenLib.trim: ' +  app.openLib.trim
         +'\nopenLib.trailingDigit: ' +  app.openLib.trailingDigit
         +'\nopenLib.number: ' +  app.openLib.number
-        +'\nen: ' +  app.en
-        +'\nenD: ' +  app.enD
-        +'\nlib: ' +  app.lib
+        +'\nopenLib.lib: ' +  app.openLib.lib
+        +'\nopenLib.en: ' +  app.openLib.en
+        +'\nopenLib.entries: ' +  app.openLib.entries
+        +'\nopenLib.enD: ' +  app.openLib.enD
         +'\ndph.zakladna: ' +  app.dph.zakladna
         +'\ndph.znizena: ' +  app.dph.znizena
         +'\nmsg: ' +  msg
