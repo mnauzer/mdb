@@ -80,6 +80,7 @@ const newEntryAfterSave = (en, initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
+    set.app(app.runningScript)
     if (app.log) {message(app.runningScript)}
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     //try {
@@ -102,7 +103,7 @@ const removeEntryBefore = (en, initScript) => {
     //     createErrorEntry(app.runningScript, error)
     // }
 }
-const removeEntryAfter = (en, initScript) => {
+const removeEntryAfter = (en, initScript) => {u
     if (app.log) {message(app.runningScript)}
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
