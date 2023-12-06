@@ -36,7 +36,20 @@ const newEntryBeforeSave = (en, initScript) => {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message(app.runningScript)}
-
+        switch (app.openLib.name) {
+            case "Dochádzka":
+                prepocitatZaznamDochadzky(en, app.runningScript)
+                genDochadzkaZavazky(en, app.runningScript)
+                break;
+            case "Evidencia prác":
+                break;
+            case "Pokladňa":
+                break;
+            case "Kniha jázd":
+                break;
+            default:
+                break;
+        }
         en.set(VIEW, VIEW_PRINT)
         nullAppScripts()
     } catch (error) {

@@ -70,10 +70,10 @@ const get = {
             get.season()
             const dbEntry = libByName(app.data.app).find(app.season)[0]
             if (dbEntry !== undefined){
-                if (app.log) {message("...openDbSeason: " + app.season)}
+                //if (app.log) {message("...openDbSeason: " + app.season)}
                 const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
                 if (dbLib !== undefined){
-                    if (app.log) {message("...openDb: " + dbEntry.name)}
+                    //if (app.log) {message("...openDb: " + dbEntry.name)}
                     app.openLib.db = dbLib[0]
                     app.openLib.ID = app.openLib.db.field("ID")
                     app.openLib.prefix = app.openLib.db.field("Prefix")
