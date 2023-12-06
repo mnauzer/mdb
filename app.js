@@ -104,6 +104,7 @@ const get = {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
                 if (app.log) {message("...removedNums: " + app.openLib.removedNums)}
+                // použi najprv vymazané čísla
             }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
