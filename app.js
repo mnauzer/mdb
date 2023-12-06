@@ -103,7 +103,7 @@ const get = {
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
-                appLogMsg("...removedNums: ", app.openLib.removedNums, 1)
+                if (app.log) {message("...removedNums: " + app.openLib.removedNums)}
             }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
