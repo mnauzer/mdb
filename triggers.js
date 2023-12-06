@@ -82,7 +82,7 @@ const newEntryAfterSave = (en, initScript) => {
 
 const removeEntryBefore = (en, initScript) => {
     if (app.log) {message(app.runningScript)}
-    set.app(app.runningScript)
+    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     //try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
