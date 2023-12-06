@@ -1,9 +1,9 @@
 // DOCHÁDZKA
 const prepocitatZaznamDochadzky = (en, initScript) => {
     setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript)
+    if (app.log) {message(app.runningScript)}
     try {
         // výpočet pracovnej doby
-        if (app.log) {message(app.runningScript)}
         const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         const odchod = roundTimeQ(en.field("Odchod"));
         const datum = en.field(DATE)
@@ -84,8 +84,8 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
     setAppScripts('sadzbaZamestnancab()', 'calc.js', initScript)
+    if (app.log) {message(app.runningScript)}
     try {
-        if (app.log) {message(app.runningScript)}
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
         const dateField ="Platnosť od"
@@ -104,9 +104,9 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
 }
 const genDochadzkaZavazky = (en, initScript) => {
     setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript)
+    if (app.log) {message(app.runningScript)}
     const zavazok = en.field("Generovať záväzky")
     try {
-        if (app.log) {message(app.runningScript)}
 
         if (zavazok) {
             if (app.log) {message("...generujem záväzky")}
