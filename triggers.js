@@ -35,6 +35,19 @@ const newEntryBeforeSave = (en, initScript) => {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message(app.runningScript)}
+
+        en.set(VIEW, VIEW_PRINT)
+        nullAppScripts()
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}
+
+const newEntryAfterSave = (en, initScript) => {
+    message('after save')
+    setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
+    try {
+        if (app.log) {message(app.runningScript)}
         switch (app.openLib.name) {
             case "Dochádzka":
                 prepocitatZaznamDochadzky(en, app.runningScript)
@@ -48,17 +61,6 @@ const newEntryBeforeSave = (en, initScript) => {
             default:
                 break;
         }
-        en.set(VIEW, VIEW_PRINT)
-        nullAppScripts()
-    } catch (error) {
-        createErrorEntry(app.runningScript, error)
-    }
-}
-
-const newEntryAfterSave = (en, initScript) => {
-    setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
-    try {
-        if (app.log) {message(app.runningScript)}
         set.number()
         en.set(VIEW, VIEW_PRINT)
 
