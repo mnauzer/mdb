@@ -51,6 +51,7 @@ const newEntryAfterSave = (en, initScript) => {
         switch (app.openLib.name) {
             case "Dochádzka":
                 prepocitatZaznamDochadzky(en, app.runningScript)
+                genDochadzkaZavazky(en, app.runningScript)
                 break;
             case "Evidencia prác":
                 break;
