@@ -13,9 +13,9 @@ const libOpen = (initScript) => {
     }
 }
 const newEntry = (en, initScript)  => {
-    set.app(app.runningScript)
     setAppScripts('newEntry()', 'triggers.js', initScript)
-  //  try {
+    set.app(app.runningScript)
+    try {
         if (app.log) {message(app.runningScript)}
         message("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
@@ -27,9 +27,9 @@ const newEntry = (en, initScript)  => {
         en.set(SEASON, app.season)
         // code here
         nullAppScripts()
-    // } catch (error) {
-    //     createErrorEntry(app.runningScript, error)
-    // }
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
 }
 
 const newEntryBeforeSave = (en, initScript) => {
@@ -80,8 +80,8 @@ const newEntryAfterSave = (en, initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
-    set.app(app.runningScript)
     if (app.log) {message(app.runningScript)}
+    set.app(app.runningScript)
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     //try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
