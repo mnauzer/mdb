@@ -103,7 +103,7 @@ const get = {
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
-                appLogMsg('"...removedNums: " + app.openLib.removedNums', 1)
+                appLogMsg("...removedNums: ", app.openLib.removedNums, 1)
             }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
@@ -315,7 +315,7 @@ const createLogEntry = (msg) => {
         newLog['note'] = 'generované scriptom createLogEntry'
         errorLib.create(newLog)
 }
-const createMsgEntry = (msg) => {
+const createMsgEntry = (msg, value) => {
         if (app.log) {message("Nový záznam vytvorený")}
         const errorLib = libByName(app.data.errors)
         const newMsg = new Object()
@@ -324,7 +324,7 @@ const createMsgEntry = (msg) => {
         newMsg['memento library'] = app.openLib.name
         newMsg['library'] = app.libFile
         newMsg['script'] = app.runningScript
-        newMsg['text'] = 'app store variables'
+        newMsg['text'] = message + value
         newMsg['variables'] = logAppVariableStore(msg)
         newMsg['note'] = 'generované scriptom createMsgEntry'
         errorLib.create(newMsg)
@@ -356,13 +356,13 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.libFile = libFile
         app.initScript = initScript || null
 }
-const appLogMsg = (message, createEntry) => {
+const appLogMsg = (message, value, createEntry) => {
     setAppScripts('appLogMsg()', 'app.js')
     try {
         createEntry = createEntry || false
-        if (app.log) {message(message)}
+        if (app.log) {message(message + value)}
         if (createEntry) {
-            createMsgEntry(message)
+            createMsgEntry(message, value )
         }
         nullAppScripts()
     } catch (error) {
