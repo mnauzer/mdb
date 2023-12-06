@@ -1,5 +1,5 @@
 // TRIGGERS
-const libOpen = () => {
+const libOpen = (initScript) => {
     // trigger lib_open
     setAppScripts('libOpen()', 'triggers.js', initScript)
     try {
