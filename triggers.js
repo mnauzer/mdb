@@ -114,5 +114,5 @@ const removeEntryAfter = (en, initScript) => {
 }
 
 const test = () => {
-    message('test')
+    message('test2')
 }
