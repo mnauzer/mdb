@@ -1,8 +1,6 @@
 // DOCHÁDZKA
 const prepocitatZaznamDochadzky = (en, initScript) => {
-    app.runningScript = 'prepocitatZaznamDochadzky()'
-    app.libFile = 'calcs.js'
-    app.initScript = initScript
+    setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript)
     try {
         // výpočet pracovnej doby
         if (app.log) {message("...prepocitatZaznamDochadzky()")}
@@ -85,9 +83,7 @@ const prepocitatZaznamDochadzky = (en, initScript) => {
 const sadzbaZamestnanca = (employee, date, initScript) => {
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
-    app.runningScript = 'sadzbaZamestnanca()'
-    app.libFile = 'calcs.js'
-    app.initScript = initScript
+    setAppScripts('sadzbaZamestnancab()', 'calc.js', initScript)
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         if (app.log) {message("...sadzbaZamestnanca()")}

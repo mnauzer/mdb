@@ -55,9 +55,7 @@ const pad = (number, length) => {
 // ARRAY FUNCTIONS
 const filterByDate = (entries, maxDate, dateField, initScript) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    app.runningScript = 'filterByDate()'
-    app.libFile = 'helpers.js'
-    app.initScript = initScript
+    setAppScripts('filterByDate()', 'helpers.js', initScript)
     try {
         const filtered = []
         for(let i in entries) {

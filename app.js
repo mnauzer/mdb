@@ -65,8 +65,7 @@ const get = {
     //     app.openLib.name = app.openLib.db.title // lib().title
     // },
     openDb(){
-        app.runningScript = 'get.openDb()'
-        app.libFile = 'app.js'
+        setAppScripts('get.openDb()', 'app.js')
         try {
             get.library()
             get.season()
@@ -102,8 +101,7 @@ const get = {
     },
     number(){
         // vyskladaj nové číslo záznamu
-        app.runningScript = 'get.number()'
-        app.libFile = 'app.js'
+        setAppScripts('get.number()', 'app.js')
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
@@ -327,4 +325,9 @@ const nullAppScripts = () => {
         app.runningScript = null
         app.libFile = null
         app.initScript = null
+}
+const setAppScripts = (scriptName, libFile, initScript) => {
+        app.runningScript = scriptName
+        app.libFile = libFile
+        app.initScript = initScript || null
 }

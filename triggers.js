@@ -1,8 +1,7 @@
 // TRIGGERS
 const libOpen = () => {
     // trigger lib_open
-    app.runningScript = 'get.sadzbaZamestnanca()'
-    app.libFile = 'triggers.js'
+    setAppScripts('libOpen()', 'triggers.js', initScript)
     try {
         initApp()
         message(app.data.name + ' v.' + app.data.version +
@@ -13,11 +12,9 @@ const libOpen = () => {
     }
 }
 const newEntry = (en, initScript)  => {
-    app.runningScript = 'newEntry()'
-    app.libFile = 'triggers.js'
-    app.initScript = initScript
+    setAppScripts('newEntry()', 'triggers.js', initScript)
     try {
-        message("Nový záznam >> " + app.openLib.name)
+        ("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
         en.set(CR, user())
@@ -53,9 +50,7 @@ const newEntryBeforeSave = (en, initScript) => {
 }
 
 const newEntryAfterSave = (initScript) => {
-    app.runningScript = 'newEntryAfterSave()'
-    app.libFile = 'triggers.js'
-    app.initScript = initScript
+    setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message("...after save")}
         const createdEntry = lib().entries()[0]
@@ -73,9 +68,7 @@ const newEntryAfterSave = (initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
-    app.runningScript = 'removeEntryBefore()'
-    app.libFile = 'triggers.js'
-    app.initScript = initScript
+    setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         message('remove before')
@@ -86,9 +79,7 @@ const removeEntryBefore = (en, initScript) => {
     }
 }
 const removeEntryAfter = (en, initScript) => {
-    app.runningScript = 'removeEntryAfter()'
-    app.libFile = 'triggers.js'
-    app.initScript = initScript
+    setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(29)
