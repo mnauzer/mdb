@@ -64,7 +64,6 @@ const get = {
     },
     openDb(){
         setAppScripts('get.openDb()', 'app.js')
-        if (app.log) {message(app.runningScript)}
         try {
             get.library()
             get.season()
@@ -103,7 +102,7 @@ const get = {
         setAppScripts('get.number()', 'app.js')
         try {
             // najprv zisti či nie sú vymazané čísla
-            if (app.openLib.removedNums){
+            if (app.openLib.removedNums > 0){
                 if (app.log) {message("...removedNums: " + app.openLib.removedNums)}
                 // použi najprv vymazané čísla
             }
@@ -148,7 +147,6 @@ const set = {
         setAppScripts('set.storeDb()', 'app.js', initScript)
         try {
             // Store to ASISTANTO Tenants
-            if (app.log) {message(app.runningScript)}
             const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
             storeDB.set("data.name", app.data.name)
             storeDB.set("data.version", app.data.version)
@@ -193,7 +191,7 @@ const set = {
         }
     },
     season(arg){
-        app.runningScript = 'set.season()'
+        setAppScripts('get.season()', 'app.js')
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set("default season", arg)
             initApp()
@@ -367,6 +365,7 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.runningScript = scriptName
         app.libFile = libFile
         app.initScript = initScript || null
+        if (app.log) {message("scr: " + initScript + '>>' + app.runningScript)}
 }
 const appLogMsg = (message, value, createEntry) => {
     setAppScripts('appLogMsg()', 'app.js')
