@@ -103,7 +103,7 @@ const get = {
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
-                appLogMsg("...removedNums: " + app.openLib.removedNums, 1)
+                appLogMsg('"...removedNums: " + app.openLib.removedNums', 1)
             }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
@@ -357,9 +357,15 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.initScript = initScript || null
 }
 const appLogMsg = (message, createEntry) => {
-    createEntry = createEntry || false
-    if (app.log) {message(message)}
-    if (createEntry) {
-        createMsgEntry(message)
+    setAppScripts('appLogMsg()', 'app.js')
+    try {
+        createEntry = createEntry || false
+        if (app.log) {message(message)}
+        if (createEntry) {
+            createMsgEntry(message)
+        }
+        nullAppScripts()
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
     }
 }
