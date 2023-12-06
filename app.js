@@ -103,13 +103,13 @@ const get = {
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
-                if (app.log) {message("...removedNums: " + app.openLib.removedNums)}
+                appLogMsg("...removedNums: " + app.openLib.removedNums, 1)
             }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             app.openLib.number = newNumber
-            if (app.log) {message('Nové číslo: ' + newNumber)}
+            appLogMsg('Nové číslo: ' + newNumber, 1)
             nullAppScripts()
             return newNumber
         } catch (error) {
@@ -315,6 +315,20 @@ const createLogEntry = (msg) => {
         newLog['note'] = 'generované scriptom createLogEntry'
         errorLib.create(newLog)
 }
+const createMsgEntry = (msg) => {
+        if (app.log) {message("Nový záznam vytvorený")}
+        const errorLib = libByName(app.data.errors)
+        const newMsg = new Object()
+        newMsg['type'] = 'msg'
+        newMsg['date'] = new Date()
+        newMsg['memento library'] = app.openLib.name
+        newMsg['library'] = app.libFile
+        newMsg['script'] = app.runningScript
+        newMsg['text'] = 'app store variables'
+        newMsg['variables'] = logAppVariableStore(msg)
+        newMsg['note'] = 'generované scriptom createMsgEntry'
+        errorLib.create(newMsg)
+}
 const createErrorEntry = (msg, error) => {
         if (app.debug) {message(error)}
         if (app.debug) {message(error.lineNumber)}
@@ -341,4 +355,11 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.runningScript = scriptName
         app.libFile = libFile
         app.initScript = initScript || null
+}
+const appLogMsg = (message, createEntry) => {
+    createEntry = createEntry || false
+    if (app.log) {message(message)}
+    if (createEntry) {
+        createMsgEntry(message)
+    }
 }
