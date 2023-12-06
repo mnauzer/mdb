@@ -1,5 +1,5 @@
 // DOCHÁDZKA
-const prepocitatZaznamDochadzky = (en, initScript)=> {
+const prepocitatZaznamDochadzky = (en, initScript) => {
     app.runningScript = 'prepocitatZaznamDochadzky()'
     app.libFile = 'calcs.js'
     app.initScript = initScript
@@ -76,9 +76,7 @@ const prepocitatZaznamDochadzky = (en, initScript)=> {
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
         if (app.log) {message("...hotovo")}
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -102,9 +100,7 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
         } else {
             sadzba = filteredLinks[0].field("Sadzba");
         }
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
         return sadzba;
     } catch (error) {
         createErrorEntry(app.runningScript, error)

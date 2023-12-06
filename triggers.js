@@ -7,9 +7,7 @@ const libOpen = () => {
         initApp()
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.openLib.name +' ' +  app.season )
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -28,9 +26,7 @@ const newEntry = (en, initScript)  => {
         en.set(NUMBER_ENTRY, app.openLib.nextNum)
         en.set(SEASON, app.season)
         // code here
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -50,9 +46,7 @@ const newEntryBeforeSave = (en, initScript) => {
                 break;
         }
         createdEntry.set(VIEW, VIEW_PRINT)
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -72,9 +66,7 @@ const newEntryAfterSave = (initScript) => {
             set.number()
 
         }
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -88,9 +80,7 @@ const removeEntryBefore = (en, initScript) => {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         message('remove before')
         app.openLib.removedNums.push(29)
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -102,9 +92,7 @@ const removeEntryAfter = (en, initScript) => {
     try {
         if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(29)
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }

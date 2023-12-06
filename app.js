@@ -66,6 +66,7 @@ const get = {
     },
     openDb(){
         app.runningScript = 'get.openDb()'
+        app.libFile = 'app.js'
         try {
             get.library()
             get.season()
@@ -88,7 +89,7 @@ const get = {
                 message('Nie je vytvorený záznam v app pre sezónu ' + app.season)
             }
             set.storeDb()
-            app.runningScript = null
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
@@ -96,6 +97,7 @@ const get = {
     number(){
         // vyskladaj nové číslo záznamu
         app.runningScript = 'get.number()'
+        app.libFile = 'app.js'
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums){
@@ -106,7 +108,7 @@ const get = {
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             app.openLib.number = newNumber
             if (app.log) {message('Nové číslo: ' + newNumber)}
-            app.runningScript = null
+            nullAppScripts()
             return newNumber
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -243,6 +245,7 @@ const set = {
             app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
             initApp()
             app.runningScript = null
+            app.libFile = null
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
@@ -254,12 +257,13 @@ const calc = {
 
 const initApp = () => {
     app.runningScript = 'initApp()'
+    app.libFile = 'app.js'
     try {
         get.openDb()
         get.openLibName()
         get.sadzbyDPH()
         set.storeDb()
-        app.runningScript = null
+        nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
     }
@@ -320,4 +324,11 @@ const createErrorEntry = (msg, error) => {
         newError['variables'] = logAppVariableStore(msg)
         newError['note'] = 'generované scriptom createErrorEntry'
         errorLib.create(newError)
+        nullAppScripts()
+}
+
+const nullAppScripts = () => {
+        app.runningScript = null
+        app.libFile = null
+        app.initScript = null
 }

@@ -67,9 +67,7 @@ const filterByDate = (entries, maxDate, dateField, initScript) => {
         }
         filtered.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
         filtered.reverse()
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
+        nullAppScripts()
         return filtered
     } catch (error) {
         createErrorEntry(app.runningScript, error)
