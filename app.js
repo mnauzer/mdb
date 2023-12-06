@@ -15,14 +15,13 @@ const app = {
     runningScript: null,
     libFile: 'app.js',
     initScript: null,
-    season: null,
-    log: false,
-    debug: false,
-    openLib: { // library nastavenia v knižnici ASISTANTO
+    openLib: { // ASISTANTO nastavenie knižnice podľa sezóny
         name: null,
+        // ASISTANTO DB
         db: null,
         ID: null,
         prefix: null,
+        // ASISTANTO attributes
         lastNum: null,
         nextNum: null,
         reservedNum: null,
@@ -30,11 +29,19 @@ const app = {
         isPrefix: null,
         trim: null,
         trailingDigit: null,
+        // generované get.number()
         number: null,
+        // záznamy otvorenej knižnice
+        lib: null,
+        entries: null,
+        en: null,
+        enD: null,
     },
-    en: null,
-    enD: null,
-    lib: null,
+    // ASSISTANTO TENANTS nastavenie
+    season: null, // default season
+    log: false,
+    debug: false,
+    // ASISTANTO nastavenie knižnice podľa sezóny
     dph: {
         zakladna: null,
         znizena: null,
@@ -43,7 +50,11 @@ const app = {
 const get = {
     // app getters
     library(){
-        app.lib = lib()
+        app.openLib.lib = lib()
+        app.openLib.entries = app.openLib.lib.entries()
+        app.openLib.en = entry()
+        app.openLib.enD = entryDefault()
+
     },
     season(){
         app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
