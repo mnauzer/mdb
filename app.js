@@ -312,7 +312,7 @@ const logAppVariableStore = (msg) => {
     return storeVariables
 }
 const createLogEntry = (msg) => {
-        if (app.log) {message("Nový záznam vytvorený")}
+        if (app.msg) {message("Nový záznam vytvorený")}
         const errorLib = libByName(app.data.errors)
         const newLog = new Object()
         newLog['type'] = 'log'
@@ -365,7 +365,12 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.runningScript = scriptName
         app.libFile = libFile
         app.initScript = initScript || null
-        if (app.log) {message("scr: " + initScript + '>>' + app.runningScript)}
+        const msg = 'scr: ' + initScript + '\n>>' + app.runningScript
+        if (app.log) {
+            message(msg)
+            createLogEntry(msg)
+            }
+
 }
 const appLogMsg = (message, value, createEntry) => {
     setAppScripts('appLogMsg()', 'app.js')
