@@ -64,6 +64,7 @@ const get = {
     },
     openDb(){
         setAppScripts('get.openDb()', 'app.js')
+        if (app.log) {message(app.runningScript)}
         try {
             get.library()
             get.season()
