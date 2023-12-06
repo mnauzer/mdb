@@ -112,3 +112,7 @@ const removeEntryAfter = (en, initScript) => {
         createErrorEntry(app.runningScript, error)
     }
 }
+
+const test = () => {
+    message('test')
+}
