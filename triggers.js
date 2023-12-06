@@ -30,14 +30,18 @@ const newEntry = (en, initScript)  => {
 }
 
 const newEntryBeforeSave = (en, initScript) => {
-    app.runningScript = 'newEntryBeforeSave()'
-    app.libFile = 'triggers.js'
-    app.initScript = initScript
+    setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message("...before save")}
         switch (app.openLib.name) {
             case "Dochádzka":
                 prepocitatZaznamDochadzky(en, app.runningScript)
+                break;
+            case "Evidencia prác":
+                break;
+            case "Pokladňa":
+                break;
+            case "Kniha jázd":
                 break;
             default:
                 break;
