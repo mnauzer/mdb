@@ -38,8 +38,7 @@ const newEntryBeforeSave = (en, initScript) => {
         if (app.log) {message(app.runningScript)}
         switch (app.openLib.name) {
             case "Dochádzka":
-                prepocitatZaznamDochadzky(en, app.runningScript)
-                genDochadzkaZavazky(en, app.runningScript)
+
                 break;
             case "Evidencia prác":
                 break;
