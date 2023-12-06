@@ -47,6 +47,7 @@ const app = {
         znizena: null,
     }
 }
+// GETTERS
 const get = {
     // app getters
     library(){
@@ -61,9 +62,6 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
     },
-    //openLibName(){
-    //     app.openLib.name = app.openLib.db.title // lib().title
-    // },
     openDb(){
         setAppScripts('get.openDb()', 'app.js')
         try {
@@ -120,18 +118,30 @@ const get = {
     },
     sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
-        app.runningScript = 'get.sadzbyDPH()'
+        setAppScripts('sadzbyDPH()', 'app.js')
         try {
             app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
-            app.runningScript = null
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
     },
 }
+// SETTERS
 const set = {
-    // app setters
+    app(){
+        setAppScripts('set.app()', 'app.js')
+        try {
+            get.openDb()
+            //get.openLibName()
+            get.sadzbyDPH()
+            this.storeDb()
+            nullAppScripts()
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
+    },
     storeDb(){
         app.runningScript = 'get.storeDb()'
         try {
@@ -244,13 +254,13 @@ const set = {
         }
     }
 }
+// MUTATORS
 const calc = {
     // app mutators
 }
 
 const initApp = () => {
-    app.runningScript = 'initApp()'
-    app.libFile = 'app.js'
+    setAppScripts('initApp()', 'app.js')
     try {
         get.openDb()
         //get.openLibName()
@@ -261,6 +271,8 @@ const initApp = () => {
         createErrorEntry(app.runningScript, error)
     }
 }
+
+// LOG & ERRORS
 const logAppVariableStore = (msg) => {
     const storeVariables =
         'name: ' + app.data.name
@@ -320,7 +332,6 @@ const createErrorEntry = (msg, error) => {
         errorLib.create(newError)
         nullAppScripts()
 }
-
 const nullAppScripts = () => {
         app.runningScript = null
         app.libFile = null
