@@ -122,10 +122,9 @@ const removeEntryAfter = (en, initScript) => {
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
         if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
-        app.openLib.removedNums.push(29)
         switch (app.openLib.name) {
             case "Dochádzka":
-                app.openLib.removedNums.push(29)30
+                app.openLib.removedNums.push(30)
                 break;
             case "Evidencia prác":
                 break;
