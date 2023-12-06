@@ -81,7 +81,7 @@ const get = {
                     app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
                     app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
                     app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
-                    app.openLib.removedNums = app.openLib.db.attr("vymazané čísla")
+                    app.openLib.removedNums.concat(app.openLib.db.attr("vymazané čísla"))
                     app.openLib.isPrefix = app.openLib.db.attr("prefix")
                     app.openLib.trim = app.openLib.db.attr("trim")
                     app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
