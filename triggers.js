@@ -49,6 +49,7 @@ const newEntryBeforeSave = (en, initScript) => {
             default:
                 break;
         }
+        createdEntry.set(VIEW, VIEW_PRINT)
         app.runningScript = null
         app.libFile = null
         app.initScript = null
@@ -69,7 +70,7 @@ const newEntryAfterSave = (initScript) => {
         if (createdEntry.field(NUMBER_ENTRY) == Number(app.openLib.nextNum)) {
             if (app.log) {message("...entry successfully created")}
             set.number()
-            createdEntry.set(VIEW, VIEW_PRINT)
+
         }
         app.runningScript = null
         app.libFile = null
@@ -81,6 +82,20 @@ const newEntryAfterSave = (initScript) => {
 
 const removeEntryBefore = (en, initScript) => {
     app.runningScript = 'removeEntryBefore()'
+    app.libFile = 'triggers.js'
+    app.initScript = initScript
+    try {
+        if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
+        app.openLib.removedNums.push(29)
+        app.runningScript = null
+        app.libFile = null
+        app.initScript = null
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}
+const removeEntryAfter = (en, initScript) => {
+    app.runningScript = 'removeEntryAfter()'
     app.libFile = 'triggers.js'
     app.initScript = initScript
     try {
