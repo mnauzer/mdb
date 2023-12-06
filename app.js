@@ -54,7 +54,7 @@ const get = {
         app.openLib.name = lib().title
         app.openLib.entries = lib().entries()
         app.openLib.en = entry()
-        //app.openLib.enD = entryDefault()
+        app.openLib.enD = entryDefault()
     },
     season(){
         app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
