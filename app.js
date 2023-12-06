@@ -208,10 +208,10 @@ const set = {
         try {
             if (app.log) {
                 app.log = false
-                message('log zapnutý')
+                message('log vypnutý')
             } else {
                 app.log = true
-                message('log vypnutý')
+                message('log zapnutý')
             }
             libByName(app.data.tenants).find(app.data.tenant)[0].set("log", app.log)
             nullAppScripts()
