@@ -13,6 +13,7 @@ const libOpen = (initScript) => {
     }
 }
 const newEntry = (en, initScript)  => {
+    set.app(app.runningScript)
     setAppScripts('newEntry()', 'triggers.js', initScript)
   //  try {
         if (app.log) {message(app.runningScript)}
