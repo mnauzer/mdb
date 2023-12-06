@@ -97,7 +97,7 @@ const removeEntryBefore = (en, initScript) => {
     set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     //try {
-        if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
+        if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
             case "Dochádzka":
                 app.openLib.removedNums.push(29)
@@ -121,11 +121,11 @@ const removeEntryAfter = (en, initScript) => {u
     set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
-        if (app.log) {message("...removing entry:" + en.field(NUMBER_ENTRY))}
+        if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(29)
         switch (app.openLib.name) {
             case "Dochádzka":
-                app.openLib.removedNums.push(29)
+                app.openLib.removedNums.push(29)30
                 break;
             case "Evidencia prác":
                 break;
