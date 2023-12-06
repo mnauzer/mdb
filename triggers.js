@@ -124,7 +124,6 @@ const removeEntryAfter = (en, initScript) => {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
             case "Dochádzka":
-                app.openLib.removedNums.push(30)
                 break;
             case "Evidencia prác":
                 break;
