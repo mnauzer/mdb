@@ -12,12 +12,11 @@ const libOpen = () => {
         createErrorEntry(app.runningScript, error)
     }
 }
-const newEntry = (initScript)  => {
+const newEntry = (en, initScript)  => {
     app.runningScript = 'newEntry()'
     app.libFile = 'triggers.js'
     app.initScript = initScript
     try {
-        let en = app.openLib.end
         message("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
