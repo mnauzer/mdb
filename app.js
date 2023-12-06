@@ -72,21 +72,27 @@ const get = {
             get.season()
             const dbEntry = libByName(app.data.app).find(app.season)[0]
             if (dbEntry !== undefined){
+                if (app.log) {message("...openDbSeason: " + app.season)}
                 const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
-                app.openLib.db = dbLib[0]
-                app.openLib.ID = app.openLib.db.field("ID")
-                app.openLib.prefix = app.openLib.db.field("Prefix")
-                // entry attributes
-                app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
-                app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
-                app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
-                app.openLib.removedNums = app.openLib.db.attr("vymazané čísla")
-                app.openLib.isPrefix = app.openLib.db.attr("prefix")
-                app.openLib.trim = app.openLib.db.attr("trim")
-                app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
-                app.openLib.number = this.number()
+                if (dbLib !== undefined){
+                    if (app.log) {message("...openDb: " + dbEntry.name)}
+                    app.openLib.db = dbLib[0]
+                    app.openLib.ID = app.openLib.db.field("ID")
+                    app.openLib.prefix = app.openLib.db.field("Prefix")
+                    // entry attributes
+                    app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
+                    app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
+                    app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
+                    app.openLib.removedNums = app.openLib.db.attr("vymazané čísla")
+                    app.openLib.isPrefix = app.openLib.db.attr("prefix")
+                    app.openLib.trim = app.openLib.db.attr("trim")
+                    app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
+                    app.openLib.number = this.number()
+                } else {
+                    if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.openLib.name + ' v sezóne  ' + app.season)}
+                }
             } else {
-                message('Nie je vytvorený záznam knižnice ' + app.openLib.name + ' pre sezónu ' + app.season)
+                if (app.log) {message("...nie je vytvorené záznam pre sezónu " + app.season)}
             }
             set.storeDb()
             nullAppScripts()
@@ -278,7 +284,7 @@ const logAppVariableStore = (msg) => {
         +'\nopenLib.number: ' +  app.openLib.number
         +'\nopenLib.lib: ' +  app.openLib.lib
         +'\nopenLib.en: ' +  app.openLib.en
-        +'\nopenLib.entries: ' +  app.openLib.entries
+        +'\nopenLib.entries: ' +  app.openLib.entries.length
         +'\nopenLib.enD: ' +  app.openLib.enD
         +'\ndph.zakladna: ' +  app.dph.zakladna
         +'\ndph.znizena: ' +  app.dph.znizena
