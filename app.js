@@ -109,7 +109,7 @@ const get = {
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             app.openLib.number = newNumber
-            appLogMsg('Nové číslo: ' + newNumber, 1)
+            if (app.log) {message('Nové číslo: ' + newNumber)}
             nullAppScripts()
             return newNumber
         } catch (error) {
