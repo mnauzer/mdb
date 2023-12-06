@@ -102,3 +102,35 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
         createErrorEntry(app.runningScript, error)
     }
 }
+const genDochadzkaZavazky = (en, initScript) => {
+    setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript)
+    const zavazok = en.field("Generovať záväzky")
+    try {
+        if (app.log) {message("...genDochadzkaZavazky()")}
+
+        if (zavazok) {
+            if (app.log) {message("...generujem záväzky")}
+
+            // ak sú staré záväzky, najprv vymaž
+            const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+            // if(stareZavazky.length > 0){
+            //     message("Mažem súvisiace záväzky...")
+            //     for (let i in stareZavazky) {
+            //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
+            //     }
+            // stareZavazky = false
+            // }
+
+            // vygeneruj nové záväzky
+
+            const zamestnanci = en.field("Zamestnanci")
+            // for (let z in zamestnanci) {
+            //     if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+            //     newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
+            // }
+        }
+        nullAppScripts()
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}

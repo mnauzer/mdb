@@ -53,14 +53,18 @@ const newEntryAfterSave = (en, initScript) => {
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
     try {
         if (app.log) {message("...after save")}
-        const createdEntry = lib().entries()[0]
-        if (app.log) {message("...entry number: " + createdEntry.field(NUMBER_ENTRY) )}
-        if (app.log) {message("...app.openLib.nextNum: " + Number(app.openLib.nextNum) )}
-        if (createdEntry.field(NUMBER_ENTRY) == Number(app.openLib.nextNum)) {
-            if (app.log) {message("...entry successfully created")}
-            set.number()
+        set.number()
+        en.set(VIEW, VIEW_PRINT)
 
-        }
+        // if (app.log) {message("...after save")}
+        // const createdEntry = lib().entries()[0]
+        // if (app.log) {message("...entry number: " + createdEntry.field(NUMBER_ENTRY) )}
+        // if (app.log) {message("...app.openLib.nextNum: " + Number(app.openLib.nextNum) )}
+        // if (createdEntry.field(NUMBER_ENTRY) == Number(app.openLib.nextNum)) {
+        //     if (app.log) {message("...entry successfully created")}
+        //     set.number()
+
+        // }
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
