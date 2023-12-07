@@ -72,8 +72,12 @@ function prepocitatZaznamDochadzky(en, initScript){
         en.set("Odpracované", odpracovaneCelkom);
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
+        en.set("appMsg", 'vyžaduje pozornosť');
 
-        if (en.field("Generovať záväzky")) {genDochadzkaZavazky(en, app.runningScript)};
+        if (en.field("Generovať záväzky")) {
+            message('Generujem záväzky z miezd...');
+            genDochadzkaZavazky(en, app.runningScript);
+            };
         if (app.log) {message("...hotovo")};
         nullAppScripts();
     } catch (error) {
