@@ -2,58 +2,61 @@
 function prepocitatZaznamDochadzky(en, initScript){
     setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
-        // výpočet pracovnej doby
-        const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
-        const odchod = roundTimeQ(en.field("Odchod"));
         const datum = en.field(DATE);
-        const pracovnaDoba = (odchod - prichod) / 3600000;
         const zavazky = en.field("Generovať záväzky")
-        en.set("Príchod", prichod); //uloženie upravených časov
-        en.set("Odchod", odchod);
+        const zamestnanci = en.field("Zamestnanci");
+        const evidenciaPrac = en.field("Práce");
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
         let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
-        const zamestnanci = en.field("Zamestnanci");
-        if (app.log) {message("...zamestnancov: " + zamestnanci.length)};
-        const evidenciaPrac = en.field("Práce");
-        if (app.log) {message("...evidencia prác: " + evidenciaPrac.length)};
-        if (zamestnanci) {
-            if (app.log) {message("...prepočítavam zamestnancov")}
+
+        // zaokrúhlenie zadaného času na 15min
+        const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
+        const odchod = roundTimeQ(en.field("Odchod"));
+        en.set("Príchod", prichod); //uloženie upravených časov
+        en.set("Odchod", odchod);
+
+        // výpočet pracovnej doby
+        const pracovnaDoba = (odchod - prichod) / 3600000;
+
+        // prepočet zamestnancov
+        if (zamestnanci !== undefined) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
-               // const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); //neprepisovať už zadanú hodinovku
+                // vyhľadanie aktuálnej sadzby zamestnanca
                 const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
-                const hodnotenie = zamestnanci[z].attr("hodnotenie") ? zamestnanci[z].attr("hodnotenie") : 5;
-                let dennaMzda = zamestnanci[z].attr("denná mzda") ? zamestnanci[z].attr("denná mzda") : 0; // jedného zamestnanca
-                // premenné z knižnice zamestnanci
-                let zarobene = zamestnanci[z].field("Zarobené") - dennaMzda;
-                let odrobene = zamestnanci[z].field("Odpracované"); // len v úprave zázbanz, odpočíta od základu už vyrátanú hodnotu
-                const vyplatene = zamestnanci[z].field("Vyplatené");
-                let hodnotenieD = zamestnanci[z].field("Dochádzka");
-
-                dennaMzda = (pracovnaDoba * (hodinovka
+                // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
+                const dennaMzda = (pracovnaDoba * (hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)")))
                     + zamestnanci[z].attr("+prémia (€)")
                     - zamestnanci[z].attr("-pokuta (€)");
                 zamestnanci[z].setAttr("denná mzda", dennaMzda);
-                zamestnanci[z].setAttr("hodnotenie", hodnotenie);
-                // nastavenie v knižnici zamestnanci
-                zarobene += dennaMzda;
-                odrobene += pracovnaDoba;
-                hodnotenieD += hodnotenie;
-                const nedoplatok = zarobene - vyplatene;
 
-                zamestnanci[z].set("Zarobené", zarobene);
-                zamestnanci[z].set("Odpracované", odrobene);
-                zamestnanci[z].set("Preplatok/Nedoplatok", nedoplatok);
-                zamestnanci[z].set("Dochádzka", hodnotenieD);
-
+                // pripočítanie do celkových hodnôt záznamu
                 mzdyCelkom += dennaMzda;
                 odpracovaneCelkom += pracovnaDoba;
+
+                // generovanie záväzkov za mzdy
+                if (zavazky) {
+                    // ak sú staré záväzky, najprv vymaž
+                    const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
+                    if(stareZavazky !== undefined){
+                        message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
+                        const filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0] == zamestnanci[z])
+                        message("mažem..." + filtered.length + " záznamov")
+                        filtered.forEach(el => {
+                            el.trash()
+                        });trash()
+                    stareZavazky = null
+                    }
+                    // vygeneruj nové záväzky
+                    message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
+                    const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
+                };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-                if (evidenciaPrac) {
+                if (evidenciaPrac !== undefined) {
                     if (app.log) {message("...prepočítavam evidenciu prác")}
                     for (let ep = 0; ep < evidenciaPrac.length; ep++) {
                         const zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
@@ -65,22 +68,6 @@ function prepocitatZaznamDochadzky(en, initScript){
                         }
                     }
                 }
-                if (zavazky) {
-                    // ak sú staré záväzky, najprv vymaž
-                    const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
-                    if(stareZavazky.length > 0){
-                        message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                        const filtered = stareZavazky.filter(en => en.field("Zamestnanec") = zamestnanci[z])
-                        message("mažem..." + filtered.length + " záznamov")
-                        filtered.trash()
-
-                    stareZavazky = null
-                    }
-
-                    // vygeneruj nové záväzky
-                    message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
-                };
             }
         };
         prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
