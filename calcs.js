@@ -90,7 +90,7 @@ function prepocitatZaznamDochadzky(en, initScript){
             // }
 
             // vygeneruj nové záväzky
-            for (let z in zamestnanci) {
+            for (let z of zamestnanci) {
                 if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                     newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"));
             };
@@ -173,6 +173,7 @@ function newEntryZavazky(employee, en, sum) {
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
+        return true;
         // kontrola vytvorenia záznamu
     } catch (error) {
         createErrorEntry(app.runningScript, error);
