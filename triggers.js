@@ -92,9 +92,10 @@ const removeEntryBefore = (en, initScript) => {
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
+        const rmNum  = []
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
-        app.openLib.removedNums.push(en.field(NUMBER_ENTRY))
-        if (app.log) {message("BF...removedNums: " + app.openLib.removedNums)}
+        rmNum.push(en.field(NUMBER_ENTRY))
+        if (app.log) {message("BF...removedNums: " + rmNum)}
         switch (app.openLib.name) {
             case "Dochádzka":
                 break;
