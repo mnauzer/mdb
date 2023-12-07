@@ -549,7 +549,9 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
-        set.number(app.runningScript);
+        app.openLib.lastNum = app.openLib.nextNum;
+        app.openLib.nextNum = (app.openLib.nextNum)  +1;
+        set.storeDb(app.runningScript);
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {
@@ -624,7 +626,8 @@ function newEntry (en, initScript) {
 function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
-        app.openLib.nextNum = Number(app.openLib.nextNum) + 1
+        app.openLib.lastNum = app.openLib.nextNum;
+        app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
         set.storeDb(app.runningScript)
         en.set(VIEW, VIEW_PRINT)
         nullAppScripts();
