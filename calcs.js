@@ -141,7 +141,7 @@ function genDochadzkaZavazky(en, initScript){
 function newEntryZavazky(employee, en, sum, initScript) {
     setAppScripts('newEntryZavazky()', 'calc.js', initScript);
     try {
-        get.openDb(LIB_ZVK);
+        get.openDb(app.runningScript, LIB_ZVK); // inicializácia app knižnicou záväzky
         const popis = "Mzda " + employee.name +", za deň "; // TODO: pridať a upraviť formát dátumu
         const zavazky = libByName(LIB_ZVK);
         // vytvorenie nového záznamu
@@ -161,6 +161,7 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
+        get.openDb(app.runningScript) // inicializácia app práve otvorenou knižnicou
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {

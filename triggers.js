@@ -96,7 +96,7 @@ function newEntryAfterSave(en, initScript){
 
 function removeEntryBefore(en, initScript) {
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
-    set.app(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    get.openDb(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         const rmNum  = [];
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
@@ -121,7 +121,7 @@ function removeEntryBefore(en, initScript) {
 }
 function removeEntryAfter(en, initScript) {
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
-    set.app(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    get.openDb(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
