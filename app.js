@@ -624,20 +624,9 @@ function newEntry (en, initScript) {
 function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
+        app.openLib.nextNum = Number(app.openLib.nextNum) + 1
+        set.storeDb(app.runningScript)
         en.set(VIEW, VIEW_PRINT)
-        switch (app.openLib.name) {
-            case "Dochádzka":
-
-                break;
-            case "Evidencia prác":
-                break;
-            case "Pokladňa":
-                break;
-            case "Kniha jázd":
-                break;
-            default:
-                break;
-        };
         nullAppScripts();
     } catch (error) {
         createErrorEntry(app.runningScript, error);
