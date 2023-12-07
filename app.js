@@ -3,13 +3,13 @@ const app = {
     data: {
         name: 'ASISTANTO',
         version: '1.03.0017',
-        app: "ASISTANTO",
-        db: "ASISTANTO DB",
-        errors: "ASISTANTO Errors",
-        tenants: "ASISTANTO Tenants",
-        scripts: "ASISTANTO Scripts",
-        todo: "ASISTANTO ToDo",
-        tenant: "KRAJINKA"
+        app: 'ASISTANTO',
+        db: 'ASISTANTO DB',
+        errors: 'ASISTANTO Errors',
+        tenants: 'ASISTANTO Tenants',
+        scripts: 'ASISTANTO Scripts',
+        todo: 'ASISTANTO ToDo',
+        tenant: 'KRAJINKA'
     },
     msg: null,
     runningScript: null,
@@ -58,9 +58,9 @@ const get = {
         app.openLib.enD = entryDefault()
     },
     season(){
-        app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field("default season")
-        app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
-        app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
+        app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field('default season')
+        app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field('log')
+        app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
     },
     openDb(initScript, libName){
         setAppScripts('get.openDb()', 'app.js', initScript)
@@ -72,27 +72,27 @@ const get = {
             get.season();
             const dbEntry = libByName(app.data.app).find(app.season)[0];
             if (dbEntry !== undefined){
-                //if (app.log) {message("...openDbSeason: " + app.season)}
-                const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name);
+                //if (app.log) {message('...openDbSeason: ' + app.season)}
+                const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.openLib.name);
                 if (dbLib !== undefined){
-                    if (app.log) {message("...openDb: " + dbEntry.name)}
+                    if (app.log) {message('...openDb: ' + dbEntry.name)}
                     app.openLib.db = dbLib[0];
-                    app.openLib.ID = app.openLib.db.field("ID");
-                    app.openLib.prefix = app.openLib.db.field("Prefix");
+                    app.openLib.ID = app.openLib.db.field('ID');
+                    app.openLib.prefix = app.openLib.db.field('Prefix');
                     // entry attributes
-                    app.openLib.lastNum = app.openLib.db.attr("posledné číslo");
-                    app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo");
-                    app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo");
-                    app.openLib.removedNums.concat(app.openLib.db.attr("vymazané čísla"));
-                    app.openLib.isPrefix = app.openLib.db.attr("prefix");
-                    app.openLib.trim = app.openLib.db.attr("trim");
-                    app.openLib.trailingDigit = app.openLib.db.attr("trailing digit");
+                    app.openLib.lastNum = app.openLib.db.attr('posledné číslo');
+                    app.openLib.nextNum = app.openLib.db.attr('nasledujúce číslo');
+                    app.openLib.reservedNum = app.openLib.db.attr('rezervované číslo');
+                    app.openLib.removedNums.concat(app.openLib.db.attr('vymazané čísla'));
+                    app.openLib.isPrefix = app.openLib.db.attr('prefix');
+                    app.openLib.trim = app.openLib.db.attr('trim');
+                    app.openLib.trailingDigit = app.openLib.db.attr('trailing digit');
                     app.openLib.number = this.number();
                 } else {
                     if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.openLib.name + ' v sezóne  ' + app.season)}
                 }
             } else {
-                if (app.log) {message("...nie je vytvorené záznam pre sezónu " + app.season)}
+                if (app.log) {message('...nie je vytvorené záznam pre sezónu ' + app.season)}
             }
             set.storeDb(app.runningScript)
             nullAppScripts()
@@ -106,7 +106,7 @@ const get = {
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums > 0){
-                if (app.log) {message("...removedNums: " + app.openLib.removedNums)}
+                if (app.log) {message('...removedNums: ' + app.openLib.removedNums)}
                 // použi najprv vymazané čísla
             }
             const newNumber = app.openLib.isPrefix
@@ -124,8 +124,8 @@ const get = {
         // nájdi sadzby DPH pre sezónu
         setAppScripts('sadzbyDPH()', 'app.js')
         try {
-            app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field("Základná sadzba DPH")
-            app.dph.znizena = libByName(app.data.app).find(app.season)[0].field("Znížená sadzba DPH")
+            app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field('Základná sadzba DPH')
+            app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -148,35 +148,35 @@ const set = {
         try {
             // Store to ASISTANTO Tenants
             const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
-            storeDB.set("data.name", app.data.name)
-            storeDB.set("data.version", app.data.version)
-            storeDB.set("data.app", app.data.app)
-            storeDB.set("data.db", app.data.db)
-            storeDB.set("data.errors", app.data.errors)
-            storeDB.set("data.tenants", app.data.tenants)
-            storeDB.set("data.scripts", app.data.scripts)
-            storeDB.set("data.todo", app.data.todo)
-            storeDB.set("data.tenant", app.data.tenant)
-            storeDB.set("msg", app.msg)
-            storeDB.set("runningScript", app.runningScript)
-            storeDB.set("libFile", app.libFile)
-            storeDB.set("season", app.season)
-            storeDB.set("log", app.log)
-            storeDB.set("debug", app.debug)
-            storeDB.set("openLib.name", app.openLib.name)
-            storeDB.set("openLib.db.id", app.openLib.db ? app.openLib.db.id : null)
-            storeDB.set("openLib.prefix", app.openLib.prefix)
-            storeDB.set("openLib.lastNum", app.openLib.lastNum)
-            storeDB.set("openLib.nextNum", app.openLib.nextNum)
-            storeDB.set("openLib.reservedNum", app.openLib.reservedNum)
-            storeDB.set("openLib.removedNums", app.openLib.removedNums)
-            storeDB.set("openLib.isPrefix", app.openLib.isPrefix)
-            storeDB.set("openLib.trailingDigit", app.openLib.trailingDigit)
-            storeDB.set("openLib.trim", app.openLib.trim)
-            storeDB.set("openLib.number", app.openLib.number)
-            storeDB.set("dph.zakladna", app.dph.zakladna)
-            storeDB.set("dph.znizena", app.dph.znizena)
-            storeDB.set("en.id", app.en ? app.en.id : null)
+            storeDB.set('data.name', app.data.name)
+            storeDB.set('data.version', app.data.version)
+            storeDB.set('data.app', app.data.app)
+            storeDB.set('data.db', app.data.db)
+            storeDB.set('data.errors', app.data.errors)
+            storeDB.set('data.tenants', app.data.tenants)
+            storeDB.set('data.scripts', app.data.scripts)
+            storeDB.set('data.todo', app.data.todo)
+            storeDB.set('data.tenant', app.data.tenant)
+            storeDB.set('msg', app.msg)
+            storeDB.set('runningScript', app.runningScript)
+            storeDB.set('libFile', app.libFile)
+            storeDB.set('season', app.season)
+            storeDB.set('log', app.log)
+            storeDB.set('debug', app.debug)
+            storeDB.set('openLib.name', app.openLib.name)
+            storeDB.set('openLib.db.id', app.openLib.db ? app.openLib.db.id : null)
+            storeDB.set('openLib.prefix', app.openLib.prefix)
+            storeDB.set('openLib.lastNum', app.openLib.lastNum)
+            storeDB.set('openLib.nextNum', app.openLib.nextNum)
+            storeDB.set('openLib.reservedNum', app.openLib.reservedNum)
+            storeDB.set('openLib.removedNums', app.openLib.removedNums)
+            storeDB.set('openLib.isPrefix', app.openLib.isPrefix)
+            storeDB.set('openLib.trailingDigit', app.openLib.trailingDigit)
+            storeDB.set('openLib.trim', app.openLib.trim)
+            storeDB.set('openLib.number', app.openLib.number)
+            storeDB.set('dph.zakladna', app.dph.zakladna)
+            storeDB.set('dph.znizena', app.dph.znizena)
+            storeDB.set('en.id', app.en ? app.en.id : null)
 
             // Store to ASISTANTO open database
             app.openLib.db.setAttr('názov', app.openLib.name)
@@ -193,7 +193,7 @@ const set = {
     season(arg){
         setAppScripts('set.season()', 'app.js')
         try {
-            libByName(app.data.tenants).find(app.data.tenant)[0].set("default season", arg)
+            libByName(app.data.tenants).find(app.data.tenant)[0].set('default season', arg)
             get.openDb()
             message('Nastavená sezóna: ' + app.season)
             nullAppScripts()
@@ -211,7 +211,7 @@ const set = {
                 app.log = true
                 message('log zapnutý')
             }
-            libByName(app.data.tenants).find(app.data.tenant)[0].set("log", app.log)
+            libByName(app.data.tenants).find(app.data.tenant)[0].set('log', app.log)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -221,7 +221,7 @@ const set = {
         setAppScripts('set.app()', 'app.js')
         const current = app.debug
         try {
-            libByName(app.data.tenants).find(app.data.tenant)[0].set("debug", !current)
+            libByName(app.data.tenants).find(app.data.tenant)[0].set('debug', !current)
             get.openDb(app.runningScript)
             if (app.log) {
                 message('debug zapnutý')
@@ -237,7 +237,7 @@ const set = {
         setAppScripts('set.numberPrefix()', 'app.js', initScript)
         const current = app.openLib.isPrefix
         try {
-            app.openLib.db.setAttr("prefix", !current)
+            app.openLib.db.setAttr('prefix', !current)
             initApp()
             if (app.log) {
                 message('prefix čísla zapnutý')
@@ -255,8 +255,8 @@ const set = {
             const lastNum = app.openLib.nextNum;
             const nextNum = (Number(app.openLib.nextNum) + 1);
             message('setting number ' + nextNum + ' v openLib ' + openLib.name);
-            app.openLib.db.setAttr("posledné číslo", lastNum);
-            app.openLib.db.setAttr("nasledujúce číslo", nextNum );
+            app.openLib.db.setAttr('posledné číslo', lastNum);
+            app.openLib.db.setAttr('nasledujúce číslo', nextNum );
             this.storeDb(app.runningScript);
             get.openDb(app.runningScript);
         } catch (error) {
@@ -312,7 +312,7 @@ const logAppVariableStore = (msg) => {
     return storeVariables
 }
 const createLogEntry = (msg) => {
-        if (app.msg) {message("Nový záznam vytvorený")}
+        if (app.msg) {message('Nový záznam vytvorený')}
         const errorLib = libByName(app.data.errors)
         const newLog = new Object()
         newLog['type'] = 'log'
@@ -326,7 +326,7 @@ const createLogEntry = (msg) => {
         errorLib.create(newLog)
 }
 const createMsgEntry = (msg) => {
-        if (app.log) {message("Nový záznam vytvorený")}
+        if (app.log) {message('Nový záznam vytvorený')}
         const errorLib = libByName(app.data.errors)
         const newMsg = new Object()
         newMsg['type'] = 'msg'
