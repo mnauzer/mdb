@@ -736,3 +736,286 @@ function removeEntryAfter(en, initScript) {
 const test = () => {
     message('test2')
 }
+
+// HELPERS
+// DATE TIME FUNCTONS
+//
+const dateDiff = (date1, date2) => {
+    var diff = {}// Initialization of the return
+    var tmp = date2 - date1
+
+    tmp = Math.floor(tmp/1000)// Number of seconds between the 2 dates
+    diff.sec = tmp % 60
+    //Extracting the number of seconds
+
+    tmp = Math.floor((tmp-diff.sec)/60)// Number of minutes (whole part)
+    diff.min = tmp % 60
+    // Extract the number of minutes
+
+    tmp = Math.floor((tmp-diff.min)/60)// Number of hours (whole)
+    diff.hour = tmp % 24
+    // Extract the number of hours
+
+    tmp = Math.floor((tmp-diff.hour)/24)
+
+    // Nombre de jours restants
+    diff.day = tmp % 7
+
+    tmp = Math.floor((tmp-diff.day)/7)
+    diff.week = tmp % 4
+
+    tmp = Math.floor((tmp-diff.week)/4)
+    diff.mon = tmp % 12
+
+    tmp = Math.floor((tmp-diff.mon)/12)
+    diff.year = tmp
+
+    return diff
+}
+const roundTimeQ = time => {
+    // zaokrúhľovanie času na 1/4 hodiny
+    var timeToReturn = new Date(time)
+    timeToReturn.setMilliseconds(Math.round(timeToReturn.getMilliseconds() / 1000) * 1000)
+    timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60)
+    timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15)
+    return timeToReturn
+}
+
+// NUMBER FUNCTIONS
+//
+const pad = (number, length) => {
+    // pridá počet núl k čislu do zadanej dĺžky
+    let str = '' + number
+    while (str.length < length) {
+        str = '0' + str
+    }
+    return str
+}
+
+// ARRAY FUNCTIONS
+const filterByDate = (entries, maxDate, dateField, initScript) => {
+    //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
+    setAppScripts('filterByDate()', 'helpers.js', initScript)
+    try {
+        const filtered = []
+        for(let i in entries) {
+            if(Number(entries[i].field(dateField).getTime()/1000) <= Number(maxDate.getTime()/1000)) {
+                filtered.push(entries[i])
+            }
+        }
+        filtered.sort((entryA, entryB) => (entryA.field(dateField).getTime()/1000) - (entryB.field(dateField).getTime()/1000))
+        filtered.reverse()
+        nullAppScripts()
+        return filtered
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}
+
+// CONSTANS
+// libraries
+// APP
+const LIBAPP = "ASISTANTO"
+const LIBAPP_DB = "ASISTANTO DB"
+const LIBAPP_ERROR = "ASISTANTO Errors"
+const LIBAPP_TENATNS = "ASISTANTO Tenants"
+const LIBAPP_SCRIPTS = "ASISTANTO Scripts"
+const LIBAPP_TODO = "ASISTANTO ToDo"
+
+// PROJEKTY
+const LIB_CPN = "Cenové ponuky"
+const LIB_ZKZ = "Zákazky"
+const LIB_VYC = "Vyúčtovania"
+const LIB_CPR = "Cenník prác"
+const LIB_PP = "Plán prác"
+const LIB_VP = "Výkaz prác"
+const LIB_VM = "Výkaz materiálu"
+const LIB_VS = "Výkaz strojov"
+const LIB_VD = "Výkaz dopravy"
+const LIB_SD = "Stavebný denník"
+
+// ADMINISTRATÍVA
+const LIB_INV = "Invenúry"
+const LIB_PRJ = "Príjemky"
+const LIB_REZ = "Rezervácie"
+const LIB_OBJ = "Objednávky"
+const LIB_FP = "Faktúry prijaté"
+const LIB_FO = "Faktúry odoslané"
+const LIB_POH = "Pohľadávky"
+const LIB_ZVK = "Záväzky"
+
+// EVIDENCIA
+const LIB_PKL = "Pokladňa"
+const LIB_EP = "Evidencia prác"
+const LIB_DOCH = "Dochádzka"
+const LIB_KJ = "Kniha jázd"
+
+// DATABÁZY
+const LIB_SKL = "Sklad"
+const LIB_ESKL = "Externý sklad"
+const LIB_ZVKM = "Zamestnanci"
+const LIB_KLI = "Klienti"
+const LIB_DOD = "Dodávatelia"
+const LIB_PAR = "Partneri"
+const LIB_MIE = "Miesta"
+const LIB_DR = "Databáza rastlín"
+const LIB_UCT = "Účty"
+const LIB_SZ = "sadzby zamestnancov"
+const LIB_LPH = "limity pracovných hodín"
+const LIB_SCPS = "sezónne ceny prác a strojov"
+const LIB_SCM = "sezónne ceny materiálu"
+const LIB_STR = "Stroje"
+
+// aGroup
+const DBA_OBL = "aZáväzky"
+const DBA_SAL= "aMzdy"
+const DBA_POHLADAVKY = "aPohľadávky"
+const DBA_DOCHADZKA = "aDochádzka"
+const DBA_WORK = "aPráce"
+
+// fields
+// spolocne
+const FLD_CPN = "Cenová ponuka" // link to entry
+const FLD_ZKZ = "Zákazka"
+const FLD_VYC = "Vyúčtovanie"
+const FLD_TV = "Typ výkazu"
+const FLD_PPS = "Popis"
+const FLD_ZAM = "Zamestnanec"
+
+
+
+//
+const FLD_PRC = "Práce"
+const FLD_MAT = "Materiál"
+const FLD_STR = "Stroje"
+const FLD_DPR = "Doprava"
+// diely polozky
+const FLD_TRAVNIK = "Trávnik"
+const FLD_VYSADBY = "Výsadby"
+const FLD_RASTLINY = "Rastliny"
+const FLD_ZAVLAZOVANIE = "Zavlažovanie"
+const FLD_JAZIERKO = "Jazierko"
+const FLD_KAMEN = "Kameň"
+const FLD_NESTANDARDNE = "Neštandardné"
+const FLD_SUBDODAVKY = "Subdodávky"
+// diely hzs
+const FLD_ZAHRADNICKE_PRACE = "Záhradnícke práce"
+const FLD_SERVIS_ZAVLAZOVANIA = "Servis zavlažovania"
+const FLD_KONZULTACIE = "Konzultácie a poradenstvo"
+const FLD_PRC_NAVYSE = "Práce navyše"
+// zamestnanci
+const FLD_ZAMESTNANCI = "Zamestnanci"
+const FLD_HZS = "Hodinovka"
+// zakazky
+const FLD_UCTOVANIE_DPH = "Účtovanie DPH"
+
+// words
+const W_ZAKAZKA = "Zákazka"
+const W_PRACE = "Práce"
+const W_PRACE_NAVYSE = "Práce navyše"
+const W_DOPRAVA = "Doprava"
+const W_MATERIAL = "Materiál"
+const W_STROJE = "Stroje"
+const W_HODINOVKA = "Hodinovka"
+const W_POLOZKY = "Položky"
+
+// Knižnica Faktúry prijaté
+// LIB_FP
+const FO_DOD = "Dodávateľ"
+const FO_DOD_NUMBER = "Číslo faktúry"
+const FO_DOD_VS = "VS" // variabilný symbol
+const FO_DATE = "Dátum vystavenia"
+const FO_DUE_DATE = "Dátum splatnosti"
+const FO_PAY_DATE = "Dátum úhrady"
+const FO_SUM = "Suma bez DPH"
+const FO_SUM_DPH = "DPH"
+const FO_SUM_TOTAL = "Suma s DPH"
+const FO_PAYED = "Uhradená"
+
+// aZáväzky
+const A_OBL_TYPE = "Typ záväzku"
+const A_OBL_SUM = "Suma"
+const A_OBL_DUE_DATE = "Dátum splatnosti"
+const A_OBL_PAY_DATE = "Dátum úhrady"
+const A_OBL_INVC = "Faktúry prijaté"
+const A_OBL_PAYED = "Uhradené"
+
+// Príjemky
+// LIB_PRM
+const RCPTS_INVC = "Faktúry prijaté"
+// aMzdy
+
+// Pokladňa/bi
+// LIB_PKL
+// Polia
+const POK_POHYB = "Pohyb" //Select
+const POK_U_PREVOD = "Účel prevodu" //Select
+const POK_DOKLAD = "Doklad" //Multiple choice
+const POK_S_DPH = "s DPH" //Checklist
+const POK_SADZBA_DPH = "sadzba DPH" //Real Number
+const POK_ = "%DPH" //Real number
+
+
+// Dochádzka/Attendance
+// LIB_ATTDC
+const DOCH_ARRIVAL = "Príchod"
+const DOCH_DEPARTURE = "Odchod"
+const DOCH_WORKS = "Práce" // Link to Entry
+const DOCH_EMPLOYEES = "Zamestnanci"
+
+
+// SPOLOČNÉ POLIA
+const VIEW = "view"
+const VIEW_EDIT = "Editácia"
+const VIEW_PRINT = "Tlač"
+const VIEW_DEBUG = "Debug"
+const STATUS = "Stav"
+const DATE = "Dátum"
+const NUMBER = "Číslo"
+const NICK = "Nick"
+const DBG = "debug"
+const SEASON = "sezóna"
+const LAST_NUM = "lastnum"
+const APP_SEASON = "Sezóna" // linked field
+const NUMBER_ENTRY = "number"
+const CR = "zapísal"
+const CR_DATE = "dátum zápisu"
+const MOD = "upravil"
+const MOD_DATE = "dátum úpravy"
+const ENT_COLOR = "farba záznamu"
+const BKG_COLOR = "farba pozadia"
+
+// COLOR CODES
+const FIREBRICK = "#B22222"
+const CHARTREUSE = "#7FFF00"
+const MEDIUMAQUAMARINE = "#66CDAA"
+// GRAY
+const MARENGO = "#4C5866"
+const MEDIUM_GRAY = "#BEBEBE"
+const NICKEL = "#727472"
+const STONE_GRAY  = "#928E85"
+const OUTER_SPACE = "#414A4C"
+// WHITE
+const PORCELAIN = "#FFFEFC"
+const WHITE = "#FFFFFF"
+const CHIFFON = "#FBFAF2"
+const BONE = "#E7DECC"
+const ACOUSTIC_WHITE = "#EFECE1"
+const AIRCRAFT_WHITE = "#EDF2F8"
+const CERAMIC = "#FCFFF9"
+const BRIGHT_WHITE = "#F4F5F0"
+const BRILLIANT_WHITE = "#EDF1FE"
+
+
+
+
+// MEMENTO COLORS
+const MEM_RED = "#B22222"
+const MEM_GREEN = "#669966"
+const MEM_BLUE = "#4D66CC"
+const MEM_LIGHT_GREEN = "#CCFFCC"
+const MEM_LIGHT_YELLOW = "#FFFFCC"
+const MEM_LIGHT_BLUE = "#CCFFFF"
+
+
+
