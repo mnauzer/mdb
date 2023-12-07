@@ -87,7 +87,7 @@ const get = {
                     app.openLib.isPrefix = app.openLib.db.attr('prefix');
                     app.openLib.trim = app.openLib.db.attr('trim');
                     app.openLib.trailingDigit = app.openLib.db.attr('trailing digit');
-                    app.openLib.number = this.number();
+                    app.openLib.number = this.number(app.runningScript);
                 } else {
                     if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.openLib.name + ' v sezóne  ' + app.season)}
                 }
@@ -100,9 +100,9 @@ const get = {
             createErrorEntry(app.runningScript, error)
         }
     },
-    number(){
+    number(initScript){
         // vyskladaj nové číslo záznamu
-        setAppScripts('get.number()', 'app.js');
+        setAppScripts('get.number()', 'app.js', initScript);
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums > 0){
@@ -113,16 +113,16 @@ const get = {
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
             : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit);
             app.openLib.number = newNumber;
-            if (app.log) {message('Nové číslo: ' + newNumber)}
+            if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.openLib.name)}
             nullAppScripts();
             return newNumber
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
     },
-    sadzbyDPH(){
+    sadzbyDPH(initScript){
         // nájdi sadzby DPH pre sezónu
-        setAppScripts('sadzbyDPH()', 'app.js')
+        setAppScripts('sadzbyDPH()', 'app.js', initScript)
         try {
             app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field('Základná sadzba DPH')
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
