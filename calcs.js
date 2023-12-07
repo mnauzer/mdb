@@ -77,6 +77,7 @@ function prepocitatZaznamDochadzky(en, initScript){
             en.set("appMsg", 'vyžaduje pozornosť');
             en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
+        message('Generovať záväzky: ' + zavazky);
         if (zavazky) {
             message('Generujem záväzky...');
             genDochadzkaZavazky(en, app.runningScript);
