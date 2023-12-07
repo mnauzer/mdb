@@ -641,7 +641,7 @@ function newEntryAfterSave(en, initScript){
     try {
         const entryCreated = app.openLib.lib.entries()[0]
         if (entryCreated.field(NUMBER_ENTRY) === app.openLib.nextNum) {
-            message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.openLib.nextNum)
+        if(app.log) { message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.openLib.nextNum)}
             switch (app.openLib.name) {
                 case "Dochádzka":
                     prepocitatZaznamDochadzky(entryCreated, app.runningScript);
@@ -657,6 +657,7 @@ function newEntryAfterSave(en, initScript){
             };
         app.openLib.lastNum = app.openLib.nextNum;
         app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
+        if(app.log) { message("Ukladám čísla: " + app.openLib.lastNum + '/' +app.openLib.nextNum)}
         set.storeDb(app.runningScript)
         en.set(VIEW, VIEW_PRINT);
         } else {
