@@ -628,7 +628,8 @@ function newEntry (en, initScript) {
 function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
-
+        app.openLib.lastNum = app.openLib.nextNum;
+        app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
         en.set(VIEW, VIEW_PRINT)
         nullAppScripts();
     } catch (error) {
@@ -655,8 +656,7 @@ function newEntryAfterSave(en, initScript){
                 default:
                     break;
             };
-        app.openLib.lastNum = app.openLib.nextNum;
-        app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
+
         if(app.log) { message("Ukladám čísla: " + app.openLib.lastNum + '/' +app.openLib.nextNum)}
         set.storeDb(app.runningScript)
         en.set(VIEW, VIEW_PRINT);
