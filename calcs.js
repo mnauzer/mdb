@@ -44,7 +44,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                     const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
                     if(stareZavazky !== undefined){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                        const filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0] == zamestnanci[z])
+                        const filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
                         filtered.forEach(el => {
                             el.trash()
