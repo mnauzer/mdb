@@ -79,8 +79,21 @@ function prepocitatZaznamDochadzky(en, initScript){
         }
         message('Generovať záväzky: ' + zavazky);
         if (zavazky) {
-            message('Generujem záväzky...');
-            genDochadzkaZavazky(en, app.runningScript);
+            // ak sú staré záväzky, najprv vymaž
+            const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
+            // if(stareZavazky.length > 0){
+            //     message("Mažem súvisiace záväzky...")
+            //     for (let i in stareZavazky) {
+            //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
+            //     }
+            // stareZavazky = false
+            // }
+
+            // vygeneruj nové záväzky
+            for (let z in zamestnanci) {
+                if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+                    newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"));
+            };
             };
         if (app.log) {message("...hotovo")};
         nullAppScripts();
