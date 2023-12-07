@@ -365,7 +365,7 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.runningScript = scriptName
         app.libFile = libFile
         app.initScript = initScript || null
-        const msg = 'scr: ' + initScript + '\n>>' + app.runningScript
+        const msg = initScript + '>>' + app.runningScript
         if (app.log) {
             message(msg)
             createLogEntry(msg)
