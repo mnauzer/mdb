@@ -204,14 +204,15 @@ const set = {
     log(){
         setAppScripts('set.log()', 'app.js')
         try {
-            if (app.log) {
-                app.log = false
+            const log = libByName(app.data.tenants).find(app.data.tenant)[0]
+            if (log) {
+                log = false
                 message('log vypnutý')
             } else {
-                app.log = true
+                log = true
                 message('log zapnutý')
             }
-            libByName(app.data.tenants).find(app.data.tenant)[0].set('log', app.log)
+            log.set('log', log)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
