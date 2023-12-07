@@ -121,13 +121,71 @@ const genDochadzkaZavazky = (en, initScript) => {
             // vygeneruj nové záväzky
 
             const zamestnanci = en.field("Zamestnanci")
-            // for (let z in zamestnanci) {
-            //     if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-            //     newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
-            // }
+            for (let z in zamestnanci) {
+                if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+                newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
+            }
         }
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
+    }
+}
+const newEntryZavazky = (employee, en, sum) => {
+    setAppScripts('newEntryZavazky()', 'calc.js', initScript)
+    try {
+        get.openDb(LIB_ZVK)
+        const popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
+        const zavazky = libByName(LIB_ZVK)
+        // vytvorenie nového záznamu
+        const newEntry = new Object();
+        newEntry[NUMBER] = app.openLib.number;
+        newEntry[NUMBER_ENTRY] = app.openLib.nextNum;
+        newEntry[DATE] =  new Date();
+        // TODO: zmeniť aj pre iných veriteľov ako zamestnanci
+        newEntry["Typ"] = "Mzdy";
+        newEntry["Zamestnanec"] = employee;
+        newEntry["Dochádzka"] = en;
+        newEntry["info"] = "generované automaticky z dochádzky";
+        //
+        newEntry["Popis"] = popis;
+        newEntry["Suma"] = sum.toFixed(2);
+        newEntry[SEASON]= app.season
+        newEntry[CR] = user()
+        newEntry[CR_DATE] = new Date()
+        zavazky.create(newEntry);
+        // kontrola vytvorenia záznamu
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
+}
+
+const zavazky = {
+    name: null,
+    // ASISTANTO DB
+    db: null,
+    ID: null,
+    prefix: null,
+    // ASISTANTO attributes
+    lastNum: null,
+    nextNum: null,
+    reservedNum: null,
+    removedNums: [],
+    isPrefix: null,
+    trim: null,
+    trailingDigit: null,
+    // generované get.number()
+    number: null,
+    // záznamy otvorenej knižnice
+    lib: null,
+    entries: null,
+    en: null,
+    enD: null,
+    // GETTERS
+    get:{
+        db(){
+            const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
+
+        }
     }
 }

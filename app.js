@@ -45,14 +45,14 @@ const app = {
     dph: {
         zakladna: null,
         znizena: null,
-    }
+    },
 }
 // GETTERS
 const get = {
     // app getters
-    library(){
+    library(libName){
         app.openLib.lib = lib()
-        app.openLib.name = lib().title
+        app.openLib.name = libName || lib().title
         app.openLib.entries = lib().entries()
         app.openLib.en = entry()
         app.openLib.enD = entryDefault()
@@ -62,10 +62,10 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
     },
-    openDb(initScript){
-        setAppScripts('get.openDb()', 'app.js', initScript)
+    openDb(libName){
+        setAppScripts('get.openDb()', 'app.js')
         try {
-            get.library()
+            get.library(libName)
             get.season()
             const dbEntry = libByName(app.data.app).find(app.season)[0]
             if (dbEntry !== undefined){
