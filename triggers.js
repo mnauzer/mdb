@@ -72,7 +72,7 @@ function newEntryAfterSave(en, initScript){
                 default:
                     break;
             };
-            set.number();
+            set.number(app.runningScript);
             en.set(VIEW, VIEW_PRINT);
         } else {
             message('Záznam nebol vytvorený')

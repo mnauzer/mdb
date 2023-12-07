@@ -81,8 +81,6 @@ function prepocitatZaznamDochadzky(en, initScript){
             en.set("appMsg", 'vyžaduje pozornosť');
             en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
-        message('Generovať záväzky: ' + zavazky);
-
         if (app.log) {message("...hotovo")};
         nullAppScripts();
     } catch (error) {
@@ -161,6 +159,7 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
+        set.number(app.runningScript);
         get.openDb(app.runningScript) // inicializácia app práve otvorenou knižnicou
         return true;
         // kontrola vytvorenia záznamu
