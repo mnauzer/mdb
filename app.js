@@ -221,7 +221,6 @@ const set = {
     },
     debug(){
         setAppScripts('set.debug()', 'app.js')
-        const current = app.debug
         try {
             const lib = libByName(app.data.tenants).find(app.data.tenant)[0]
             let isDebug = lib.field('debug')
@@ -371,7 +370,7 @@ const setAppScripts = (scriptName, libFile, initScript) => {
         app.libFile = libFile
         app.initScript = initScript || null
         const msg = initScript + '>>' + app.runningScript
-        if (app.log) {
+        if (app.debug) {
             message(msg)
             createLogEntry(msg)
             }
