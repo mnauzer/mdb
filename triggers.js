@@ -11,7 +11,7 @@ const libOpen = (initScript) => {
         createErrorEntry(app.runningScript, error)
     }
 }
-const newEntry = (en, initScript)  => {
+function newEntry (en, initScript) {
     setAppScripts('newEntry()', 'triggers.js', initScript);
     set.app(app.runningScript);
     try {
@@ -30,7 +30,7 @@ const newEntry = (en, initScript)  => {
     }
 }
 
-const newEntryBeforeSave = (en, initScript) => {
+function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
         switch (app.openLib.name) {
@@ -87,7 +87,7 @@ function newEntryAfterSave(en, initScript){
     }
 }
 
-const removeEntryBefore = (en, initScript) => {
+function removeEntryBefore(en, initScript) {
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
     set.app(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
@@ -112,7 +112,7 @@ const removeEntryBefore = (en, initScript) => {
         createErrorEntry(app.runningScript, error);
     }
 }
-const removeEntryAfter = (en, initScript) => {
+function removeEntryAfter(en, initScript) {
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
     set.app(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {

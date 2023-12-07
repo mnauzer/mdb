@@ -1,5 +1,5 @@
 // DOCHÁDZKA
-const prepocitatZaznamDochadzky = (en, initScript) => {
+function prepocitatZaznamDochadzky(en, initScript){
     setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         // výpočet pracovnej doby
@@ -81,18 +81,18 @@ const prepocitatZaznamDochadzky = (en, initScript) => {
     }
 }
 // ZAMESTNANCI
-const sadzbaZamestnanca = (employee, date, initScript) => {
+function sadzbaZamestnanca(employee, date, initScript){
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
-    setAppScripts('sadzbaZamestnancab()', 'calc.js', initScript)
+    setAppScripts('sadzbaZamestnancab()', 'calc.js', initScript);
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
-        const dateField ="Platnosť od"
-        let sadzba = 0
+        const dateField ="Platnosť od";
+        let sadzba = 0;
         filteredLinks = filterByDate(links, date, dateField, app.runningScript);
         if (filteredLinks.length < 0) {
-            msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu'
+            msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu';
         } else {
             sadzba = filteredLinks[0].field("Sadzba");
         }
@@ -103,12 +103,12 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
     }
 }
 function genDochadzkaZavazky(en, initScript){
-    setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript)
+    setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript);
     try {
-        if (app.log) {message("...generujem záväzky")}
+        if (app.log) {message("...generujem záväzky")};
 
         // ak sú staré záväzky, najprv vymaž
-        const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+        const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
         // if(stareZavazky.length > 0){
         //     message("Mažem súvisiace záväzky...")
         //     for (let i in stareZavazky) {
@@ -119,22 +119,22 @@ function genDochadzkaZavazky(en, initScript){
 
         // vygeneruj nové záväzky
 
-        const zamestnanci = en.field("Zamestnanci")
+        const zamestnanci = en.field("Zamestnanci");
         for (let z in zamestnanci) {
             if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-                newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
-        }
-        nullAppScripts()
+                newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"));
+        };
+        nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
-const newEntryZavazky = (employee, en, sum) => {
-    setAppScripts('newEntryZavazky()', 'calc.js', initScript)
+function newEntryZavazky(employee, en, sum) {
+    setAppScripts('newEntryZavazky()', 'calc.js', initScript);
     try {
-        get.openDb(LIB_ZVK)
-        const popis = "Mzda " + employee.name +", za deň " // TODO: pridať a upraviť formát dátumu
-        const zavazky = libByName(LIB_ZVK)
+        get.openDb(LIB_ZVK);
+        const popis = "Mzda " + employee.name +", za deň "; // TODO: pridať a upraviť formát dátumu
+        const zavazky = libByName(LIB_ZVK);
         // vytvorenie nového záznamu
         const newEntry = new Object();
         newEntry[NUMBER] = app.openLib.number;
@@ -148,13 +148,13 @@ const newEntryZavazky = (employee, en, sum) => {
         //
         newEntry["Popis"] = popis;
         newEntry["Suma"] = sum.toFixed(2);
-        newEntry[SEASON]= app.season
-        newEntry[CR] = user()
-        newEntry[CR_DATE] = new Date()
+        newEntry[SEASON]= app.season;
+        newEntry[CR] = user();
+        newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
         // kontrola vytvorenia záznamu
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 
