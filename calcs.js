@@ -1,11 +1,11 @@
 // DOCHÁDZKA
 const prepocitatZaznamDochadzky = (en, initScript) => {
-    setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript)
+    setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         // výpočet pracovnej doby
         const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
         const odchod = roundTimeQ(en.field("Odchod"));
-        const datum = en.field(DATE)
+        const datum = en.field(DATE);
         const pracovnaDoba = (odchod - prichod) / 3600000;
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
@@ -14,9 +14,9 @@ const prepocitatZaznamDochadzky = (en, initScript) => {
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
         let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
         const zamestnanci = en.field("Zamestnanci");
-        if (app.log) {message("...zamestnancov: " + zamestnanci.length)}
+        if (app.log) {message("...zamestnancov: " + zamestnanci.length)};
         const evidenciaPrac = en.field("Práce");
-        if (app.log) {message("...evidencia prác: " + evidenciaPrac.length)}
+        if (app.log) {message("...evidencia prác: " + evidenciaPrac.length)};
         if (zamestnanci) {
             if (app.log) {message("...prepočítavam zamestnancov")}
             for (let z = 0; z < zamestnanci.length; z++ ) {
@@ -64,7 +64,7 @@ const prepocitatZaznamDochadzky = (en, initScript) => {
                     }
                 }
             }
-        }
+        };
         prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", mzdyCelkom.toFixed(2));
@@ -73,11 +73,11 @@ const prepocitatZaznamDochadzky = (en, initScript) => {
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
 
-        if (en.field("Generovať záväzky")) {genDochadzkaZavazky(en, app.runningScript)}
-        if (app.log) {message("...hotovo")}
-        nullAppScripts()
+        if (en.field("Generovať záväzky")) {genDochadzkaZavazky(en, app.runningScript)};
+        if (app.log) {message("...hotovo")};
+        nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 // ZAMESTNANCI
