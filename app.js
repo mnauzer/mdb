@@ -75,7 +75,7 @@ const get = {
                 //if (app.log) {message('...openDbSeason: ' + app.season)}
                 const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.openLib.name);
                 if (dbLib !== undefined){
-                    if (app.log) {message('...openDb: ' + dbEntry.name)}
+                    if (app.log) {message('...openDb: ' + dbEntry.name + ' - ' + app.openLib.db.title)}
                     app.openLib.db = dbLib[0];
                     app.openLib.ID = app.openLib.db.field('ID');
                     app.openLib.prefix = app.openLib.db.field('Prefix');
@@ -220,16 +220,19 @@ const set = {
         }
     },
     debug(){
-        setAppScripts('set.app()', 'app.js')
+        setAppScripts('set.debug()', 'app.js')
         const current = app.debug
         try {
-            libByName(app.data.tenants).find(app.data.tenant)[0].set('debug', !current)
-            get.openDb(app.runningScript)
-            if (app.log) {
-                message('debug zapnutý')
-            } else {
+            const lib = libByName(app.data.tenants).find(app.data.tenant)[0]
+            let isDebug = lib.field('debug')
+            if (isDebug) {
+                isDebug = false
                 message('debug vypnutý')
+            } else {
+                isDebug = true
+                message('debug zapnutý')
             }
+            lib.set('debug', isDebug)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -656,7 +659,7 @@ function newEntryAfterSave(en, initScript){
         app.openLib.lastNum = app.openLib.nextNum;
         app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
         set.storeDb(app.runningScript)
-            en.set(VIEW, VIEW_PRINT);
+        en.set(VIEW, VIEW_PRINT);
         } else {
             message('Záznam nebol vytvorený')
             en.set(VIEW, VIEW_DEBUG);
