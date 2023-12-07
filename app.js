@@ -551,8 +551,8 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
-        app.openLib.lastNum = app.openLib.nextNum;
-        app.openLib.nextNum = (app.openLib.nextNum)  +1;
+       // app.openLib.lastNum = app.openLib.nextNum;
+       // app.openLib.nextNum = (app.openLib.nextNum) + 1;
         set.storeDb(app.runningScript);
         return true;
         // kontrola vytvorenia záznamu
