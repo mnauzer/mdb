@@ -33,6 +33,7 @@ function newEntry (en, initScript) {
 function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
+        en.set(VIEW, VIEW_PRINT)
         switch (app.openLib.name) {
             case "Dochádzka":
 
@@ -46,7 +47,6 @@ function newEntryBeforeSave (en, initScript) {
             default:
                 break;
         };
-        en.set(VIEW, VIEW_PRINT);
         nullAppScripts();
     } catch (error) {
         createErrorEntry(app.runningScript, error);
