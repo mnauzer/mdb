@@ -77,7 +77,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                     // }
 
                     // vygeneruj nové záväzky
-                    newEntryZavazky(zamestnanci[z], en, dennaMzda);
+                    const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
                 };
             }
         };
@@ -149,7 +149,7 @@ function genDochadzkaZavazky(en, initScript){
         createErrorEntry(app.runningScript, error);
     }
 }
-function newEntryZavazky(employee, en, sum) {
+function newEntryZavazky(employee, en, sum, initScript) {
     setAppScripts('newEntryZavazky()', 'calc.js', initScript);
     try {
         get.openDb(LIB_ZVK);
