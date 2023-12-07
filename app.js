@@ -661,7 +661,7 @@ function newEntryAfterSave(en, initScript){
         set.storeDb(app.runningScript)
         en.set(VIEW, VIEW_PRINT);
         } else {
-            message('Záznam nebol vytvorený')
+            if(app.log) {message('Záznam nebol vytvorený')}
             en.set(VIEW, VIEW_DEBUG);
         }
 
