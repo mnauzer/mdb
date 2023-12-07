@@ -640,7 +640,7 @@ function newEntryAfterSave(en, initScript){
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
         const entryCreated = app.openLib.lib.entries()[0]
-        if (entryCreated.field(NUMBER_ENTRY) === app.openLib.nextNum) {
+        if (entryCreated.field(NUMBER_ENTRY) === app.openLib.lastNum) {
             message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.openLib.nextNum)
             switch (app.openLib.name) {
                 case "Dochádzka":
