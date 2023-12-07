@@ -66,7 +66,7 @@ const get = {
         setAppScripts('get.openDb()', 'app.js', initScript)
         try {
             if(libName){
-                set.app;
+                set.storeDb(app.runningScript); // keď je otvorená sekundárna knižnica ulož premenné
             }
             get.library(libName);
             get.season();
