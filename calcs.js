@@ -75,7 +75,7 @@ function prepocitatZaznamDochadzky(en, initScript){
         en.set("Prestoje", prestojeCelkom);
         if (prestojeCelkom = odpracovaneCelkom) {
             en.set("appMsg", 'vyžaduje pozornosť');
-            en.set("appMsg2", 'nie sú zaevidované žiadne práce na zákazkách');
+            en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
         if (zavazky) {
             message('Generujem záväzky...');
