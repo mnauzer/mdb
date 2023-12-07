@@ -75,7 +75,6 @@ const get = {
                 //if (app.log) {message('...openDbSeason: ' + app.season)}
                 const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.openLib.name);
                 if (dbLib !== undefined){
-                    if (app.log) {message('...openDb: ' + dbEntry.name + ' - ' + app.openLib.db.title)}
                     app.openLib.db = dbLib[0];
                     app.openLib.ID = app.openLib.db.field('ID');
                     app.openLib.prefix = app.openLib.db.field('Prefix');
@@ -88,6 +87,7 @@ const get = {
                     app.openLib.trim = app.openLib.db.attr('trim');
                     app.openLib.trailingDigit = app.openLib.db.attr('trailing digit');
                     app.openLib.number = this.number(app.runningScript);
+                    if (app.log) {message('...openDb: ' + dbEntry.name + ' - ' + app.openLib.db.title)}
                 } else {
                     if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.openLib.name + ' v sezóne  ' + app.season)}
                 }
