@@ -7,6 +7,7 @@ function prepocitatZaznamDochadzky(en, initScript){
         const odchod = roundTimeQ(en.field("Odchod"));
         const datum = en.field(DATE);
         const pracovnaDoba = (odchod - prichod) / 3600000;
+        const zavazky = en.field("Generovať záväzky")
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
@@ -72,10 +73,12 @@ function prepocitatZaznamDochadzky(en, initScript){
         en.set("Odpracované", odpracovaneCelkom);
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
-        en.set("appMsg", 'vyžaduje pozornosť');
-
-        if (en.field("Generovať záväzky")) {
-            message('Generujem záväzky z miezd...');
+        if (prestojeCelkom = odpracovaneCelkom) {
+            en.set("appMsg", 'vyžaduje pozornosť');
+            en.set("appMsg2", 'nie sú zaevidované žiadne práce na zákazkách');
+        }
+        if (zavazky) {
+            message('Generujem záväzky...');
             genDochadzkaZavazky(en, app.runningScript);
             };
         if (app.log) {message("...hotovo")};
