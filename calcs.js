@@ -65,6 +65,20 @@ function prepocitatZaznamDochadzky(en, initScript){
                         }
                     }
                 }
+                if (zavazky) {
+                    // ak sú staré záväzky, najprv vymaž
+                    const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
+                    // if(stareZavazky.length > 0){
+                    //     message("Mažem súvisiace záväzky...")
+                    //     for (let i in stareZavazky) {
+                    //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
+                    //     }
+                    // stareZavazky = false
+                    // }
+
+                    // vygeneruj nové záväzky
+                    newEntryZavazky(zamestnanci[z], en, dennaMzda);
+                };
             }
         };
         prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
@@ -79,23 +93,7 @@ function prepocitatZaznamDochadzky(en, initScript){
             en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
         message('Generovať záväzky: ' + zavazky);
-        if (zavazky) {
-            // ak sú staré záväzky, najprv vymaž
-            const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
-            // if(stareZavazky.length > 0){
-            //     message("Mažem súvisiace záväzky...")
-            //     for (let i in stareZavazky) {
-            //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
-            //     }
-            // stareZavazky = false
-            // }
 
-            // vygeneruj nové záväzky
-            for (let z of zamestnanci) {
-                if (z == 0 ) {message("Generujem záväzky......")} // this message only once
-                    newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"));
-            };
-            };
         if (app.log) {message("...hotovo")};
         nullAppScripts();
     } catch (error) {
