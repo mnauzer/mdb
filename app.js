@@ -228,13 +228,13 @@ const set = {
             } else {
                 message('debug vypnutý')
             }
-            app.runningScript = null
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
     },
     numberPrefix(){
-        app.runningScript = 'set.numberPrefix()'
+        setAppScripts('set.numberPrefix()', 'app.js', initScript)
         const current = app.openLib.isPrefix
         try {
             app.openLib.db.setAttr("prefix", !current)
@@ -244,21 +244,18 @@ const set = {
             } else {
                 message('prefix čísla vypnutý')
             }
-            app.runningScript = null
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
     },
     number(){
-        app.runningScript = 'set.number()'
-        app.libFile = 'app.js'
+        setAppScripts('set.number()', 'app.js', initScript)
         try {
-            if (app.log) {message("...set.number()")}
             app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
             app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
-            initApp()
-            app.runningScript = null
-            app.libFile = null
+            this.app()
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
