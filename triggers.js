@@ -58,8 +58,8 @@ const newEntryAfterSave = (en, initScript) => {
     try {
         switch (app.openLib.name) {
             case "Dochádzka":
-                prepocitatZaznamDochadzky(en, app.runningScript)
-                genDochadzkaZavazky(en, app.runningScript)
+                prepocitatZaznamDochadzky(en, app.runningScript);
+                genDochadzkaZavazky(en, app.runningScript);
                 break;
             case "Evidencia prác":
                 break;
@@ -69,9 +69,9 @@ const newEntryAfterSave = (en, initScript) => {
                 break;
             default:
                 break;
-        }
-        set.number()
-        en.set(VIEW, VIEW_PRINT)
+        };
+        set.number();
+        en.set(VIEW, VIEW_PRINT);
 
         // if (app.log) {message("...after save")}
         // const createdEntry = lib().entries()[0]
@@ -84,7 +84,7 @@ const newEntryAfterSave = (en, initScript) => {
         // }
         nullAppScripts()
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 
