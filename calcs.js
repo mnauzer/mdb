@@ -160,7 +160,6 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
         set.number(app.runningScript);
-        get.openDb(app.runningScript) // inicializácia app práve otvorenou knižnicou
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {

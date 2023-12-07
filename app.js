@@ -222,7 +222,7 @@ const set = {
         const current = app.debug
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set("debug", !current)
-            get.openDb()
+            get.openDb(app.runningScript)
             if (app.log) {
                 message('debug zapnutý')
             } else {
@@ -255,7 +255,7 @@ const set = {
             app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
             app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
             this.app()
-            nullAppScripts()
+            get.openDb(app.runningScript)
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
