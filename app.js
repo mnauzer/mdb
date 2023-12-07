@@ -257,7 +257,7 @@ const set = {
             message('setting number ' + nextNum + ' v openLib ' + openLib.name);
             app.openLib.db.setAttr("posledné číslo", lastNum);
             app.openLib.db.setAttr("nasledujúce číslo", nextNum );
-            this.app();
+            this.storeDb(app.runningScript);
             get.openDb(app.runningScript);
         } catch (error) {
             createErrorEntry(app.runningScript, error);
