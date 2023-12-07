@@ -72,6 +72,8 @@ const prepocitatZaznamDochadzky = (en, initScript) => {
         en.set("Odpracované", odpracovaneCelkom);
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
+
+        if (en.field("Generovať záväzky")) {genDochadzkaZavazky(en, app.runningScript)}
         if (app.log) {message("...hotovo")}
         nullAppScripts()
     } catch (error) {
@@ -102,29 +104,25 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
 }
 function genDochadzkaZavazky(en, initScript){
     setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript)
-    const zavazok = en.field("Generovať záväzky")
     try {
+        if (app.log) {message("...generujem záväzky")}
 
-        if (zavazok) {
-            if (app.log) {message("...generujem záväzky")}
+        // ak sú staré záväzky, najprv vymaž
+        const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
+        // if(stareZavazky.length > 0){
+        //     message("Mažem súvisiace záväzky...")
+        //     for (let i in stareZavazky) {
+        //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
+        //     }
+        // stareZavazky = false
+        // }
 
-            // ak sú staré záväzky, najprv vymaž
-            const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka")
-            // if(stareZavazky.length > 0){
-            //     message("Mažem súvisiace záväzky...")
-            //     for (let i in stareZavazky) {
-            //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
-            //     }
-            // stareZavazky = false
-            // }
+        // vygeneruj nové záväzky
 
-            // vygeneruj nové záväzky
-
-            const zamestnanci = en.field("Zamestnanci")
-            for (let z in zamestnanci) {
-                if (z == 0 ) {message("Generujem záväzky......")} // this message only once
+        const zamestnanci = en.field("Zamestnanci")
+        for (let z in zamestnanci) {
+            if (z == 0 ) {message("Generujem záväzky......")} // this message only once
                 newEntryZavazky(zamestnanci[z], en, zamestnanci[z].attr("denná mzda"))
-            }
         }
         nullAppScripts()
     } catch (error) {
