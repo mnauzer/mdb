@@ -48,7 +48,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                         message("mažem..." + filtered.length + " záznamov")
                         filtered.forEach(el => {
                             el.trash()
-                        });trash()
+                        });
                     stareZavazky = null
                     }
                     // vygeneruj nové záväzky
