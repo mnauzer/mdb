@@ -325,7 +325,7 @@ const createLogEntry = (msg) => {
         newLog['note'] = 'generované scriptom createLogEntry'
         errorLib.create(newLog)
 }
-const createMsgEntry = (msg, value) => {
+const createMsgEntry = (msg) => {
         if (app.log) {message("Nový záznam vytvorený")}
         const errorLib = libByName(app.data.errors)
         const newMsg = new Object()
@@ -334,7 +334,7 @@ const createMsgEntry = (msg, value) => {
         newMsg['memento library'] = app.openLib.name
         newMsg['library'] = app.libFile
         newMsg['script'] = app.runningScript
-        newMsg['text'] = message + value
+        newMsg['text'] = msg
         newMsg['variables'] = logAppVariableStore(msg)
         newMsg['note'] = 'generované scriptom createMsgEntry'
         errorLib.create(newMsg)

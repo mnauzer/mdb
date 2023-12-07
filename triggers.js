@@ -56,21 +56,28 @@ function newEntryBeforeSave (en, initScript) {
 function newEntryAfterSave(en, initScript){
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
-        switch (app.openLib.name) {
-            case "Dochádzka":
-                prepocitatZaznamDochadzky(en, app.runningScript);
-                break;
-            case "Evidencia prác":
-                break;
-            case "Pokladňa":
-                break;
-            case "Kniha jázd":
-                break;
-            default:
-                break;
-        };
-        set.number();
-        en.set(VIEW, VIEW_PRINT);
+        const entryCreated = app.openLib.lib.entries()[0]
+        if (entryCreated.field(NUMBER_ENTRY) === app.openLib.nextNum) {
+            message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.openLib.nextNum)
+            switch (app.openLib.name) {
+                case "Dochádzka":
+                    prepocitatZaznamDochadzky(entryCreated, app.runningScript);
+                    break;
+                case "Evidencia prác":
+                    break;
+                case "Pokladňa":
+                    break;
+                case "Kniha jázd":
+                    break;
+                default:
+                    break;
+            };
+            set.number();
+            en.set(VIEW, VIEW_PRINT);
+        } else {
+            message('Záznam nebol vytvorený')
+            en.set(VIEW, VIEW_DEBUG);
+        }
 
         // if (app.log) {message("...after save")}
         // const createdEntry = lib().entries()[0]
