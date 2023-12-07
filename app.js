@@ -256,7 +256,7 @@ const set = {
         try {
             const lastNum = app.openLib.nextNum;
             const nextNum = (Number(app.openLib.nextNum) + 1);
-            message('setting number ' + nextNum + ' v openLib ' + app.openLib.name);
+            message('setting number ' + lastNum + '/' + nextNum + ' v openLib ' + app.openLib.name);
             app.openLib.db.setAttr('posledné číslo', lastNum);
             app.openLib.db.setAttr('nasledujúce číslo', nextNum );
             this.storeDb(app.runningScript);
