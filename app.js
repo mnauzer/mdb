@@ -252,13 +252,15 @@ const set = {
     number(initScript){
         setAppScripts('set.number()', 'app.js', initScript)
         try {
-            message('setting number');
-            app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
-            app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
-            this.app()
-            get.openDb(app.runningScript)
+            const lastNum = app.openLib.nextNum;
+            const nextNum = (Number(app.openLib.nextNum) + 1);
+            message('setting number ' + nextNum);
+            app.openLib.db.setAttr("posledné číslo", lastNum);
+            app.openLib.db.setAttr("nasledujúce číslo", nextNum );
+            this.app();
+            get.openDb(app.runningScript);
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            createErrorEntry(app.runningScript, error);
         }
     }
 }
