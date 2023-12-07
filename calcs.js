@@ -100,7 +100,7 @@ const sadzbaZamestnanca = (employee, date, initScript) => {
         createErrorEntry(app.runningScript, error)
     }
 }
-const genDochadzkaZavazky = (en, initScript) => {
+function genDochadzkaZavazky(en, initScript){
     setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript)
     const zavazok = en.field("Generovať záväzky")
     try {

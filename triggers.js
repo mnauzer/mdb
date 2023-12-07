@@ -53,7 +53,7 @@ const newEntryBeforeSave = (en, initScript) => {
     }
 }
 
-const newEntryAfterSave = (en, initScript) => {
+function newEntryAfterSave(en, initScript){
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
         switch (app.openLib.name) {
