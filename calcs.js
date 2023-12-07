@@ -21,7 +21,8 @@ function prepocitatZaznamDochadzky(en, initScript){
         if (zamestnanci) {
             if (app.log) {message("...prepočítavam zamestnancov")}
             for (let z = 0; z < zamestnanci.length; z++ ) {
-                const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript);
+               // const hodinovka = zamestnanci[z].attr("hodinovka") ? zamestnanci[z].attr("hodinovka") : sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); //neprepisovať už zadanú hodinovku
+                const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
                 const hodnotenie = zamestnanci[z].attr("hodnotenie") ? zamestnanci[z].attr("hodnotenie") : 5;
