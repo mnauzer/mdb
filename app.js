@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '1.02.0015',
+        version: '1.03.0016',
         app: "ASISTANTO",
         db: "ASISTANTO DB",
         errors: "ASISTANTO Errors",
@@ -62,8 +62,8 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
     },
-    openDb(){
-        setAppScripts('get.openDb()', 'app.js')
+    openDb(initScript){
+        setAppScripts('get.openDb()', 'app.js', initScript)
         try {
             get.library()
             get.season()
@@ -91,7 +91,7 @@ const get = {
             } else {
                 if (app.log) {message("...nie je vytvorené záznam pre sezónu " + app.season)}
             }
-            set.storeDb()
+            set.storeDb(app.runningScript)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -191,7 +191,7 @@ const set = {
         }
     },
     season(arg){
-        setAppScripts('get.season()', 'app.js')
+        setAppScripts('set.season()', 'app.js')
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set("default season", arg)
             initApp()
@@ -269,18 +269,18 @@ const calc = {
     // app mutators
 }
 
-const initApp = () => {
-    setAppScripts('initApp()', 'app.js')
-    try {
-        get.openDb()
-        //get.openLibName()
-        get.sadzbyDPH()
-        set.storeDb()
-        nullAppScripts()
-    } catch (error) {
-        createErrorEntry(app.runningScript, error)
-    }
-}
+// const initApp = () => {
+//     setAppScripts('initApp()', 'app.js')
+//     try {
+//         get.openDb()
+//         //get.openLibName()
+//         get.sadzbyDPH()
+//         set.storeDb()
+//         nullAppScripts()
+//     } catch (error) {
+//         createErrorEntry(app.runningScript, error)
+//     }
+// }
 
 // LOG & ERRORS
 const logAppVariableStore = (msg) => {

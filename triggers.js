@@ -3,7 +3,6 @@ const libOpen = (initScript) => {
     // trigger lib_open
     setAppScripts('libOpen()', 'triggers.js', initScript)
     try {
-        if (app.log) {message(app.runningScript)}
         set.app(app.runningScript)
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.openLib.name +' ' +  app.season )
@@ -16,7 +15,6 @@ const newEntry = (en, initScript)  => {
     setAppScripts('newEntry()', 'triggers.js', initScript)
     set.app(app.runningScript)
     try {
-        if (app.log) {message(app.runningScript)}
         message("Nový záznam >> " + app.openLib.name)
         en.set(VIEW, VIEW_EDIT)
         en.set(DATE, new Date())
@@ -35,7 +33,6 @@ const newEntry = (en, initScript)  => {
 const newEntryBeforeSave = (en, initScript) => {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript)
     try {
-        if (app.log) {message(app.runningScript)}
         switch (app.openLib.name) {
             case "Dochádzka":
 
@@ -59,7 +56,6 @@ const newEntryBeforeSave = (en, initScript) => {
 const newEntryAfterSave = (en, initScript) => {
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
     try {
-        if (app.log) {message(app.runningScript)}
         switch (app.openLib.name) {
             case "Dochádzka":
                 prepocitatZaznamDochadzky(en, app.runningScript)
@@ -93,7 +89,6 @@ const newEntryAfterSave = (en, initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
-    if (app.log) {message(app.runningScript)}
     set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
     //try {
@@ -118,7 +113,6 @@ const removeEntryBefore = (en, initScript) => {
     // }
 }
 const removeEntryAfter = (en, initScript) => {
-    if (app.log) {message(app.runningScript)}
     set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
     try {
