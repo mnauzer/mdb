@@ -252,6 +252,7 @@ const set = {
     number(initScript){
         setAppScripts('set.number()', 'app.js', initScript)
         try {
+            message('setting number');
             app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
             app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
             this.app()
