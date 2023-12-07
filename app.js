@@ -65,26 +65,29 @@ const get = {
     openDb(libName){
         setAppScripts('get.openDb()', 'app.js')
         try {
-            get.library(libName)
-            get.season()
-            const dbEntry = libByName(app.data.app).find(app.season)[0]
+            if(libName){
+                set.app;
+            }
+            get.library(libName);
+            get.season();
+            const dbEntry = libByName(app.data.app).find(app.season)[0];
             if (dbEntry !== undefined){
                 //if (app.log) {message("...openDbSeason: " + app.season)}
-                const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
+                const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name);
                 if (dbLib !== undefined){
                     //if (app.log) {message("...openDb: " + dbEntry.name)}
-                    app.openLib.db = dbLib[0]
-                    app.openLib.ID = app.openLib.db.field("ID")
-                    app.openLib.prefix = app.openLib.db.field("Prefix")
+                    app.openLib.db = dbLib[0];
+                    app.openLib.ID = app.openLib.db.field("ID");
+                    app.openLib.prefix = app.openLib.db.field("Prefix");
                     // entry attributes
-                    app.openLib.lastNum = app.openLib.db.attr("posledné číslo")
-                    app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo")
-                    app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo")
-                    app.openLib.removedNums.concat(app.openLib.db.attr("vymazané čísla"))
-                    app.openLib.isPrefix = app.openLib.db.attr("prefix")
-                    app.openLib.trim = app.openLib.db.attr("trim")
-                    app.openLib.trailingDigit = app.openLib.db.attr("trailing digit")
-                    app.openLib.number = this.number()
+                    app.openLib.lastNum = app.openLib.db.attr("posledné číslo");
+                    app.openLib.nextNum = app.openLib.db.attr("nasledujúce číslo");
+                    app.openLib.reservedNum = app.openLib.db.attr("rezervované číslo");
+                    app.openLib.removedNums.concat(app.openLib.db.attr("vymazané čísla"));
+                    app.openLib.isPrefix = app.openLib.db.attr("prefix");
+                    app.openLib.trim = app.openLib.db.attr("trim");
+                    app.openLib.trailingDigit = app.openLib.db.attr("trailing digit");
+                    app.openLib.number = this.number();
                 } else {
                     if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.openLib.name + ' v sezóne  ' + app.season)}
                 }
@@ -99,7 +102,7 @@ const get = {
     },
     number(){
         // vyskladaj nové číslo záznamu
-        setAppScripts('get.number()', 'app.js')
+        setAppScripts('get.number()', 'app.js');
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.openLib.removedNums > 0){
@@ -108,10 +111,10 @@ const get = {
             }
             const newNumber = app.openLib.isPrefix
             ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
-            : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
-            app.openLib.number = newNumber
+            : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit);
+            app.openLib.number = newNumber;
             if (app.log) {message('Nové číslo: ' + newNumber)}
-            nullAppScripts()
+            nullAppScripts();
             return newNumber
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -134,10 +137,7 @@ const set = {
     app(initScript){
         setAppScripts('set.app()', 'app.js', initScript)
         try {
-            get.openDb()
-            //get.openLibName()
-            get.sadzbyDPH()
-            this.storeDb()
+            this.storeDb(app.runningScript)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -194,9 +194,9 @@ const set = {
         setAppScripts('set.season()', 'app.js')
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set("default season", arg)
-            initApp()
+            get.openDb()
             message('Nastavená sezóna: ' + app.season)
-            app.runningScript = null
+            nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
         }
@@ -218,11 +218,11 @@ const set = {
         }
     },
     debug(){
-        app.runningScript = 'set.debug()'
+        setAppScripts('set.app()', 'app.js')
         const current = app.debug
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set("debug", !current)
-            initApp()
+            get.openDb()
             if (app.log) {
                 message('debug zapnutý')
             } else {
@@ -250,7 +250,7 @@ const set = {
         }
     },
     number(){
-        setAppScripts('set.number()', 'app.js', initScript)
+        setAppScripts('set.number()', 'app.js')
         try {
             app.openLib.db.setAttr("posledné číslo", app.openLib.nextNum)
             app.openLib.db.setAttr("nasledujúce číslo", (Number(app.openLib.nextNum) + 1))
