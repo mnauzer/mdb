@@ -12,26 +12,26 @@ const libOpen = (initScript) => {
     }
 }
 const newEntry = (en, initScript)  => {
-    setAppScripts('newEntry()', 'triggers.js', initScript)
-    set.app(app.runningScript)
+    setAppScripts('newEntry()', 'triggers.js', initScript);
+    set.app(app.runningScript);
     try {
-        message("Nový záznam >> " + app.openLib.name)
-        en.set(VIEW, VIEW_EDIT)
-        en.set(DATE, new Date())
-        en.set(CR, user())
-        en.set(CR_DATE, new Date())
-        en.set(NUMBER, app.openLib.number)
-        en.set(NUMBER_ENTRY, app.openLib.nextNum)
-        en.set(SEASON, app.season)
+        message("Nový záznam >> " + app.openLib.name);
+        en.set(VIEW, VIEW_EDIT);
+        en.set(DATE, new Date());
+        en.set(CR, user());
+        en.set(CR_DATE, new Date());
+        en.set(NUMBER, app.openLib.number);
+        en.set(NUMBER_ENTRY, app.openLib.nextNum);
+        en.set(SEASON, app.season);
         // code here
-        nullAppScripts()
+        nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 
 const newEntryBeforeSave = (en, initScript) => {
-    setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript)
+    setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
         switch (app.openLib.name) {
             case "Dochádzka":
@@ -45,16 +45,16 @@ const newEntryBeforeSave = (en, initScript) => {
                 break;
             default:
                 break;
-        }
-        en.set(VIEW, VIEW_PRINT)
-        nullAppScripts()
+        };
+        en.set(VIEW, VIEW_PRINT);
+        nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 
 const newEntryAfterSave = (en, initScript) => {
-    setAppScripts('newEntryAfterSave()', 'triggers.js', initScript)
+    setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
         switch (app.openLib.name) {
             case "Dochádzka":
@@ -89,13 +89,13 @@ const newEntryAfterSave = (en, initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
-    setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
-    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
+    set.app(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
-        const rmNum  = []
+        const rmNum  = [];
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
-        rmNum.push(en.field(NUMBER_ENTRY))
-        if (app.log) {message("BF...removedNums: " + rmNum)}
+        rmNum.push(en.field(NUMBER_ENTRY));
+        if (app.log) {message("BF...removedNums: " + rmNum)};
         switch (app.openLib.name) {
             case "Dochádzka":
                 break;
@@ -107,15 +107,15 @@ const removeEntryBefore = (en, initScript) => {
                 break;
             default:
                 break;
-        }
-        nullAppScripts()
+        };
+        nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 const removeEntryAfter = (en, initScript) => {
-    setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
-    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
+    set.app(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
@@ -129,10 +129,10 @@ const removeEntryAfter = (en, initScript) => {
                 break;
             default:
                 break;
-        }
-        nullAppScripts()
+        };
+        nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        createErrorEntry(app.runningScript, error);
     }
 }
 
