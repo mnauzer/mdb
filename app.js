@@ -626,9 +626,7 @@ function newEntry (en, initScript) {
 function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
-        app.openLib.lastNum = app.openLib.nextNum;
-        app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
-        set.storeDb(app.runningScript)
+
         en.set(VIEW, VIEW_PRINT)
         nullAppScripts();
     } catch (error) {
@@ -640,7 +638,7 @@ function newEntryAfterSave(en, initScript){
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
         const entryCreated = app.openLib.lib.entries()[0]
-        if (entryCreated.field(NUMBER_ENTRY) === app.openLib.lastNum) {
+        if (entryCreated.field(NUMBER_ENTRY) === app.openLib.nextNum) {
             message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.openLib.nextNum)
             switch (app.openLib.name) {
                 case "Dochádzka":
@@ -655,7 +653,9 @@ function newEntryAfterSave(en, initScript){
                 default:
                     break;
             };
-            set.number(app.runningScript);
+        app.openLib.lastNum = app.openLib.nextNum;
+        app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
+        set.storeDb(app.runningScript)
             en.set(VIEW, VIEW_PRINT);
         } else {
             message('Záznam nebol vytvorený')
