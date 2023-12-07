@@ -13,7 +13,7 @@ const libOpen = (initScript) => {
 }
 function newEntry (en, initScript) {
     setAppScripts('newEntry()', 'triggers.js', initScript);
-    set.app(app.runningScript);
+    get.openDb(app.runningScript);
     try {
         message("Nový záznam >> " + app.openLib.name);
         en.set(VIEW, VIEW_EDIT);

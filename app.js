@@ -62,8 +62,8 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field("log")
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field("debug")
     },
-    openDb(libName){
-        setAppScripts('get.openDb()', 'app.js')
+    openDb(initScript, libName){
+        setAppScripts('get.openDb()', 'app.js', initScript)
         try {
             if(libName){
                 set.app;
