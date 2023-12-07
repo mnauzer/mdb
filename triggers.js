@@ -2,8 +2,8 @@
 const libOpen = (initScript) => {
     // trigger lib_open
     setAppScripts('libOpen()', 'triggers.js', initScript)
+    set.app(app.runningScript)
     try {
-        set.app(app.runningScript)
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.openLib.name +' ' +  app.season )
         nullAppScripts()
@@ -89,9 +89,9 @@ const newEntryAfterSave = (en, initScript) => {
 }
 
 const removeEntryBefore = (en, initScript) => {
-    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript)
-    //try {
+    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    try {
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
         app.openLib.removedNums.push(en.field(NUMBER_ENTRY))
         if (app.log) {message("BF...removedNums: " + app.openLib.removedNums)}
@@ -108,13 +108,13 @@ const removeEntryBefore = (en, initScript) => {
                 break;
         }
         nullAppScripts()
-    // } catch (error) {
-    //     createErrorEntry(app.runningScript, error)
-    // }
+    } catch (error) {
+        createErrorEntry(app.runningScript, error)
+    }
 }
 const removeEntryAfter = (en, initScript) => {
-    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript)
+    set.app(app.runningScript) //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.openLib.name) {
