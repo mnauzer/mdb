@@ -68,15 +68,17 @@ function prepocitatZaznamDochadzky(en, initScript){
                 if (zavazky) {
                     // ak sú staré záväzky, najprv vymaž
                     const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
-                    // if(stareZavazky.length > 0){
-                    //     message("Mažem súvisiace záväzky...")
-                    //     for (let i in stareZavazky) {
-                    //         removeEntry(stareZavazky[i], LIB_ZVK, scr.name)
-                    //     }
-                    // stareZavazky = false
-                    // }
+                    if(stareZavazky.length > 0){
+                        message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
+                        const filtered = stareZavazky.filter(en => en.field("Zamestnanec") = zamestnanci[z])
+                        message("mažem..." + filtered.length + " záznamov")
+                        filtered.trash()
+
+                    stareZavazky = null
+                    }
 
                     // vygeneruj nové záväzky
+                    message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
                     const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
                 };
             }
