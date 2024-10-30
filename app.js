@@ -15,7 +15,7 @@ const app = {
     runningScript: null,
     libFile: 'app.js',
     initScript: null,
-    openLib: { // ASISTANTO nastavenie knižnice podľa sezóny
+    activeLib: { // ASISTANTO nastavenie knižnice podľa sezóny
         name: null,
         // ASISTANTO DB
         db: null,
@@ -51,11 +51,11 @@ const app = {
 const get = {
     // app getters
     library(libName){
-        app.openLib.lib = lib()
-        app.openLib.name = libName || lib().title
-        app.openLib.entries = lib().entries()
-        app.openLib.en = entry()
-        app.openLib.enD = entryDefault()
+        app.activeLib.lib = lib()
+        app.activeLib.name = libName || lib().title
+        app.activeLib.entries = lib().entries()
+        app.activeLib.en = entry()
+        app.activeLib.enD = entryDefault()
     },
     season(){
         app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field('default season')
@@ -73,23 +73,23 @@ const get = {
             const dbEntry = libByName(app.data.app).find(app.season)[0];
             if (dbEntry !== undefined){
                 //if (app.log) {message('...openDbSeason: ' + app.season)}
-                const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.openLib.name);
+                const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.activeLib.name);
                 if (dbLib !== undefined){
-                    app.openLib.db = dbLib[0];
-                    app.openLib.ID = app.openLib.db.field('ID');
-                    app.openLib.prefix = app.openLib.db.field('Prefix');
+                    app.activeLib.db = dbLib[0];
+                    app.activeLib.ID = app.activeLib.db.field('ID');
+                    app.activeLib.prefix = app.activeLib.db.field('Prefix');
                     // entry attributes
-                    app.openLib.lastNum = app.openLib.db.attr('posledné číslo');
-                    app.openLib.nextNum = app.openLib.db.attr('nasledujúce číslo');
-                    app.openLib.reservedNum = app.openLib.db.attr('rezervované číslo');
-                    app.openLib.removedNums.concat(app.openLib.db.attr('vymazané čísla'));
-                    app.openLib.isPrefix = app.openLib.db.attr('prefix');
-                    app.openLib.trim = app.openLib.db.attr('trim');
-                    app.openLib.trailingDigit = app.openLib.db.attr('trailing digit');
-                    app.openLib.number = this.number(app.runningScript);
-                    if (app.log) {message('...openDb: ' + dbEntry.name + ' - ' + app.openLib.db.title)}
+                    app.activeLib.lastNum = app.activeLib.db.attr('posledné číslo');
+                    app.activeLib.nextNum = app.activeLib.db.attr('nasledujúce číslo');
+                    app.activeLib.reservedNum = app.activeLib.db.attr('rezervované číslo');
+                    app.activeLib.removedNums.concat(app.activeLib.db.attr('vymazané čísla'));
+                    app.activeLib.isPrefix = app.activeLib.db.attr('prefix');
+                    app.activeLib.trim = app.activeLib.db.attr('trim');
+                    app.activeLib.trailingDigit = app.activeLib.db.attr('trailing digit');
+                    app.activeLib.number = this.number(app.runningScript);
+                    if (app.log) {message('...openDb: ' + dbEntry.name + ' - ' + app.activeLib.db.title)}
                 } else {
-                    if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.openLib.name + ' v sezóne  ' + app.season)}
+                    if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.activeLib.name + ' v sezóne  ' + app.season)}
                 }
             } else {
                 if (app.log) {message('...nie je vytvorené záznam pre sezónu ' + app.season)}
@@ -105,13 +105,13 @@ const get = {
         setAppScripts('get.number()', 'app.js', initScript);
         try {
             // najprv zisti či nie sú vymazané čísla
-            if (app.openLib.removedNums > 0){
-                if (app.log) {message('...removedNums: ' + app.openLib.removedNums)}
+            if (app.activeLib.removedNums > 0){
+                if (app.log) {message('...removedNums: ' + app.activeLib.removedNums)}
                 // použi najprv vymazané čísla
             }
-            const newNumber = app.openLib.isPrefix
-            ? app.openLib.prefix + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit)
-            : app.openLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit);
+            const newNumber = app.activeLib.isPrefix
+            ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit)
+            : app.activeLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit);
             app.openLib.number = newNumber;
             if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.openLib.name)}
             nullAppScripts();
@@ -181,6 +181,7 @@ const set = {
             // Store to ASISTANTO open database
 
             // TODO: vypínam toto padá apka R 30.10.2024
+            message ("vypnutý script app.js riadok 184")
             // app.openLib.db.setAttr('názov', app.openLib.name)
             // app.openLib.db.setAttr('posledné číslo', app.openLib.lastNum)
             // app.openLib.db.setAttr('nasledujúce číslo', app.openLib.nextNum)
