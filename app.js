@@ -111,9 +111,9 @@ const get = {
             }
             const newNumber = app.activeLib.isPrefix
             ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit)
-            : app.activeLib.ID + app.season.slice(app.openLib.trim) + pad(app.openLib.nextNum, app.openLib.trailingDigit);
-            app.openLib.number = newNumber;
-            if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.openLib.name)}
+            : app.activeLib.ID + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit);
+            app.activeLib.number = newNumber;
+            if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.activeLib.name)}
             nullAppScripts();
             return newNumber
         } catch (error) {
@@ -163,17 +163,17 @@ const set = {
             storeDB.set('season', app.season)
             storeDB.set('log', app.log)
             storeDB.set('debug', app.debug)
-            storeDB.set('openLib.name', app.openLib.name)
-            storeDB.set('openLib.db.id', app.openLib.db ? app.openLib.db.id : null)
-            storeDB.set('openLib.prefix', app.openLib.prefix)
-            storeDB.set('openLib.lastNum', app.openLib.lastNum)
-            storeDB.set('openLib.nextNum', app.openLib.nextNum)
-            storeDB.set('openLib.reservedNum', app.openLib.reservedNum)
-            storeDB.set('openLib.removedNums', app.openLib.removedNums)
-            storeDB.set('openLib.isPrefix', app.openLib.isPrefix)
-            storeDB.set('openLib.trailingDigit', app.openLib.trailingDigit)
-            storeDB.set('openLib.trim', app.openLib.trim)
-            storeDB.set('openLib.number', app.openLib.number)
+            storeDB.set('activeLib.name', app.activeLib.name)
+            storeDB.set('activeLib.db.id', app.activeLib.db ? app.activeLib.db.id : null)
+            storeDB.set('activeLib.prefix', app.activeLib.prefix)
+            storeDB.set('activeLib.lastNum', app.activeLib.lastNum)
+            storeDB.set('activeLib.nextNum', app.activeLib.nextNum)
+            storeDB.set('activeLib.reservedNum', app.activeLib.reservedNum)
+            storeDB.set('activeLib.removedNums', app.activeLib.removedNums)
+            storeDB.set('activeLib.isPrefix', app.activeLib.isPrefix)
+            storeDB.set('activeLib.trailingDigit', app.activeLib.trailingDigit)
+            storeDB.set('activeLib.trim', app.activeLib.trim)
+            storeDB.set('activeLib.number', app.activeLib.number)
             storeDB.set('dph.zakladna', app.dph.zakladna)
             storeDB.set('dph.znizena', app.dph.znizena)
             storeDB.set('en.id', app.en ? app.en.id : null)
@@ -182,12 +182,12 @@ const set = {
 
             // TODO: vypínam toto padá apka R 30.10.2024
             message ("vypnutý script app.js riadok 184")
-            // app.openLib.db.setAttr('názov', app.openLib.name)
-            // app.openLib.db.setAttr('posledné číslo', app.openLib.lastNum)
-            // app.openLib.db.setAttr('nasledujúce číslo', app.openLib.nextNum)
-            // app.openLib.db.setAttr('rezervované číslo', app.openLib.reservedNum)
-            // app.openLib.db.setAttr('vymazané čísla', app.openLib.removedNums)
-            // app.openLib.db.setAttr('vygenerované číslo', app.openLib.number)
+            // app.activeLib.db.setAttr('názov', app.activeLib.name)
+            // app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
+            // app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
+            // app.activeLib.db.setAttr('rezervované číslo', app.activeLib.reservedNum)
+            // app.activeLib.db.setAttr('vymazané čísla', app.activeLib.removedNums)
+            // app.activeLib.db.setAttr('vygenerované číslo', app.activeLib.number)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -242,9 +242,9 @@ const set = {
     },
     numberPrefix(){
         setAppScripts('set.numberPrefix()', 'app.js', initScript)
-        const current = app.openLib.isPrefix
+        const current = app.activeLib.isPrefix
         try {
-            app.openLib.db.setAttr('prefix', !current)
+            app.activeLib.db.setAttr('prefix', !current)
             initApp()
             if (app.log) {
                 message('prefix čísla zapnutý')
@@ -259,11 +259,11 @@ const set = {
     number(initScript){
         setAppScripts('set.number()', 'app.js', initScript)
         try {
-            const lastNum = app.openLib.nextNum;
-            const nextNum = (Number(app.openLib.nextNum) + 1);
-            message('setting number ' + lastNum + '/' + nextNum + ' v openLib ' + app.openLib.name);
-            app.openLib.db.setAttr('posledné číslo', lastNum);
-            app.openLib.db.setAttr('nasledujúce číslo', nextNum );
+            const lastNum = app.activeLib.nextNum;
+            const nextNum = (Number(app.activeLib.nextNum) + 1);
+            message('setting number ' + lastNum + '/' + nextNum + ' v activeLib.' + app.activeLib.name);
+            app.activeLib.db.setAttr('posledné číslo', lastNum);
+            app.activeLib.db.setAttr('nasledujúce číslo', nextNum );
             this.storeDb(app.runningScript);
             get.openDb(app.runningScript);
         } catch (error) {
@@ -280,7 +280,7 @@ const calc = {
 //     setAppScripts('initApp()', 'app.js')
 //     try {
 //         get.openDb()
-//         //get.openLibName()
+//         //get.activeLib.ame()
 //         get.sadzbyDPH()
 //         set.storeDb()
 //         nullAppScripts()
@@ -297,22 +297,22 @@ const logAppVariableStore = (msg) => {
         +'\nseason: ' +  app.season
         +'\nlog: ' +  app.log
         +'\ndebug: ' +  app.debug
-        +'\nopenLib.name: ' +  app.openLib.name
-        +'\nopenLib.db: ' +  app.openLib.db
-        +'\nopenLib.ID: ' +  app.openLib.ID
-        +'\nopenLib.prefix: ' +  app.openLib.prefix
-        +'\nopenLib.lastNum: ' +  app.openLib.lastNum
-        +'\nopenLib.nextNum: ' +  app.openLib.nextNum
-        +'\nopenLib.reservedNum: ' +  app.openLib.reservedNum
-        +'\nopenLib.removedNums: ' +  app.openLib.removedNums
-        +'\nopenLib.isPrefix: ' +  app.openLib.isPrefix
-        +'\nopenLib.trim: ' +  app.openLib.trim
-        +'\nopenLib.trailingDigit: ' +  app.openLib.trailingDigit
-        +'\nopenLib.number: ' +  app.openLib.number
-        +'\nopenLib.lib: ' +  app.openLib.lib
-        +'\nopenLib.en: ' +  app.openLib.en
-        +'\nopenLib.entries: ' +  app.openLib.entries.length
-        +'\nopenLib.enD: ' +  app.openLib.enD
+        +'\nactiveLib.name: ' +  app.activeLib.name
+        +'\nactiveLib.db: ' +  app.activeLib.db
+        +'\nactiveLib.ID: ' +  app.activeLib.ID
+        +'\nactiveLib.prefix: ' +  app.activeLib.prefix
+        +'\nactiveLib.lastNum: ' +  app.activeLib.lastNum
+        +'\nactiveLib.nextNum: ' +  app.activeLib.nextNum
+        +'\nactiveLib.reservedNum: ' +  app.activeLib.reservedNum
+        +'\nactiveLib.removedNums: ' +  app.activeLib.removedNums
+        +'\nactiveLib.isPrefix: ' +  app.activeLib.isPrefix
+        +'\nactiveLib.trim: ' +  app.activeLib.trim
+        +'\nactiveLib.trailingDigit: ' +  app.activeLib.trailingDigit
+        +'\nactiveLib.number: ' +  app.activeLib.number
+        +'\nactiveLib.lib: ' +  app.activeLib.lib
+        +'\nactiveLib.en: ' +  app.activeLib.en
+        +'\nactiveLib.entries: ' +  app.activeLib.entries.length
+        +'\nactiveLib.enD: ' +  app.activeLib.enD
         +'\ndph.zakladna: ' +  app.dph.zakladna
         +'\ndph.znizena: ' +  app.dph.znizena
         +'\nmsg: ' +  msg
@@ -324,7 +324,7 @@ const createLogEntry = (msg) => {
         const newLog = new Object()
         newLog['type'] = 'log'
         newLog['date'] = new Date()
-        newLog['memento library'] = app.openLib.name
+        newLog['memento library'] = app.activeLib.name
         newLog['library'] = app.libFile
         newLog['script'] = app.runningScript
         newLog['text'] = 'app store variables'
@@ -338,7 +338,7 @@ const createMsgEntry = (msg) => {
         const newMsg = new Object()
         newMsg['type'] = 'msg'
         newMsg['date'] = new Date()
-        newMsg['memento library'] = app.openLib.name
+        newMsg['memento library'] = app.activeLib.name
         newMsg['library'] = app.libFile
         newMsg['script'] = app.runningScript
         newMsg['text'] = msg
@@ -353,7 +353,7 @@ const createErrorEntry = (msg, error) => {
         const newError = new Object()
         newError['type'] = 'error'
         newError['date'] = new Date()
-        newError['memento library'] = app.openLib.name
+        newError['memento library'] = app.activeLib.name
         newError['library'] = app.libFile
         newError['script'] = app.runningScript
         newError['text'] = error
@@ -539,8 +539,8 @@ function newEntryZavazky(employee, en, sum, initScript) {
         const zavazky = libByName(LIB_ZVK);
         // vytvorenie nového záznamu
         const newEntry = new Object();
-        newEntry[NUMBER] = app.openLib.number;
-        newEntry[NUMBER_ENTRY] = app.openLib.nextNum;
+        newEntry[NUMBER] = app.activeLib.number;
+        newEntry[NUMBER_ENTRY] = app.activeLib.nextNum;
         newEntry[DATE] =  new Date();
         // TODO: zmeniť aj pre iných veriteľov ako zamestnanci
         newEntry["Typ"] = "Mzdy";
@@ -554,8 +554,8 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
-        app.openLib.lastNum = app.openLib.nextNum;
-        app.openLib.nextNum = (app.openLib.nextNum) + 1;
+        app.activeLib.lastNum = app.activeLib.nextNum;
+        app.activeLib.nextNum = (app.activeLib.nextNum) + 1;
         set.storeDb(app.runningScript);
         return true;
         // kontrola vytvorenia záznamu
@@ -588,7 +588,7 @@ const zavazky = {
     // GETTERS
     get:{
         db(){
-            const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.openLib.name)
+            const dbLib = dbEntry.field("Databázy").filter(en => en.field("Názov") == app.activeLib.name)
 
         }
     }
@@ -603,7 +603,7 @@ const libOpen = (initScript) => {
     set.app(app.runningScript)
     try {
         message(app.data.name + ' v.' + app.data.version +
-        '\n' +  app.openLib.name +' ' +  app.season )
+        '\n' +  app.activeLib.name +' ' +  app.season )
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
@@ -613,13 +613,13 @@ function newEntry (en, initScript) {
     setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openDb(app.runningScript);
     try {
-        dialog("Nový záznam >> " + app.openLib.name);
+        dialog("Nový záznam >> " + app.activeLib.name);
         en.set(VIEW, VIEW_EDIT);
         en.set(DATE, new Date());
         en.set(CR, user());
         en.set(CR_DATE, new Date());
-        en.set(NUMBER, app.openLib.number);
-        en.set(NUMBER_ENTRY, app.openLib.nextNum);
+        en.set(NUMBER, app.activeLib.number);
+        en.set(NUMBER_ENTRY, app.activeLib.nextNum);
         en.set(SEASON, app.season);
         // code here
         nullAppScripts();
@@ -631,8 +631,8 @@ function newEntry (en, initScript) {
 function newEntryBeforeSave (en, initScript) {
     setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
-        app.openLib.lastNum = app.openLib.nextNum;
-        app.openLib.nextNum = Number(app.openLib.nextNum) + 1;
+        app.activeLib.lastNum = app.activeLib.nextNum;
+        app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
         en.set(VIEW, VIEW_PRINT)
         nullAppScripts();
     } catch (error) {
@@ -643,10 +643,10 @@ function newEntryBeforeSave (en, initScript) {
 function newEntryAfterSave(en, initScript){
     setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
-        const entryCreated = app.openLib.lib.entries()[0]
-        if (entryCreated.field(NUMBER_ENTRY) === app.openLib.nextNum) {
-        if(app.log) { message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.openLib.nextNum)}
-            switch (app.openLib.name) {
+        const entryCreated = app.activeLib.lib.entries()[0]
+        if (entryCreated.field(NUMBER_ENTRY) === app.activeLib.nextNum) {
+        if(app.log) { message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.activeLib.nextNum)}
+            switch (app.activeLib.name) {
                 case "Dochádzka":
                     prepocitatZaznamDochadzky(entryCreated, app.runningScript);
                     break;
@@ -660,7 +660,7 @@ function newEntryAfterSave(en, initScript){
                     break;
             };
 
-        if(app.log) { message("Ukladám čísla: " + app.openLib.lastNum + '/' +app.openLib.nextNum)}
+        if(app.log) { message("Ukladám čísla: " + app.activeLib.lastNum + '/' +app.activeLib.nextNum)}
         set.storeDb(app.runningScript)
         en.set(VIEW, VIEW_PRINT);
         } else {
@@ -671,8 +671,8 @@ function newEntryAfterSave(en, initScript){
         // if (app.log) {message("...after save")}
         // const createdEntry = lib().entries()[0]
         // if (app.log) {message("...entry number: " + createdEntry.field(NUMBER_ENTRY) )}
-        // if (app.log) {message("...app.openLib.nextNum: " + Number(app.openLib.nextNum) )}
-        // if (createdEntry.field(NUMBER_ENTRY) == Number(app.openLib.nextNum)) {
+        // if (app.log) {message("...app.activeLib.nextNum: " + Number(app.activeLib.nextNum) )}
+        // if (createdEntry.field(NUMBER_ENTRY) == Number(app.activeLib.nextNum)) {
         //     if (app.log) {message("...entry successfully created")}
         //     set.number()
 
@@ -691,7 +691,7 @@ function removeEntryBefore(en, initScript) {
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
         rmNum.push(en.field(NUMBER_ENTRY));
         if (app.log) {message("BF...removedNums: " + rmNum)};
-        switch (app.openLib.name) {
+        switch (app.activeLib.name) {
             case "Dochádzka":
                 break;
             case "Evidencia prác":
@@ -713,7 +713,7 @@ function removeEntryAfter(en, initScript) {
     get.openDb(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
-        switch (app.openLib.name) {
+        switch (app.activeLib.name) {
             case "Dochádzka":
                 break;
             case "Evidencia prác":
