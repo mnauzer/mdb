@@ -610,7 +610,7 @@ function newEntry (en, initScript) {
     setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openDb(app.runningScript);
     try {
-        message("Nový záznam >> " + app.openLib.name);
+        dialog("Nový záznam >> " + app.openLib.name);
         en.set(VIEW, VIEW_EDIT);
         en.set(DATE, new Date());
         en.set(CR, user());
@@ -680,7 +680,7 @@ function newEntryAfterSave(en, initScript){
     }
 }
 
-function removeEntryBefore(en, initScript) {
+function removeEntryBefore(en, initScript) { 
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
     get.openDb(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
