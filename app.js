@@ -181,13 +181,13 @@ const set = {
             // Store to ASISTANTO open database
 
             // TODO: vypínam toto padá apka R 30.10.2024
-            message("vypnutý script app.js riadok 184")
+            message("zapnutý script app.js riadok 184")
              app.activeLib.db.setAttr('názov', app.activeLib.name)
-            // app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
-            // app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
-            // app.activeLib.db.setAttr('rezervované číslo', app.activeLib.reservedNum)
-            // app.activeLib.db.setAttr('vymazané čísla', app.activeLib.removedNums)
-            // app.activeLib.db.setAttr('vygenerované číslo', app.activeLib.number)
+            app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
+            app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
+            app.activeLib.db.setAttr('rezervované číslo', app.activeLib.reservedNum)
+            app.activeLib.db.setAttr('vymazané čísla', app.activeLib.removedNums)
+            app.activeLib.db.setAttr('vygenerované číslo', app.activeLib.number)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
