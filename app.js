@@ -179,12 +179,14 @@ const set = {
             storeDB.set('en.id', app.en ? app.en.id : null)
 
             // Store to ASISTANTO open database
-            app.openLib.db.setAttr('názov', app.openLib.name)
-            app.openLib.db.setAttr('posledné číslo', app.openLib.lastNum)
-            app.openLib.db.setAttr('nasledujúce číslo', app.openLib.nextNum)
-            app.openLib.db.setAttr('rezervované číslo', app.openLib.reservedNum)
-            app.openLib.db.setAttr('vymazané čísla', app.openLib.removedNums)
-            app.openLib.db.setAttr('vygenerované číslo', app.openLib.number)
+
+            // TODO: vypínam toto padá apka R 30.10.2024
+            // app.openLib.db.setAttr('názov', app.openLib.name)
+            // app.openLib.db.setAttr('posledné číslo', app.openLib.lastNum)
+            // app.openLib.db.setAttr('nasledujúce číslo', app.openLib.nextNum)
+            // app.openLib.db.setAttr('rezervované číslo', app.openLib.reservedNum)
+            // app.openLib.db.setAttr('vymazané čísla', app.openLib.removedNums)
+            // app.openLib.db.setAttr('vygenerované číslo', app.openLib.number)
             nullAppScripts()
         } catch (error) {
             createErrorEntry(app.runningScript, error)
@@ -413,7 +415,7 @@ function prepocitatZaznamDochadzky(en, initScript){
         const pracovnaDoba = (odchod - prichod) / 3600000;
 
         // prepočet zamestnancov
-        if (zamestnanci !== undefined) {
+   /*      if (zamestnanci !== undefined) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
@@ -462,7 +464,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                 }
             }
         };
-        prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
+        prestojeCelkom = odpracovaneCelkom - evidenciaCelkom; */
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", mzdyCelkom.toFixed(2));
         en.set("Pracovná doba", pracovnaDoba);
