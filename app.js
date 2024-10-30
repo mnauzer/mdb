@@ -181,8 +181,8 @@ const set = {
             // Store to ASISTANTO open database
 
             // TODO: vypínam toto padá apka R 30.10.2024
-            message ("vypnutý script app.js riadok 184")
-            // app.activeLib.db.setAttr('názov', app.activeLib.name)
+            message("vypnutý script app.js riadok 184")
+             app.activeLib.db.setAttr('názov', app.activeLib.name)
             // app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
             // app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
             // app.activeLib.db.setAttr('rezervované číslo', app.activeLib.reservedNum)
