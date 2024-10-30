@@ -409,16 +409,15 @@ const employees = {
             const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
             const dateField ="Platnosť od";
             let sadzba = 0;
-            filteredLinks = filterByDate(links, date, dateField, app.runningScript);
+            filteredLinks = filterByDate(links, date, dateField);
             if (filteredLinks.length < 0) {
                 msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu';
+                return null;
             } else {
-                sadzba = filteredLinks[0].field("Sadzba");
+                return filteredLinks[0].field("Sadzba");
             }
-            nullAppScripts()
-            return sadzba;
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            createErrorEntry(error)
         }
     }
 }
@@ -446,10 +445,12 @@ function prepocitatZaznamDochadzky(en, initScript){
         const pracovnaDoba = (odchod - prichod) / 3600000;
 
         // prepočet zamestnancov
-   /*      if (zamestnanci !== undefined) {
+        if (zamestnanci !== undefined) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
-                const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
+                //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
+                const hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
+                message("sadzba " + zamestnanci[z].field("nick") + " je " + hodinovka)
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
                 // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
@@ -495,7 +496,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                 }
             }
         };
-        prestojeCelkom = odpracovaneCelkom - evidenciaCelkom; */
+        prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", mzdyCelkom.toFixed(2));
         en.set("Pracovná doba", pracovnaDoba);
