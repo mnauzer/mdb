@@ -483,7 +483,7 @@ const getSumaSDPH = (sumaBezDPH, sadzbaDPH) => {
 //
 const errorGen = ( script, error, variables, parameters) => {
     // generátor chyby
-    message("ERROR: " + script + "\n" + error)
+    dialog("ERROR: " + script + "\n" + error)
     let errorLib = libByName(APP_ERROR)
     let newError = new Object()
     newError["type"] = "error"
