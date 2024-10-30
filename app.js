@@ -465,7 +465,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                 odpracovaneCelkom += pracovnaDoba;
 
                 // generovanie záväzkov za mzdy
-                if (zavazky) {
+              /*   if (zavazky) {
                     // ak sú staré záväzky, najprv vymaž
                     const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
                     if(stareZavazky !== undefined){
@@ -480,9 +480,9 @@ function prepocitatZaznamDochadzky(en, initScript){
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
                     const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
-                };
+                }; */
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-                if (evidenciaPrac !== undefined) {
+                /* if (evidenciaPrac !== undefined) {
                     if (app.log) {message("...prepočítavam evidenciu prác")}
                     for (let ep = 0; ep < evidenciaPrac.length; ep++) {
                         const zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
@@ -493,7 +493,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                             }
                         }
                     }
-                }
+                } */
             }
         };
         prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
