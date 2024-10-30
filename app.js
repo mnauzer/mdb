@@ -504,11 +504,11 @@ function prepocitatZaznamDochadzky(en, initScript){
         en.set("Na zákazkách", evidenciaCelkom);
         en.set("Prestoje", prestojeCelkom);
         if (prestojeCelkom = odpracovaneCelkom) {
-            en.set("appMsg", 'vyžaduje pozornosť');
-            en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
+           // en.set("appMsg", 'vyžaduje pozornosť');
+          //  en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
         if (app.log) {message("...hotovo")};
-        nullAppScripts();
+        //nullAppScripts();
     } catch (error) {
         createErrorEntry(app.runningScript, error);
     }
