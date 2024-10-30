@@ -62,7 +62,7 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field('log')
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
     },
-    openDb(initScript, libName){
+    openDb(initScript, libName){  //parametre sú pre generátor chýb -- debug
         setAppScripts('get.openDb()', 'app.js', initScript)
         try {
             if(libName){
@@ -70,7 +70,7 @@ const get = {
             }
             get.library(libName);
             get.season();
-            const dbEntry = libByName(app.data.app).find(app.season)[0];
+            const dbEntry = libByName(app.data.app).find(app.season)[0]; // TS: ibByName() je Memento funkcia
             if (dbEntry !== undefined){
                 //if (app.log) {message('...openDbSeason: ' + app.season)}
                 const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.activeLib.name);
