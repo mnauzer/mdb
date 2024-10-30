@@ -11,6 +11,15 @@ const app = {
         todo: 'ASISTANTO ToDo',
         tenant: 'KRAJINKA'
     },
+    tenant: {
+        name: null,
+        street: null,
+        city: null,
+        psc: null,
+        ico: null,
+        dic: null,
+        platca_dph: null,
+    },
     msg: null,
     runningScript: null,
     libFile: 'app.js',
@@ -62,8 +71,8 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field('log')
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
     },
-    openDb(initScript, libName){  //parametre sú pre generátor chýb -- debug
-        setAppScripts('get.openDb()', 'app.js', initScript)
+    openLib(initScript, libName){  //parametre sú pre generátor chýb -- debug
+        setAppScripts('get.openLib()', 'app.js', initScript)
         try {
             if(libName){
                 set.storeDb(app.runningScript); // keď je otvorená sekundárna knižnica ulož premenné
@@ -72,7 +81,7 @@ const get = {
             get.season();
             const dbEntry = libByName(app.data.app).find(app.season)[0]; // TS: ibByName() je Memento funkcia
             if (dbEntry !== undefined){
-                //if (app.log) {message('...openDbSeason: ' + app.season)}
+                //if (app.log) {message('...openLibSeason: ' + app.season)}
                 const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.activeLib.name);
                 if (dbLib !== undefined){
                     app.activeLib.db = dbLib[0];
@@ -87,7 +96,7 @@ const get = {
                     app.activeLib.trim = app.activeLib.db.attr('trim');
                     app.activeLib.trailingDigit = app.activeLib.db.attr('trailing digit');
                     app.activeLib.number = this.number(app.runningScript);
-                    if (app.log) {message('...openDb: ' + dbEntry.name + ' - ' + app.activeLib.db.title)}
+                    if (app.log) {message('...openLib: ' + dbEntry.name + ' - ' + app.activeLib.db.title)}
                 } else {
                     if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.activeLib.name + ' v sezóne  ' + app.season)}
                 }
@@ -182,7 +191,7 @@ const set = {
 
             // TODO: vypínam toto padá apka R 30.10.2024
             message("zapnutý script app.js riadok 184")
-             app.activeLib.db.setAttr('názov', app.activeLib.name)
+            app.activeLib.db.setAttr('názov', app.activeLib.name)
             app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
             app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
             app.activeLib.db.setAttr('rezervované číslo', app.activeLib.reservedNum)
@@ -197,7 +206,7 @@ const set = {
         setAppScripts('set.season()', 'app.js')
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set('default season', arg)
-            get.openDb()
+            get.openLib()
             message('Nastavená sezóna: ' + app.season)
             nullAppScripts()
         } catch (error) {
@@ -265,7 +274,7 @@ const set = {
             app.activeLib.db.setAttr('posledné číslo', lastNum);
             app.activeLib.db.setAttr('nasledujúce číslo', nextNum );
             this.storeDb(app.runningScript);
-            get.openDb(app.runningScript);
+            get.openLib(app.runningScript);
         } catch (error) {
             createErrorEntry(app.runningScript, error);
         }
@@ -279,7 +288,7 @@ const calc = {
 // const initApp = () => {
 //     setAppScripts('initApp()', 'app.js')
 //     try {
-//         get.openDb()
+//         get.openLib()
 //         //get.activeLib.ame()
 //         get.sadzbyDPH()
 //         set.storeDb()
@@ -390,6 +399,27 @@ const appLogMsg = (message, value, createEntry) => {
         nullAppScripts()
     } catch (error) {
         createErrorEntry(app.runningScript, error)
+    }
+}
+// EMPLOYEES / ZAMESTNANCI
+const employees = {
+    sadzba(employee, date) {
+        try {
+            // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
+            const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
+            const dateField ="Platnosť od";
+            let sadzba = 0;
+            filteredLinks = filterByDate(links, date, dateField, app.runningScript);
+            if (filteredLinks.length < 0) {
+                msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu';
+            } else {
+                sadzba = filteredLinks[0].field("Sadzba");
+            }
+            nullAppScripts()
+            return sadzba;
+        } catch (error) {
+            createErrorEntry(app.runningScript, error)
+        }
     }
 }
 // CALC
@@ -534,7 +564,7 @@ function genDochadzkaZavazky(en, initScript){
 function newEntryZavazky(employee, en, sum, initScript) {
     setAppScripts('newEntryZavazky()', 'calc.js', initScript);
     try {
-        get.openDb(app.runningScript, LIB_ZVK); // inicializácia app knižnicou záväzky
+        get.openLib(app.runningScript, LIB_ZVK); // inicializácia app knižnicou záväzky
         const popis = "Mzda " + employee.name +", za deň "; // TODO: pridať a upraviť formát dátumu
         const zavazky = libByName(LIB_ZVK);
         // vytvorenie nového záznamu
@@ -611,7 +641,7 @@ const libOpen = (initScript) => {
 }
 function newEntry (en, initScript) {
     setAppScripts('newEntry()', 'triggers.js', initScript);
-    get.openDb(app.runningScript);
+    get.openLib(app.runningScript);
     try {
         dialog("Nový záznam >> " + app.activeLib.name);
         en.set(VIEW, VIEW_EDIT);
@@ -685,7 +715,7 @@ function newEntryAfterSave(en, initScript){
 
 function removeEntryBefore(en, initScript) { 
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
-    get.openDb(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         const rmNum  = [];
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
@@ -710,7 +740,7 @@ function removeEntryBefore(en, initScript) {
 }
 function removeEntryAfter(en, initScript) {
     setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
-    get.openDb(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.activeLib.name) {
