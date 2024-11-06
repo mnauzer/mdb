@@ -1,12 +1,7 @@
-// Library/Event/Script:    Projekty\Cenové ponuky\shared\krajinkaLib.js
-// JS Libraries:
-// Dátum:                   06.03.2022
-// Popis:                   knižnica krajinkaLib
-
 const APP = {
-    version: '23.0.010',
-    defaultName(lib){
-        return lib || lib().title
+    version: '24.11.0010',
+    defaultName(){
+        return lib().title
     },
     defaultSeason(season){
         return season || libByName(LIBAPP_TENATNS).find("KRAJINKA")[0].field("default season")

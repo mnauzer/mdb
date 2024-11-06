@@ -373,7 +373,7 @@ const createErrorEntry = (msg, error) => {
         nullAppScripts()
 }
 const nullAppScripts = () => {
-        app.runningScript = null
+        app.runningScript = null 
         app.libFile = null
         app.initScript = null
 }
