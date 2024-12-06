@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '1.04.0001',
+        version: '1.04.0002',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -373,7 +373,7 @@ const createErrorEntry = (msg, error) => {
         nullAppScripts()
 }
 const nullAppScripts = () => {
-        app.runningScript = null 
+        app.runningScript = null
         app.libFile = null
         app.initScript = null
 }
@@ -714,7 +714,7 @@ function newEntryAfterSave(en, initScript){
     }
 }
 
-function removeEntryBefore(en, initScript) { 
+function removeEntryBefore(en, initScript) {
     setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
