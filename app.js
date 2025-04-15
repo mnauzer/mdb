@@ -672,13 +672,13 @@ function prepocitatZaznamDochadzky2(en, initScript) {
             );
 
             if (app.log) {
-                message(`Výpočet dennej mzdy pre ${zamestnanec.field("nick")}:
-                    Odpracované: ${pracovnaDoba}
-                    Hodinovka: ${hodinovka}
-                    Príplatok: ${priplatokHod}
-                    Prémia: ${premia}
-                    Pokuta: ${pokuta}
-                    Denná mzda: ${dennaMzda}`);
+            message('Výpočet dennej mzdy pre ' + zamestnanec.field("nick") + ':\n' +
+                    'Odpracované: ' + pracovnaDoba + '\n' +
+                    'Hodinovka: ' + hodinovka + '\n' +
+                    'Príplatok: ' + priplatokHod + '\n' +
+                    'Prémia: ' + premia + '\n' +
+                    'Pokuta: ' + pokuta + '\n' +
+                    'Denná mzda: ' + dennaMzda);
             }
 
             // Set employee attributes individually
@@ -688,10 +688,10 @@ function prepocitatZaznamDochadzky2(en, initScript) {
                 zamestnanec.setAttr("denná mzda", dennaMzda);
 
                 if (app.log) {
-                    message(`Atribúty nastavené pre ${zamestnanec.field("nick")}:
-                        Denná mzda: ${zamestnanec.attr("denná mzda")}
-                        Odpracované: ${zamestnanec.attr("odpracované")}
-                        Hodinovka: ${zamestnanec.attr("hodinovka")}`);
+                    message('Atribúty nastavené pre ' + zamestnanec.field("nick") + ':\n' +
+                        'Denná mzda: ' + zamestnanec.attr("denná mzda") + '\n' +
+                        'Odpracované: ' + zamestnanec.attr("odpracované") + '\n' +
+                        'Hodinovka: ' + zamestnanec.attr("hodinovka"));;
                 }
             } catch (error) {
                 throw new Error(`Chyba pri nastavovaní atribútov pre ${zamestnanec.field("nick")}: ${error.message}`);
@@ -714,12 +714,12 @@ function prepocitatZaznamDochadzky2(en, initScript) {
             en.set("Prestoje", prestojeCelkom);
 
             if (app.log) {
-                message(`Celkové hodnoty:
-                    Mzdové náklady: ${mzdyCelkom}
-                    Pracovná doba: ${pracovnaDoba}
-                    Odpracované: ${odpracovaneCelkom}
-                    Na zákazkách: ${evidenciaCelkom}
-                    Prestoje: ${prestojeCelkom}`);
+                message('Celkové hodnoty:\n' +
+                    'Mzdové náklady: ' + mzdyCelkom + '\n' +
+                    'Pracovná doba: ' + pracovnaDoba + '\n' +
+                    'Odpracované: ' + odpracovaneCelkom + '\n' +
+                    'Na zákazkách: ' + evidenciaCelkom + '\n' +
+                    'Prestoje: ' + prestojeCelkom);
             }
         } catch (error) {
             throw new Error(`Chyba pri ukladaní súhrnných údajov: ${error.message}`);
