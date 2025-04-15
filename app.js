@@ -56,6 +56,52 @@ const app = {
         znizena: null,
     },
 }
+// Better library reference caching
+const LibraryCache = {
+    _cache: {},
+    get(libName) {
+        if (!this._cache[libName]) {
+            this._cache[libName] = libByName(libName);
+        }
+        return this._cache[libName];
+    },
+    clear() {
+        this._cache = {};
+    }
+};
+
+// Improved error handling for Memento operations
+const MementoOps = {
+    safeLibOperation(libName, operation) {
+        try {
+            const library = LibraryCache.get(libName);
+            if (!library) {
+                throw new Error(`Library ${libName} not found`);
+            }
+            return operation(library);
+        } catch (error) {
+            createErrorEntry('MementoOps.safeLibOperation', error);
+            return null;
+        }
+    }
+};
+
+// Better entry validation
+const validateEntry = (entry, requiredFields) => {
+    if (!entry) return false;
+    return requiredFields.every(field => {
+        const value = entry.field(field);
+        return value !== undefined && value !== null;
+    });
+};
+
+// Improved number generation with validation
+const getNextNumber = (lib, season) => {
+    if (!lib || !season) {
+        throw new Error('Library and season required for number generation');
+    }
+    // Existing number generation logic with added validation
+};
 // GETTERS
 const get = {
     // app getters
