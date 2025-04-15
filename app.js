@@ -506,8 +506,14 @@ function prepocitatZaznamDochadzky(en, initScript){
             message('Invalid arrival/departure times');
         }
 
-        en.set("Príchod", prichod); //uloženie upravených časov
-        en.set("Odchod", odchod);
+        // Update times in single batch
+        en.set({
+            "Príchod": prichod,
+            "Odchod": odchod
+        });
+
+        // en.set("Príchod", prichod); //uloženie upravených časov
+        // en.set("Odchod", odchod);
 
         // výpočet pracovnej doby
         const pracovnaDoba = calculateWorkHours(prichod, odchod);

@@ -25,11 +25,6 @@ function prepocitatZaznamDochadzky(en, initScript) {
             throw new Error('Invalid arrival/departure times');
         }
 
-        // Update times in single batch
-        en.set({
-            "Príchod": prichod,
-            "Odchod": odchod
-        });
 
         const pracovnaDoba = calculateWorkHours(prichod, odchod);
 
