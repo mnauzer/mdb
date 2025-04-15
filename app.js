@@ -482,8 +482,8 @@ function validateAndRoundTime(time) {
 function calculateWorkHours(start, end) {
     return (end - start) / 3600000;
 }
-function prepocitatZaznamDochadzky(en, initScript){
-    setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
+function prepocitatZaznamDochadzky(en){
+   // setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         const datum = en.field(DATE);
         const zavazky = en.field("Generovať záväzky")
