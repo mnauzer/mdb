@@ -514,23 +514,24 @@ function prepocitatZaznamDochadzky(en, initScript){
 
                 // generovanie záväzkov za mzdy
                  if (zavazky) {
+                    message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
                     const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
-                    if(stareZavazky !== undefined){
+                    if(stareZavazky !== undefined || stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
                         const filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
                         filtered.forEach(el => {
                             el.trash()
                         });
-                    stareZavazky = null
+                    stareZavazky = null;
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
                     const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
                 };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-                 if (evidenciaPrac !== undefined) {
+                 if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
                     if (app.log) {message("...prepočítavam evidenciu prác")}
                     for (let ep = 0; ep < evidenciaPrac.length; ep++) {
                         const zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
