@@ -502,7 +502,7 @@ function prepocitatZaznamDochadzky(en, initScript){
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
                 // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
-                const dennaMzda = (pracovnaDoba * (hodinovka
+                let dennaMzda = (pracovnaDoba * (hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)")))
                     + zamestnanci[z].attr("+prémia (€)")
                     - zamestnanci[z].attr("-pokuta (€)");
