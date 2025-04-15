@@ -152,7 +152,7 @@ const get = {
             set.storeDb(app.runningScript)
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     number(initScript){
@@ -172,7 +172,7 @@ const get = {
             nullAppScripts();
             return newNumber
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     sadzbyDPH(initScript){
@@ -183,7 +183,7 @@ const get = {
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
 }
@@ -195,7 +195,7 @@ const set = {
             this.storeDb(app.runningScript)
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     storeDb(initScript){
@@ -245,7 +245,7 @@ const set = {
             app.activeLib.db.setAttr('vygenerované číslo', app.activeLib.number)
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     season(arg){
@@ -256,7 +256,7 @@ const set = {
             message('Nastavená sezóna: ' + app.season)
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     log(){
@@ -274,7 +274,7 @@ const set = {
             lib.set('log', isLog)
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     debug(){
@@ -292,7 +292,7 @@ const set = {
             lib.set('debug', isDebug)
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     numberPrefix(){
@@ -308,7 +308,7 @@ const set = {
             }
             nullAppScripts()
         } catch (error) {
-            createErrorEntry(app.runningScript, error)
+            message(error)
         }
     },
     number(initScript){
@@ -322,7 +322,7 @@ const set = {
             this.storeDb(app.runningScript);
             get.openLib(app.runningScript);
         } catch (error) {
-            createErrorEntry(app.runningScript, error);
+            message(error);
         }
     }
 }
@@ -340,7 +340,7 @@ const calc = {
 //         set.storeDb()
 //         nullAppScripts()
 //     } catch (error) {
-//         createErrorEntry(app.runningScript, error)
+//         message(error)
 //     }
 // }
 
@@ -444,7 +444,7 @@ const appLogMsg = (message, value, createEntry) => {
         }
         nullAppScripts()
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        message(error)
     }
 }
 // EMPLOYEES / ZAMESTNANCI
@@ -554,8 +554,8 @@ function prepocitatZaznamDochadzky(en){
                 //     - zamestnanci[z].attr("-pokuta (€)");
 
                 // pripočítanie do celkových hodnôt záznamu
-                mzdyCelkom += employeeAtt.dennaMzda;
-                odpracovaneCelkom += employeeAtt.odpracovane;
+                totals.mzdy += employeeAtt.dennaMzda;
+                totals.odpracovane += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
                 if (zavazky) {
@@ -590,43 +590,41 @@ function prepocitatZaznamDochadzky(en){
                 }
             }
         };
-        prestojeCelkom = odpracovaneCelkom - evidenciaCelkom;
+        totals.prestoje = totals.odpracovane - totals.evidencia;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
-        en.set("Mzdové náklady", mzdyCelkom.toFixed(2));
-        en.set("Pracovná doba", pracovnaDoba);
-        en.set("Odpracované", odpracovaneCelkom);
-        en.set("Na zákazkách", evidenciaCelkom);
-        en.set("Prestoje", prestojeCelkom);
-        if (prestojeCelkom = odpracovaneCelkom) {
+        en.set("Mzdové náklady", totals.mzdy.toFixed(2));
+        en.set("Pracovná doba", totals.odpracovane.toFixed(2));
+        en.set("Odpracované", totals.odpracovane.toFixed(2));
+        en.set("Na zákazkách", totals.evidencia.toFixed(2));
+        en.set("Prestoje", totals.prestoje.toFixed(2));
+        if (totals.evidencia == totals.odpracovane) {
            // en.set("appMsg", 'vyžaduje pozornosť');
           //  en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
         if (app.log) {message("...hotovo")};
         //nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 // ZAMESTNANCI
-function sadzbaZamestnanca(employee, date, initScript){
+function sadzbaZamestnanca(employee, date){
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
     // v databáze "LIB_SZ - sadzby zamestnancov"
-    setAppScripts('sadzbaZamestnancab()', 'calc.js', initScript);
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         const links = employee.linksFrom(LIB_SZ, FLD_ZAM);
         const dateField ="Platnosť od";
         let sadzba = 0;
-        filteredLinks = filterByDate(links, date, dateField, app.runningScript);
-        if (filteredLinks.length < 0) {
+        filteredLinks = filterByDate(links, date, dateField);
+        if (filteredLinks == undefined || filteredLinks.length < 0) {
             msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu';
         } else {
             sadzba = filteredLinks[0].field("Sadzba");
         }
-        nullAppScripts()
         return sadzba;
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        message(error);
     }
 }
 function genDochadzkaZavazky(en, initScript){
@@ -653,7 +651,7 @@ function genDochadzkaZavazky(en, initScript){
         };
         nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 function newEntryZavazky(employee, en, sum, initScript) {
@@ -685,7 +683,7 @@ function newEntryZavazky(employee, en, sum, initScript) {
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 
@@ -731,7 +729,7 @@ const libOpen = (initScript) => {
         '\n' +  app.activeLib.name +' ' +  app.season )
         nullAppScripts()
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        message(error)
     }
 }
 function newEntry (en, initScript) {
@@ -749,7 +747,7 @@ function newEntry (en, initScript) {
         // code here
         nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 
@@ -761,7 +759,7 @@ function newEntryBeforeSave (en, initScript) {
         en.set(VIEW, VIEW_PRINT)
         nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 
@@ -804,7 +802,7 @@ function newEntryAfterSave(en, initScript){
         // }
         nullAppScripts()
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 
@@ -830,7 +828,7 @@ function removeEntryBefore(en, initScript) {
         };
         nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 function removeEntryAfter(en, initScript) {
@@ -852,7 +850,7 @@ function removeEntryAfter(en, initScript) {
         };
         nullAppScripts();
     } catch (error) {
-        createErrorEntry(app.runningScript, error);
+        message(error);
     }
 }
 
@@ -931,7 +929,7 @@ const filterByDate = (entries, maxDate, dateField, initScript) => {
         nullAppScripts()
         return filtered
     } catch (error) {
-        createErrorEntry(app.runningScript, error)
+        message(error)
     }
 }
 
