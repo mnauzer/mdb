@@ -418,35 +418,9 @@ const createErrorEntry = (msg, error) => {
         errorLib.create(newError)
         //nullAppScripts()
 }
-const nullAppScripts = () => {
-        app.runningScript = null
-        app.libFile = null
-        app.initScript = null
-}
-const setAppScripts = (scriptName, libFile, initScript) => {
-        app.runningScript = scriptName
-        app.libFile = libFile
-        app.initScript = initScript || null
-        const msg = initScript + '>>' + app.runningScript
-        if (app.debug) {
-            message(msg)
-            createLogEntry(msg)
-            }
 
-}
-const appLogMsg = (message, value, createEntry) => {
-    setAppScripts('appLogMsg()', 'app.js')
-    try {
-        createEntry = createEntry || false
-        if (app.log) {message(message + value)}
-        if (createEntry) {
-            createMsgEntry(message, value )
-        }
-        //nullAppScripts()
-    } catch (error) {
-        message(error)
-    }
-}
+
+
 // EMPLOYEES / ZAMESTNANCI
 const employees = {
     sadzba(employee, date) {
@@ -984,9 +958,6 @@ function removeEntryAfter(en, initScript) {
     }
 }
 
-const test = () => {
-    message('test2')
-}
 
 // HELPERS
 // DATE TIME FUNCTONS
