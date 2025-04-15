@@ -495,8 +495,10 @@ function prepocitatZaznamDochadzky(en, initScript){
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
-                const hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
+                let hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
                 message("sadzba " + zamestnanci[z].field("nick") + " je " + hodinovka)
+
+                zamestnanci[z].setAttr("odpracované", pracovnaDoba);
                 zamestnanci[z].setAttr("hodinovka", hodinovka);
 
                 // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
@@ -695,8 +697,8 @@ function newEntry (en, initScript) {
         en.set(DATE, new Date());
         en.set(CR, user());
         en.set(CR_DATE, new Date());
-        en.set(NUMBER, app.activeLib.number);
-        en.set(NUMBER_ENTRY, app.activeLib.nextNum);
+       // en.set(NUMBER, app.activeLib.number);
+       // en.set(NUMBER_ENTRY, app.activeLib.nextNum);
         en.set(SEASON, app.season);
         // code here
         nullAppScripts();
