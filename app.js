@@ -473,6 +473,7 @@ const employees = {
 function validateAndRoundTime(time) {
     if (!time) {
         message('Missing time value');
+
     }
     return roundTimeQ(time);
 }
@@ -504,6 +505,8 @@ function prepocitatZaznamDochadzky(en, initScript){
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
+            throw new Error('Invalid arrival/departure times');
+            cancel();
         }
 
         // Update times in single batch
