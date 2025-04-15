@@ -469,6 +469,17 @@ const employees = {
 }
 // CALC
 // DOCHÁDZKA
+// Helper functions
+function validateAndRoundTime(time) {
+    if (!time) {
+        message('Missing time value');
+    }
+    return roundTimeQ(time);
+}
+
+function calculateWorkHours(start, end) {
+    return (end - start) / 3600000;
+}
 function prepocitatZaznamDochadzky(en, initScript){
     setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
@@ -476,14 +487,25 @@ function prepocitatZaznamDochadzky(en, initScript){
         const zavazky = en.field("Generovať záväzky")
         const zamestnanci = en.field("Zamestnanci");
         const evidenciaPrac = en.field("Práce");
+        const totals = {
+            mzdy: 0,
+            odpracovane: 0,
+            evidencia: 0,
+            prestoje: 0
+        };
         let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
         let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
         let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
 
-        // zaokrúhlenie zadaného času na 15min
-        const prichod = roundTimeQ(en.field("Príchod")); //zaokrúhlenie času na 15min
-        const odchod = roundTimeQ(en.field("Odchod"));
+         // Validate and process time entries
+        const prichod = validateAndRoundTime(en.field("Príchod"));
+        const odchod = validateAndRoundTime(en.field("Odchod"));
+
+        if (!prichod || !odchod || prichod >= odchod) {
+            message('Invalid arrival/departure times');
+        }
+
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
 
@@ -491,7 +513,7 @@ function prepocitatZaznamDochadzky(en, initScript){
         const pracovnaDoba = (odchod - prichod) / 3600000;
 
         // prepočet zamestnancov
-        if (zamestnanci !== undefined) {
+        if (zamestnanci !== undefined || zamestnanci.length > 0) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
@@ -513,13 +535,13 @@ function prepocitatZaznamDochadzky(en, initScript){
                 odpracovaneCelkom += pracovnaDoba;
 
                 // generovanie záväzkov za mzdy
-                 if (zavazky) {
+                if (zavazky) {
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
-                    const stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
+                    let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
                     if(stareZavazky !== undefined || stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                        const filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
+                        let filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
                         filtered.forEach(el => {
                             el.trash()
@@ -528,14 +550,14 @@ function prepocitatZaznamDochadzky(en, initScript){
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    const zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
+                    let zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
                 };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-                 if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
+                if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
                     if (app.log) {message("...prepočítavam evidenciu prác")}
                     for (let ep = 0; ep < evidenciaPrac.length; ep++) {
-                        const zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                        const naZakazke = evidenciaPrac[ep].field("Pracovná doba");
+                        let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
+                        let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
                         for (let znz in zamNaZakazke) {
                             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
                                 evidenciaCelkom += naZakazke;
