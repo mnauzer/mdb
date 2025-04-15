@@ -506,7 +506,7 @@ function prepocitatZaznamDochadzky(en){
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
-            Noification.show("Error", "Invalid arrival/departure times");
+            Notification.show("Error", "Invalid arrival/departure times");
             cancel();
             throw new Error('Invalid arrival/departure times');
         }
@@ -516,7 +516,10 @@ function prepocitatZaznamDochadzky(en){
         //     "Príchod": prichod,
         //     "Odchod": odchod
         // });
+        function setEmployeeAtrributes(employee, employeeAtt){
 
+        }
+//
         en.set("Príchod", prichod); //uloženie upravených časov
         en.set("Odchod", odchod);
 
@@ -528,22 +531,31 @@ function prepocitatZaznamDochadzky(en){
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
-                let hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
+                const employeeAtt = {
+                    hodinovka: employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
+                    odpracovane: pracovnaDoba,
+                    dennaMzda: pracovnaDoba * (this.hodinovka
+                    + zamestnanci[z].attr("+príplatok (€/h)"))
+                    + zamestnanci[z].attr("+prémia (€)")
+                    - zamestnanci[z].attr("-pokuta (€)")
+                }
+               // employeeAtt.hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
+
                 message("sadzba " + zamestnanci[z].field("nick") + " je " + hodinovka)
 
-                zamestnanci[z].setAttr("odpracované", pracovnaDoba);
-                zamestnanci[z].setAttr("hodinovka", hodinovka);
+                zamestnanci[z].setAttr("odpracované", employeeAtt.odpracovane);
+                zamestnanci[z].setAttr("hodinovka", employeeAtt.hodinovka);
+                zamestnanci[z].setAttr("denná mzda", employeeAtt.dennaMzda);
 
                 // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
-                let dennaMzda = (pracovnaDoba * (hodinovka
-                    + zamestnanci[z].attr("+príplatok (€/h)")))
-                    + zamestnanci[z].attr("+prémia (€)")
-                    - zamestnanci[z].attr("-pokuta (€)");
-                zamestnanci[z].setAttr("denná mzda", dennaMzda);
+                // let dennaMzda = (pracovnaDoba * (hodinovka
+                //     + zamestnanci[z].attr("+príplatok (€/h)")))
+                //     + zamestnanci[z].attr("+prémia (€)")
+                //     - zamestnanci[z].attr("-pokuta (€)");
 
                 // pripočítanie do celkových hodnôt záznamu
-                mzdyCelkom += dennaMzda;
-                odpracovaneCelkom += pracovnaDoba;
+                mzdyCelkom += employeeAtt.dennaMzda;
+                odpracovaneCelkom += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
                 if (zavazky) {
