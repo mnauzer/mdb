@@ -837,11 +837,11 @@ const libOpen = (initScript) => {
         message(error)
     }
 }
-function newEntry (en, initScript) {
-    setAppScripts('newEntry()', 'triggers.js', initScript);
+function newEntry (en) {
+    //setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openLib(app.runningScript);
     try {
-        dialog("Nový záznam >> " + app.activeLib.name);
+        //dialog("Nový záznam >> " + app.activeLib.name);
         en.set(VIEW, VIEW_EDIT);
         en.set(DATE, new Date());
         en.set(CR, user());
@@ -852,7 +852,7 @@ function newEntry (en, initScript) {
         // code here
         //nullAppScripts();
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error);
     }
 }
 
