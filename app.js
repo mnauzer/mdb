@@ -558,7 +558,7 @@ function prepocitatZaznamDochadzky(en){
                 totals.odpracovane += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
-                if (zavazky) {
+                if (!zavazky) {
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
                     let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
@@ -605,6 +605,136 @@ function prepocitatZaznamDochadzky(en){
         //nullAppScripts();
     } catch (error) {
         message(error);
+    }
+}
+
+function prepocitatZaznamDochadzky2(en, initScript) {
+    setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
+    try {
+        // 1. Input Validation
+        const datum = en.field(DATE);
+        if (!datum) {
+            throw new Error('Chýba dátum záznamu');
+        }
+
+        const zamestnanci = en.field("Zamestnanci");
+        if (!zamestnanci || zamestnanci.length === 0) {
+            throw new Error('Nie sú vybraní zamestnanci');
+        }
+
+        // 2. Time Validation and Calculation
+        const prichodCas = en.field("Príchod");
+        const odchodCas = en.field("Odchod");
+        if (!prichodCas || !odchodCas) {
+            throw new Error('Chýba čas príchodu alebo odchodu');
+        }
+
+        // Round times to 15 minutes
+        const prichod = roundTimeQ(prichodCas);
+        const odchod = roundTimeQ(odchodCas);
+
+        // Save rounded times back to entry
+        en.set("Príchod", prichod);
+        en.set("Odchod", odchod);
+
+        // Calculate work hours
+        const pracovnaDoba = Number(((odchod - prichod) / 3600000).toFixed(2));
+        if (pracovnaDoba <= 0) {
+            throw new Error('Neplatná pracovná doba');
+        }
+
+        // 3. Initialize Totals
+        let mzdyCelkom = 0;
+        let odpracovaneCelkom = 0;
+        let evidenciaCelkom = 0;
+
+        // 4. Process Each Employee
+        for (let i = 0; i < zamestnanci.length; i++) {
+            const zamestnanec = zamestnanci[i];
+            if (app.log) {
+                message(`Spracovávam zamestnanca: ${zamestnanec.field("nick")}`);
+            }
+
+            // Get hourly rate
+            const hodinovka = employees.sadzba(zamestnanec, datum);
+            if (!hodinovka || hodinovka <= 0) {
+                throw new Error(`Neplatná hodinová sadzba pre ${zamestnanec.field("nick")}`);
+            }
+
+            // Get bonuses and penalties
+            const priplatokHod = Number(zamestnanec.attr("+príplatok (€/h)") || 0);
+            const premia = Number(zamestnanec.attr("+prémia (€)") || 0);
+            const pokuta = Number(zamestnanec.attr("-pokuta (€)") || 0);
+
+            // Calculate daily wage
+            const dennaMzda = Number(
+                (pracovnaDoba * (hodinovka + priplatokHod) + premia - pokuta).toFixed(2)
+            );
+
+            if (app.log) {
+                message(`Výpočet dennej mzdy pre ${zamestnanec.field("nick")}:
+                    Odpracované: ${pracovnaDoba}
+                    Hodinovka: ${hodinovka}
+                    Príplatok: ${priplatokHod}
+                    Prémia: ${premia}
+                    Pokuta: ${pokuta}
+                    Denná mzda: ${dennaMzda}`);
+            }
+
+            // Set employee attributes individually
+            try {
+                zamestnanec.setAttr("odpracované", pracovnaDoba);
+                zamestnanec.setAttr("hodinovka", hodinovka);
+                zamestnanec.setAttr("denná mzda", dennaMzda);
+
+                if (app.log) {
+                    message(`Atribúty nastavené pre ${zamestnanec.field("nick")}:
+                        Denná mzda: ${zamestnanec.attr("denná mzda")}
+                        Odpracované: ${zamestnanec.attr("odpracované")}
+                        Hodinovka: ${zamestnanec.attr("hodinovka")}`);
+                }
+            } catch (error) {
+                throw new Error(`Chyba pri nastavovaní atribútov pre ${zamestnanec.field("nick")}: ${error.message}`);
+            }
+
+            // Update totals
+            mzdyCelkom = Number((mzdyCelkom + dennaMzda).toFixed(2));
+            odpracovaneCelkom = Number((odpracovaneCelkom + pracovnaDoba).toFixed(2));
+        }
+
+        // 5. Calculate Idle Time
+        const prestojeCelkom = Number((odpracovaneCelkom - evidenciaCelkom).toFixed(2));
+
+        // 6. Update Entry Totals
+        try {
+            en.set("Mzdové náklady", mzdyCelkom);
+            en.set("Pracovná doba", pracovnaDoba);
+            en.set("Odpracované", odpracovaneCelkom);
+            en.set("Na zákazkách", evidenciaCelkom);
+            en.set("Prestoje", prestojeCelkom);
+
+            if (app.log) {
+                message(`Celkové hodnoty:
+                    Mzdové náklady: ${mzdyCelkom}
+                    Pracovná doba: ${pracovnaDoba}
+                    Odpracované: ${odpracovaneCelkom}
+                    Na zákazkách: ${evidenciaCelkom}
+                    Prestoje: ${prestojeCelkom}`);
+            }
+        } catch (error) {
+            throw new Error(`Chyba pri ukladaní súhrnných údajov: ${error.message}`);
+        }
+
+        // 7. Check Idle Time
+        if (prestojeCelkom === odpracovaneCelkom) {
+            if (app.log) {
+                message("Upozornenie: Všetok čas je evidovaný ako prestoj");
+            }
+        }
+
+    } catch (error) {
+        createErrorEntry(app.runningScript, error);
+        throw error;
     }
 }
 // ZAMESTNANCI
