@@ -584,7 +584,6 @@ function prepocitatZaznamDochadzky(en){
 }
 
 function prepocitatZaznamDochadzky2(en, initScript) {
-    setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         // 1. Input Validation
         const datum = en.field(DATE);
@@ -790,6 +789,21 @@ function newEntryZavazky(employee, en, sum, initScript) {
     } catch (error) {
         message(error);
     }
+}
+
+function newEntryAttendance(employee, en ){
+    const attendance = libByName('attendance')
+    const newEntry = new Object();
+    newEntry['Attendance'] = en;
+    newEntry['Employee'] = employee;
+    newEntry[DATE] = en.field(DATE);
+    newEntry['nick'] = employee.field('nick');
+    newEntry['check_in'] = en.field('Príchod');
+    newEntry['check_out'] = en.field('Odchod');
+    newEntry['hourly_rate'] = employee.attr('sadzba');
+    newEntry['hours_worked'] = employee.attr('odpracované');
+    newEntry['wage_ammount'] = employee.attr('denná mzda');
+    attendance.create(newEntry);
 }
 
 const zavazky = {
