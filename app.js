@@ -506,18 +506,19 @@ function prepocitatZaznamDochadzky(en){
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
-            throw new Error('Invalid arrival/departure times');
+            Noification.show("Error", "Invalid arrival/departure times");
             cancel();
+            throw new Error('Invalid arrival/departure times');
         }
 
         // Update times in single batch
-        en.set({
-            "Príchod": prichod,
-            "Odchod": odchod
-        });
+        // en.set({
+        //     "Príchod": prichod,
+        //     "Odchod": odchod
+        // });
 
-        // en.set("Príchod", prichod); //uloženie upravených časov
-        // en.set("Odchod", odchod);
+        en.set("Príchod", prichod); //uloženie upravených časov
+        en.set("Odchod", odchod);
 
         // výpočet pracovnej doby
         const pracovnaDoba = calculateWorkHours(prichod, odchod);
