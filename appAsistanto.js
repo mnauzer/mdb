@@ -25,8 +25,36 @@ const APP = {
             if (!nmb || isNaN(nmb)) {
                 throw new Error('Invalid number provided')
             }
-            // ... rest of logic
-        }
+            season = this.defaultSeason(season)
+            lib = this.defaultName(lib)
+            const number = []
+            const trashedNums = this.getTrashedNums(lib, season)
+            //message('1 trashed length: ' + trashedNums.length)
+            message('2 trashed: ' + trashedNums)
+            let nextNum = null;
+            const trim = this.DB(lib, season).attr("trim")
+            // najprv použi vymazané čísla
+            if (trashedNums !== undefined && trashedNums != null){
+                message('3 využívam vymazané číslo: ' + season)
+                nextNum = trashedNums.pop()
+                this.DB(lib, season).setAttr("vymazané čísla", trashedNums)
+            } else {
+                message('3 využívam nasledujúce číslo: ' + season)
+                // ak nie sú žiadne vymazané čísla použi následujúce
+                nextNum = Number(this.DB(lib, season).attr("nasledujúce číslo"))
+                if (nextNum == Number(this.DB(lib, season).attr("rezervované číslo"))){
+                    nextNum += 1
+                }
+            }
+            this.DB(lib, season).setAttr("rezervované číslo", nextNum)
+            number[0] = this.DB(lib, season).attr("prefix")
+            ? this.DB(lib, season).field("Prefix") + season.slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+            : this.DB(lib, season).field("ID") + season.slice(trim) + pad(nextNum, this.DB(lib, season).attr("trailing digit"))
+            number[1] = nextNum
+
+            this.DB(lib).setAttr("rezervované číslo", null)
+            return number
+            }
     },
   // Database Operations Module
     dbOps: {
@@ -36,7 +64,10 @@ const APP = {
             if (this._cache[cacheKey]) {
                 return this._cache[cacheKey]
             }
-            // ... existing logic
+            season = this.defaultSeason(season)
+        lib = this.defaultName(lib)
+        const db = this.entry(season).field("Databázy")
+        const filtered = db.fil
         },
         _cache: {},
         clearCache() {
