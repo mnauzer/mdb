@@ -510,7 +510,7 @@ function prepocitatZaznamDochadzky(en, initScript){
         en.set("Odchod", odchod);
 
         // výpočet pracovnej doby
-        const pracovnaDoba = (odchod - prichod) / 3600000;
+        const pracovnaDoba = calculateWorkHours(prichod, odchod);
 
         // prepočet zamestnancov
         if (zamestnanci !== undefined || zamestnanci.length > 0) {
