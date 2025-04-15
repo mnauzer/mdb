@@ -472,8 +472,8 @@ const employees = {
 // Helper functions
 function validateAndRoundTime(time) {
     if (!time) {
-        message('Missing time value');
-
+        //message('Missing time value');
+        Noification.show("Error", "Missing time value")
     }
     return roundTimeQ(time);
 }
