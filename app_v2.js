@@ -98,6 +98,7 @@ const validateEntry = (entry, requiredFields) => {
 // Improved number generation with validation
 const getNextNumber = (lib, season) => {
     if (!lib || !season) {
+        message('Library and season required for number generation');
         throw new Error('Library and season required for number generation');
     }
     // Existing number generation logic with added validation
@@ -150,7 +151,7 @@ const get = {
                 if (app.log) {message('...nie je vytvorené záznam pre sezónu ' + app.season)}
             }
             set.storeDb(app.runningScript)
-            nullAppScripts;()
+            //nullAppScripts()
         } catch (error) {
             message(error)
         }
