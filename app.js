@@ -181,7 +181,7 @@ const get = {
         try {
             app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field('Základná sadzba DPH')
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
-            nullAppScripts()
+            //nullAppScripts()
         } catch (error) {
             message(error)
         }
@@ -463,7 +463,7 @@ const employees = {
                 return filteredLinks[0].field("Sadzba");
             }
         } catch (error) {
-            createErrorEntry(error)
+            message(error)
         }
     }
 }
@@ -473,7 +473,7 @@ const employees = {
 function validateAndRoundTime(time) {
     if (!time) {
         //message('Missing time value');
-        Noification.show("Error", "Missing time value");
+        Notification.show("Error", "Missing time value");
         cancel();
     }
     return roundTimeQ(time);
@@ -495,10 +495,10 @@ function prepocitatZaznamDochadzky(en){
             evidencia: 0,
             prestoje: 0
         };
-        let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
-        let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
+       // let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
+       // let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
         let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
-        let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
+       // let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
 
          // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
@@ -541,7 +541,7 @@ function prepocitatZaznamDochadzky(en){
                 }
                // employeeAtt.hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
 
-                message("sadzba " + zamestnanci[z].field("nick") + " je " + hodinovka)
+                message("sadzba " + zamestnanci[z].field("nick") + " je " + employeeAtt.hodinovka);
 
                 zamestnanci[z].setAttr("odpracované", employeeAtt.odpracovane);
                 zamestnanci[z].setAttr("hodinovka", employeeAtt.hodinovka);
@@ -583,7 +583,7 @@ function prepocitatZaznamDochadzky(en){
                         let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
                         for (let znz in zamNaZakazke) {
                             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
-                                evidenciaCelkom += naZakazke;
+                                totals.evidencia += naZakazke;
                             }
                         }
                     }
