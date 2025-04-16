@@ -706,6 +706,7 @@ function newEntryBeforeSave (en, initScript) {
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
+        prepocitatZaznamDochadzky(en);
         en.set(VIEW, VIEW_PRINT)
         //nullAppScripts();
     } catch (error) {
@@ -713,15 +714,16 @@ function newEntryBeforeSave (en, initScript) {
     }
 }
 
-function newEntryAfterSave(en, initScript){
+function newEntryAfterSave(){
     //setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
-        const entryCreated = app.activeLib.lib.entries()[0]
+        //const entryCreated = app.activeLib.lib.entries()[0]
+        const entryCreated = app.activeLib.lib.lastEntry()
         if (entryCreated.field(NUMBER_ENTRY) === app.activeLib.nextNum) {
-        if(app.log) { message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + en.field(NUMBER_ENTRY) + '/' + app.activeLib.nextNum)}
+        if(1) { message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + entryCreated.field(NUMBER_ENTRY) + '/' + app.activeLib.nextNum)}
             switch (app.activeLib.name) {
                 case "Dochádzka":
-                    prepocitatZaznamDochadzky(entryCreated, app.runningScript);
+                    prepocitatZaznamDochadzky(entryCreated);
                     break;
                 case "Evidencia prác":
                     break;
@@ -735,10 +737,10 @@ function newEntryAfterSave(en, initScript){
 
         if(app.log) { message("Ukladám čísla: " + app.activeLib.lastNum + '/' +app.activeLib.nextNum)}
         set.storeDb(app.runningScript)
-        en.set(VIEW, VIEW_PRINT);
+        enentryCreated.set(VIEW, VIEW_PRINT);
         } else {
             if(app.log) {message('Záznam nebol vytvorený')}
-            en.set(VIEW, VIEW_DEBUG);
+            entryCreated.set(VIEW, VIEW_DEBUG);
         }
 
         // if (app.log) {message("...after save")}
