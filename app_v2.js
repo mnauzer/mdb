@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0026',
+        version: '2.04.0027',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -554,7 +554,7 @@ function sadzbaZamestnanca(employee, date){
     // v databáze "LIB_SZ - sadzby zamestnancov"
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-        const links = employee.linksFrom(LIB.SZ, FLD_ZAM);
+        const links = employee.linksFrom(LIBRARY.SZ, FLD_ZAM);
         const dateField ="Platnosť od";
         let sadzba = 0;
         filteredLinks = filterByDate(links, date, dateField);
@@ -574,7 +574,7 @@ function genDochadzkaZavazky(en, initScript){
         if (app.log) {message("...generujem záväzky")};
 
         // ak sú staré záväzky, najprv vymaž
-        const stareZavazky = en.linksFrom(LIB.ZVK, "Dochádzka");
+        const stareZavazky = en.linksFrom(LIBRARY.ZVK, "Dochádzka");
         // if(stareZavazky.length > 0){
         //     message("Mažem súvisiace záväzky...")
         //     for (let i in stareZavazky) {
@@ -598,9 +598,9 @@ function genDochadzkaZavazky(en, initScript){
 function newEntryZavazky(employee, en, sum, initScript) {
     //setAppScripts('newEntryZavazky()', 'calc.js', initScript);
     try {
-        get.openLib(app.runningScript, LIB.ZVK); // inicializácia app knižnicou záväzky
+        get.openLib(app.runningScript, LIBRARY.ZVK); // inicializácia app knižnicou záväzky
         const popis = "Mzda " + employee.name +", za deň "; // TODO: pridať a upraviť formát dátumu
-        const zavazky = libByName(LIB.ZVK);
+        const zavazky = libByName(LIBRARY.ZVK);
         // vytvorenie nového záznamu
         const newEntry = new Object();
         newEntry[NUMBER] = app.activeLib.number;
