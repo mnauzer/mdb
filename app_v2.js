@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0007',
+        version: '2.04.0008',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -496,7 +496,7 @@ function prepocitatZaznamDochadzky(en){
                 //     - zamestnanci[z].attr("-pokuta (€)");
 
                 // pripočítanie do celkových hodnôt záznamu
-                totals.mzdy += employeeAtt.dennaMzda;
+                totals.mzdy += employeeAtt.dennaMzda();
                 totals.odpracovane += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
@@ -515,7 +515,7 @@ function prepocitatZaznamDochadzky(en){
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    let zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
+                    let zavazok = newEntryZavazky(zamestnanci[z], en, employeeAtt.dennaMzda(), app.runningScript);
                 };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
