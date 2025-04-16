@@ -119,7 +119,7 @@ const get = {
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
     },
     openLib(initScript, libName){  //parametre sú pre generátor chýb -- debug
-        setAppScripts('get.openLib()', 'app.js', initScript)
+        //setAppScripts('get.openLib()', 'app.js', initScript)
         try {
             if(libName){
                 set.storeDb(app.runningScript); // keď je otvorená sekundárna knižnica ulož premenné
@@ -158,7 +158,7 @@ const get = {
     },
     number(initScript){
         // vyskladaj nové číslo záznamu
-        setAppScripts('get.number()', 'app.js', initScript);
+        //setAppScripts('get.number()', 'app.js', initScript);
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.activeLib.removedNums > 0){
@@ -178,7 +178,7 @@ const get = {
     },
     sadzbyDPH(initScript){
         // nájdi sadzby DPH pre sezónu
-        setAppScripts('sadzbyDPH()', 'app.js', initScript)
+        //setAppScripts('sadzbyDPH()', 'app.js', initScript)
         try {
             app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field('Základná sadzba DPH')
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
@@ -191,7 +191,7 @@ const get = {
 // SETTERS
 const set = {
     app(initScript){
-        setAppScripts('set.app()', 'app.js', initScript)
+        //setAppScripts('set.app()', 'app.js', initScript)
         try {
             this.storeDb(app.runningScript)
             //nullAppScripts()
@@ -200,7 +200,7 @@ const set = {
         }
     },
     storeDb(initScript){
-        setAppScripts('set.storeDb()', 'app.js', initScript)
+        //setAppScripts('set.storeDb()', 'app.js', initScript)
         try {
             // Store to ASISTANTO Tenants
             const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
@@ -250,7 +250,7 @@ const set = {
         }
     },
     season(arg){
-        setAppScripts('set.season()', 'app.js')
+        //setAppScripts('set.season()', 'app.js')
         try {
             libByName(app.data.tenants).find(app.data.tenant)[0].set('default season', arg)
             get.openLib()
@@ -261,7 +261,7 @@ const set = {
         }
     },
     log(){
-        setAppScripts('set.log()', 'app.js')
+        //setAppScripts('set.log()', 'app.js')
         try {
             const lib = libByName(app.data.tenants).find(app.data.tenant)[0]
             let isLog = lib.field('log')
@@ -279,7 +279,7 @@ const set = {
         }
     },
     debug(){
-        setAppScripts('set.debug()', 'app.js')
+        //setAppScripts('set.debug()', 'app.js')
         try {
             const lib = libByName(app.data.tenants).find(app.data.tenant)[0]
             let isDebug = lib.field('debug')
@@ -297,7 +297,7 @@ const set = {
         }
     },
     numberPrefix(){
-        setAppScripts('set.numberPrefix()', 'app.js', initScript)
+        //setAppScripts('set.numberPrefix()', 'app.js', initScript)
         const current = app.activeLib.isPrefix
         try {
             app.activeLib.db.setAttr('prefix', !current)
@@ -313,7 +313,7 @@ const set = {
         }
     },
     number(initScript){
-        setAppScripts('set.number()', 'app.js', initScript)
+        //setAppScripts('set.number()', 'app.js', initScript)
         try {
             const lastNum = app.activeLib.nextNum;
             const nextNum = (Number(app.activeLib.nextNum) + 1);
@@ -333,7 +333,7 @@ const calc = {
 }
 
 // const initApp = () => {
-//     setAppScripts('initApp()', 'app.js')
+//     //setAppScripts('initApp()', 'app.js')
 //     try {
 //         get.openLib()
 //         //get.activeLib.ame()
@@ -458,7 +458,7 @@ function calculateWorkHours(start, end) {
     return (end - start) / 3600000;
 }
 function prepocitatZaznamDochadzky(en){
-   // setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
+   // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         const datum = en.field(DATE);
         const zavazky = en.field("Generovať záväzky")
@@ -732,7 +732,7 @@ function sadzbaZamestnanca(employee, date){
     }
 }
 function genDochadzkaZavazky(en, initScript){
-    setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript);
+    //setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript);
     try {
         if (app.log) {message("...generujem záväzky")};
 
@@ -759,7 +759,7 @@ function genDochadzkaZavazky(en, initScript){
     }
 }
 function newEntryZavazky(employee, en, sum, initScript) {
-    setAppScripts('newEntryZavazky()', 'calc.js', initScript);
+    //setAppScripts('newEntryZavazky()', 'calc.js', initScript);
     try {
         get.openLib(app.runningScript, LIB_ZVK); // inicializácia app knižnicou záväzky
         const popis = "Mzda " + employee.name +", za deň "; // TODO: pridať a upraviť formát dátumu
@@ -841,7 +841,7 @@ const zavazky = {
 // TRIGGERS
 const libOpen = (initScript) => {
     // trigger lib_open
-    setAppScripts('libOpen()', 'triggers.js', initScript)
+    //setAppScripts('libOpen()', 'triggers.js', initScript)
     set.app(app.runningScript)
     try {
         message(app.data.name + ' v.' + app.data.version +
@@ -852,7 +852,7 @@ const libOpen = (initScript) => {
     }
 }
 function newEntry (en) {
-    //setAppScripts('newEntry()', 'triggers.js', initScript);
+    ////setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openLib(app.runningScript);
     try {
         //dialog("Nový záznam >> " + app.activeLib.name);
@@ -871,7 +871,7 @@ function newEntry (en) {
 }
 
 function newEntryBeforeSave (en, initScript) {
-    setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
+    //setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
@@ -883,7 +883,7 @@ function newEntryBeforeSave (en, initScript) {
 }
 
 function newEntryAfterSave(en, initScript){
-    setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
+    //setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
     try {
         const entryCreated = app.activeLib.lib.entries()[0]
         if (entryCreated.field(NUMBER_ENTRY) === app.activeLib.nextNum) {
