@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0005',
+        version: '2.04.0006',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -98,7 +98,6 @@ const validateEntry = (entry, requiredFields) => {
 // Improved number generation with validation
 const getNextNumber = (lib, season) => {
     if (!lib || !season) {
-        message('Library and season required for number generation');
         message('Library and season required for number generation');
     }
     // Existing number generation logic with added validation
@@ -432,8 +431,7 @@ const employees = {
 // Helper functions
 function validateAndRoundTime(time) {
     if (!time) {
-        //message('Missing time value');
-       // Notification.show("Error", "Missing time value");
+        message('Missing time value');
         cancel();
     }
     return roundTimeQ(time);
@@ -455,10 +453,7 @@ function prepocitatZaznamDochadzky(en){
             evidencia: 0,
             prestoje: 0
         };
-       // let mzdyCelkom = 0; // mzdy za všetkých zamestnancov v ten deň
-       // let odpracovaneCelkom = 0; // odpracovane hod za všetkýh zamestnancov
-        let evidenciaCelkom = 0; // všetky odpracované hodiny z evidencie prác
-       // let prestojeCelkom = 0; //TODO: ak sa budú evidovať prestojeCelkom
+
 
          // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
@@ -466,15 +461,9 @@ function prepocitatZaznamDochadzky(en){
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
-            //Notification.show("Error", "Invalid arrival/departure times");
             cancel();
         }
 
-        // Update times in single batch
-        // en.set({
-        //     "Príchod": prichod,
-        //     "Odchod": odchod
-        // });
         function setEmployeeAtrributes(employee, employeeAttributes){
 
         }
