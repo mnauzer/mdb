@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0049',
+        version: '2.04.0050',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -473,26 +473,25 @@ function calculateWorkHoursFromField() {
 }
 
 calculateWorkHoursFromField(); // Toto by bol výraz v JavaScriptovom poli
-function registrujZavazky(employee, en, attr){
+function registrujZavazky(employee, en, attr, isEdit){
     message("Registrujem záväzky");
     // ak sú staré záväzky, najprv vymaž
-    let zavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-    let filtered = [];
-    if(zavazky.length > 0){
+    if(isEdit){
+        let zavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+        let filtered = [];
        // message('stare zavazky: ' + zavazky.length + ' -> mažem...')
         message("Hľadám existujúce záväzky k tomuto záznamu pre zamestnanca " + employee.name)
         filtered = zavazky.filter(el => el.field("Zamestnanec")[0].name == employee.name)
         message("Nájdené... " + filtered.length+ "...mažem...");
-        filtered.forEach(el => {
+        zavazky.forEach(el => {
             el.trash()
         });
         zavazky.length = 0;
     }
-
     newEntryZavazky(employee, en, attr);
     }
 
-function prepocitatZaznamDochadzky(en){
+function prepocitatZaznamDochadzky(en, isEdit){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         const datum = en.field(DATE);
@@ -555,7 +554,7 @@ function prepocitatZaznamDochadzky(en){
                 totals.mzdy += employeeAtt.dennaMzda;
                 totals.odpracovane += employeeAtt.odpracovane;
                 if(zavazky){
-                    registrujZavazky(zamestnanci[z], en, employeeAtt);
+                    registrujZavazky(zamestnanci[z], en, employeeAtt, isEdit);
                 }
             }
         }
@@ -764,7 +763,7 @@ function newEntryBeforeSave () {
 function newEntryAfterSave(){
     let en = lib().lastEntry();
     try {
-        prepocitatZaznamDochadzky(en);
+        prepocitatZaznamDochadzky(en, false);
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
@@ -791,7 +790,7 @@ function updateEntryBeforeSave(){
 function updateEntryAfterSave(){
     let en = entry();
     try {
-        prepocitatZaznamDochadzky(en);
+        prepocitatZaznamDochadzky(en, true);
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
