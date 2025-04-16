@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0042',
+        version: '2.04.0043',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -430,7 +430,7 @@ const employees = {
 function validateAndRoundTime(time) {
     if (!time) {
         message('Missing time value');
-        cancel();
+        exit();
     }
     return roundTimeQ(time);
 }
@@ -438,7 +438,26 @@ function validateAndRoundTime(time) {
 function calculateWorkHours(start, end) {
     return (end - start) / 3600000;
 }
+function calculateWorkHoursFromField() {
+    const startTimeString = "07:30";
+    const [hours, minutes] = startTimeString.split(":").map(Number);
+    const startDate = new Date();
+    startDate.setHours(hours);
+    startDate.setMinutes(minutes);
+    startDate.setSeconds(0);
+    startDate.setMilliseconds(0);
+    const startTimeInMillis = startDate.getTime();
 
+    const endTimeInMillis = entry().field("KoniecPraceMillis"); // Získanie hodnoty z poľa "KoniecPraceMillis"
+
+    if (endTimeInMillis) {
+        return (endTimeInMillis - startTimeInMillis) / 3600000;
+    } else {
+        return "Čas ukončenia nie je zadaný";
+    }
+}
+
+calculateWorkHoursFromField(); // Toto by bol výraz v JavaScriptovom poli
 function registrujZavazky(employee, en, attr){
     message("Registrujem záväzky");
     // ak sú staré záväzky, najprv vymaž
@@ -474,13 +493,13 @@ function prepocitatZaznamDochadzky(en){
         };
 
          // Validate and process time entries
-        buildDefaultEntry().set("Príchod", "7:30");
+        buildDefaultEntry().set("Príchod", calculateWorkHoursFromField());
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
-            cancel();
+            exit();
         } else {
             en.set("Príchod", prichod); //uloženie upravených časov
             en.set("Odchod", odchod);
