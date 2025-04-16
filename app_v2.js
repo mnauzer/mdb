@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0050',
+        version: '2.04.0051',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -512,7 +512,7 @@ function prepocitatZaznamDochadzky(en, isEdit){
         const odchod = validateAndRoundTime(en.field("Odchod"));
 
         if (!prichod || !odchod || prichod >= odchod) {
-            message('Invalid arrival/departure times');
+            message('Invalid arrival/departure times, Príchod: '+ prichod + ', Odchod: ' + odchod);
             exit();
         } else {
             en.set("Príchod", prichod); //uloženie upravených časov
