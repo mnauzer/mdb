@@ -433,7 +433,7 @@ const employees = {
 function validateAndRoundTime(time) {
     if (!time) {
         //message('Missing time value');
-        Notification.show("Error", "Missing time value");
+       // Notification.show("Error", "Missing time value");
         cancel();
     }
     return roundTimeQ(time);
@@ -466,9 +466,8 @@ function prepocitatZaznamDochadzky(en){
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
-            Notification.show("Error", "Invalid arrival/departure times");
+            //Notification.show("Error", "Invalid arrival/departure times");
             cancel();
-            message('Invalid arrival/departure times');
         }
 
         // Update times in single batch
@@ -592,7 +591,7 @@ function prepocitatZaznamDochadzky2(en){
 
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
-            Notification.show("Error", "Invalid arrival/departure times");
+            //Notification.show("Error", "Invalid arrival/departure times");
             cancel();
         }
         //
