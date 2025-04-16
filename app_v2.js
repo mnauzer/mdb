@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0020',
+        version: '2.04.0021',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -893,48 +893,51 @@ const LIBAPP_SCRIPTS = "ASISTANTO Scripts"
 const LIBAPP_TODO = "ASISTANTO ToDo"
 
 // PROJEKTY
-const LIB_CPN = "Cenové ponuky"
-const LIB_ZKZ = "Zákazky"
-const LIB_VYC = "Vyúčtovania"
-const LIB_CPR = "Cenník prác"
-const LIB_PP = "Plán prác"
-const LIB_VP = "Výkaz prác"
-const LIB_VM = "Výkaz materiálu"
-const LIB_VS = "Výkaz strojov"
-const LIB_VD = "Výkaz dopravy"
-const LIB_SD = "Stavebný denník"
+const LIB = {
+    // PROJEKTY
+    CPN: "Cenové ponuky",
+    ZKZ: "Zákazky",
+    VYC: "Vyúčtovania",
+    CPR: "Cenník prác",
+    PP: "Plán prác",
+    VP: "Výkaz prác",
+    VM: "Výkaz materiálu",
+    VS: "Výkaz strojov",
+    VD: "Výkaz dopravy",
+    SD: "Stavebný denník",
+    //
+    INV: "Invenúry",
+    PRJ: "Príjemky",
+    REZ: "Rezervácie",
+    OBJ: "Objednávky",
+    FP: "Faktúry prijaté",
+    FO: "Faktúry odoslané",
+    POH: "Pohľadávky",
+    ZVK: "Záväzky",
+    // EVIDENCIA
+    PKL:  "Pokladňa",
+    EP: "Evidencia prác",
+    DOCH: "Dochádzka",
+    KJ: "Kniha jázd",
 
-// ADMINISTRATÍVA
-const LIB_INV = "Invenúry"
-const LIB_PRJ = "Príjemky"
-const LIB_REZ = "Rezervácie"
-const LIB_OBJ = "Objednávky"
-const LIB_FP = "Faktúry prijaté"
-const LIB_FO = "Faktúry odoslané"
-const LIB_POH = "Pohľadávky"
-const LIB_ZVK = "Záväzky"
+    // DATABÁZY
+    SKL:  "Sklad",
+    ESKL: "Externý sklad",
+    ZVKM: "Zamestnanci",
+    KLI:  "Klienti",
+    DOD:  "Dodávatelia",
+    PAR:  "Partneri",
+    MIE:  "Miesta",
+    DR: "Databáza rastlín",
+    UCT:  "Účty",
+    SZ: "sadzby zamestnancov",
+    LPH:  "limity pracovných hodín",
+    SCPS: "sezónne ceny prác a strojov",
+    SCM:  "sezónne ceny materiálu",
+    STR:  "Stroje"
 
-// EVIDENCIA
-const LIB_PKL = "Pokladňa"
-const LIB_EP = "Evidencia prác"
-const LIB_DOCH = "Dochádzka"
-const LIB_KJ = "Kniha jázd"
 
-// DATABÁZY
-const LIB_SKL = "Sklad"
-const LIB_ESKL = "Externý sklad"
-const LIB_ZVKM = "Zamestnanci"
-const LIB_KLI = "Klienti"
-const LIB_DOD = "Dodávatelia"
-const LIB_PAR = "Partneri"
-const LIB_MIE = "Miesta"
-const LIB_DR = "Databáza rastlín"
-const LIB_UCT = "Účty"
-const LIB_SZ = "sadzby zamestnancov"
-const LIB_LPH = "limity pracovných hodín"
-const LIB_SCPS = "sezónne ceny prác a strojov"
-const LIB_SCM = "sezónne ceny materiálu"
-const LIB_STR = "Stroje"
+}
 
 // aGroup
 const DBA_OBL = "aZáväzky"
@@ -951,8 +954,6 @@ const FLD_VYC = "Vyúčtovanie"
 const FLD_TV = "Typ výkazu"
 const FLD_PPS = "Popis"
 const FLD_ZAM = "Zamestnanec"
-
-
 
 //
 const FLD_PRC = "Práce"
