@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0052',
+        version: '2.04.0053',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -486,14 +486,23 @@ function registrujZavazky(employee, en, attr, isEdit){
         zavazky.forEach(el => {
             el.trash()
         });
-        zavazky.length = 0;
+        //zavazky.length = 0;
     }
     newEntryZavazky(employee, en, attr);
     }
 const getTime = (date) => {
     return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
 };
-
+function setEmployeeAtrributes(employee, employeeAttributes){
+    try {
+    message("sadzba " + employee.field("nick") + " je " + employeeAtt.hodinovka);
+    employee.setAttr("odpracované", employeeAttributes.odpracovane);
+    employee.setAttr("hodinovka", employeeAttributes.hodinovka);
+    employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
+    } catch (error) {
+        message('Chyba: '+ error + ', line:' + error.lineNumber);
+    };
+};
 function prepocitatZaznamDochadzky(en, isEdit){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
@@ -528,16 +537,7 @@ function prepocitatZaznamDochadzky(en, isEdit){
                     dennaMzda: 0
 
                 };
-        function setEmployeeAtrributes(employee, employeeAttributes){
-            try {
-            message("sadzba " + employee.field("nick") + " je " + employeeAtt.hodinovka);
-            employee.setAttr("odpracované", employeeAttributes.odpracovane);
-            employee.setAttr("hodinovka", employeeAttributes.hodinovka);
-            employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
-            } catch (error) {
-                message('Chyba: '+ error + ', line:' + error.lineNumber);
-            };
-        };
+
         // výpočet pracovnej doby
         totals.pracovnaDoba = calculateWorkHours(prichod, odchod);
         // prepočet zamestnancov
@@ -562,26 +562,6 @@ function prepocitatZaznamDochadzky(en, isEdit){
             }
         }
         //  generovanie záväzkov za mzdy
-
-
-// if (zavazky) {}
-        //     // vygeneruj nové záväzky
-        //     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-        //     newEntryZavazky(zamestnanci[z], en, employeeAtt);
-        // };
-        // //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-        // if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
-        //     if (app.log) {message("...prepočítavam evidenciu prác")}
-        //     for (let ep = 0; ep < evidenciaPrac.length; ep++) {
-        //         let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-        //         let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
-        //         for (let znz in zamNaZakazke) {
-        //             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
-        //                 totals.evidencia += naZakazke;
-        //             }
-        //         }
-        //     }
-        // }
         totals.prestoje = totals.odpracovane - totals.evidencia;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", totals.mzdy.toFixed(2));
