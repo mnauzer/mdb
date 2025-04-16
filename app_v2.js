@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0024',
+        version: '2.04.0026',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -117,15 +117,14 @@ const get = {
         app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field('log')
         app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
     },
-    openLib(initScript, libName){  //parametre sú pre generátor chýb -- debug
-        //setAppScripts('get.openLib()', 'app.js', initScript)
+    openLib(libName){  //parametre sú pre generátor chýb -- debug
         try {
             if(libName){
                 set.storeDb(app.runningScript); // keď je otvorená sekundárna knižnica ulož premenné
             }
             get.library(libName);
             get.season();
-            const dbEntry = libByName(app.data.app).find(app.season)[0]; // TS: ibByName() je Memento funkcia
+            let dbEntry = libByName(app.data.app).find(app.season)[0]; // TS: ibByName() je Memento funkcia
             if (dbEntry !== undefined){
                 //if (app.log) {message('...openLibSeason: ' + app.season)}
                 const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.activeLib.name);
@@ -689,6 +688,7 @@ const libOpen = () => {
 
 // NEW ENTRY TRIGGERS
 function newEntry () {
+    get.openLib(app.runningScript);
     message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
     let en = entryDefault();
     try {
