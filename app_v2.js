@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0008',
+        version: '2.04.0009',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -464,6 +464,12 @@ function prepocitatZaznamDochadzky(en){
             en.set("Príchod", prichod); //uloženie upravených časov
             en.set("Odchod", odchod);
         }
+
+        const employeeAtt = {
+                    hodinovka: 0, // prepisovať zadanú hodinovku0,
+                    odpracovane: 0,
+                    dennaMzda: 0
+                }
         function setEmployeeAtrributes(employee, employeeAttributes){
         }
         // výpočet pracovnej doby
@@ -473,10 +479,9 @@ function prepocitatZaznamDochadzky(en){
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
-                const employeeAtt = {
-                    hodinovka: employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
-                    odpracovane: pracovnaDoba,
-                    dennaMzda(){return this.odpracovane * (this.hodinovka
+                employeeAtt.hodinovka = employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
+                employeeAtt.odpracovane = pracovnaDoba,
+                employeeAtt.dennaMzda = employeeAtt.odpracovane * (employeeAtt.hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)"))
                     + zamestnanci[z].attr("+prémia (€)")
                     - zamestnanci[z].attr("-pokuta (€)")}
@@ -487,7 +492,7 @@ function prepocitatZaznamDochadzky(en){
 
                 zamestnanci[z].setAttr("odpracované", employeeAtt.odpracovane);
                 zamestnanci[z].setAttr("hodinovka", employeeAtt.hodinovka);
-                zamestnanci[z].setAttr("denná mzda", employeeAtt.dennaMzda());
+                zamestnanci[z].setAttr("denná mzda", employeeAtt.dennaMzda);
 
                 // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
                 // let dennaMzda = (pracovnaDoba * (hodinovka
@@ -496,7 +501,7 @@ function prepocitatZaznamDochadzky(en){
                 //     - zamestnanci[z].attr("-pokuta (€)");
 
                 // pripočítanie do celkových hodnôt záznamu
-                totals.mzdy += employeeAtt.dennaMzda();
+                totals.mzdy += employeeAtt.dennaMzda;
                 totals.odpracovane += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
@@ -515,7 +520,7 @@ function prepocitatZaznamDochadzky(en){
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    let zavazok = newEntryZavazky(zamestnanci[z], en, employeeAtt.dennaMzda(), app.runningScript);
+                    let zavazok = newEntryZavazky(zamestnanci[z], en, employeeAtt.dennaMzda, app.runningScript);
                 };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
