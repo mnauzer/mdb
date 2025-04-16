@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0039',
+        version: '2.04.0040',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -498,28 +498,32 @@ function prepocitatZaznamDochadzky(en){
                 // pripočítanie do celkových hodnôt záznamu
                 totals.mzdy += employeeAtt.dennaMzda;
                 totals.odpracovane += employeeAtt.odpracovane;
+                if(zavazky){
+                    registrujZavazky(zamestnanci[z], en, employeeAtt);
+                }
             }
         }
         //  generovanie záväzkov za mzdy
-        if (zavazky) {
+        function registrujZavazky(employee, en, attr){
             message("Registrujem záväzky");
             // ak sú staré záväzky, najprv vymaž
             let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
             message('stare zavazky: ' + stareZavazky.length + ' -> mažem...')
             //let filtered = [];
             if(stareZavazky.length > 0){
-                // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
-                // message("mažem..." + filtered.length + " záznamov")
-                // filtered.forEach(el => {
-                //     el.trash()
-                // });
-                stareZavazky = [];
+            // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
+            // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
+            // message("mažem..." + filtered.length + " záznamov")
+            // filtered.forEach(el => {
+            //     el.trash()
+            // });
+            stareZavazky = [];
             }
-            for (let z = 0; z < zamestnanci.length; z++ ) {
-                newEntryZavazky(zamestnanci[z], en, employeeAtt);
-            }
+
+            newEntryZavazky(employee, en, attr);
         }
+
+// if (zavazky) {}
         //     // vygeneruj nové záväzky
         //     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
         //     newEntryZavazky(zamestnanci[z], en, employeeAtt);
