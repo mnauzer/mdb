@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0006',
+        version: '2.04.0007',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -494,7 +494,7 @@ function prepocitatZaznamDochadzky(en){
 
                 zamestnanci[z].setAttr("odpracované", employeeAtt.odpracovane);
                 zamestnanci[z].setAttr("hodinovka", employeeAtt.hodinovka);
-                zamestnanci[z].setAttr("denná mzda", employeeAtt.dennaMzda);
+                zamestnanci[z].setAttr("denná mzda", employeeAtt.dennaMzda());
 
                 // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
                 // let dennaMzda = (pracovnaDoba * (hodinovka
