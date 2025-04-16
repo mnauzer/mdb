@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0013',
+        version: '2.04.0014',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -688,10 +688,13 @@ const libOpen = (initScript) => {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-function newEntry (en) {
+function newEntry () {
     ////setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openLib(app.runningScript);
+    message('Knižnica: ' + app.activeLib.name + ' - ' + app.activeLib.db.title);
+    let en = entryDefault();
     try {
+
         //dialog("Nový záznam >> " + app.activeLib.name);
         en.set(VIEW, VIEW_EDIT);
         en.set(DATE, new Date());
