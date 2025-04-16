@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0029',
+        version: '2.04.0030',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -499,11 +499,11 @@ function prepocitatZaznamDochadzky(en){
                 totals.odpracovane += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
-                if (!zavazky) {
+                if (zavazky) {
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
                     let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-                    if(stareZavazky !== undefined || stareZavazky.length > 0){
+                    if(stareZavazky !== undefined && stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
                         let filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
