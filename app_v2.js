@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0051',
+        version: '2.04.0052',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -490,6 +490,9 @@ function registrujZavazky(employee, en, attr, isEdit){
     }
     newEntryZavazky(employee, en, attr);
     }
+const getTime = (date) => {
+    return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+};
 
 function prepocitatZaznamDochadzky(en, isEdit){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
@@ -506,19 +509,19 @@ function prepocitatZaznamDochadzky(en, isEdit){
             pracovnaDoba: 0
         };
 
-         // Validate and process time entries
+        // Function to extract time from a Date object
 
+        // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
 
-        if (!prichod || !odchod || prichod >= odchod) {
-            message('Invalid arrival/departure times, Príchod: '+ prichod + ', Odchod: ' + odchod);
+        if (!prichod || !odchod || getTime(prichod) >= getTime(odchod)) {
+            message('Invalid arrival/departure times, Príchod: ' + prichod + ', Odchod: ' + odchod);
             exit();
         } else {
-            en.set("Príchod", prichod); //uloženie upravených časov
+            en.set("Príchod", prichod); // uloženie upravených časov
             en.set("Odchod", odchod);
-        };
-
+        }
         const employeeAtt = {
                     odpracovane: 0,
                     hodinovka: 0, // prepisovať zadanú hodinovku0,
