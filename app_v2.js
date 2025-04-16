@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0040',
+        version: '2.04.0041',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
