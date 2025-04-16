@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0048',
+        version: '2.04.0049',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -476,17 +476,17 @@ calculateWorkHoursFromField(); // Toto by bol výraz v JavaScriptovom poli
 function registrujZavazky(employee, en, attr){
     message("Registrujem záväzky");
     // ak sú staré záväzky, najprv vymaž
-    let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-    //let filtered = [];
-    if(stareZavazky.length > 0){
-        message('stare zavazky: ' + stareZavazky.length + ' -> mažem...')
-        // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-        // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
-        // message("mažem..." + filtered.length + " záznamov")
-        stareZavazky.forEach(el => {
+    let zavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+    let filtered = [];
+    if(zavazky.length > 0){
+       // message('stare zavazky: ' + zavazky.length + ' -> mažem...')
+        message("Hľadám existujúce záväzky k tomuto záznamu pre zamestnanca " + employee.name)
+        filtered = zavazky.filter(el => el.field("Zamestnanec")[0].name == employee.name)
+        message("Nájdené... " + filtered.length+ "...mažem...");
+        filtered.forEach(el => {
             el.trash()
         });
-        stareZavazky.length = 0;
+        zavazky.length = 0;
     }
 
     newEntryZavazky(employee, en, attr);
