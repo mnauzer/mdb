@@ -453,8 +453,6 @@ function prepocitatZaznamDochadzky(en){
             evidencia: 0,
             prestoje: 0
         };
-
-
          // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
@@ -462,18 +460,14 @@ function prepocitatZaznamDochadzky(en){
         if (!prichod || !odchod || prichod >= odchod) {
             message('Invalid arrival/departure times');
             cancel();
+        } else {
+            en.set("Príchod", prichod); //uloženie upravených časov
+            en.set("Odchod", odchod);
         }
-
         function setEmployeeAtrributes(employee, employeeAttributes){
-
         }
-//
-        en.set("Príchod", prichod); //uloženie upravených časov
-        en.set("Odchod", odchod);
-
         // výpočet pracovnej doby
         const pracovnaDoba = calculateWorkHours(prichod, odchod);
-
         // prepočet zamestnancov
         if (zamestnanci !== undefined || zamestnanci.length > 0) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
@@ -482,8 +476,7 @@ function prepocitatZaznamDochadzky(en){
                 const employeeAtt = {
                     hodinovka: employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
                     odpracovane: pracovnaDoba,
-
-                    dennaMzda(){return pracovnaDoba * (this.hodinovka
+                    dennaMzda(){return this.odpracovane * (this.hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)"))
                     + zamestnanci[z].attr("+prémia (€)")
                     - zamestnanci[z].attr("-pokuta (€)")}
