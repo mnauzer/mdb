@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0033',
+        version: '2.04.0035',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -503,9 +503,10 @@ function prepocitatZaznamDochadzky(en){
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
                     let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+                    let filtered = [];
                     if(stareZavazky !== undefined || stareZavazky !== null && stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                        let filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
+                        filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
                         filtered.forEach(el => {
                             el.trash()
@@ -514,7 +515,7 @@ function prepocitatZaznamDochadzky(en){
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    let zavazok = newEntryZavazky(zamestnanci[z], en, employeeAtt);
+                    newEntryZavazky(zamestnanci[z], en, employeeAtt);
                 };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
