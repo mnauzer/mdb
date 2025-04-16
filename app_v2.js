@@ -237,7 +237,7 @@ const set = {
             // Store to ASISTANTO open database
 
             // TODO: vypínam toto padá apka R 30.10.2024
-            message("zapnutý script app.js riadok 184")
+            //message("zapnutý script app.js riadok 184")
             app.activeLib.db.setAttr('názov', app.activeLib.name)
             app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
             app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
@@ -331,19 +331,6 @@ const set = {
 const calc = {
     // app mutators
 }
-
-// const initApp = () => {
-//     //setAppScripts('initApp()', 'app.js')
-//     try {
-//         get.openLib()
-//         //get.activeLib.ame()
-//         get.sadzbyDPH()
-//         set.storeDb()
-////         nullAppScripts()
-//     } catch (error) {
-//         message(error)
-//     }
-// }
 
 // LOG & ERRORS
 const logAppVariableStore = (msg) => {
@@ -790,7 +777,6 @@ function newEntryZavazky(employee, en, sum, initScript) {
         message(error);
     }
 }
-
 function newEntryAttendance(employee, en ){
     const attendance = libByName('attendance')
     const newEntry = new Object();
