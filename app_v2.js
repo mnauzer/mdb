@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0017',
+        version: '2.04.0018',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -723,7 +723,7 @@ function newEntryBeforeSave () {
     }
 }
 function newEntryAfterSave(){
-    let en = app.activeLib.lastEntry();
+    let en = lastEntry();
     try {
         prepocitatZaznamDochadzky(en);
         en.set(VIEW, VIEW_PRINT)
