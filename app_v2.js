@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0036',
+        version: '2.04.0037',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -442,7 +442,7 @@ function prepocitatZaznamDochadzky(en){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
         const datum = en.field(DATE);
-        const zavazky = en.field("Generovať záväzky")
+        const zavazky = en.field("Generovať záväzky");
         const zamestnanci = en.field("Zamestnanci");
         const evidenciaPrac = en.field("Práce");
         const totals = {
@@ -462,14 +462,14 @@ function prepocitatZaznamDochadzky(en){
         } else {
             en.set("Príchod", prichod); //uloženie upravených časov
             en.set("Odchod", odchod);
-        }
+        };
 
         const employeeAtt = {
                     odpracovane: 0,
                     hodinovka: 0, // prepisovať zadanú hodinovku0,
                     dennaMzda: 0
 
-                }
+                };
         function setEmployeeAtrributes(employee, employeeAttributes){
             try {
             message("sadzba " + employee.field("nick") + " je " + employeeAtt.hodinovka);
@@ -478,8 +478,8 @@ function prepocitatZaznamDochadzky(en){
             employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
             } catch (error) {
                 message('Chyba: '+ error + ', line:' + error.lineNumber);
-            }
-        }
+            };
+        };
         // výpočet pracovnej doby
         totals.pracovnaDoba = calculateWorkHours(prichod, odchod);
         // prepočet zamestnancov
@@ -504,14 +504,16 @@ function prepocitatZaznamDochadzky(en){
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
                     let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+                    message('stare zavazky: ' + stareZavazky.length)
                     let filtered = [];
-                    if(stareZavazky !== undefined || stareZavazky !== null && stareZavazky.length > 0){
+                    if(stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
                         filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
                         filtered.forEach(el => {
                             el.trash()
                         });
+                        stareZavazky = [];
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
