@@ -472,7 +472,9 @@ function prepocitatZaznamDochadzky(en){
             prestoje: 0,
             pracovnaDoba: 0
         };
+
          // Validate and process time entries
+        buildDefaultEntry().set("Príchod", "7:30");
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
 
