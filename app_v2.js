@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0014',
+        version: '2.04.0015',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -691,7 +691,7 @@ const libOpen = (initScript) => {
 function newEntry () {
     ////setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openLib(app.runningScript);
-    message('Knižnica: ' + app.activeLib.name + ' - ' + app.activeLib.db.title);
+    message('Knižnica: ' + app.activeLib.db.title);
     let en = entryDefault();
     try {
 
@@ -710,13 +710,13 @@ function newEntry () {
     }
 }
 
-function newEntryBeforeSave (en, initScript) {
-    //setAppScripts('newEntryBeforeSave()', 'triggers.js', initScript);
+function newEntryBeforeSave () {
+    let en = entryDefault();
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
         prepocitatZaznamDochadzky(en);
-        en.set(VIEW, VIEW_PRINT)
+        en.set(VIEW, VIEW_EDIT)
         //nullAppScripts();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
@@ -724,49 +724,23 @@ function newEntryBeforeSave (en, initScript) {
 }
 
 function newEntryAfterSave(){
-    //setAppScripts('newEntryAfterSave()', 'triggers.js', initScript);
+    let en = app.activeLib.lastEntry();
     try {
-        //const entryCreated = app.activeLib.lib.entries()[0]
-        const entryCreated = app.activeLib.lib.lastEntry()
-        if (entryCreated.field(NUMBER_ENTRY) === app.activeLib.nextNum) {
-        if(1) { message("Záznam vytvorený: " + entryCreated.field(NUMBER_ENTRY) + '/' + entryCreated.field(NUMBER_ENTRY) + '/' + app.activeLib.nextNum)}
-            switch (app.activeLib.name) {
-                case "Dochádzka":
-                    prepocitatZaznamDochadzky(entryCreated);
-                    break;
-                case "Evidencia prác":
-                    break;
-                case "Pokladňa":
-                    break;
-                case "Kniha jázd":
-                    break;
-                default:
-                    break;
-            };
-
-        if(app.log) { message("Ukladám čísla: " + app.activeLib.lastNum + '/' +app.activeLib.nextNum)}
-        set.storeDb(app.runningScript)
-        enentryCreated.set(VIEW, VIEW_PRINT);
-        } else {
-            if(app.log) {message('Záznam nebol vytvorený')}
-            entryCreated.set(VIEW, VIEW_DEBUG);
-        }
-
-        // if (app.log) {message("...after save")}
-        // const createdEntry = lib().entries()[0]
-        // if (app.log) {message("...entry number: " + createdEntry.field(NUMBER_ENTRY) )}
-        // if (app.log) {message("...app.activeLib.nextNum: " + Number(app.activeLib.nextNum) )}
-        // if (createdEntry.field(NUMBER_ENTRY) == Number(app.activeLib.nextNum)) {
-        //     if (app.log) {message("...entry successfully created")}
-        //     set.number()
-
-        // }
-        //nullAppScripts()
+        prepocitatZaznamDochadzky(en);
+        en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 
+function updateEntryOpen(){
+    let en = entry();
+    try {
+        en.set(VIEW, VIEW_EDIT)
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
 function removeEntryBefore(en, initScript) {
    //setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
