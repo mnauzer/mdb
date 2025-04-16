@@ -676,10 +676,8 @@ const zavazky = {
 
 // TRIGGERS
 // TRIGGERS
-const libOpen = (initScript) => {
+const libOpen = () => {
     // trigger lib_open
-    //setAppScripts('libOpen()', 'triggers.js', initScript)
-    set.app(app.runningScript)
     try {
         message(app.data.name + ' v.' + app.data.version +
         '\n' +  app.activeLib.name +' ' +  app.season )
@@ -750,7 +748,6 @@ function updateEntryBeforeSave(){
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-
 function updateEntryAfterSave(){
     let en = entry();
     try {
