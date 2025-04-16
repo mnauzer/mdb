@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0043',
+        version: '2.04.0044',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -447,14 +447,15 @@ function calculateWorkHoursFromField() {
     startDate.setSeconds(0);
     startDate.setMilliseconds(0);
     const startTimeInMillis = startDate.getTime();
+    return startTimeInMillis; // Vráti čas v milisekundách od 1. januára 1970
+    //const endTimeInMillis = entry().field("KoniecPraceMillis"); // Získanie hodnoty z poľa "KoniecPraceMillis"
+//    const endTimeInMillis = entry().field("KoniecPraceMillis"); // Získanie hodnoty z poľa "KoniecPraceMillis"
 
-    const endTimeInMillis = entry().field("KoniecPraceMillis"); // Získanie hodnoty z poľa "KoniecPraceMillis"
-
-    if (endTimeInMillis) {
-        return (endTimeInMillis - startTimeInMillis) / 3600000;
-    } else {
-        return "Čas ukončenia nie je zadaný";
-    }
+//     if (endTimeInMillis) {
+//         return (endTimeInMillis - startTimeInMillis) / 3600000;
+//     } else {
+//         return "Čas ukončenia nie je zadaný";
+//     }
 }
 
 calculateWorkHoursFromField(); // Toto by bol výraz v JavaScriptovom poli
