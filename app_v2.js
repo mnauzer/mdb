@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0009',
+        version: '2.04.0010',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -471,6 +471,10 @@ function prepocitatZaznamDochadzky(en){
                     dennaMzda: 0
                 }
         function setEmployeeAtrributes(employee, employeeAttributes){
+            message("sadzba " + employee.field("nick") + " je " + employeeAtt.hodinovka);
+            employee.setAttr("odpracované", employeeAttributes.odpracovane);
+            employee.setAttr("hodinovka", employeeAttributes.hodinovka);
+            employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
         }
         // výpočet pracovnej doby
         const pracovnaDoba = calculateWorkHours(prichod, odchod);
@@ -485,21 +489,8 @@ function prepocitatZaznamDochadzky(en){
                     + zamestnanci[z].attr("+príplatok (€/h)"))
                     + zamestnanci[z].attr("+prémia (€)")
                     - zamestnanci[z].attr("-pokuta (€)")}
-                }
-               // employeeAtt.hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
 
-                message("sadzba " + zamestnanci[z].field("nick") + " je " + employeeAtt.hodinovka);
-
-                zamestnanci[z].setAttr("odpracované", employeeAtt.odpracovane);
-                zamestnanci[z].setAttr("hodinovka", employeeAtt.hodinovka);
-                zamestnanci[z].setAttr("denná mzda", employeeAtt.dennaMzda);
-
-                // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
-                // let dennaMzda = (pracovnaDoba * (hodinovka
-                //     + zamestnanci[z].attr("+príplatok (€/h)")))
-                //     + zamestnanci[z].attr("+prémia (€)")
-                //     - zamestnanci[z].attr("-pokuta (€)");
-
+                setEmployeeAtrributes(zamestnanci[z], employeeAtt)
                 // pripočítanie do celkových hodnôt záznamu
                 totals.mzdy += employeeAtt.dennaMzda;
                 totals.odpracovane += employeeAtt.odpracovane;
@@ -536,7 +527,7 @@ function prepocitatZaznamDochadzky(en){
                     }
                 }
             }
-        };
+
         totals.prestoje = totals.odpracovane - totals.evidencia;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", totals.mzdy.toFixed(2));
@@ -545,130 +536,13 @@ function prepocitatZaznamDochadzky(en){
         en.set("Na zákazkách", totals.evidencia.toFixed(2));
         en.set("Prestoje", totals.prestoje.toFixed(2));
         if (totals.evidencia == totals.odpracovane) {
-           // en.set("appMsg", 'vyžaduje pozornosť');
-          //  en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
+        // en.set("appMsg", 'vyžaduje pozornosť');
+        // en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
         if (app.log) {message("...hotovo")};
-        ////nullAppScripts();
     } catch (error) {
         message(error);
     }
-}
-
-
-function setEmployeeAtrributes(employee, employeeAtt){
-
-}
-function prepocitatZaznamDochadzky2(en){
-   // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
-    try {
-        const datum = en.field(DATE);
-        const zavazky = en.field("Generovať záväzky")
-        const zamestnanci = en.field("Zamestnanci");
-        const evidenciaPrac = en.field("Práce");
-        const totals = {
-            mzdy: 0,
-            odpracovane: 0,
-            evidencia: 0,
-            prestoje: 0
-        };
-        // Validate and process time entries
-        const prichod = validateAndRoundTime(en.field("Príchod"));
-        const odchod = validateAndRoundTime(en.field("Odchod"));
-
-        if (!prichod || !odchod || prichod >= odchod) {
-            message('Invalid arrival/departure times');
-            //Notification.show("Error", "Invalid arrival/departure times");
-            cancel();
-        }
-        //
-        en.set("Príchod", prichod); //uloženie upravených časov
-        en.set("Odchod", odchod);
-
-        // výpočet pracovnej doby
-        const pracovnaDoba = calculateWorkHours(prichod, odchod);
-
-        // prepočet zamestnancov
-        if (zamestnanci !== undefined || zamestnanci.length > 0) {
-            for (let z = 0; z < zamestnanci.length; z++ ) {
-                // vyhľadanie aktuálnej sadzby zamestnanca
-                //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
-                const employeeAttributes = {
-                    hodinovka: employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
-                    odpracovane: pracovnaDoba,
-                    dennaMzda: pracovnaDoba * (this.hodinovka
-                    + zamestnanci[z].attr("+príplatok (€/h)"))
-                    + zamestnanci[z].attr("+prémia (€)")
-                    - zamestnanci[z].attr("-pokuta (€)")
-                }
-               // employeeAttributes.hodinovka = employees.sadzba(zamestnanci[z], datum); // prepisovať zadanú hodinovku
-
-                message("sadzba " + zamestnanci[z].field("nick") + " je " + employeeAttributes.hodinovka);
-
-                zamestnanci[z].setAttr("odpracované", employeeAttributes.odpracovane);
-                zamestnanci[z].setAttr("hodinovka", employeeAttributes.hodinovka);
-                zamestnanci[z].setAttr("denná mzda", employeeAttributes.dennaMzda);
-
-                // výpočet dennej mzdy zamestnanca (základná mzda + zadané príplatky)
-                // let dennaMzda = (pracovnaDoba * (hodinovka
-                //     + zamestnanci[z].attr("+príplatok (€/h)")))
-                //     + zamestnanci[z].attr("+prémia (€)")
-                //     - zamestnanci[z].attr("-pokuta (€)");
-
-                // pripočítanie do celkových hodnôt záznamu
-                totals.mzdy += employeeAttributes.dennaMzda;
-                totals.odpracovane += employeeAttributes.odpracovane;
-
-                // generovanie záväzkov za mzdy
-                if (!zavazky) {
-                    message("Registrujem záväzky");
-                    // ak sú staré záväzky, najprv vymaž
-                    let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
-                    if(stareZavazky !== undefined || stareZavazky.length > 0){
-                        message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                        let filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
-                        message("mažem..." + filtered.length + " záznamov")
-                        filtered.forEach(el => {
-                            el.trash()
-                        });
-                    stareZavazky = null;
-                    }
-                    // vygeneruj nové záväzky
-                    message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    let zavazok = newEntryZavazky(zamestnanci[z], en, dennaMzda, app.runningScript);
-                };
-                //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-                if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
-                    if (app.log) {message("...prepočítavam evidenciu prác")}
-                    for (let ep = 0; ep < evidenciaPrac.length; ep++) {
-                        let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                        let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
-                        for (let znz in zamNaZakazke) {
-                            if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
-                                totals.evidencia += naZakazke;
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        totals.prestoje = totals.odpracovane - totals.evidencia;
-        // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
-        en.set("Mzdové náklady", totals.mzdy.toFixed(2));
-        en.set("Pracovná doba", totals.odpracovane.toFixed(2));
-        en.set("Odpracované", totals.odpracovane.toFixed(2));
-        en.set("Na zákazkách", totals.evidencia.toFixed(2));
-        en.set("Prestoje", totals.prestoje.toFixed(2));
-        if (totals.evidencia == totals.odpracovane) {
-           // en.set("appMsg", 'vyžaduje pozornosť');
-          //  en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
-        }
-        if (app.log) {message("...hotovo")};
-        ////nullAppScripts();
-    } catch (error) {
-        message(error);
-    }
-}
 // ZAMESTNANCI
 function sadzbaZamestnanca(employee, date){
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
