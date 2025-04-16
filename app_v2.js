@@ -503,7 +503,7 @@ function prepocitatZaznamDochadzky(en){
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
                     let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-                    if(stareZavazky !== undefined && stareZavazky.length > 0){
+                    if(stareZavazky !== undefined || stareZavazky !== null && stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
                         let filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
                         message("mažem..." + filtered.length + " záznamov")
