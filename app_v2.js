@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0045',
+        version: '2.04.0047',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -477,16 +477,16 @@ function registrujZavazky(employee, en, attr){
     message("Registrujem záväzky");
     // ak sú staré záväzky, najprv vymaž
     let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-    message('stare zavazky: ' + stareZavazky.length + ' -> mažem...')
     //let filtered = [];
     if(stareZavazky.length > 0){
-    // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-    // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
-    // message("mažem..." + filtered.length + " záznamov")
-    // filtered.forEach(el => {
-    //     el.trash()
-    // });
-    stareZavazky = [];
+        message('stare zavazky: ' + stareZavazky.length + ' -> mažem...')
+        // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
+        // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
+        // message("mažem..." + filtered.length + " záznamov")
+        stareZavazky.forEach(el => {
+            el.trash()
+        });
+        stareZavazky.length = 0;
     }
 
     newEntryZavazky(employee, en, attr);
@@ -508,7 +508,7 @@ function prepocitatZaznamDochadzky(en){
         };
 
          // Validate and process time entries
-        buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
+
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
 
@@ -739,7 +739,10 @@ function newEntry () {
     message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
     let en = entryDefault();
     try {
+        //buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
         en.set(VIEW, VIEW_EDIT);
+        en.set('Príchod', '7:30' );
+        en.set('Odchod', '14:30' );
         en.set(DATE, new Date());
         en.set(CR, user());
         en.set(CR_DATE, new Date());
