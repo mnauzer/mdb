@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0031',
+        version: '2.04.0033',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -197,8 +197,7 @@ const set = {
             message(error)
         }
     },
-    storeDb(initScript){
-        //setAppScripts('set.storeDb()', 'app.js', initScript)
+    storeDb(){
         try {
             // Store to ASISTANTO Tenants
             const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
@@ -465,9 +464,10 @@ function prepocitatZaznamDochadzky(en){
         }
 
         const employeeAtt = {
-                    hodinovka: 0, // prepisovať zadanú hodinovku0,
                     odpracovane: 0,
+                    hodinovka: 0, // prepisovať zadanú hodinovku0,
                     dennaMzda: 0
+
                 }
         function setEmployeeAtrributes(employee, employeeAttributes){
             try {
@@ -510,11 +510,11 @@ function prepocitatZaznamDochadzky(en){
                         filtered.forEach(el => {
                             el.trash()
                         });
-                    stareZavazky = null;
+                    stareZavazky = false;
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    let zavazok = newEntryZavazky(zamestnanci[z], en, employeeAtt.dennaMzda, app.runningScript);
+                    let zavazok = newEntryZavazky(zamestnanci[z], en, employeeAtt);
                 };
                 //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
                 if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
@@ -595,15 +595,14 @@ function genDochadzkaZavazky(en, initScript){
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-function newEntryZavazky(employee, en, sum, initScript) {
-    //setAppScripts('newEntryZavazky()', 'calc.js', initScript);
+function newEntryZavazky(employee, en, attrs) {
     try {
-        get.openLib(app.runningScript, LIBRARY.ZVK); // inicializácia app knižnicou záväzky
+        get.openLib(LIBRARY.ZVK); // inicializácia app knižnicou záväzky
         const popis = "Mzda " + employee.name +", za deň "; // TODO: pridať a upraviť formát dátumu
         const zavazky = libByName(LIBRARY.ZVK);
         // vytvorenie nového záznamu
         const newEntry = new Object();
-        newEntry[NUMBER] = app.activeLib.number;
+        newEntry[NUMBER] = app.activeLib.number; //TODO toto opraviť
         newEntry[NUMBER_ENTRY] = app.activeLib.nextNum;
         newEntry[DATE] =  new Date();
         // TODO: zmeniť aj pre iných veriteľov ako zamestnanci
@@ -613,14 +612,14 @@ function newEntryZavazky(employee, en, sum, initScript) {
         newEntry["info"] = "generované automaticky z dochádzky";
         //
         newEntry["Popis"] = popis;
-        newEntry["Suma"] = sum.toFixed(2);
+        newEntry["Suma"] = attrs.dennaMzda.toFixed(2);
         newEntry[SEASON]= app.season;
         newEntry[CR] = user();
         newEntry[CR_DATE] = new Date();
         zavazky.create(newEntry);
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = (app.activeLib.nextNum) + 1;
-        set.storeDb(app.runningScript);
+        set.storeDb();
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {
@@ -687,7 +686,8 @@ const libOpen = () => {
 }
 // NEW ENTRY TRIGGERS
 function newEntry () {
-    get.openLib(app.runningScript);
+    //get.openLib(app.runningScript);
+    get.openLib();
     message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
     let en = entryDefault();
     try {
@@ -721,7 +721,7 @@ function newEntryAfterSave(){
 }
 // UPDATE ENTRY TRIGGERS
 function updateEntryOpen(){
-    get.openLib(app.runningScript);
+    get.openLib();
     let en = entry();
     try {
         en.set(VIEW, VIEW_EDIT)
