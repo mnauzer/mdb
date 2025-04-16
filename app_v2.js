@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0027',
+        version: '2.04.0028',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -410,7 +410,7 @@ const employees = {
     sadzba(employee, date) {
         try {
             // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
-            const links = employee.linksFrom(LIB.SZ, FLD_ZAM);
+            const links = employee.linksFrom(LIBRARY.SZ, FLD_ZAM);
             const dateField ="Platnosť od";
             let sadzba = 0;
             filteredLinks = filterByDate(links, date, dateField);
@@ -578,7 +578,7 @@ function genDochadzkaZavazky(en, initScript){
         // if(stareZavazky.length > 0){
         //     message("Mažem súvisiace záväzky...")
         //     for (let i in stareZavazky) {
-        //         removeEntry(stareZavazky[i], LIB.ZVK, scr.name)
+        //         removeEntry(stareZavazky[i], LIBRARY.ZVK, scr.name)
         //     }
         // stareZavazky = false
         // }
