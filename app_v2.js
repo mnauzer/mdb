@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0021',
+        version: '2.04.0022',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -503,7 +503,7 @@ function prepocitatZaznamDochadzky(en){
                 if (!zavazky) {
                     message("Registrujem záväzky");
                     // ak sú staré záväzky, najprv vymaž
-                    let stareZavazky = en.linksFrom(LIB_ZVK, "Dochádzka");
+                    let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
                     if(stareZavazky !== undefined || stareZavazky.length > 0){
                         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
                         let filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
@@ -893,7 +893,7 @@ const LIBAPP_SCRIPTS = "ASISTANTO Scripts"
 const LIBAPP_TODO = "ASISTANTO ToDo"
 
 // PROJEKTY
-const LIB = {
+const LIBRARY = {
     // PROJEKTY
     CPN: "Cenové ponuky",
     ZKZ: "Zákazky",
