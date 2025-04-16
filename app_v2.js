@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0030',
+        version: '2.04.0031',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -721,6 +721,7 @@ function newEntryAfterSave(){
 }
 // UPDATE ENTRY TRIGGERS
 function updateEntryOpen(){
+    get.openLib(app.runningScript);
     let en = entry();
     try {
         en.set(VIEW, VIEW_EDIT)
