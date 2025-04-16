@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0011',
+        version: '2.04.0013',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -322,7 +322,7 @@ const set = {
             this.storeDb(app.runningScript);
             get.openLib(app.runningScript);
         } catch (error) {
-            message(error);
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
         }
     }
 }
@@ -471,10 +471,14 @@ function prepocitatZaznamDochadzky(en){
                     dennaMzda: 0
                 }
         function setEmployeeAtrributes(employee, employeeAttributes){
+            try {
             message("sadzba " + employee.field("nick") + " je " + employeeAtt.hodinovka);
             employee.setAttr("odpracované", employeeAttributes.odpracovane);
             employee.setAttr("hodinovka", employeeAttributes.hodinovka);
             employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
+            } catch (error) {
+                message('Chyba: '+ error + ', line:' + error.lineNumber);
+            }
         }
         // výpočet pracovnej doby
         const pracovnaDoba = calculateWorkHours(prichod, odchod);
@@ -488,7 +492,7 @@ function prepocitatZaznamDochadzky(en){
                 employeeAtt.dennaMzda = employeeAtt.odpracovane * (employeeAtt.hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)"))
                     + zamestnanci[z].attr("+prémia (€)")
-                    - zamestnanci[z].attr("-pokuta (€)")}
+                    - zamestnanci[z].attr("-pokuta (€)")
 
                 setEmployeeAtrributes(zamestnanci[z], employeeAtt)
                 // pripočítanie do celkových hodnôt záznamu
@@ -527,6 +531,7 @@ function prepocitatZaznamDochadzky(en){
                     }
                 }
             }
+        }
 
         totals.prestoje = totals.odpracovane - totals.evidencia;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
@@ -541,8 +546,7 @@ function prepocitatZaznamDochadzky(en){
         }
         if (app.log) {message("...hotovo")};
     } catch (error) {
-
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 // ZAMESTNANCI
@@ -562,7 +566,7 @@ function sadzbaZamestnanca(employee, date){
         }
         return sadzba;
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 function genDochadzkaZavazky(en, initScript){
@@ -589,7 +593,7 @@ function genDochadzkaZavazky(en, initScript){
         };
         //nullAppScripts();
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 function newEntryZavazky(employee, en, sum, initScript) {
@@ -621,7 +625,7 @@ function newEntryZavazky(employee, en, sum, initScript) {
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 function newEntryAttendance(employee, en ){
@@ -681,7 +685,7 @@ const libOpen = (initScript) => {
         '\n' +  app.activeLib.name +' ' +  app.season )
         //nullAppScripts()
     } catch (error) {
-        message(error)
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 function newEntry (en) {
@@ -699,7 +703,7 @@ function newEntry (en) {
         // code here
         //nullAppScripts();
     } catch (error) {
-        message('Chyba: ' + error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 
@@ -712,7 +716,7 @@ function newEntryBeforeSave (en, initScript) {
         en.set(VIEW, VIEW_PRINT)
         //nullAppScripts();
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 
@@ -756,7 +760,7 @@ function newEntryAfterSave(){
         // }
         //nullAppScripts()
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 
@@ -782,7 +786,7 @@ function removeEntryBefore(en, initScript) {
         };
         //nullAppScripts();
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 function removeEntryAfter(en, initScript) {
@@ -804,7 +808,7 @@ function removeEntryAfter(en, initScript) {
         };
         //nullAppScripts();
     } catch (error) {
-        message(error);
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
 
