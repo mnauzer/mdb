@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0035',
+        version: '2.04.0036',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -449,7 +449,8 @@ function prepocitatZaznamDochadzky(en){
             mzdy: 0,
             odpracovane: 0,
             evidencia: 0,
-            prestoje: 0
+            prestoje: 0,
+            pracovnaDoba: 0
         };
          // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
@@ -480,14 +481,14 @@ function prepocitatZaznamDochadzky(en){
             }
         }
         // výpočet pracovnej doby
-        const pracovnaDoba = calculateWorkHours(prichod, odchod);
+        totals.pracovnaDoba = calculateWorkHours(prichod, odchod);
         // prepočet zamestnancov
-        if (zamestnanci !== undefined || zamestnanci.length > 0) {
+        if (zamestnanci !== undefined && zamestnanci.length > 0) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
                 employeeAtt.hodinovka = employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
-                employeeAtt.odpracovane = pracovnaDoba,
+                employeeAtt.odpracovane = totals.pracovnaDoba,
                 employeeAtt.dennaMzda = employeeAtt.odpracovane * (employeeAtt.hodinovka
                     + zamestnanci[z].attr("+príplatok (€/h)"))
                     + zamestnanci[z].attr("+prémia (€)")
@@ -511,7 +512,6 @@ function prepocitatZaznamDochadzky(en){
                         filtered.forEach(el => {
                             el.trash()
                         });
-                    stareZavazky = false;
                     }
                     // vygeneruj nové záväzky
                     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
@@ -536,12 +536,12 @@ function prepocitatZaznamDochadzky(en){
         totals.prestoje = totals.odpracovane - totals.evidencia;
         // TODO zaevidovať prestoje do databázy zákaziek na zákazku Krajinka
         en.set("Mzdové náklady", totals.mzdy.toFixed(2));
-        en.set("Pracovná doba", totals.odpracovane.toFixed(2));
+        en.set("Pracovná doba", totals.pracovnaDoba.toFixed(2));
         en.set("Odpracované", totals.odpracovane.toFixed(2));
         en.set("Na zákazkách", totals.evidencia.toFixed(2));
         en.set("Prestoje", totals.prestoje.toFixed(2));
-        if (totals.evidencia == totals.odpracovane) {
-        // en.set("appMsg", 'vyžaduje pozornosť');
+        if (totals.evidencia > totals.odpracovane) {
+            en.set("appMsg", 'vyžaduje pozornosť');
         // en.set("appMsg2", 'Nie sú zaevidované žiadne práce na zákazkách\nZaeviduj práce a daj prepočítať záznam.\nZvyšný čas bude priradený na zákazku KRAJINKA - prestoje');
         }
         if (app.log) {message("...hotovo")};
