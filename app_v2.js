@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0010',
+        version: '2.04.0011',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -541,8 +541,10 @@ function prepocitatZaznamDochadzky(en){
         }
         if (app.log) {message("...hotovo")};
     } catch (error) {
+
         message(error);
     }
+}
 // ZAMESTNANCI
 function sadzbaZamestnanca(employee, date){
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
