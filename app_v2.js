@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0037',
+        version: '2.04.0038',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -483,7 +483,7 @@ function prepocitatZaznamDochadzky(en){
         // výpočet pracovnej doby
         totals.pracovnaDoba = calculateWorkHours(prichod, odchod);
         // prepočet zamestnancov
-        if (zamestnanci !== undefined && zamestnanci.length > 0) {
+        if (zamestnanci.length > 0) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
                 //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
@@ -494,44 +494,44 @@ function prepocitatZaznamDochadzky(en){
                     + zamestnanci[z].attr("+prémia (€)")
                     - zamestnanci[z].attr("-pokuta (€)")
 
-                setEmployeeAtrributes(zamestnanci[z], employeeAtt)
+                setEmployeeAtrributes(zamestnanci[z], employeeAtt);
                 // pripočítanie do celkových hodnôt záznamu
                 totals.mzdy += employeeAtt.dennaMzda;
                 totals.odpracovane += employeeAtt.odpracovane;
 
                 // generovanie záväzkov za mzdy
-                if (zavazky) {
-                    message("Registrujem záväzky");
-                    // ak sú staré záväzky, najprv vymaž
-                    let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-                    message('stare zavazky: ' + stareZavazky.length)
-                    let filtered = [];
-                    if(stareZavazky.length > 0){
-                        message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-                        filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
-                        message("mažem..." + filtered.length + " záznamov")
-                        filtered.forEach(el => {
-                            el.trash()
-                        });
-                        stareZavazky = [];
-                    }
-                    // vygeneruj nové záväzky
-                    message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
-                    newEntryZavazky(zamestnanci[z], en, employeeAtt);
-                };
-                //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
-                if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
-                    if (app.log) {message("...prepočítavam evidenciu prác")}
-                    for (let ep = 0; ep < evidenciaPrac.length; ep++) {
-                        let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
-                        let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
-                        for (let znz in zamNaZakazke) {
-                            if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
-                                totals.evidencia += naZakazke;
-                            }
-                        }
-                    }
-                }
+                // if (zavazky) {
+                //     message("Registrujem záväzky");
+                //     // ak sú staré záväzky, najprv vymaž
+                //     let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+                //     message('stare zavazky: ' + stareZavazky.length)
+                //     let filtered = [];
+                //     if(stareZavazky.length > 0){
+                //         message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
+                //         filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
+                //         message("mažem..." + filtered.length + " záznamov")
+                //         filtered.forEach(el => {
+                //             el.trash()
+                //         });
+                //         stareZavazky = [];
+                //     }
+                //     // vygeneruj nové záväzky
+                //     message('Generujem nový záväzok zamestnanca ' + zamestnanci[z].name)
+                //     newEntryZavazky(zamestnanci[z], en, employeeAtt);
+                // };
+                // //  prejsť záznam prác, nájsť každého zamestnanca z dochádzky a spočítať jeho hodiny v evidencii
+                // if (evidenciaPrac !== undefined || evidenciaPrac.length > 0) {
+                //     if (app.log) {message("...prepočítavam evidenciu prác")}
+                //     for (let ep = 0; ep < evidenciaPrac.length; ep++) {
+                //         let zamNaZakazke = evidenciaPrac[ep].field("Zamestnanci");
+                //         let naZakazke = evidenciaPrac[ep].field("Pracovná doba");
+                //         for (let znz in zamNaZakazke) {
+                //             if (zamestnanci[z].field(NICK) == zamNaZakazke[znz].field(NICK)) {
+                //                 totals.evidencia += naZakazke;
+                //             }
+                //         }
+                //     }
+                // }
             }
         }
 
