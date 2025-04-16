@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0053',
+        version: '2.04.0054',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -495,7 +495,7 @@ const getTime = (date) => {
 };
 function setEmployeeAtrributes(employee, employeeAttributes){
     try {
-    message("sadzba " + employee.field("nick") + " je " + employeeAtt.hodinovka);
+    message("sadzba " + employee.field("nick") + " je " + employeeAttributes.hodinovka);
     employee.setAttr("odpracované", employeeAttributes.odpracovane);
     employee.setAttr("hodinovka", employeeAttributes.hodinovka);
     employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
