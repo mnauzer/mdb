@@ -723,7 +723,7 @@ function newEntryBeforeSave () {
     }
 }
 function newEntryAfterSave(){
-    let en = app.activeLib.lastEntry();
+    let en = lib().lastEntry();
     try {
         prepocitatZaznamDochadzky(en);
         en.set(VIEW, VIEW_PRINT)
