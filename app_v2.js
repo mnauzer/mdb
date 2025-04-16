@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0028',
+        version: '2.04.0029',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -685,7 +685,6 @@ const libOpen = () => {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-
 // NEW ENTRY TRIGGERS
 function newEntry () {
     get.openLib(app.runningScript);
@@ -740,6 +739,7 @@ function updateEntryBeforeSave(){
 function updateEntryAfterSave(){
     let en = entry();
     try {
+        prepocitatZaznamDochadzky(en);
         en.set(VIEW, VIEW_PRINT)
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
