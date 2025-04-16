@@ -689,35 +689,23 @@ const libOpen = () => {
 
 // NEW ENTRY TRIGGERS
 function newEntry () {
-    ////setAppScripts('newEntry()', 'triggers.js', initScript);
-    get.openLib(app.runningScript);
-    message('Knižnica: ' + app.activeLib.db.title + ' /' + app.data.version );
     let en = entryDefault();
     try {
-
-        //dialog("Nový záznam >> " + app.activeLib.name);
         en.set(VIEW, VIEW_EDIT);
         en.set(DATE, new Date());
         en.set(CR, user());
         en.set(CR_DATE, new Date());
-       // en.set(NUMBER, app.activeLib.number);
-       // en.set(NUMBER_ENTRY, app.activeLib.nextNum);
         en.set(SEASON, app.season);
-        // code here
-        //nullAppScripts();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-
 function newEntryBeforeSave () {
     let en = entryDefault();
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
-        //prepocitatZaznamDochadzky(en);
         en.set(VIEW, VIEW_PRINT)
-        //nullAppScripts();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
