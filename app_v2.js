@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0041',
+        version: '2.04.0042',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -438,6 +438,26 @@ function validateAndRoundTime(time) {
 function calculateWorkHours(start, end) {
     return (end - start) / 3600000;
 }
+
+function registrujZavazky(employee, en, attr){
+    message("Registrujem záväzky");
+    // ak sú staré záväzky, najprv vymaž
+    let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+    message('stare zavazky: ' + stareZavazky.length + ' -> mažem...')
+    //let filtered = [];
+    if(stareZavazky.length > 0){
+    // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
+    // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
+    // message("mažem..." + filtered.length + " záznamov")
+    // filtered.forEach(el => {
+    //     el.trash()
+    // });
+    stareZavazky = [];
+    }
+
+    newEntryZavazky(employee, en, attr);
+    }
+
 function prepocitatZaznamDochadzky(en){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
     try {
@@ -504,24 +524,7 @@ function prepocitatZaznamDochadzky(en){
             }
         }
         //  generovanie záväzkov za mzdy
-        function registrujZavazky(employee, en, attr){
-            message("Registrujem záväzky");
-            // ak sú staré záväzky, najprv vymaž
-            let stareZavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-            message('stare zavazky: ' + stareZavazky.length + ' -> mažem...')
-            //let filtered = [];
-            if(stareZavazky.length > 0){
-            // message("Hľadám staré záväzky zamestnanca " + zamestnanci[z].name)
-            // filtered = stareZavazky.filter(el => el.field("Zamestnanec")[0].name == zamestnanci[z].name)
-            // message("mažem..." + filtered.length + " záznamov")
-            // filtered.forEach(el => {
-            //     el.trash()
-            // });
-            stareZavazky = [];
-            }
 
-            newEntryZavazky(employee, en, attr);
-        }
 
 // if (zavazky) {}
         //     // vygeneruj nové záväzky
