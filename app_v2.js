@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0023',
+        version: '2.04.0024',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -689,6 +689,7 @@ const libOpen = () => {
 
 // NEW ENTRY TRIGGERS
 function newEntry () {
+    message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
     let en = entryDefault();
     try {
         en.set(VIEW, VIEW_EDIT);
