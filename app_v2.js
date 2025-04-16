@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0044',
+        version: '2.04.0045',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -438,6 +438,20 @@ function validateAndRoundTime(time) {
 function calculateWorkHours(start, end) {
     return (end - start) / 3600000;
 }
+
+function calculateTimeFromString(string) {
+
+    const [hours, minutes] = string.split(":").map(Number);
+    const time = new Date();
+    time.setHours(hours);
+    time.setMinutes(minutes);
+    time.setSeconds(0);
+    time.setMilliseconds(0);
+    const stringInMillis = time.getTime();
+    return stringInMillis; // Vráti čas v milisekundách od 1. januára 1970
+
+}
+
 function calculateWorkHoursFromField() {
     const startTimeString = "07:30";
     const [hours, minutes] = startTimeString.split(":").map(Number);
@@ -494,7 +508,7 @@ function prepocitatZaznamDochadzky(en){
         };
 
          // Validate and process time entries
-        buildDefaultEntry().set("Príchod", calculateWorkHoursFromField());
+        buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
 
