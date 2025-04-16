@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0047',
+        version: '2.04.0048',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -741,8 +741,8 @@ function newEntry () {
     try {
         //buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
         en.set(VIEW, VIEW_EDIT);
-        en.set('Príchod', '7:30' );
-        en.set('Odchod', '14:30' );
+        en.set('Príchod', calculateTimeFromString('7:30') );
+        en.set('Odchod', calculateTimeFromString('14:30') );
         en.set(DATE, new Date());
         en.set(CR, user());
         en.set(CR_DATE, new Date());
