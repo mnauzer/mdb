@@ -688,6 +688,8 @@ const libOpen = (initScript) => {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
+
+// NEW ENTRY TRIGGERS
 function newEntry () {
     ////setAppScripts('newEntry()', 'triggers.js', initScript);
     get.openLib(app.runningScript);
@@ -722,7 +724,6 @@ function newEntryBeforeSave () {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-
 function newEntryAfterSave(){
     let en = app.activeLib.lastEntry();
     try {
@@ -732,7 +733,7 @@ function newEntryAfterSave(){
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-
+// UPDATE ENTRY TRIGGERS
 function updateEntryOpen(){
     let en = entry();
     try {
@@ -741,6 +742,25 @@ function updateEntryOpen(){
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
+function updateEntryBeforeSave(){
+    let en = entry();
+    try {
+        en.set(VIEW, VIEW_PRINT)
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
+
+function updateEntryAfterSave(){
+    let en = entry();
+    try {
+        en.set(VIEW, VIEW_PRINT)
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
+
+// DELETE ENTRY TRIGGERS
 function removeEntryBefore(en, initScript) {
    //setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
