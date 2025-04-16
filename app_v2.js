@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0003',
+        version: '2.04.0004',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -897,7 +897,7 @@ function newEntryAfterSave(en, initScript){
 }
 
 function removeEntryBefore(en, initScript) {
-    setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
+   //setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         const rmNum  = [];
@@ -922,7 +922,7 @@ function removeEntryBefore(en, initScript) {
     }
 }
 function removeEntryAfter(en, initScript) {
-    setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
+    //setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
@@ -1003,7 +1003,7 @@ const pad = (number, length) => {
 // ARRAY FUNCTIONS
 const filterByDate = (entries, maxDate, dateField, initScript) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    setAppScripts('filterByDate()', 'helpers.js', initScript)
+    //setAppScripts('filterByDate()', 'helpers.js', initScript)
     try {
         const filtered = []
         for(let i in entries) {
