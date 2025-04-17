@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0056',
+        version: '2.04.0057',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -542,7 +542,7 @@ function setEmployeeAtrributes(employee, employeeAttributes){
 };
 function prepocitatZaznamDochadzky(en, isEdit){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
-    try {
+        en = en || lib().entry();
         const datum = en.field(DATE);
         const zavazky = en.field("Generovať záväzky");
         const zamestnanci = en.field("Zamestnanci");
