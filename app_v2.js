@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0054',
+        version: '2.04.0055',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -427,11 +427,13 @@ const employees = {
 // CALC
 // DOCHÁDZKA
 // Helper functions
-function validateAndRoundTime(time) {
+function validateAndRoundTime(date, time) {
+    date = date || entry().field(DATE);
     if (!time) {
         message('Missing time value');
         exit();
     }
+    time = kombinujDatumACas(date, time);
     return roundTimeQ(time);
 }
 
@@ -451,6 +453,41 @@ function calculateTimeFromString(string) {
     return stringInMillis; // Vráti čas v milisekundách od 1. januára 1970
 
 }
+
+function kombinujDatumACas(date, time) {
+    // Získanie dátumovej časti z prvého dátumového údaja
+    const rok = date.getFullYear();
+    const mesiac = date.getMonth();
+    const den = date.getDate();
+
+    // Získanie časovej časti z druhého dátumového údaja
+    const hodiny = time.getHours();
+    const minuty = time.getMinutes();
+    const sekundy = time.getSeconds();
+    const milisekundy = time.getMilliseconds();
+
+    // Vytvorenie nového dátumového objektu s kombinovanými časťami
+    const kombinovanyDatum = new Date(rok, mesiac, den, hodiny, minuty, sekundy, milisekundy);
+
+    return kombinovanyDatum;
+}
+
+// Príklad použitia (predpokladáme, že máš dva dátumové objekty)
+// const datum1 = new Date("2025-04-20T10:00:00Z"); // Dátum, z ktorého chceme len dátum
+// const datum2 = new Date("2025-04-17T14:30:45Z"); // Dátum, z ktorého chceme len čas
+
+// const vyslednyDatum = kombinujDatumACas(datum1, datum2);
+// log("Pôvodný dátum 1: " + datum1);
+// log("Pôvodný dátum 2: " + datum2);
+// log("Kombinovaný dátum: " + vyslednyDatum);
+// message("Kombinovaný dátum: " + vyslednyDatum);
+
+// Ak pracuješ s poľami v Memento Database, môžeš použiť:
+// var datumZaznamu1 = entry().field("DatumPole1"); // Predpokladajme, že pole je dátumového typu
+// var casZaznamu2 = entry().field("DatumPole2"); // Predpokladajme, že pole je dátumového typu
+// var vyslednyDatumZPolia = kombinujDatumACas(datumZaznamu1, casZaznamu2);
+// entry().set("KombinovaneDatumPole", vyslednyDatumZPolia);
+// lib().save(entry());
 
 function calculateWorkHoursFromField() {
     const startTimeString = "07:30";
