@@ -542,6 +542,7 @@ function setEmployeeAtrributes(employee, employeeAttributes){
 };
 function prepocitatZaznamDochadzky(en, isEdit){
    // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
+    try {
         en = en || lib().entry();
         const datum = en.field(DATE);
         const zavazky = en.field("Generovať záväzky");
