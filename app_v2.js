@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0055',
+        version: '2.04.0056',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -537,7 +537,7 @@ function setEmployeeAtrributes(employee, employeeAttributes){
     employee.setAttr("hodinovka", employeeAttributes.hodinovka);
     employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
     } catch (error) {
-        message('Chyba: '+ error + ', line:' + error.lineNumber);
+        message('Chyba: '+ error + ', line: ' + error.lineNumber);
     };
 };
 function prepocitatZaznamDochadzky(en, isEdit){
