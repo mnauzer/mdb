@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0058',
+        version: '2.04.0059',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -433,7 +433,7 @@ function validateAndRoundTime( time) {
         message('Missing time value');
         exit();
     }
-    time = kombinujDatumACas(date, time);
+   // time = kombinujDatumACas(date, time);
     return roundTimeQ(time);
 }
 
@@ -442,16 +442,19 @@ function calculateWorkHours(start, end) {
 }
 
 function calculateTimeFromString(string) {
-
     const [hours, minutes] = string.split(":").map(Number);
-    const time = new Date();
+
+    // Vytvoríme nový Date objekt pre 1. januára 1970 00:00:00 UTC
+    const time = new Date(0); // Alebo new Date(1970, 0, 1, 0, 0, 0);
+
+    // Nastavíme hodiny a minúty
     time.setHours(hours);
     time.setMinutes(minutes);
     time.setSeconds(0);
     time.setMilliseconds(0);
-    const stringInMillis = time.getTime();
-    return stringInMillis; // Vráti čas v milisekundách od 1. januára 1970
 
+    const stringInMillis = time.getTime();
+    return stringInMillis;
 }
 
 function kombinujDatumACas(date, time) {
@@ -586,7 +589,7 @@ function prepocitatZaznamDochadzky(en, isEdit){
 
         vypisCelyDatumovyUdaj("Príchod");
         vypisCelyDatumovyUdaj("Odchod");
-        vypisCelyDatumovyUdaj("Datum");
+        vypisCelyDatumovyUdaj("Dátum");
 
 
         if (!prichod || !odchod || getTime(prichod) >= getTime(odchod)) {
@@ -788,7 +791,7 @@ function newEntry () {
     try {
         //buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
         en.set(VIEW, VIEW_EDIT);
-        //en.set('Príchod', calculateTimeFromString('7:30') );
+        en.set('Príchod', calculateTimeFromString('7:30') );
         en.set('Odchod', calculateTimeFromString('14:30') );
         en.set(DATE, new Date());
         en.set(CR, user());
