@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0057',
+        version: '2.04.0058',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -508,6 +508,28 @@ function calculateWorkHoursFromField() {
 //         return "Čas ukončenia nie je zadaný";
 //     }
 }
+function vypisCelyDatumovyUdaj(nazovDatumovehoPola) {
+  var datumovyUdaj = entry().field(nazovDatumovehoPola);
+
+  if (datumovyUdaj instanceof Date) {
+    log("Celý dátumový údaj z poľa '" + nazovDatumovehoPola + "': " + datumovyUdaj);
+    message("Celý dátumový údaj: " + datumovyUdaj);
+  } else {
+    log("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátumový údaj.");
+    message("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátum.");
+  }
+}
+function vypisCelyDatumovyUdaj(nazovDatumovehoPola) {
+  var datumovyUdaj = entry().field(nazovDatumovehoPola);
+
+  if (datumovyUdaj instanceof Date) {
+    log("Celý dátumový údaj z poľa '" + nazovDatumovehoPola + "': " + datumovyUdaj);
+    message("Celý dátumový údaj: " + datumovyUdaj);
+  } else {
+    log("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátumový údaj.");
+    message("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátum.");
+  }
+}
 
 calculateWorkHoursFromField(); // Toto by bol výraz v JavaScriptovom poli
 function registrujZavazky(employee, en, attr, isEdit){
@@ -561,6 +583,11 @@ function prepocitatZaznamDochadzky(en, isEdit){
         // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
+
+        vypisCelyDatumovyUdaj("Príchod");
+        vypisCelyDatumovyUdaj("Odchod");
+        vypisCelyDatumovyUdaj("Datum");
+
 
         if (!prichod || !odchod || getTime(prichod) >= getTime(odchod)) {
             message('Invalid arrival/departure times, Príchod: ' + prichod + ', Odchod: ' + odchod);
@@ -761,7 +788,7 @@ function newEntry () {
     try {
         //buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
         en.set(VIEW, VIEW_EDIT);
-        en.set('Príchod', calculateTimeFromString('7:30') );
+        //en.set('Príchod', calculateTimeFromString('7:30') );
         en.set('Odchod', calculateTimeFromString('14:30') );
         en.set(DATE, new Date());
         en.set(CR, user());
