@@ -427,8 +427,8 @@ const employees = {
 // CALC
 // DOCHÁDZKA
 // Helper functions
-function validateAndRoundTime(date, time) {
-    date = date || entry().field(DATE);
+function validateAndRoundTime( time) {
+    date =  entry().field(DATE);
     if (!time) {
         message('Missing time value');
         exit();
