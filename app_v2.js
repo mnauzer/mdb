@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0061',
+        version: '2.04.0062',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -150,10 +150,10 @@ const get = {
             set.storeLib()
             //nullAppScripts()
         } catch (error) {
-            message(error)
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
         }
     },
-    numbe(){
+    number(){
         // vyskladaj nové číslo záznamu
         //setAppScripts('get.number()', 'app.js' );
         try {
@@ -170,7 +170,7 @@ const get = {
             //nullAppScripts();
             return newNumber
         } catch (error) {
-            message(error)
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
         }
     },
     sadzbyDP(){
@@ -181,7 +181,7 @@ const get = {
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
             ////nullAppScripts()
         } catch (error) {
-            message(error)
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
         }
     },
 }
