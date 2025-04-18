@@ -693,10 +693,16 @@ const zavazky = {
     }
 }
 
+const myDialog = dialog()
+myDialog.title("Hello")
+        .text("Welcome to our application.")
+        .positiveButton("OK", () => { /* Handle positive button click */ })
+        .show();
+
 // CENOVÉ PONUKY
 function fillEntryCP(entry, isEdit){
     try {
-        let en = entry || entryDefault();
+        let en = entry ;
         en.set("Platnosť do", new Date(moment(en.field("Dátum")).add(en.field("Platnosť ponuky"), "Days")));
         if (en.field("Identifikátor") == "") {
             en.set("Identifikátor", en.field("Miesto")[0].field("Klient")[0].field("Nick") + ", " + en.field("Miesto")[0].field("Lokalita"));
@@ -708,6 +714,31 @@ function fillEntryCP(entry, isEdit){
                 popis = popis + diely[i].field("diel cenovej ponuky") + ", ";
             }
             en.set("Popis cenovej ponuky",popis);
+        }
+        } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+        createErrorEntry(error, 'fillEntryCP()');
+    }
+}
+function fillEntryCPDiely(entry, isEdit){
+    try {
+        let en = entry ;
+        let me = masterEntry()
+        if (en.field("Identifikátor") == "") {
+            en.set("Identifikátor", en.field("Miesto")[0].field("Klient")[0].field("Nick") + ", " + en.field("Miesto")[0].field("Lokalita"));
+        }
+        if (en.field("Popis cenovej ponuky") == ""){
+            let diely = en.field("Diel cenovej ponuky");
+            let popis = "";
+            for (let i = 0; i < diely.length; i++){
+                popis = popis + diely[i].field("diel cenovej ponuky") + ", ";
+            }
+            en.set("Popis cenovej ponuky",popis);
+        }
+        if (me.length > 0){
+            en.set("Typ cenovej ponuky",me.field("Typ cenovej ponuky"));
+            en.set("Počítať zľavy na sadzby",me.field("Počítať zľavy na sadzby"));
+            en.set("Účtovanie dopravy",me.field("Účtovanie dopravy"));
         }
         } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
@@ -837,6 +868,8 @@ function newEntryAfterSave(){
             case "Cenové ponuky v2":
                 fillEntryCP(en, false);
                 break;
+            case "CP Diely":
+                fillEntryDielyCP(en, false);
             default:
                 break;
         }
