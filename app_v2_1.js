@@ -127,7 +127,7 @@ const Helpers = {
             const val = entry.field(fieldName);
             return val !== undefined && val !== null ? val : defaultValue;
         } catch (e) {
-            if (app.log) message(`Chyba pri čítaní poľa ${fieldName}: ${e}`);
+if (app.log) message('Chyba pri čítaní poľa ' + fieldName + ': ' + e);
             return defaultValue;
         }
     },
@@ -135,7 +135,7 @@ const Helpers = {
         try {
             entry.set(fieldName, value);
         } catch (e) {
-            if (app.log) message(`Chyba pri zápise poľa ${fieldName}: ${e}`);
+if (app.log) message('Chyba pri zápise poľa ' + fieldName + ': ' + e);
         }
     },
     roundTimeToQuarter(time) {
@@ -220,24 +220,24 @@ const Logger = {
         errorLib.create(newError);
     },
     _logVariables(msg) {
-        return `name: ${app.data.name}
-version: ${app.data.version}
-season: ${app.season}
-log: ${app.log}
-debug: ${app.debug}
-activeLib.name: ${app.activeLib.name}
-activeLib.db: ${app.activeLib.db ? app.activeLib.db.title : null}
-activeLib.ID: ${app.activeLib.ID}
-activeLib.prefix: ${app.activeLib.prefix}
-activeLib.lastNum: ${app.activeLib.lastNum}
-activeLib.nextNum: ${app.activeLib.nextNum}
-activeLib.reservedNum: ${app.activeLib.reservedNum}
-activeLib.removedNums: ${app.activeLib.removedNums}
-activeLib.isPrefix: ${app.activeLib.isPrefix}
-activeLib.trim: ${app.activeLib.trim}
-activeLib.trailingDigit: ${app.activeLib.trailingDigit}
-activeLib.number: ${app.activeLib.number}
-msg: ${msg}`;
+        return 'name: ' + app.data.name + '\n' +
+            'version: ' + app.data.version + '\n' +
+            'season: ' + app.season + '\n' +
+            'log: ' + app.log + '\n' +
+            'debug: ' + app.debug + '\n' +
+            'activeLib.name: ' + app.activeLib.name + '\n' +
+            'activeLib.db: ' + (app.activeLib.db ? app.activeLib.db.title : null) + '\n' +
+            'activeLib.ID: ' + app.activeLib.ID + '\n' +
+            'activeLib.prefix: ' + app.activeLib.prefix + '\n' +
+            'activeLib.lastNum: ' + app.activeLib.lastNum + '\n' +
+            'activeLib.nextNum: ' + app.activeLib.nextNum + '\n' +
+            'activeLib.reservedNum: ' + app.activeLib.reservedNum + '\n' +
+            'activeLib.removedNums: ' + app.activeLib.removedNums + '\n' +
+            'activeLib.isPrefix: ' + app.activeLib.isPrefix + '\n' +
+            'activeLib.trim: ' + app.activeLib.trim + '\n' +
+            'activeLib.trailingDigit: ' + app.activeLib.trailingDigit + '\n' +
+            'activeLib.number: ' + app.activeLib.number + '\n' +
+            'msg: ' + msg;
     }
 };
 
@@ -266,7 +266,7 @@ const CenovePonuky = {
                 en.set(CONFIG.fields.popisCenovejPonuky, popis);
             }
         } catch (error) {
-            message(`Chyba: ${error}, line: ${error.lineNumber}`);
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'CenovePonuky.fillEntryCP');
         }
     },
@@ -295,7 +295,7 @@ const CenovePonuky = {
                 en.set('Účtovanie dopravy', mEn.field('Účtovanie dopravy'));
             }
         } catch (error) {
-            message(`Chyba: ${error}, line: ${error.lineNumber}`);
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'CenovePonuky.fillEntryCPDiely');
         }
     }
@@ -305,9 +305,9 @@ const CenovePonuky = {
 const Triggers = {
     libOpen() {
         try {
-            message(`${app.data.name} v.${app.data.version}\n${app.activeLib.name} ${app.season}`);
+message(app.data.name + ' v.' + app.data.version + '\n' + app.activeLib.name + ' ' + app.season);
         } catch (error) {
-            message(`Chyba: ${error}, line: ${error.lineNumber}`);
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
         }
     },
     libOpenBeforeShow() {
@@ -321,7 +321,7 @@ const Triggers = {
                 .autoDismiss(true)
                 .show();
         } catch (error) {
-            message(`Chyba: ${error}, line: ${error.lineNumber}`);
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'Triggers.libOpenBeforeShow');
         }
     },
@@ -343,7 +343,7 @@ const Triggers = {
             }
             en.set(VIEW, VIEW_PRINT);
         } catch (error) {
-            message(`Chyba: ${error}, line: ${error.lineNumber}`);
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
             en.set(VIEW, VIEW_DEBUG);
             Logger.createError(error, 'Triggers.newEntryAfterSave');
         }
@@ -360,7 +360,7 @@ const Triggers = {
                     break;
             }
         } catch (error) {
-            message(`Chyba: ${error}, line: ${error.lineNumber}`);
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'Triggers.linkEntryBeforeSave');
         }
     }
