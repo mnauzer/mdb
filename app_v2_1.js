@@ -1,10 +1,35 @@
 // Refaktorovaný súbor app_v2_1.js s aplikovanými vylepšeniami a zachovaním funkčnosti pôvodného app_v2.js
 
+import { TABLES, SYSTEM_TABLES } from './tableConstants';
+import {
+    COMMON_FIELDS,
+    PRICE_QUOTE_FIELDS,
+    ATTENDANCE_FIELDS,
+    EMPLOYEE_FIELDS,
+    LIABILITY_FIELDS,
+    WORK_RECORD_FIELDS
+} from './fieldConstants';
+import {
+    APP_CONFIG,
+    SECTIONS,
+    COLORS,
+    VIEW_STATES,
+    DEFAULTS,
+    MESSAGES
+} from './appConfig';
+import {
+    EMPLOYEE_ATTRIBUTES,
+    WAGE_TYPES,
+    CALCULATION,
+    ENTRY_TYPES,
+    NOTES
+} from './attributeConstants';
+
 // Konfigurácia tabuliek, polí a sekcií pre lepšiu údržbu
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0078',
+        version: '2.04.0079',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -37,11 +62,15 @@ const CONFIG = {
         zlavaNaSadzby: 'Počítať zľavy na sadzby',
         typCenovejPonuky: 'Typ cenovej ponuky',
         platnostPonuky: 'Platnosť ponuky',
+        platnostDo: 'Platnosť do',
         identifikator: 'Identifikátor',
         popisCenovejPonuky: 'Popis cenovej ponuky',
         dielCenovejPonuky: 'Diel cenovej ponuky',
         miestoRealizacie: 'Miesto realizácie',
-        klient: 'Klient'
+        klient: 'Klient',
+        uctovanieDopravy: 'Účtovanie dopravy',
+        nick: 'Nick',
+        lokalita: 'Lokalita'
     },
     colors: {
         firebrick: '#B22222',
@@ -250,13 +279,13 @@ const CenovePonuky = {
         try {
             const platnostPonuky = Helpers.getField(en, CONFIG.fields.platnostPonuky, 10);
             const datum = Helpers.getField(en, CONFIG.fields.datum, new Date());
-            en.set('Platnosť do', new Date(moment(datum).add(platnostPonuky, 'days')));
+            en.set(CONFIG.fields.platnostDo, new Date(moment(datum).add(platnostPonuky, 'days')));
             if (!Helpers.getField(en, CONFIG.fields.identifikator, '')) {
                 const miesto = Helpers.getField(en, CONFIG.fields.miestoRealizacie, []);
                 if (miesto.length > 0) {
                     const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
                     if (klient.length > 0) {
-                        en.set(CONFIG.fields.identifikator, klient[0].field('Nick') + ', ' + miesto[0].field('Lokalita'));
+                        en.set(CONFIG.fields.identifikator, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
                     }
                 }
             }
@@ -264,7 +293,7 @@ const CenovePonuky = {
                 const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
                 let popis = '';
                 for (let i = 0; i < diely.length; i++) {
-                    popis += diely[i].field('diel cenovej ponuky') + ', ';
+                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
                 }
                 en.set(CONFIG.fields.popisCenovejPonuky, popis);
             }
@@ -280,7 +309,7 @@ const CenovePonuky = {
                 if (miesto.length > 0) {
                     const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
                     if (klient.length > 0) {
-                        en.set(CONFIG.fields.identifikator, klient[0].field('Nick') + ', ' + miesto[0].field('Lokalita'));
+                        en.set(CONFIG.fields.identifikator, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
                     }
                 }
             }
@@ -288,14 +317,14 @@ const CenovePonuky = {
                 const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
                 let popis = '';
                 for (let i = 0; i < diely.length; i++) {
-                    popis += diely[i].field('diel cenovej ponuky') + ', ';
+                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
                 }
                 en.set(CONFIG.fields.popisCenovejPonuky, popis);
             }
             if (mEn.length > 0) {
                 en.set(CONFIG.fields.typCenovejPonuky, mEn.field(CONFIG.fields.typCenovejPonuky));
                 en.set(CONFIG.fields.zlavaNaSadzby, mEn.field(CONFIG.fields.zlavaNaSadzby));
-                en.set('Účtovanie dopravy', mEn.field('Účtovanie dopravy'));
+                en.set(CONFIG.fields.uctovanieDopravy, mEn.field(CONFIG.fields.uctovanieDopravy));
             }
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
@@ -311,6 +340,44 @@ const Triggers = {
             message(app.data.name + ' v.' + app.data.version + '\n' + app.activeLib.name + ' ' + app.season);
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
+        }
+    },
+    createEntryOpen() {
+        try {
+            get.openLib();
+            message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
+            const en = entryDefault();
+
+            // Set basic fields
+            en.set(COMMON_FIELDS.VIEW, VIEW_STATES.EDIT);
+            en.set(COMMON_FIELDS.DATE, new Date());
+            en.set(COMMON_FIELDS.NUMBER, app.activeLib.number);
+            en.set(COMMON_FIELDS.NUMBER_ENTRY, app.activeLib.nextNum);
+            en.set(COMMON_FIELDS.SEASON, app.season);
+
+            // Set creation metadata
+            en.set(COMMON_FIELDS.CREATED_BY, user());
+            en.set(COMMON_FIELDS.CREATED_DATE, new Date());
+
+            // Set library-specific defaults
+            switch (app.activeLib.name) {
+                case 'Dochádzka':
+                    en.set(ATTENDANCE_FIELDS.PRICHOD, '7:30');
+                    en.set(ATTENDANCE_FIELDS.ODCHOD, '14:30');
+                    break;
+                case 'Evidencia prác':
+                    en.set(WORK_RECORD_FIELDS.ZACIATOK, '8:00');
+                    en.set(WORK_RECORD_FIELDS.KONIEC, '14:00');
+                    break;
+                case 'Cenové ponuky v2':
+                    en.set(CONFIG.fields.platnostPonuky, '10');
+                    break;
+                default:
+                    break;
+            }
+        } catch (error) {
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+            Logger.createError(error, 'Triggers.createEntryOpen');
         }
     },
     libOpenBeforeShow() {
@@ -333,7 +400,7 @@ const Triggers = {
         try {
             switch (app.activeLib.name) {
                 case 'Dochádzka':
-                    prepocitatZaznamDochadzky(en, false);
+                    Dochadzka.prepocitatZaznamDochadzky(en, false);
                     break;
                 case 'Cenové ponuky v2':
                     CenovePonuky.fillEntryCP(en, false);
@@ -344,10 +411,10 @@ const Triggers = {
                 default:
                     break;
             }
-            en.set(VIEW, VIEW_PRINT);
+            en.set(COMMON_FIELDS.VIEW, VIEW_STATES.PRINT);
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
-            en.set(VIEW, VIEW_DEBUG);
+            en.set(COMMON_FIELDS.VIEW, VIEW_STATES.DEBUG);
             Logger.createError(error, 'Triggers.newEntryAfterSave');
         }
     },
@@ -370,11 +437,11 @@ const Triggers = {
 };
 
 // Export alebo priradenie triggerov podľa potreby
-// Napríklad:
-// exports.libOpen = Triggers.libOpen;
-// exports.libOpenBeforeShow = Triggers.libOpenBeforeShow;
-// exports.newEntryAfterSave = Triggers.newEntryAfterSave;
-// exports.linkEntryBeforeSave = Triggers.linkEntryBeforeSave;
+exports.libOpen = Triggers.libOpen;
+exports.libOpenBeforeShow = Triggers.libOpenBeforeShow;
+exports.newEntryAfterSave = Triggers.newEntryAfterSave;
+exports.linkEntryBeforeSave = Triggers.linkEntryBeforeSave;
+exports.createEntryOpen = Triggers.createEntryOpen;
 
 // Ďalšie funkcie a logika môžu byť refaktorované podobným spôsobom podľa potreby
 
@@ -400,10 +467,10 @@ const Dochadzka = {
     prepocitatZaznamDochadzky(en, isEdit) {
         try {
             en = en || lib().entry();
-            const datum = en.field(DATE);
-            const zavazky = en.field("Generovať záväzky");
-            const zamestnanci = en.field("Zamestnanci");
-            const evidenciaPrac = en.field("Práce");
+            const datum = en.field(COMMON_FIELDS.DATE);
+            const zavazky = en.field(ATTENDANCE_FIELDS.GENEROVAT_ZAVAZKY);
+            const zamestnanci = en.field(ATTENDANCE_FIELDS.ZAMESTNANCI);
+            const evidenciaPrac = en.field(ATTENDANCE_FIELDS.PRACE);
             const totals = {
                 mzdy: 0,
                 odpracovane: 0,
@@ -412,15 +479,15 @@ const Dochadzka = {
                 pracovnaDoba: 0
             };
 
-            const prichod = this.validateAndRoundTime(en.field("Príchod"));
-            const odchod = this.validateAndRoundTime(en.field("Odchod"));
+            const prichod = this.validateAndRoundTime(en.field(ATTENDANCE_FIELDS.PRICHOD));
+            const odchod = this.validateAndRoundTime(en.field(ATTENDANCE_FIELDS.ODCHOD));
 
             if (!prichod || !odchod || this.getTime(prichod) >= this.getTime(odchod)) {
-                message('Invalid arrival/departure times, Príchod: ' + prichod + ', Odchod: ' + odchod);
+                message('Invalid arrival/departure times, ' + ATTENDANCE_FIELDS.PRICHOD + ': ' + prichod + ', ' + ATTENDANCE_FIELDS.ODCHOD + ': ' + odchod);
                 return;
             } else {
-                en.set("Príchod", prichod);
-                en.set("Odchod", odchod);
+                en.set(ATTENDANCE_FIELDS.PRICHOD, prichod);
+                en.set(ATTENDANCE_FIELDS.ODCHOD, odchod);
             }
 
             const employeeAtt = {
@@ -453,14 +520,14 @@ const Dochadzka = {
 
             totals.prestoje = totals.odpracovane - totals.evidencia;
 
-            en.set("Mzdové náklady", totals.mzdy.toFixed(2));
-            en.set("Pracovná doba", totals.pracovnaDoba.toFixed(2));
-            en.set("Odpracované", totals.odpracovane.toFixed(2));
-            en.set("Na zákazkách", totals.evidencia.toFixed(2));
-            en.set("Prestoje", totals.prestoje.toFixed(2));
+            en.set(ATTENDANCE_FIELDS.MZDOVE_NAKLADY, totals.mzdy.toFixed(2));
+            en.set(ATTENDANCE_FIELDS.PRACOVNA_DOBA, totals.pracovnaDoba.toFixed(2));
+            en.set(ATTENDANCE_FIELDS.ODPRACOVANE, totals.odpracovane.toFixed(2));
+            en.set(ATTENDANCE_FIELDS.NA_ZAKAZKACH, totals.evidencia.toFixed(2));
+            en.set(ATTENDANCE_FIELDS.PRESTOJE, totals.prestoje.toFixed(2));
 
             if (totals.evidencia > totals.odpracovane) {
-                en.set("appMsg", 'vyžaduje pozornosť');
+                en.set(ATTENDANCE_FIELDS.APP_MSG, MESSAGES.REQUIRES_ATTENTION);
             }
 
             if (app.log) {
@@ -473,8 +540,8 @@ const Dochadzka = {
     registrujZavazky(employee, en, attr, isEdit) {
         try {
             if (isEdit) {
-                let zavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
-                let filtered = zavazky.filter(el => el.field("Zamestnanec")[0].name == employee.name);
+                let zavazky = en.linksFrom(TABLES.ZAVAZKY, app.activeLib.db.title);
+                let filtered = zavazky.filter(el => el.field(LIABILITY_FIELDS.ZAMESTNANEC)[0].name == employee.name);
                 filtered.forEach(el => {
                     el.trash();
                 });
@@ -486,22 +553,22 @@ const Dochadzka = {
     },
     newEntryZavazky(employee, en, attrs) {
         try {
-            get.openLib(LIBRARY.ZVK);
-            const popis = "Mzda " + employee.name + ", za deň ";
-            const zavazky = libByName(LIBRARY.ZVK);
+            get.openLib(TABLES.ZAVAZKY);
+            const popis = MESSAGES.WAGE_FOR_DAY.replace('{0}', employee.name);
+            const zavazky = libByName(TABLES.ZAVAZKY);
             const newEntry = {};
-            newEntry[NUMBER] = app.activeLib.number;
-            newEntry[NUMBER_ENTRY] = app.activeLib.nextNum;
-            newEntry[DATE] = new Date();
-            newEntry["Typ"] = "Mzdy";
-            newEntry["Zamestnanec"] = employee;
-            newEntry["Dochádzka"] = en;
-            newEntry["info"] = "generované automaticky z dochádzky";
-            newEntry["Popis"] = popis;
-            newEntry["Suma"] = attrs.dennaMzda.toFixed(2);
-            newEntry[SEASON] = app.season;
-            newEntry[CR] = user();
-            newEntry[CR_DATE] = new Date();
+            newEntry[COMMON_FIELDS.NUMBER] = app.activeLib.number;
+            newEntry[COMMON_FIELDS.NUMBER_ENTRY] = app.activeLib.nextNum;
+            newEntry[COMMON_FIELDS.DATE] = new Date();
+            newEntry[LIABILITY_FIELDS.TYP] = WAGE_TYPES.WAGES;
+            newEntry[LIABILITY_FIELDS.ZAMESTNANEC] = employee;
+            newEntry[LIABILITY_FIELDS.DOCHADZKA] = en;
+            newEntry[LIABILITY_FIELDS.INFO] = MESSAGES.AUTO_GENERATED;
+            newEntry[LIABILITY_FIELDS.POPIS] = popis;
+            newEntry[LIABILITY_FIELDS.SUMA] = attrs.dennaMzda.toFixed(2);
+            newEntry[COMMON_FIELDS.SEASON] = app.season;
+            newEntry[COMMON_FIELDS.CREATED_BY] = user();
+            newEntry[COMMON_FIELDS.CREATED_DATE] = new Date();
             zavazky.create(newEntry);
             app.activeLib.lastNum = app.activeLib.nextNum;
             app.activeLib.nextNum += 1;
@@ -520,13 +587,12 @@ const Dochadzka = {
 const Zamestnanci = {
     sadzba(employee, date) {
         try {
-            const links = employee.linksFrom(LIBRARY.SZ, FLD_ZAM);
-            const dateField = "Platnosť od";
-            const filteredLinks = filterByDate(links, date, dateField);
+            const links = employee.linksFrom(TABLES.SADZBY_ZAMESTNANCOV, EMPLOYEE_FIELDS.ZAMESTNANEC);
+            const filteredLinks = Helpers.filterByDate(links, date, EMPLOYEE_FIELDS.PLATNOST_OD);
             if (!filteredLinks || filteredLinks.length === 0) {
                 return null;
             } else {
-                return filteredLinks[0].field("Sadzba");
+                return filteredLinks[0].field(EMPLOYEE_FIELDS.SADZBA);
             }
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
