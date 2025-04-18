@@ -760,10 +760,10 @@ const libOpenBeforeShow = () => {
     // trigger libOpen_beforeShow
     try {
         const myDialog = dialog()
-myDialog.title("Hello")
-        .text("ASISTANTO v." + app.data.version )
+myDialog.title("ASISTANTO")
+        .text("verzia v." + app.data.version )
         .positiveButton("Pokračuj", () => { /* Handle positive button click */ })
-        .positiveButton("Zrušiť", () => {cancel(); /* Handle positive button click */ })
+        .positiveButton("Odísť", () => {cancel(); /* Handle positive button click */ })
         .show();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
