@@ -23,7 +23,6 @@ const app = {
     msg: null,
     runningScript: null,
     libFile: 'app_v2.js',
-    initScript: null,
     activeLib: { // ASISTANTO nastavenie knižnice podľa sezóny
         name: null,
         // ASISTANTO DB
@@ -154,9 +153,9 @@ const get = {
             message(error)
         }
     },
-    number(initScript){
+    numbe(){
         // vyskladaj nové číslo záznamu
-        //setAppScripts('get.number()', 'app.js', initScript);
+        //setAppScripts('get.number()', 'app.js' );
         try {
             // najprv zisti či nie sú vymazané čísla
             if (app.activeLib.removedNums > 0){
@@ -174,9 +173,9 @@ const get = {
             message(error)
         }
     },
-    sadzbyDPH(initScript){
+    sadzbyDP(){
         // nájdi sadzby DPH pre sezónu
-        //setAppScripts('sadzbyDPH()', 'app.js', initScript)
+        //setAppScripts('sadzbyDPH()', 'app.js' )
         try {
             app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field('Základná sadzba DPH')
             app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
@@ -188,8 +187,8 @@ const get = {
 }
 // SETTERS
 const set = {
-    app(initScript){
-        //setAppScripts('set.app()', 'app.js', initScript)
+    ap(){
+        //setAppScripts('set.app()', 'app.js' )
         try {
             this.storeLib(app.runningScript)
             //nullAppScripts()
@@ -294,7 +293,7 @@ const set = {
         }
     },
     numberPrefix(){
-        //setAppScripts('set.numberPrefix()', 'app.js', initScript)
+        //setAppScripts('set.numberPrefix()', 'app.js' )
         const current = app.activeLib.isPrefix
         try {
             app.activeLib.db.setAttr('prefix', !current)
@@ -309,8 +308,8 @@ const set = {
             message(error)
         }
     },
-    number(initScript){
-        //setAppScripts('set.number()', 'app.js', initScript)
+    numbe(){
+        //setAppScripts('set.number()', 'app.js' )
         try {
             const lastNum = app.activeLib.nextNum;
             const nextNum = (Number(app.activeLib.nextNum) + 1);
@@ -501,7 +500,7 @@ function setEmployeeAtrributes(employee, employeeAttributes){
     };
 };
 function prepocitatZaznamDochadzky(en, isEdit){
-   // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js', initScript);
+   // //setAppScripts('prepocitatZaznamDochadzky()', 'calc.js' );
     try {
         en = en || lib().entry();
         const datum = en.field(DATE);
@@ -596,8 +595,8 @@ function sadzbaZamestnanca(employee, date){
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-function genDochadzkaZavazky(en, initScript){
-    //setAppScripts('genDochadzkaZavazky()', 'calc.js', initScript);
+function genDochadzkaZavazky(en ){
+    //setAppScripts('genDochadzkaZavazky()', 'calc.js' );
     try {
         if (app.log) {message("...generujem záväzky")};
 
@@ -736,10 +735,7 @@ function newEntryOpen() {
     message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
     let en = entryDefault();
     try {
-        //buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
         en.set(VIEW, VIEW_EDIT);
-        en.set('Príchod', calculateTimeFromString('7:30') );
-        en.set('Odchod', calculateTimeFromString('14:30') );
         en.set(DATE, new Date());
         en.set(CR, user());
         en.set(CR_DATE, new Date());
@@ -796,8 +792,8 @@ function updateEntryAfterSave(){
 }
 
 // DELETE ENTRY TRIGGERS
-function removeEntryBefore(en, initScript) {
-   //setAppScripts('removeEntryBefore()', 'triggers.js', initScript);
+function removeEntryBefore(en) {
+   //setAppScripts('removeEntryBefore()', 'triggers.js');
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         const rmNum  = [];
@@ -821,8 +817,8 @@ function removeEntryBefore(en, initScript) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-function removeEntryAfter(en, initScript) {
-    //setAppScripts('removeEntryAfter()', 'triggers.js', initScript);
+function removeEntryAfter(en) {
+    //setAppScripts('removeEntryAfter()', 'triggers.js');
     get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
@@ -901,9 +897,9 @@ const pad = (number, length) => {
 }
 
 // ARRAY FUNCTIONS
-const filterByDate = (entries, maxDate, dateField, initScript) => {
+const filterByDate = (entries, maxDate, dateField) => {
     //odfiltruje záznamy s vyšším dátumom ako maxDate v poli datefield
-    //setAppScripts('filterByDate()', 'helpers.js', initScript)
+    //setAppScripts('filterByDate()', 'helpers.js')
     try {
         const filtered = []
         for(let i in entries) {
