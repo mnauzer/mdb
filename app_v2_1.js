@@ -244,7 +244,7 @@ const get = {
             //nullAppScripts()
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
-            createErrorEntry(error, 'get.openLib()');
+            Logger.createError(error, 'get.openLib()');
         }
     },
     number(){
@@ -257,14 +257,14 @@ const get = {
                 // použi najprv vymazané čísla
             }
             const newNumber = app.activeLib.isPrefix
-            ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit)
-            : app.activeLib.ID + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit);
+            ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + padNumber(app.activeLib.nextNum, app.activeLib.trailingDigit)
+            : app.activeLib.ID + app.season.slice(app.activeLib.trim) + padNumber(app.activeLib.nextNum, app.activeLib.trailingDigit);
             app.activeLib.number = newNumber;
             if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.activeLib.name)}
             return newNumber
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
-            createErrorEntry(error, 'get.number()')
+            Logger.createError(error, 'get.number()')
         }
     },
     sadzbyDPH(){
