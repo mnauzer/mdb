@@ -14,19 +14,39 @@ if (typeof std_FieldLister === 'undefined') {
   try {
     var script = libByName('ASISTANTO Scripts').find('std_fieldLister.js');
     if (script.length === 0) {
-      message('Error: std_fieldLister.js not found in ASISTANTO Scripts');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: std_fieldLister.js not found in ASISTANTO Scripts')
+              .positiveButton('OK', function() {})
+              .show();
     } else {
       var scriptContent = script[0].field('Script');
       if (!scriptContent) {
-        message('Error: std_fieldLister.js is empty');
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error: std_fieldLister.js is empty')
+                .positiveButton('OK', function() {})
+                .show();
       } else {
         // Execute the script
         eval(scriptContent);
-        message('Successfully loaded std_FieldLister module');
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Informácia')
+                .text('Successfully loaded std_FieldLister module')
+                .positiveButton('OK', function() {})
+                .show();
       }
     }
   } catch (e) {
-    message('Error loading std_fieldLister.js: ' + e.toString());
+    // Use dialog instead of message
+    var myDialog = dialog();
+    myDialog.title('Chyba')
+            .text('Error loading std_fieldLister.js: ' + e.toString())
+            .positiveButton('OK', function() {})
+            .show();
   }
 }
 
@@ -39,7 +59,12 @@ function showTableSelectionDialog() {
     var libraries = libs();
     
     if (!libraries || libraries.length === 0) {
-      message('No libraries found');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Upozornenie')
+              .text('No libraries found')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
@@ -79,13 +104,23 @@ function showTableSelectionDialog() {
     });
     
     myDialog.negativeButton('Cancel', function() {
-      message('Operation cancelled');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Informácia')
+              .text('Operation cancelled')
+              .positiveButton('OK', function() {})
+              .show();
     });
     
     // Show dialog
     myDialog.show();
   } catch (e) {
-    message('Error showing table selection dialog: ' + e.toString());
+    // Use dialog instead of message
+    var myDialog = dialog();
+    myDialog.title('Chyba')
+            .text('Error showing table selection dialog: ' + e.toString())
+            .positiveButton('OK', function() {})
+            .show();
   }
 }
 
@@ -96,28 +131,58 @@ function showTableSelectionDialog() {
 function processTable(tableName) {
   try {
     if (!tableName) {
-      message('Error: Table name is required');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: Table name is required')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
     if (typeof std_FieldLister === 'undefined') {
-      message('Error: std_FieldLister module not loaded');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: std_FieldLister module not loaded')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
-    message('Processing table: ' + tableName);
+    // Use dialog instead of message
+    var processDialog = dialog();
+    processDialog.title('Informácia')
+                 .text('Processing table: ' + tableName)
+                 .positiveButton('OK', function() {})
+                 .show();
     
     // Run the field lister for the specified table
     var success = std_FieldLister.run(tableName);
     
     if (success) {
-      message('Successfully processed table: ' + tableName);
+      // Use dialog instead of message
+      var successDialog = dialog();
+      successDialog.title('Informácia')
+                   .text('Successfully processed table: ' + tableName)
+                   .positiveButton('OK', function() {})
+                   .show();
       showResultDialog(tableName);
     } else {
-      message('Failed to process table: ' + tableName);
+      // Use dialog instead of message
+      var failDialog = dialog();
+      failDialog.title('Upozornenie')
+                .text('Failed to process table: ' + tableName)
+                .positiveButton('OK', function() {})
+                .show();
     }
   } catch (e) {
-    message('Error processing table: ' + e.toString());
+    // Use dialog instead of message
+    var errorDialog = dialog();
+    errorDialog.title('Chyba')
+               .text('Error processing table: ' + e.toString())
+               .positiveButton('OK', function() {})
+               .show();
   }
 }
 
@@ -127,23 +192,43 @@ function processTable(tableName) {
 function processAllTables() {
   try {
     if (typeof std_FieldLister === 'undefined') {
-      message('Error: std_FieldLister module not loaded');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: std_FieldLister module not loaded')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
-    message('Processing all tables...');
+    // Use dialog instead of message
+    var processDialog = dialog();
+    processDialog.title('Informácia')
+                 .text('Processing all tables...')
+                 .positiveButton('OK', function() {})
+                 .show();
     
     // Run the field lister for all tables
     var results = std_FieldLister.processAllTables();
     
-    message('Processed ' + (results.success + results.failure) + ' tables');
-    message('Success: ' + results.success + ', Failure: ' + results.failure);
+    // Use dialog instead of message
+    var resultsDialog = dialog();
+    resultsDialog.title('Výsledky')
+                 .text('Processed ' + (results.success + results.failure) + ' tables\n' +
+                       'Success: ' + results.success + ', Failure: ' + results.failure)
+                 .positiveButton('OK', function() {})
+                 .show();
     
     if (results.success > 0) {
       showResultsListDialog();
     }
   } catch (e) {
-    message('Error processing all tables: ' + e.toString());
+    // Use dialog instead of message
+    var errorDialog = dialog();
+    errorDialog.title('Chyba')
+               .text('Error processing all tables: ' + e.toString())
+               .positiveButton('OK', function() {})
+               .show();
   }
 }
 
@@ -156,14 +241,24 @@ function showResultDialog(tableName) {
     // Get the ASISTANTO DB library
     var dbLibrary = libByName('ASISTANTO DB');
     if (!dbLibrary) {
-      message('Error: ASISTANTO DB library not found');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: ASISTANTO DB library not found')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
     // Find the entry for the table
     var entries = dbLibrary.find(tableName);
     if (!entries || entries.length === 0) {
-      message('Error: No entry found for table: ' + tableName);
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: No entry found for table: ' + tableName)
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
@@ -177,7 +272,12 @@ function showResultDialog(tableName) {
     myDialog.positiveButton('OK', function() {});
     myDialog.show();
   } catch (e) {
-    message('Error showing result dialog: ' + e.toString());
+    // Use dialog instead of message
+    var errorDialog = dialog();
+    errorDialog.title('Chyba')
+               .text('Error showing result dialog: ' + e.toString())
+               .positiveButton('OK', function() {})
+               .show();
   }
 }
 
@@ -189,14 +289,24 @@ function showResultsListDialog() {
     // Get the ASISTANTO DB library
     var dbLibrary = libByName('ASISTANTO DB');
     if (!dbLibrary) {
-      message('Error: ASISTANTO DB library not found');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Chyba')
+              .text('Error: ASISTANTO DB library not found')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
     // Get all entries
     var entries = dbLibrary.entries();
     if (!entries || entries.length === 0) {
-      message('No entries found in ASISTANTO DB');
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Upozornenie')
+              .text('No entries found in ASISTANTO DB')
+              .positiveButton('OK', function() {})
+              .show();
       return;
     }
     
@@ -221,7 +331,12 @@ function showResultsListDialog() {
     // Show dialog
     myDialog.show();
   } catch (e) {
-    message('Error showing results list dialog: ' + e.toString());
+    // Use dialog instead of message
+    var errorDialog = dialog();
+    errorDialog.title('Chyba')
+               .text('Error showing results list dialog: ' + e.toString())
+               .positiveButton('OK', function() {})
+               .show();
   }
 }
 

@@ -18,7 +18,12 @@ var std_FieldLister = {
         if (typeof std_ErrorHandler !== 'undefined') {
           std_ErrorHandler.createValidationError('Table name is required', null, 'std_FieldLister.listFields', true);
         } else {
-          message('Error: Table name is required');
+          // Use dialog instead of message
+          var myDialog = dialog();
+          myDialog.title('Chyba')
+                  .text('Error: Table name is required')
+                  .positiveButton('OK', function() {})
+                  .show();
         }
         return [];
       }
@@ -35,7 +40,12 @@ var std_FieldLister = {
         if (typeof std_ErrorHandler !== 'undefined') {
           std_ErrorHandler.createDatabaseError('Library not found: ' + tableName, 'std_FieldLister.listFields', true);
         } else {
-          message('Error: Library not found: ' + tableName);
+          // Use dialog instead of message
+          var myDialog = dialog();
+          myDialog.title('Chyba')
+                  .text('Error: Library not found: ' + tableName)
+                  .positiveButton('OK', function() {})
+                  .show();
         }
         return [];
       }
@@ -43,7 +53,13 @@ var std_FieldLister = {
       // Get all entries to analyze fields
       var entries = library.entries();
       if (!entries || entries.length === 0) {
-        message('Warning: No entries found in library: ' + tableName);
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Upozornenie')
+                .text('Warning: No entries found in library: ' + tableName)
+                .positiveButton('OK', function() {})
+                .show();
+        
         // Try to get fields from the library schema if available
         return this._getFieldsFromSchema(library);
       }
@@ -67,7 +83,12 @@ var std_FieldLister = {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createDatabaseError(e, 'std_FieldLister.listFields', true);
       } else {
-        message('Error listing fields: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error listing fields: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return [];
     }
@@ -102,7 +123,12 @@ var std_FieldLister = {
       
       return fields;
     } catch (e) {
-      message('Warning: Could not get fields from schema: ' + e.toString());
+      // Use dialog instead of message
+      var myDialog = dialog();
+      myDialog.title('Upozornenie')
+              .text('Warning: Could not get fields from schema: ' + e.toString())
+              .positiveButton('OK', function() {})
+              .show();
       return [];
     }
   },
@@ -234,7 +260,12 @@ var std_FieldLister = {
         if (typeof std_ErrorHandler !== 'undefined') {
           std_ErrorHandler.createValidationError('Table name and field list are required', null, 'std_FieldLister.saveFieldList', true);
         } else {
-          message('Error: Table name and field list are required');
+          // Use dialog instead of message
+          var myDialog = dialog();
+          myDialog.title('Chyba')
+                  .text('Error: Table name and field list are required')
+                  .positiveButton('OK', function() {})
+                  .show();
         }
         return false;
       }
@@ -251,7 +282,12 @@ var std_FieldLister = {
         if (typeof std_ErrorHandler !== 'undefined') {
           std_ErrorHandler.createDatabaseError('ASISTANTO DB library not found', 'std_FieldLister.saveFieldList', true);
         } else {
-          message('Error: ASISTANTO DB library not found');
+          // Use dialog instead of message
+          var myDialog = dialog();
+          myDialog.title('Chyba')
+                  .text('Error: ASISTANTO DB library not found')
+                  .positiveButton('OK', function() {})
+                  .show();
         }
         return false;
       }
@@ -264,7 +300,12 @@ var std_FieldLister = {
         // Update existing entry
         entry = existingEntries[0];
         entry.set('Zoznam polí', fieldList);
-        message('Updated field list for table: ' + tableName);
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Informácia')
+                .text('Updated field list for table: ' + tableName)
+                .positiveButton('OK', function() {})
+                .show();
       } else {
         // Create new entry
         var newEntry = {
@@ -279,7 +320,12 @@ var std_FieldLister = {
           entry = dbLibrary.create(newEntry);
         }
         
-        message('Created field list for table: ' + tableName);
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Informácia')
+                .text('Created field list for table: ' + tableName)
+                .positiveButton('OK', function() {})
+                .show();
       }
       
       return true;
@@ -287,7 +333,12 @@ var std_FieldLister = {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createDatabaseError(e, 'std_FieldLister.saveFieldList', true);
       } else {
-        message('Error saving field list: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error saving field list: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return false;
     }
@@ -304,12 +355,22 @@ var std_FieldLister = {
         if (typeof std_ErrorHandler !== 'undefined') {
           std_ErrorHandler.createValidationError('Table name is required', null, 'std_FieldLister.processTable', true);
         } else {
-          message('Error: Table name is required');
+          // Use dialog instead of message
+          var myDialog = dialog();
+          myDialog.title('Chyba')
+                  .text('Error: Table name is required')
+                  .positiveButton('OK', function() {})
+                  .show();
         }
         return false;
       }
       
-      message('Processing table: ' + tableName);
+      // Use dialog instead of message
+      var processDialog = dialog();
+      processDialog.title('Informácia')
+                   .text('Processing table: ' + tableName)
+                   .positiveButton('OK', function() {})
+                   .show();
       
       // List fields
       var fields = this.listFields(tableName);
@@ -321,7 +382,12 @@ var std_FieldLister = {
       var success = this.saveFieldList(tableName, fieldList);
       
       if (success) {
-        message('Successfully processed table: ' + tableName);
+        // Use dialog instead of message
+        var successDialog = dialog();
+        successDialog.title('Informácia')
+                     .text('Successfully processed table: ' + tableName)
+                     .positiveButton('OK', function() {})
+                     .show();
       }
       
       return success;
@@ -329,7 +395,12 @@ var std_FieldLister = {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createSystemError(e, 'std_FieldLister.processTable', true);
       } else {
-        message('Error processing table: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error processing table: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return false;
     }
@@ -350,7 +421,12 @@ var std_FieldLister = {
       }
       
       if (!asistantoDB) {
-        message('ASISTANTO DB library not found');
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('ASISTANTO DB library not found')
+                .positiveButton('OK', function() {})
+                .show();
         return { success: 0, failure: 0 };
       }
       
@@ -358,7 +434,12 @@ var std_FieldLister = {
       var entries = asistantoDB.entries();
       
       if (!entries || entries.length === 0) {
-        message('No tables found in ASISTANTO DB');
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Upozornenie')
+                .text('No tables found in ASISTANTO DB')
+                .positiveButton('OK', function() {})
+                .show();
         return { success: 0, failure: 0 };
       }
       
@@ -388,15 +469,25 @@ var std_FieldLister = {
         }
       }
       
-      message('Processed ' + (results.success + results.failure) + ' tables');
-      message('Success: ' + results.success + ', Failure: ' + results.failure);
+      // Use dialog instead of message
+      var resultsDialog = dialog();
+      resultsDialog.title('Výsledky')
+                   .text('Processed ' + (results.success + results.failure) + ' tables\n' +
+                         'Success: ' + results.success + ', Failure: ' + results.failure)
+                   .positiveButton('OK', function() {})
+                   .show();
       
       return results;
     } catch (e) {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createSystemError(e, 'std_FieldLister.processAllTables', true);
       } else {
-        message('Error processing all tables: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error processing all tables: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return { success: 0, failure: 0 };
     }
@@ -417,7 +508,12 @@ var std_FieldLister = {
       }
       
       if (!asistantoLib) {
-        message('ASISTANTO library not found');
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('ASISTANTO library not found')
+                .positiveButton('OK', function() {})
+                .show();
         return [];
       }
       
@@ -443,13 +539,24 @@ var std_FieldLister = {
       }
       
       if (!season) {
-        message('Warning: Could not determine current season');
+        // Use dialog instead of message
+        var warningDialog = dialog();
+        warningDialog.title('Upozornenie')
+                     .text('Warning: Could not determine current season')
+                     .positiveButton('OK', function() {})
+                     .show();
+        
         // Try to get the latest season
         var seasons = asistantoLib.entries();
         if (seasons && seasons.length > 0) {
           season = seasons[0].name;
         } else {
-          message('Error: No seasons found in ASISTANTO');
+          // Use dialog instead of message
+          var errorDialog = dialog();
+          errorDialog.title('Chyba')
+                     .text('Error: No seasons found in ASISTANTO')
+                     .positiveButton('OK', function() {})
+                     .show();
           return [];
         }
       }
@@ -457,7 +564,12 @@ var std_FieldLister = {
       // Find the season entry
       var seasonEntries = asistantoLib.find(season);
       if (!seasonEntries || seasonEntries.length === 0) {
-        message('Error: Season not found: ' + season);
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error: Season not found: ' + season)
+                .positiveButton('OK', function() {})
+                .show();
         return [];
       }
       
@@ -466,7 +578,12 @@ var std_FieldLister = {
       // Get the databases linked to this season
       var databases = seasonEntry.field('Databázy');
       if (!databases || databases.length === 0) {
-        message('No databases found for season: ' + season);
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Upozornenie')
+                .text('No databases found for season: ' + season)
+                .positiveButton('OK', function() {})
+                .show();
         return [];
       }
       
@@ -485,7 +602,12 @@ var std_FieldLister = {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createDatabaseError(e, 'std_FieldLister.getTablesFromAsistanto', true);
       } else {
-        message('Error getting tables from ASISTANTO: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error getting tables from ASISTANTO: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return [];
     }
@@ -501,7 +623,12 @@ var std_FieldLister = {
       var tableNames = this.getTablesFromAsistanto();
       
       if (!tableNames || tableNames.length === 0) {
-        message('No tables found in ASISTANTO');
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Upozornenie')
+                .text('No tables found in ASISTANTO')
+                .positiveButton('OK', function() {})
+                .show();
         return { success: 0, failure: 0 };
       }
       
@@ -535,15 +662,25 @@ var std_FieldLister = {
         }
       }
       
-      message('Processed ' + (results.success + results.failure) + ' tables');
-      message('Success: ' + results.success + ', Failure: ' + results.failure);
+      // Use dialog instead of message
+      var resultsDialog = dialog();
+      resultsDialog.title('Výsledky')
+                   .text('Processed ' + (results.success + results.failure) + ' tables\n' +
+                         'Success: ' + results.success + ', Failure: ' + results.failure)
+                   .positiveButton('OK', function() {})
+                   .show();
       
       return results;
     } catch (e) {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createSystemError(e, 'std_FieldLister.processTablesFromAsistanto', true);
       } else {
-        message('Error processing tables from ASISTANTO: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error processing tables from ASISTANTO: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return { success: 0, failure: 0 };
     }
@@ -574,7 +711,12 @@ var std_FieldLister = {
       if (typeof std_ErrorHandler !== 'undefined') {
         std_ErrorHandler.createSystemError(e, 'std_FieldLister.run', true);
       } else {
-        message('Error running field lister: ' + e.toString());
+        // Use dialog instead of message
+        var myDialog = dialog();
+        myDialog.title('Chyba')
+                .text('Error running field lister: ' + e.toString())
+                .positiveButton('OK', function() {})
+                .show();
       }
       return false;
     }
