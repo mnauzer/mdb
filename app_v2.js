@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0066',
+        version: '2.04.0067',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -697,10 +697,10 @@ const zavazky = {
 }
 
 // CENOVÉ PONUKY
-function fillEntryCP(en, isEdit){
+function fillEntryCP(entry, isEdit){
     try {
-        en = en || lib().entry();
-        en.set("Platnosť do", en.field("Dátum") + (en.field("Platnosť ponuky") * 24 * 60 * 60 * 1000));
+        let en = entry || lib().entry();
+        en.set("Platnosť do", new Date(moment(en.field("Dátum")).add(en.field("Platnosť ponuky"), "Days")));
         if (en.field("Identifikátor") == "") {
             en.set("Identifikátor", en.field("Miesto")[0].field("Klient")[0].field("Nick") + ", " + en.field("Miesto")[0].field("Lokalita"));
         }
