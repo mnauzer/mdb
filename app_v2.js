@@ -759,6 +759,7 @@ function newEntryOpen() {
         en.set(SEASON, app.season);
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
+        en.set(VIEW, VIEW_DEBUG);
     }
 }
 function newEntryBeforeSave() {
@@ -766,18 +767,20 @@ function newEntryBeforeSave() {
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
-        en.set(VIEW, VIEW_PRINT)
+        en.set(VIEW, VIEW_PRINT);
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
+        en.set(VIEW, VIEW_DEBUG);
     }
 }
 function newEntryAfterSave(){
     let en = lib().lastEntry();
     try {
         prepocitatZaznamDochadzky(en, false);
-        en.set(VIEW, VIEW_PRINT)
+        en.set(VIEW, VIEW_PRINT);
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
+        en.set(VIEW, VIEW_DEBUG);
     }
 }
 // UPDATE ENTRY TRIGGERS
