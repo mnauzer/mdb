@@ -1,8 +1,8 @@
 const app = {
     // app store
     data: {
-        name: 'ASISTANTO',
-        version: '2.04.0069',
+        name: 'ASISTANTO 2',
+        version: '2.04.0070',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -767,8 +767,8 @@ const libOpenBeforeShow = () => {
     // trigger libOpen_beforeShow
     try {
         const myDialog = dialog()
-myDialog.title("ASISTANTO")
-        .text(app.dialog.text)
+myDialog.title(app.data.name)
+        .text(app.data.version)
         .positiveButton("Pokračuj", () => { /* Handle positive button click */ })
         .positiveButton("Odísť", () => {cancel(); /* Handle positive button click */ })
         .show();
