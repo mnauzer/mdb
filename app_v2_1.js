@@ -132,12 +132,13 @@ const Helpers = {
             defaultValue = null;
         }
         try {
+            const val = ""
             // Použitie get objektu na získanie hodnoty, ak je definovaný
             if (get && typeof get[fieldName] === 'function') {
-                const val = get[fieldName](entry);
+                val = get[fieldName](entry);
             } else {
                 // Fallback na pôvodné volanie
-                const val = entry.field(fieldName);
+                val = entry.field(fieldName);
             }
                 return val !== undefined && val !== null ? val : defaultValue;
         } catch (e) {
