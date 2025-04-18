@@ -305,11 +305,19 @@ const CenovePonuky = {
 const Triggers = {
     libOpen() {
         try {
-message(app.data.name + ' v.' + app.data.version + '\n' + app.activeLib.name + ' ' + app.season);
+            message(app.data.name + ' v.' + app.data.version + '\n' + app.activeLib.name + ' ' + app.season);
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
         }
     },
+/*************  ✨ Windsurf Command ⭐  *************/
+    /**
+     * Trigger funkcia, ktorá sa spúští pri otvorení knižnice.
+     * Zobrazí dial gov dialog s informáciami o aplikácii.
+     * Ak je stlačené tlačidlo "Pokračuj", pokračuje sa s otvorením knižnice.
+     * Ak je stlačené tlačidlo "Odísť", je knižnica zatvorená.
+     */
+/*******  e504751e-5345-4676-8341-61d2661c0b1d  *******/
     libOpenBeforeShow() {
         try {
             const myDialog = dialog();
