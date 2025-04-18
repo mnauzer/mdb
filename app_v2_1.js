@@ -131,6 +131,7 @@ const Helpers = {
         if (defaultValue === undefined) {
             defaultValue = null;
         }
+        if(fieldName === undefined || fieldName === null) {fieldName = 'pole neexistuje' };
         try {
             let val;
             // Použitie get objektu na získanie hodnoty, ak je definovaný
