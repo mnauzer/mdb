@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0067',
+        version: '2.04.0068',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -383,16 +383,13 @@ const createMsgEntry = (msg) => {
         newMsg['note'] = 'generované scriptom createMsgEntry'
         errorLib.create(newMsg)
 }
-const createErrorEntry = (msg, error) => {
-        if (app.debug) {message(error)}
-        if (app.debug) {message(error.lineNumber)}
+const createErrorEntry = (error, msg) => {
         const errorLib = libByName(app.data.errors)
         const newError = new Object()
         newError['type'] = 'error'
         newError['date'] = new Date()
         newError['memento library'] = app.activeLib.name
         newError['library'] = app.libFile
-        newError['script'] = app.runningScript
         newError['text'] = error
         newError['line'] = error.lineNumber
         newError['variables'] = logAppVariableStore(msg)
@@ -714,6 +711,7 @@ function fillEntryCP(entry, isEdit){
         }
         } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
+        createErrorEntry(error, 'fillEntryCP()');
     }
 }
 // CENOVÉ PONUKY
@@ -808,6 +806,7 @@ function newEntryOpen() {
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
         en.set(VIEW, VIEW_DEBUG);
+        createErrorEntry(error, 'newEntryOpen()');
     }
 }
 function newEntryBeforeSave() {
@@ -819,6 +818,7 @@ function newEntryBeforeSave() {
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
         en.set(VIEW, VIEW_DEBUG);
+        createErrorEntry(error, 'newEntryBeforeSave()');
     }
 }
 function newEntryAfterSave(){
@@ -844,6 +844,8 @@ function newEntryAfterSave(){
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
         en.set(VIEW, VIEW_DEBUG);
+        createErrorEntry(error, 'newEntryAfterSave()');
+
     }
 }
 // UPDATE ENTRY TRIGGERS
