@@ -12,7 +12,7 @@ const app = {
         tenant: 'KRAJINKA'
     },
     dialog:{
-        text: "verzia: " + this.data.version
+        text: "verzia: 2 "
     },
     tenant: {
         name: null,
