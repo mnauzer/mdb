@@ -1,0 +1,280 @@
+Triggers
+Jump to navigationJump to search
+« Page as of 2023-08-12, editions Mobile 5.0, Desktop 2.0 »
+Wiki
+Home	About
+Wiki | Memento	Getting started
+Wiki | Memento	Indexes
+Mobile | Desktop | Scripting	Support
+Wiki | Memento
+Triggers
+A Trigger is a script that defines the processing of an entry whenever a particular kind of event takes place. Trigger scripts are written in JavaScript. When a trigger script is executed, it may perform actions like changing an existing entry, creating a new entry, executing an HTTP request, creating a file, performing data validation, etc.
+
+
+Contents
+1	Definitions
+1.1	Mode of script execution
+1.2	Scripting for creating and for updating entries
+2	Events & Phases
+2.1	Opening a library
+2.2	Creating an entry
+2.2.1	Phases
+2.2.2	Scripting considerations
+2.3	Updating an entry
+2.3.1	Phases
+2.4	Updating a field
+2.5	Linking an entry
+2.5.1	Phases
+2.6	Unlinking an entry
+2.6.1	Phases
+2.7	Deleting an entry
+2.7.1	Phases
+2.8	Opening an Entry View card
+2.8.1	Phases
+2.9	Adding an entry to Favorites
+2.9.1	Phases
+2.10	Removing an entry from Favorites
+2.10.1	Phases
+3	Security
+3.1	Permissions for scripts
+4	Creating a trigger
+4.1	Writing a Trigger Script
+4.1.1	Things to know while writing a trigger script
+5	See Also
+Definitions
+We define the following terms:
+
+Event type
+One of the following:
+Opening a library
+Creating an entry
+Updating an entry
+Updating a field
+Deleting an entry
+Linking an entry
+Unlinking an entry
+Opening an Entry Edit card
+Adding an entry to Favorites
+Removing an entry from Favorites
+Phase of an Event
+One of a predefined set of moments during entry processing for each Event type during which the user can intervene via a trigger script. See the table of events and phases below.
+The Event type and the Phase determine the trigger script(s) to be run.
+Trigger or Trigger Script
+A script that may be defined to run when an event occurs for an entry
+The trigger (Event type & Phase) and the corresponding trigger script are one-to-one.
+When referring specifically to the script, it is called the trigger script. When referring to the Event type & Phase and its listing in the trigger list, it is referred to merely as a trigger.
+Mode of script execution
+The phase in which the trigger is activated defines its mode of execution — synchronous or asynchronous.
+
+Synchronous script execution mode
+Memento suspends user interaction and then executes the script. In the case of Before... phases, there is an impending operation that will take place unless the script forestalls it by calling cancel().
+Time-consuming operations are not recommended in this mode.
+Asynchronous script execution mode
+The script runs in the background; user interaction is not suspended. Usually, asynchronous scripts are used in the last phases of the action, after any save or other operation is initiated.
+Scripting for creating and for updating entries
+If you want the same logic to be used in both your Creating scripts and your Updating scripts, it is tempting to just copy the code for one and paste it into the other, and that can be done in in most cases. If you write your Updating script first, the copy will work. If you write your Creating script first, then you may still be able to copy, but if you needed for the Creating Script to be executed Before saving, you'll need to change defaultEntry() to use entry() instead.
+
+Events & Phases
+These are the defined Event types, Phases, and their corresponding modes of execution.
+
+THE DEFINED EVENT TYPES & THEIR PHASES
+Event type	Phase	Execution mode
+Opening a library	Opening the library	synchronous
+Creating an entry	Opening an Entry Edit card	synchronous
+Before saving the entry	synchronous
+After saving the entry	asynchronous
+Updating an entry	Opening an Entry Edit card	synchronous
+Before saving the entry	synchronous
+After saving the entry	asynchronous
+Linking an entry	Before saving the entry	synchronous
+After saving the entry	asynchronous
+Unlinking an entry	Before saving the entry	synchronous
+After saving the entry	asynchronous
+Deleting an entry	Before deleting the entry	synchronous
+After deleting the entry	asynchronous
+Opening an Entry View card	Before window display	synchronous
+After window display	asynchronous
+Adding an entry to Favorites	Before the operation	synchronous
+After the operation	asynchronous
+Removing an entry from Favorites	Before the operation	synchronous
+After the operation	asynchronous
+Opening a library
+This event occurs when a library is opened before any activity is performed on the library. This event has only one phase, and it is synchronous. Therefore, the script will fully execute before any other activity takes place in the library.
+
+Creating an entry
+This event starts when a user has requested that a new entry be added to the library, normally by pressing the + button on the Entries List screen. It ends after the entry is saved to storage — or else not, depending on the processing of the entry.
+
+Phases
+This event has three phases. In sequence:
+
+1. Opening an Entry Edit card (synchronous)
+The script will be called once the Entry Edit card is open and before any data is displayed.
+Initial field values (defaults) may be set.
+2. Before saving the entry (synchronous)
+The script will be called after the user has pressed the Checkmark icon and before the entry has been saved to storage.
+The entered data may be validated; if validation fails, the save may be forestalled and control sent back to the Entry Edit card so the user may fix the errors.
+Once the data is validated, this phase is an opportunity for many other functions to be performed to get data to add to the entry to be saved.
+3. After saving the entry (asynchronous)
+The script will be called once the save of the entry has been initiated and will continue in parallel with final processing of the new entry.
+If you want to do something whenever a new entry is added, but not before the data is saved, this is the place to do it.
+Scripting considerations
+=> Say what here?
+
+Creating an entry
+Creating scripts are different from other trigger scripts in that, since the new entry is being crafted, it is not yet stored within Memento — the Entry object does not yet exist — so it needs to be handled differently.
+
+Use the method defaultEntry(), rather than entry(), to get the DefaultEntry object (the unstored template, if you will, for the eventual Entry object).
+
+Once the default entry is saved, it can be referred to by calling entry() to get the saved Entry object. So Before saving scripts use defaultEntry(), and After saving scripts use entry().
+
+Updating an entry
+This event starts when a user has requested that an existing entry be edited (updated) within the library, normally by pressing the Pencil button on the Entry View card. It ends after the entry is resaved to storage — or else not, depending on the processing of the entry.
+
+Phases
+This event has three phases. In sequence:
+
+1. Opening an Entry Edit card (synchronous)
+The script will be called once the Entry Edit card is open and before any data is displayed.
+2. Before saving the entry (synchronous)
+The script will be called after the user has pressed the Checkmark icon and before the entry has been saved to storage.
+The entered data may be validated; if validation fails, the save may be forestalled and control sent back to the Entry Edit card so the user may fix the errors.
+Once the data is validated, this phase is an opportunity for many other functions to be performed to get data to add to the entry to be saved.
+The script could be used to update some entry data based on other entry data, to keep it all coordinated.
+3. After saving the entry (asynchronous)
+The script will be called once the save of the entry has been initiated and will continue in parallel with final processing of the new entry.
+If you want to do something whenever an existing entry is updated, but not before the data is saved, this is the place to do it.
+The following 2 sections are under development.
+
+Updating a field
+TBD
+
+Linking an entry
+This event starts when a user has added a linked entry to a Link to Entry field either by selecting an existing entry from the entries list for the linked library or by pressing + (Plus) to create a new entry in the linked library. It ends after the entry is resaved to storage — or else not, depending on the processing of the entry.
+
+Phases
+This event has two phases. In sequence:
+
+1. Before saving the entry (synchronous)
+The script will be called before the entry has been saved to storage after the user has either selected an entry from the linked library or pressed the Checkmark icon after having added a new entry to the linked library from within the Link to Entry field.
+The entered data may be validated; if validation fails, the save may be forestalled and control sent back to the Entry Edit card so the user may fix the errors.
+Once the data is validated, this phase is an opportunity for many other functions to be performed to get data to add to the entry to be saved.
+The script could be used to update some entry data based on other entry data, to keep it all coordinated.
+2. After saving the entry (asynchronous)
+The script will be called once the save of the entry has been initiated and will continue in parallel with final processing of the new entry.
+If you want to do something whenever an existing entry is updated, but not before the data is saved, this is the place to do it.
+The script of this event type has access to additional functions:
+
+masterLib()
+Returns the library from which the current record was referenced.
+masterEntry()
+Returns the entry from which the current record was referenced.
+attr(name)
+Get the value of the attribute for the current reference.
+setAttr(name , value)
+Set the value of the attribute for the current reference.
+Unlinking an entry
+This event starts when a user has requested that an existing entry be edited (updated) within the library, normally by pressing the Pencil button on the Entry View card. It ends after the entry is resaved to storage — or else not, depending on the processing of the entry.
+
+Phases
+This event has two phases. In sequence:
+
+1. Before saving the entry (synchronous)
+The script will be called after the user has pressed the Checkmark icon and before the entry has been saved to storage.
+The entered data may be validated; if validation fails, the save may be forestalled and control sent back to the Entry Edit card so the user may fix the errors.
+Once the data is validated, this phase is an opportunity for many other functions to be performed to get data to add to the entry to be saved.
+The script could be used to update some entry data based on other entry data, to keep it all coordinated.
+2. After saving the entry (asynchronous)
+The script will be called once the save of the entry has been initiated and will continue in parallel with final processing of the new entry.
+If you want to do something whenever an existing entry is updated, but not before the data is saved, this is the place to do it.
+Deleting an entry
+This event starts when a user has requested that an existing entry be deleted (actually, moved to the library's Recycle Bin) within the library, normally by pressing the Trash Can button on the Entry View card. It ends after the entry is moved to the Recycle Bin — or else not, depending on the processing of the entry.
+
+Phases
+This event has two phases. In sequence:
+
+1. Before deleting the entry (synchronous)
+This script will be called after the user has requested the deletion of the entry and pressed Yes on the "Do you really want to?" card, but before taking the action.
+Since the user has at this point already confirmed that he or she really wants to delete that entry, what else needs to be done before doing the delete? And what would cause the delete to need to be forestalled? If the delete is to be forestalled, the script could call cancel() and inform the user as to why via message(), and let the user reconsider what to do.
+Mainly, help the user reconfirm that the deletion should take place, and if not, call cancel() and inform the user (via message()).
+2. After deleting the entry (asynchronous)
+This script will be called after the delete operation is initiated and will continue as that operation takes place.
+Anything you want to do whenever an entry is deleted should be done in this script.
+Opening an Entry View card
+This event starts when the user has selected an entry for view and ends after the entry had been displayed.
+
+Phases
+This event has two phases. In sequence:
+
+1. Before window display (synchronous)
+This script will be called before the entry is displayed. This provides the opportunity to alter or augment the data before it is seen by the user.
+2. After window display (asynchronous)
+This script will be called after the data display had been initiated, providing the opportunity to perform an action each time an entry had been viewed, such as logging or timestamping.
+Adding an entry to Favorites
+This event starts when the user has pressed an empty Star icon to make the current entry a Favorite and ends once it has been made a Favorite.
+
+Phases
+This event has two phases. In sequence:
+
+1. Before the operation (synchronous)
+This script is run just before the entry is made a Favorite.
+Data validation could be done; perhaps only certain entries are allowed to be Favorites.
+2. After the operation (asynchronous)
+This script is called after the entry has been made a Favorite.
+This action could be logged, for instance, or it could trigger an action on some other app.
+Removing an entry from Favorites
+This event starts when the user has pressed a filled Star icon to remove the current entry from Favorites and ends once it has been removed.
+
+Phases
+This event has two phases. In sequence:
+
+1. Before the operation (synchronous)
+This script is run just before the entry is removed from Favorites.
+Confirmation of the user's intent could go here.
+2. After the operation (asynchronous)
+This script is called after the entry has been removed from Favorites.
+This action could be logged, for instance, or it could trigger an action on some other app.
+
+
+Security
+Since the scripts have access to more actions than a user does, they require additional permissions.
+
+The user must define these permissions manually for each library.
+
+To open a card to set permissions for scripts, open the library triggers list and click the Shield icon on the toolbar. Permissions must be set separately on each device. Permissions are not synchronized between devices.
+
+Permissions for scripts
+Library permission
+determines which other libraries can be affected by the script. You can grant access to all libraries or select only certain libraries. This authorization is required for the libByName() function.
+Read permission
+grants the script read access to a file
+Write permission
+grants the script write access to a file
+Network
+grants to the script the right to execute HTTP requests
+
+
+Creating a trigger
+Each library can have a number of triggers; multiple triggers may exist for each Event type and Phase. To see the list of triggers, open the library, open the menu, and then select Triggers.
+
+To create a trigger, press the 3-dot icon in the upper-right corner of the screen to open the Action Menu; then press Triggers to open the list of existing triggers; then click +. You must then identify the Event type & Phase and write a trigger script that performs the necessary actions.
+
+Writing a Trigger Script
+Trigger scripts are in the JavaScript language. See Links to JavaScript documentation below.
+
+Event & Phase
+Make sure to understand the Event & Phase you are scripting. This will dictate a number of things, such as whether data is present already or not, whether cancel() makes sense or not, whether the user is waiting for script execution or not, and so on.
+Globals get you started
+Note the global functions in the sections below; they generally get you started by providing needed information.
+Inform the user
+Keep the user informed. For instance, if a script is running in a synchronous phase, then a call to cancel() may make sense, but the user won't know what happened and what to do next unless you provide that information, probably via message().
+Debug your script
+Of course, you can put calls to message("Your message") to help to test your script. To further assist, the log("Your message") global function can be used to send messages to a log without bothering the user about it. By default, the log is directed to the Android developer console; to have it directed instead to a file, go to Memento Settings under Debug and turn on Triggers Logs. You can set the location for the file, but by default, it will be in memento/logs. Both messages from calls to log() and system log messages, including JavaScript exceptions, go into the log.
+Permissions
+Certain functions require special permissions; read above about that. One such function is libByName(). Others include the file access and HTTP functions.
+No return
+As of release 4.0.0 of the mobile edition, the script is executed as a top-level script and not as a called function; therefore, for instance, the return statement is not appropriate in a trigger script.
+Things to know while writing a trigger script
+No implicit context
+There is no implicit context for the trigger script, as there is, for instance, in a JavaScript field. Instead, there are global functions, such as lib() and entry() that must be used to set up context for the script.
+Entry objects are clones
+The Entry object associated with the Event (the one that entry() gives you) is a clone of the actual entry object. If changes are made to this object, they will be saved if the script returns normally. However, if the script calls cancel(), this clone will be discarded upon return from the script, along with any changes that have been made.

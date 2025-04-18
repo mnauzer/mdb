@@ -1,0 +1,736 @@
+Memento JavaScript Library
+Jump to navigationJump to search
+« Page as of 2024-08-27, editions Mobile 5.5.1, Desktop 1.9.6 »
+Memento includes the capability for users to use JavaScript to accomplish complex tasks beyond the capabilities of the normal Memento user interface. Examples include JavaScript fields, Triggers, Actions, and Data Sources. The Memento JavaScript Library may be used to access Memento facilities (by all except JavaScript fields).
+
+To keep JavaScript fields both easy and safe for users, they may use only a portion of the library, and the nature of its use is simplified. Any limitations or differences related to JavaScript fields will be identified.
+
+
+Contents
+1	Libraries and Entries
+1.1	Library global functions
+1.1.1	entry()
+1.1.2	entryDefault()
+1.1.3	buildDefaultEntry()
+1.1.4	exit()
+1.1.5	lib()
+1.1.6	libByName(name)
+1.1.7	libById(id)
+1.2	Object Library
+1.2.1	Library methods
+1.2.2	Library properties
+1.3	Object Entry
+1.3.1	Entry methods
+1.3.2	Entry properties
+1.4	Object DefaultEntry
+1.4.1	DefaultEntry methods
+1.5	Library & Entry objects examples
+2	Working with files
+2.1	File global functions
+2.1.1	file(name)
+2.2	Object File
+2.2.1	File methods
+2.2.2	File properties
+2.3	Files examples
+3	SQL
+3.1	sql(query)
+3.2	Object SQL
+3.2.1	SQL methods
+3.2.2	Table and Column Naming Conventions
+4	Processing an HTTP request
+4.1	Object Http
+4.1.1	Http methods
+4.2	Object HttpResult
+4.2.1	Properties
+4.2.2	Method
+4.3	Http examples
+5	Performing email functions
+5.1	Email global functions
+5.1.1	email()
+5.2	Object Email
+5.2.1	Email global functions
+5.3	Object EmailConfig
+5.3.1	EmailConfig properties
+5.4	Email example
+6	Interaction with the system
+6.1	System global functions
+6.1.1	cancel()
+6.1.2	guid()
+6.1.3	intent(action)
+6.1.4	log(text)
+6.1.5	message(text)
+6.1.6	dialog()
+6.1.7	system()
+6.2	Object System
+6.2.1	System global functions
+6.2.2	System properties
+6.3	Object Dialog
+6.4	Object Notification
+6.5	Object Intent
+6.5.1	Intent methods
+6.6	System examples
+7	Built-in objects for certain Memento field types
+7.1	Object JSContact
+7.1.1	JSContact methods
+7.1.2	JSContact properties
+7.2	Object JSGeolocation
+7.2.1	JSGeolocation properties
+7.3	Built-in Objects examples
+8	See also
+8.1	JavaScript links
+Libraries and Entries
+Library global functions
+entry()
+Get the Entry object of the Event. For example, if the script is triggered by an Update Entry event, this method will return the entry being updated.
+This Entry object is a clone of the actual Entry object. If the entry is saved, this object will become the actual one, but if cancel() is called, this entry clone, along with any changes the script may have performed, will be discarded.
+This global function is available to all Events and Phases, with the exception of Creating an entry > Opening an Entry Edit card; for this action, use the global function entryDefault().
+Result
+Entry object — the current entry
+entryDefault()
+Get the Entry object containing the default field values for the entry not yet created. This feature is available specifically and only for the Event Creating an entry & Phase Opening an Entry Edit card.
+Result
+DefaultEntry object
+
+
+buildDefaultEntry()
+The buildDefaultEntry() method is designed to facilitate the customization of default field values during the Creating an entry or Updating an entry trigger events, specifically in the Opening an Entry Edit card phase. When used in the "Creating an entry" trigger event, the buildDefaultEntry() method applies default values for new, copied, or prefilled entries.
+Result
+DefaultEntry object
+Properties
+The buildDefaultEntry() method allows you to determine the method used by the user to create an entry. Use the following properties for this purpose:
+buildDefaultEntry().created
+Indicates a new and empty entry.
+buildDefaultEntry().duplicated
+Indicates a duplicate of an existing entry.
+buildDefaultEntry().prefilled
+Indicates the creation of an entry based on a template.
+Usage
+The typical usage pattern involves invoking the set() method on the result of buildDefaultEntry() to specify the field name and its corresponding default value.
+buildDefaultEntry().set("Field name", "Field value");
+If you want to set default values only when duplicating an entry, you can use the following example:
+if (buildDefaultEntry().duplicated) {
+  buildDefaultEntry().set("Description", "Duplicated Entry")
+}
+exit()
+Stops script execution
+lib()
+Get the library of the triggering event
+Result
+Library object — the current library
+libByName(name)
+Find the library by name. Permission to use the library is required, based on security settings.
+Argument
+The name of the library to find
+Result
+Library object — the library identified by the argument name, if found. Otherwise null.
+libById(id)
+Find the library by id. Permission to use the library is required, based on security settings. Added in MDB 5.5
+Argument
+The ID of the library to find
+Result
+Library object — the library identified by the argument id, if found. Otherwise null.
+Object Library
+This object provides access to library entries. You can work with the current library — the lib() — or any other library in the database — libByName(). This global function provides the ability to update existing entries and create new ones.
+
+Library methods
+create(values)
+Create a new entry in the library
+Argument
+values
+[1]
+Object containing the field values as its properties
+Result
+Entry object — the new entry to create in the library
+entries()
+Get all the entries of the library
+Result
+Array object containing entries (Entry objects), sorted by the time of their creation, from newest to oldest
+lastEntry()
+Get the most recently created entry in the library.
+Result
+If no entries are present, then null
+Otherwise, the Entry object
+firstEntry()
+Get the oldest entry created in the library
+Result
+If no entries are present, then null
+Otherwise, the Entry object
+fields()
+Get some of the fieldnames of the library
+Result
+Array object containing the strings, in definition order. Only the names of the fields defined in the MAIN page and not appearing within a Subheader will be returned, as of Memento release 4.13.
+find(query)
+Search field values within entries in the library matching the given query. This search is similar to searching via Memento's user interface.
+Argument
+query
+the search string
+Result
+Array object containing matching entries. Entries are sorted by the time of their creation, from newest to oldest.
+findById(id)
+Search all entries by entry ID.
+Argument
+id
+the ID string uniquely identifying the entry.
+Result
+Entry object, if found. Otherwise, null.
+findByKey(name)
+Search all entries by the entry name. The library must be set for unique entry names.
+Argument
+name
+the Entry name field value(s)
+Result
+an Entry object, if found. Otherwise, null.
+linksTo(entry)
+Get entries in the library that contain a link to the specified entry.
+
+Arguments
+entry
+An entry to search for links to it.
+Result
+Array object containing entries.
+show()
+Display the library
+Library properties
+name
+The name of the library
+title
+The name of the library
+id
+The library identifier; Added in MDB 5.5
+
+
+Object Entry
+This object holds an entry of the current library, allowing the setting of field values
+
+Entry methods
+field(name)
+Get the value of the named field
+Argument
+name
+name of the field
+Result
+The value of the field. The type of the result depends on the type of the field.
+Field Type Return Values
+Field type	JavaScript object	Examples
+Text , Hyperlink, Password, Phone, Email, Barcode, Radio buttons, Single-choice list, Calculation (string result)	String	"abc"
+Integer, Real number, Integer values, Rating, Currency, Calculation (number result)	Number	42, 42.1
+Date , DateTime, Time	Date
+Checkbox (Boolean)	Boolean	true, false
+Checkboxes, Multiple-choice list	Array of strings	["Shirts", "Pants", "Socks"]
+Image	Array of strings	["file:///storage/emulated/0/DCIM/image01.png", "file:///storage/emulated/0/DCIM/image02.png"]
+Link to entry	Array of entries
+Each array element has a method field() for access to values of fields of entries of the linked library. Example:
+field("localField")[i].field("remoteField")	[e1, e2, e3, ...]
+link(name, entry)
+Add a link — to a Link to Entry field in the current library — to an entry in the related library.
+Arguments
+name
+Name of the Link to Entry field to which to add the link
+entry
+Entry in the field's related library to which to link
+
+
+images(name)
+The images(name) method is designed to facilitate easy retrieval and manipulation of images associated with a specified field in the entry.
+Arguments
+name
+Name of the Image field
+Return Value
+An array of objects, each representing an image associated with the specified field.
+caption
+Get or set the caption for the image.
+uri
+Retrieve the URI (link) of the image.
+recalc()
+Recalculate values of entry fields.
+trash()
+Moves an entry into the trash.
+untrash()
+Moves an entry out of the trash.
+set(name, value)
+Set the value of the named field. Calling this method results in immediate writing of the value to the library.
+Note: In the case where the field to be set is a Link To Entry field, the second argument should be the entry name of the entry to link to. If there are, in that library, multiple fields set as the entry name, the entry name for the set() method is formed by separating the value of those fields by a comma (,) — not a comma and a space, but only a comma.
+Arguments
+name
+name of the field
+value
+the value of the field
+For Multiple-choice List and Checkboxes fields, an array of strings supplies the values.
+For Link to Entry fields, an array of of strings — each of which may be a comma-separated list of field names — supplies the entry names of entries to which to link.
+For Link to File fields, an array of path names identifies the files to which to link.
+show()
+Display the entry
+unlink(name, entry)
+Remove a link — from a Link to Entry field in the current library — to an entry in the related library.
+Arguments
+name
+Name of the Link to Entry field from which to remove the link
+entry
+Entry in the field's related library identifying the link to be removed
+Entry properties
+author
+the id of the user who created the entry
+creationTime
+date & time the entry was created
+deleted
+true, if the entry is deleted (it is in the Recycle Bin)
+description
+entry description
+favorites
+true, if the entry is in Favorites
+id
+entry identifier
+lastModifiedTime
+date & time the entry was last modified
+name
+entry name
+title
+entry name
+
+
+Object DefaultEntry
+Template with default values for a new entry. This feature is available specifically and only for the Event Creating an entry & Phase Opening an Entry Edit card.
+
+DefaultEntry methods
+set(name, value)
+Set the value of the field
+Arguments
+name
+the name of the field
+value
+the value of the field
+
+
+Library & Entry objects examples
+See Trigger Examples#Libraries examples.
+
+
+
+Working with files
+With scripts, you can read or write files located in the device's internal memory or on the SD card. All file operations are performed by the File object, which is obtained via a global function called file().
+
+To work with the files, the library should have read/write file access. Also, in the Android app, select a folder that your script will have access to. You can configure this folder in the script permission dialog.
+
+File global functions
+file(name)
+Open a file for read or write operations. If the file with the specified name does not exist yet, it will be created.
+
+Argument
+name
+The name of the file in the chosen folder is accessible to scripts. In the Desktop app, you must specify the full file path.
+Result
+File object
+
+
+Object File
+This object is returned by the global function file() and provides access to the requested file. After reading or writing, the file should be closed using the method close().
+
+File methods
+close()
+Close the file. It can subsequently be reopened.
+getLineNumber()
+Get the current line number
+Returns
+The line number, or position, in the file
+readAll()
+Reads all lines of the file, and then closes the file
+Returns
+Array containing the lines of the file
+readChar()
+Reads the next character from the file stream
+Returns
+The character
+readLine()
+Reads the next line from the file stream
+Returns
+The line
+readLines()
+Reads the remaining lines from the file stream
+Returns
+Array containing the remaining lines of the file
+write(text)
+Write string(s). Take a variable number of arguments, converts each argument to a string, and writes that string to the file stream.
+writeLine(text)
+Write strings and a newline to the file stream
+appendMode()
+Switch the file to append mode, allowing data to be added to the end of the file without overwriting existing content.
+File properties
+exists
+true — if and only if the file exists; false otherwise
+length
+The length, in bytes, of the file, or 0L if the file does not exist.
+
+
+Files examples
+See Trigger Examples#Files examples.
+
+
+
+SQL
+Memento Database provides an interface for executing SELECT SQL queries, accessible via the sql() function. By using SQL functions, you can perform complex calculations, aggregate data, and transform results directly within the app, enabling advanced data analysis and customized data presentation. Queries are executed using SQLite, so SQLite syntax should be used. For detailed information on SQLite syntax, please refer to the SQLite documentation
+
+
+To assist in developing and testing your SQL queries, Memento Database offers the SQL Explorer feature. This tool provides a user-friendly interface for executing queries, viewing results directly within the app, and even leveraging AI-generated suggestions to enhance your queries.
+
+sql(query)
+The sql() function provides an interface for executing SELECT SQL queries within Memento Database's JavaScript environment.
+Argument
+query
+A string containing the SQL SELECT query to be executed
+Result
+SQL object
+Object SQL
+The SQL object returned by the sql() function provides access to the results of the executed query and includes the following methods.
+
+SQL methods
+asObjects()
+Returns the query result as a list of JavaScript objects. Each object represents a row in the result set, where the keys (property names) correspond to the column names.
+
+let results = sql("SELECT * FROM MyLibrary").asObjects();
+// Each object in results will have keys matching the column names
+// For example: {id: "book_uuid_1", Title: "Book Title", Author: "Author Name"}
+asEntries()
+The asEntries() method allows you to execute an SQL query and returns a list of entry objects.
+
+let results = sql("SELECT * FROM MyLibrary WHERE Number > 10").asEntries();
+Important Notes
+
+ID Column Required: Your SQL query must include the id column in the SELECT statement. Entries will only be returned if the id column is specified.
+Fields in Entries: The returned entry objects will include fields specified in the query. If you use SELECT *, all fields will be included in each entry.
+Performance Tip: For better performance, specify only the fields that are needed for your script instead of using SELECT *.
+asInt()
+Returns the first column of the first row as an integer. This is useful for aggregation queries.
+
+let count = sql("SELECT COUNT(*) FROM MyLibrary").asInt();
+asDouble()
+Returns the first column of the first row as a floating-point number.
+
+let average = sql("SELECT AVG(Rating) FROM MyLibrary").asDouble();
+asString()
+Returns the first column of the first row as a string.
+
+let name = sql("SELECT Name FROM MyLibrary LIMIT 1").asString();
+Table and Column Naming Conventions
+For information on table and column naming conventions, as well as how to work with linked records, please refer to the SQL Explorer documentation
+
+Processing an HTTP request
+Scripts can send HTTP requests to Web services through their APIs. Processing for HTTP requests allows integration between Memento and the system. All file operations use the Http object, which works through global function http().
+
+HTTP requests must fulfill two requirements:
+
+Script execution must be asynchronous, so HTTP requests go in the last Phase of an Event.
+The library should have the permission Network.
+
+
+Object Http
+Interface for processing HTTP requests
+
+Http methods
+http()
+Get the Http object
+
+
+get(url)
+Execute HTTP GET request
+Argument
+url
+HTTP address, starting with http:// or https://
+Result
+HttpResult
+Object containing the result of the execution of the HTTP request
+
+
+post(url, body)
+Execute HTTP POST request
+Arguments
+url
+HTTP address, starting with http:// or https://
+body
+The text of the HTTP POST request
+Result
+HttpResult
+Object containing the result of the execution of the HTTP request
+Example
+var result = http().post("http://httpbin.org/post", "the body of the request message");
+
+
+headers(info)
+Set up header
+Argument
+
+info
+Header text
+Result
+HttpResult
+Object containing the result of the execution of the HTTP request
+Example
+var http = http();
+http.headers({"User-Agent": "My Super App"});   // Set up the header
+var result = http.get("http://httpbin.org/get");   // Do a GET
+var headerValue = result.header("etag");   // Get response header
+Object HttpResult
+Result of the execution of the HTTP request
+
+Properties
+body
+The response in text form
+code
+HTTP code of the response, if the request is successful (usually 200).
+
+
+Method
+header(tag)
+Argument
+
+tag
+???
+Http examples
+See Trigger Examples#Http examples.
+
+
+
+Performing email functions
+Email global functions
+email()
+Returns the system Email object. Methods of the Email object may be used to send email messages, among other things. See the Email object.
+Object Email
+This object provides methods related to email.
+
+Email global functions
+send()
+Send an email message based on a provided Smtp configuration object and other arguments.
+Arguments
+cfg
+The EmailConfig object to use for this email message
+to
+The email address to which to send the email message
+subject
+Text for the "Subject:" line
+message
+Body text of the email message
+Object EmailConfig
+EmailConfig properties
+host
+The SMTP server from which to base email requests
+port
+The UDP port to use for email communications
+user
+The user within the host in whose name to make email requests
+pass
+The password for the user
+from
+The email address for the email "From:" line
+Email example
+Send an email message in the background
+
+// Send email example
+// You must use the Object to specify SMTP configuration:
+//   SMTP server host, port, username, password, email address
+
+var cfg = {"host" : "smtp.example.com" , "port":25, 
+"user":"username" , "pass":"password" , "from":"username@example.com"};
+email().send(cfg , "to@email.com" , "Subject" , "Text");
+Interaction with the system
+System global functions
+cancel()
+Stop the system operation that caused the event. Many triggers can be a result of an entry manipulation (create, update, delete, etc). The cancel() function can be used during the phases that precede the system operation. For example, this function can be used during data validation before the entry is saved.
+guid()
+Generates random text identifier
+Result
+Random string identifier
+intent(action)
+Create an information exchange object — Intent. This function can send a request for action to another application.
+This function is available only on Android.
+Argument
+action
+Line that defines standard action (eg, view, pick)
+Result
+Intent object — Information exchange object
+After the object is received, the data will be added to it, and then sent via send().
+Android has many built-in actions. A list of these actions can be found here.
+log(text)
+Write a line to the log file
+Argument
+text
+text to be written to the log
+message(text)
+Shows the user a brief notification
+Argument
+text
+Text of the notification
+dialog()
+Create a builder for constructing and displaying a dialog
+Result
+Dialog object
+system()
+Obtain information about the system
+Result
+System object
+
+
+Object System
+This object contains information about the system.
+
+System global functions
+exit()
+End script execution
+System properties
+os
+Name of the operating system executing the script
+
+
+Object Dialog
+The Dialog object provides a set of methods to configure and customize the appearance and behavior of the dialog.
+
+Usage
+
+To use the Dialog object, instantiate it using dialog() method and then chain the available methods to configure the dialog as needed. Finally, call the show() method to display the constructed dialog to the user.
+
+const myDialog = dialog()
+myDialog.title("Hello")
+        .text("Welcome to our application.")
+        .positiveButton("OK", () => { /* Handle positive button click */ })
+        .show();
+Methods
+
+title(string)
+Sets the title of the dialog. Accepts a string parameter that represents the title to be displayed.
+text(string)
+Sets the main text content of the dialog. Accepts a string parameter that represents the primary message or content of the dialog.
+view(ui object)
+Sets a custom view for the dialog. Accepts a UI object that represents the custom view to be displayed within the dialog.
+positiveButton(text, function())
+Configures the positive button of the dialog. Accepts two parameters: the text to be displayed on the button and the function to be executed when the button is clicked.
+negativeButton(text, function())
+Configures the negative button of the dialog. Accepts two parameters: the text to be displayed on the button and the function to be executed when the button is clicked.
+neutralButton(text, function())
+Configures the neutral button of the dialog. Accepts two parameters: the text to be displayed on the button and the function to be executed when the button is clicked.
+autoDismiss(bool)
+Sets whether the dialog should automatically dismiss when a button is clicked. Accepts a boolean parameter. If autoDismiss is set to false, the dialog will only close when a button function returns true.
+show()
+Displays the configured dialog to the user.
+
+
+Object Notification
+The Notification object is used to create and display notifications on Android and iOS devices.
+
+Usage
+
+To use the Notification object, instantiate it using notification() method and then chain the available methods to configure the notification as needed. Finally, call the show() method to display the constructed notification to the user.
+
+notification()
+  .id(int)              // Sets the ID of the notification. (Optional)
+  .title(string)        // Sets the notification title.
+  .text(string)         // Sets the main text.
+  .bigText(string)      // Sets the expanded text. (Optional)
+  .smallIcon(iconCode)  // Sets the small icon. (Optional)
+  .largeIcon(iconCode or imageURL)  // Sets the large icon. (Optional)
+  .alertOnce()          // Ensures the notification alerts only once. (Optional)
+  .show();              // Displays the notification.
+Methods
+
+id(int)
+Sets the ID of the notification. This is optional but useful if you need to manage or update the notification later. If a notification with the same ID already exists, it will be replaced with the new one.
+title(string)
+Sets the title of the notification. This is a mandatory field.
+text(string)
+Sets the main text of the notification. This is a mandatory field.
+bigText(string)
+Sets the expanded text that appears when the notification is expanded. This is optional.
+smallIcon(iconCode)
+Sets the small icon for the notification. This is optional and can be specified using an icon code.
+largeIcon(iconCode or imageURL)
+Sets the large icon for the notification. This is optional and can be specified using an icon code or an image URL. You can also use the value of an image field as the argument for the icon.
+alertOnce()
+Ensures that the notification alerts only once. This is optional and prevents the notification from making sound or vibrating multiple times if it is updated.
+show()
+Displays the notification. This method should be called last to show the configured notification.
+
+
+
+
+Object Intent
+Information exchange object. This object is created by using the global function intent().
+
+Intent methods
+data(uri)
+Define URI to reference the data
+Argument
+uri
+URI referencing data to which the action will be applied. It can be contact ID, path to the file, phone number, etc.
+extra(key, value)
+Define additional data as key-value pairs, as necessary for execution of the required action. Similar to how URI data can be required for certain actions, other actions may require extra data in this format.
+Arguments
+key
+key for additional data item
+value
+value of additional data item
+extraLong(key, value)
+Define additional data as key-value pairs, where data type needs to be Long
+Arguments
+key
+key for additional data item
+value
+value of additional data item
+mimeType(mime)
+Define MIME type of the data
+Argument
+mime
+MIME type of the data on which the operation will be performed
+send()
+Send a message
+
+
+System examples
+See Trigger Examples#System examples.
+
+
+
+Built-in objects for certain Memento field types
+Object JSContact
+This object contains the information stored within a Contact field and provides properties and methods for use in accessing and manipulating this information.
+
+When an Entry object's field() method is called, if the Memento field type is Contact, a JSContact object is returned.
+
+If the Contact field contains multiple contacts, use hasNext and next to retrieve them.
+
+JSContact methods
+call()
+If the device is a phone, calls the primary phone number of this contact
+sendEmail(subject, message)
+Sends an email message to the primary email address of this contact, with subject subject and message message (text string)
+sendSMS(message)
+If the device is a phone, sends the provided message (text string) as an SMS message to the primary phone number of this contact
+show()
+Opens the Contacts app for this contact
+JSContact properties
+email
+The primary email address of this contact
+fullName
+The full name of this contact
+hasNext
+Returns TRUE if there is a next JSContact object, otherwise FALSE
+next
+Returns the next JSContact object, if there is one.
+phone
+The primary phone number of this contact
+
+
+Object JSGeolocation
+This object contains the information stored within a Location field and provides properties and methods for use in accessing and manipulating this information.
+
+When an Entry object's field() method is called, if the Memento field type is Location, a JSGeolocation object is returned.
+
+If the Location field contains multiple locations, use hasNext and next to retrieve them.
+
+JSGeolocation properties
+address
+Address for this Location
+hasNext
+Returns TRUE if there is a next JSGeolocation object, otherwise FALSE
+lat
+Latitude, as a Real
+lng
+Longitude, as a Real
+next
+Returns the next JSGeolocation object, if there is one.

@@ -1,0 +1,430 @@
+Trigger Examples
+Jump to navigationJump to search
+« Page as of 2021-07-01, editions Mobile 4.10.0, Desktop 1.10.1 »
+
+Contents
+1	Libraries Examples
+1.1	Data Validation
+1.2	Previous value of another field
+1.3	Beginning of the next day
+1.4	New entry in one library triggers new entry in another
+1.5	Ensuring unique non-Name field value
+1.6	TEMPORARY SECTION. PLEASE DISREGARD
+1.7	Copying the value of a Checkboxes or Multiple-choice field to another library
+1.8	Copying an entry's field values to another library
+2	Files Examples
+2.1	Writing & reading from a file
+2.2	Save an entry to a file in XML format
+3	Http Examples
+3.1	Currency Conversion
+3.2	Creating a Task in the Todoist App
+4	System Examples
+4.1	Script to open a screen for dialing a number
+4.2	Script to open app to send SMS message
+4.3	Script to insert an appointment into Google Calendar
+5	Built-in Objects Examples
+5.1	Example: Extracting components from a Contact field into separate fields
+5.2	Example: Extracting coordinates from a Location field into Real fields
+6	See Also
+Libraries Examples
+Data Validation
+Using scripts, you can check the correctness of input data and deny saving of data that fail the test. For example, perhaps a field integer values ​​are allowed only from 0 to 200.
+
+Add a Create trigger
+Set Event to Creating a new entry, Phase to Before saving the entry. It will run synchronously.
+Add an Update trigger
+Set Event to Updating an entry, Phase to Before saving the entry. It will run synchronously.
+Trigger script:
+var num = entry().field("Number"); // Get value of field Number
+if (num < 0 || num > 200) {        // Test for value matching allowable range
+ message("Wrong range");           // If value is outside range, display message
+ cancel();                         // Cancel the operation
+}
+Set default values
+If default values cannot be set using the user interface, they can be set using a script.
+
+
+Previous value of another field
+Suppose there is a library containing daily mileage of daily walks or use of a car or bicycle. Suppose the library has a StartingMileage field and a Mileage field. When an entry is created, the field StartMileage must get data from the field Mileage in the previous entry.
+
+Add a new trigger
+Set Event to Creating an entry and Phase to Open the Entry Edit card. It will run synchronously.
+Trigger script:
+var entries = lib().entries();                   // Get current library & array of its entries
+if (entries.length > 0) {                        // Check that array is not empty;
+                                                 //   otherwise exit,
+                                                 //   since there is no previous entry.
+prevMileage = entries[0].field("Mileage");       // The array is sorted newest to oldest,
+                                                 //   so newest entry in the array
+                                                 //   on top with index of 0.
+entryDefault().set("StartMileage", prevMileage); // Set value of field Mileage
+                                                 //   from the previous entry
+                                                 //   as default value for field StartMileage.
+}
+
+
+Beginning of the next day
+Suppose you need to identify the beginning of a new day in the DateTime field. (The script requires connection of the JavaScript library moment.js moment.js.)
+
+Add new trigger
+Set Event to Creating an entry and Phase to Opening an Entry Edit card. It will run synchronously.
+Trigger script:
+var m = moment().add(1,'d'); // Using the moment.js library function moment(),
+                             //   get the current time, and add 1 day
+m.hour(8).minute(0);         // Set the time to hour 8 and minute 0
+entryDefault().set("Date",
+    m.toDate().getTime());   // Use that as the default value for the field Date
+
+
+New entry in one library triggers new entry in another
+Suppose that after a new application for membership is validated, a new member should be created. We have libraries Applications & Members. After a new Applications entry is entered and before it is saved, we want to validate the application, and if it passes, we want to create a new entry in Members.
+
+Fields
+Library Applications has fields Date, Name, City, Years in city, Type.
+Library Members has fields Name & Type.
+Set library permission
+The Applications library must be permitted to access other libraries via libByName().
+Within Triggers, press the shield icon to view Permission settings.
+Add new trigger
+Add a new trigger to the Applications library.
+Set Event Creating a new entry, Phase Before saving the entry.
+(A similar trigger could be set for Event Updating an entry Phase Before saving the entry, but only if a change in a field value is to trigger the add of the new member.)
+Trigger script:
+// Get the application entry that's being saved and call it e
+//     (because you may use it a lot)
+// With that, you can readily reference fields
+//     in the new application entry about to be saved
+
+var e = entry();
+
+// If you have any checks on the values of fields the user entered,
+//     you could do them here
+// If any validations fail, call cancel() to forestall the save
+// The user remains in the Entry Edit card
+//     and will be advised the application does not pass criteria
+
+if (e.field("Years in city") <= 2) {  // Sample field validation
+    message("Application inadequate"); // You'll want more
+    cancel(); // This will abort the save, but continue the script
+}
+
+else {      // Add a new member only if application is adequate
+
+// From here on, the new application will be saved,
+//     so we must also create the new member entry
+
+// To create the new member, we need to reference Members
+
+    var members = libByName("Members"); // This requires permission (see above)
+
+// Start a new entry for Members
+
+    var newMember = new Object();
+
+// Set member fields from application data and add the new Members entry
+
+    newMember["Name"] = e.field("Name");
+    newMember["Type"] = e.field("Type");
+    members.create(newMember);
+}
+
+
+
+
+Ensuring unique non-Name field value
+The goal is to ensure that a particular field value is unique within the library.
+
+The ideal way to do this is to make the field the one and only Entry Name field and then set the Entry Name to be unique. Then, Memento will take care of ensuring this for you.
+
+To do this, go in the Library Edit screen to the MAIN tab of the library and turn on the switch "The Entry Name is unique". Then go to the FIELDS tab and ensure that your field and only that field has the role Entry Name. Do that by editing the field, and under Display Options, you'll see "Display in the list as"; the choices will include Entry Name.
+
+Now, if your library needs some other Entry Name, and you nevertheless want to ensure that a different field is unique within the library, then, yes, you'll need some code.
+
+The best way, if you're just starting to enter entries into your library, is to make sure they're unique from the outset, so from the Entries List screen, pick Triggers from the menu. Press the + (plus) button to add a trigger, set the Event to "Creating a new entry" and the Phase to "Before saving the entry".
+
+Fields
+The field in the current library — that is to be unique among the entries of the library — is myField.
+Add new trigger
+Add a new trigger to the library.
+Set Event Creating a new entry, Phase Before saving the entry.
+(A similar trigger could be set for Event Updating an entry Phase Before saving the entry — for instance, if the library already has entries in which myField may not be unique.)
+Trigger script:
+var myField = entry().field("myField");            // Value of myField
+var entries = lib().entries();                     // Array containing all entries
+
+var unique = true;                                 // Presuming, initially
+for (var ent = 0; ent < entries.length; ent++) {   // Loop through all entries
+    if (entries[ent].field("myField") === myField) // If there is ever a match,
+        unique = false;                            // Remember it
+}
+
+if (!unique) { // If not unique,
+    cancel(); // Disallow the save
+    message("myField is not unique. Try again.");  // Tell the user
+}
+
+
+
+
+TEMPORARY SECTION. PLEASE DISREGARD
+Suppose you use a Checkboxes field or a Multiple-choice field in a My Today's Activities library to represent a plan of club activities to do today — a set of activities one can select or not. Which of the items one will do on a given day will be based on standard plans one can select from an Activity Plans library via a Link to Entry field to that library.
+
+Libraries
+My Today's Activities — Contains a member's plan for the day.
+Activity Plans — Essentially a menu of available plans for activities.
+Fields
+My Today's Activities — Date and Member, a few other fields, and a Checkboxes field called Today's Plan.
+Activity Plans — A plan name, description, and a Checkboxes field Plan (identical items to Today's Plan) with the checked activities associated with the plan.
+Add new trigger
+Add two new triggers to the library.
+Set Event Creating a new entry, Phase Before saving the entry.
+var e = entry();
+var links = e.field("Std Plans").length;
+if (links > 0) { // If the member has selected a standard plan
+    var linkedEntry = e.field("Std Plans")[0];  // The first & only entry
+    var todaysPlan = e.field("Today's Plan");
+    var stdPlan = linkedEntry.field("Plan");
+    var forSet = "";
+    for (var act in stdPlan) {
+        if (forSet != "")
+            forSet += ", ";      // Comma except 1st time thru
+        forSet += stdPlan[act]; // Only items that are checked
+        }
+    e.set("Plan", forSet); // Set Today's Plan to the values in the selected standard Plan
+    }
+After the Creating/Before trigger is running correctly
+Add another trigger, this time for event Updating an existing entry and phase Before saving the entry. Then copy the previous script to the clipboard and paste it into this new trigger, so that they are identical, except for the trigger name and the event name.
+
+
+
+
+Copying the value of a Checkboxes or Multiple-choice field to another library
+Suppose you have and library with the same structure as the 1st library, and you'd like to send a clone of an entry to the web library in the trigger for saving the wet library's entry. Thisuse a Checkboxes field or a Multiple-choice field in a My Today's Activities library to represent a plan of club activities to do today — a set of activities one can select or not. Which of the items one will do on a given day will be based on standard plans one can select from an Activity Plans library via a Link to Entry field to that library.
+
+Libraries
+My Today's Activities — Contains a member's plan for the day.
+Activity Plans — Essentially a menu of available plans for activities.
+Fields
+My Today's Activities — Date and Member, a few other fields, and a Checkboxes field called Today's Plan.
+Activity Plans — A plan name, description, and a Checkboxes field Plan (identical items to Today's Plan) with the checked activities associated with the plan.
+Add new trigger
+Add two new triggers to the library.
+Set Event Creating a new entry, Phase Before saving the entry.
+var e = entry();
+var links = e.field("Std Plans").length;
+if (links > 0) { // If the member has selected a standard plan
+    var linkedEntry = e.field("Std Plans")[0];  // The first & only entry
+    var todaysPlan = e.field("Today's Plan");
+    var stdPlan = linkedEntry.field("Plan");
+    var forSet = "";
+    for (var act in stdPlan) {
+        if (forSet != "")
+            forSet += ", ";      // Comma except 1st time thru
+        forSet += stdPlan[act]; // Only items that are checked
+        }
+    e.set("Plan", forSet); // Set Today's Plan to the values in the selected standard Plan
+    }
+After the Creating/Before trigger is running correctly
+Add another trigger, this time for event Updating an existing entry and phase Before saving the entry. Then copy the previous script to the clipboard and paste it into this new trigger, so that they are identical, except for the trigger name and the event name.
+
+
+
+
+Copying an entry's field values to another library
+Suppose you use a library to hold purchase orders, and you want a subset of these to be sent to a history library for later transmission to a server database.
+
+Libraries
+The current library is used as the source library. The target library is to be called PO History. This is set as a default at the top of the script below to copy the current entry to the history library, so the default may be changed readily.
+Fields
+My Today's Activities — Date and Member, a few other fields, and a Checkboxes field called Today's Plan.
+Activity Plans — A plan name, description, and a Checkboxes field Plan (identical items to Today's Plan) with the checked activities associated with the plan.
+Add new trigger
+Add two new triggers to the library.
+Set Event Creating a new entry, Phase Before saving the entry.
+//Field names to copy to another lib
+const fields=["Field1","Filed2"];
+
+// Get current entry
+let ent = entry();
+
+//Create empty object
+let newLogEntry = new Object();
+
+//Get another library name and create new entry
+let logs = libByName("anotherLib");
+let newEntry = logs.create(newLogEntry);
+
+
+//Fill new log entry with values from state
+for (let i of fields) {
+    newEntry.set(i,ent.field(i));
+}
+Files Examples
+Writing & reading from a file
+Add trigger(s)
+This script could be a part of any phase of any event.
+Trigger script:
+f = file("myfile.txt");         // Open myfile.txt in a folder designated as accessible to scripts
+                                // If no file, it will be created
+f.writeLine("one");             // Write "one" as a line to the file
+f.writeLine("two");
+f.writeLine("three");
+f.close();                      // Close & save. Until closed,
+                                // the file is still empty
+var a = f.readLines();          // Read all lines into array a
+
+
+Save an entry to a file in XML format
+The entry includes fields: id , title , date.
+
+Add trigger(s)
+This script could be a part of any phase of any event.
+Trigger script:
+var xml = '<record id="' + entry().field("id") + '">' +  // Format XML record
+'<title>' + entry().field("title") + '</title>' +        //     from entry field values
+'<date>' + entry().field("date") + '</date>' +
+'</record>';
+f = file("/sdcard/" + entry().field("title") + ".xml");  // File name is Entry Name
+f.write(xml);                                            // Save XML data to the file
+f.close();                                               // Close the file
+
+
+
+
+Http Examples
+Currency Conversion
+Suppose the library contains two fields: PriceUSD and PriceEUR. The user will enter the value in PriceUSD and the value in Euros will appear in PriceEUR according to the current exchange rate.
+
+Add new trigger
+Set Event Create a new entry and Phase After saving the entry. It will run asynchronously.
+Trigger script:
+result = http().get("http://api.fixer.io/latest?base=USD"); // Use http://fixer.io/ for
+                                                            // conversion rate in JSON
+usdToEur = JSON.parse(result.body)["rates"]["Eur"];         // Use JavaScript object JSON
+                                                            // to parse the result
+entry().set("PriceEUR",
+    entry().field( "PriceUSD") * usdToEur );                // PriceUSD * conversion rate
+                                                            // for value for PriceEUR
+
+
+Creating a Task in the Todoist App
+Todoist — A Web service and mobile app for task management. Todoist allows task creation via API [1]. In the following example of task creation, text will be taken from the Memento library entry.
+
+Add a new trigger
+Set Event to Creating a new entry or perhaps Update an entry. Set Phase as appropriate.
+Trigger script:
+// Create a JSON command for Todoist task creation
+//     using the format described in [https://develop.todoist.com/#add-an-item].
+// This command should include a unique identifier
+//     created using the guid() global function.
+
+var commands =
+    '[{"uuid":"' + guid() + '","temp_id":"' + guid() +
+    '","type":"item_add","args":{"content":"' + entry().field("Task") + '"}}]';
+
+// Execute the HTTP request. An attribute called '''token''' is used
+//     for authorization in Todoist.
+// It is available in the Todoist Account setting.
+// Since the text of the task can include symbols
+//     not allowed in a URL request,
+//     use the standard function encodeURIComponent() to filter them out.
+result = http().get("https://todoist.com/API/v7/sync?token=15281e8e4d499dаff817af0b14112eac3176f9dc&commands=" +
+    encodeURIComponent(commands));
+
+// Show the user a message indicating successful creation of the task.
+if (result.code == 200)
+    message('Task has been successfully created");
+
+
+
+
+System Examples
+Script to open a screen for dialing a number
+Suppose a library contains a field called Phone containing a phone number.
+
+Add a new trigger
+Set Event to Opening an Entry View card, Phase to After display of the entry.
+Trigger script:
+i = intent("android.intent.action.DIAL"); // Create information exchange object Intent
+                                          // with the action of DIAL
+i.data("tel:"+entry().field("Phone"));    // The data will be the phone number obtained
+                                          // from the field Phone
+i.send();                                 // Send the message
+
+
+Script to open app to send SMS message
+The phone number will be obtained from the field Phone and the text of the message will be obtained from the fields ContactName and Notes.
+
+Add a new trigger
+Set Event to Opening an Entry View card, Phase After display of the entry. It will run synchronously.
+Trigger script:
+msg = "Dear, " +
+    entry().field("ContactName") +
+    "\n" + entry().field("Notes");          // Form the message from ContactName & Notes
+i = intent("android.intent.action.SENDTO"); // Create intent object to open the app for sending
+i.data("smsto:"+entry().field("Phone"));    // Provide the phone number in format smsto:number
+i.extra("sms_body" , msg);                  // Insert the text of the message to sms_body
+i.send();                                   // Send the message
+
+
+Script to insert an appointment into Google Calendar
+Suppose a library contains the time and name of an appointment.
+
+Add a new trigger
+Set Event to Creating a new entry, Phase to Before saving the entry. It will run synchronously.
+Trigger script:
+i = intent("android.intent.action.INSERT");       // Create Intent object
+i.data("content://com.android.calendar/events");  // Data contains Google Calendar URI
+i.extra("title", entry().field("Title"));         // Get event name from field Title
+i.extra("description",
+    entry().field("Description"));                // Get description from field Description
+i.extraLong("beginTime",
+    entry().field("Begin").getTime());            // Get start time from field Begin
+                                                  // Begin is of type DateTime
+                                                  // Additional parameter is of type Long,
+                                                  // so extraLong() is used for conversion.
+i.extraLong("endTime",
+    entry().field("End").getTime());              // Get end time from the field End
+                                                  // Requires same conversion as above
+i.send();                                         // Send the message
+
+
+
+
+Built-in Objects Examples
+Example: Extracting components from a Contact field into separate fields
+Suppose you have a Contact field called myContact. If you would like the name, primary phone, and primary email as separate fields, create the fields, maybe ContactFullname, ContactPrimaryPhone, and ContactPrimaryEmail. The create two triggers, as follows:
+
+CreateBefore
+Event: Creating a new entry
+Phase: Before saving the entry
+Script: As follows
+var e = entry();
+var contact = e.field("myContact");
+
+e.set("ContactFullname", contact.fullName);
+e.set("ContactPrimaryPhone", contact.phone);
+e.set("ContactPrimaryEmail", contact.email);
+
+
+UpdateBefore
+Event: Updating an existing entry
+The rest the same as above.
+Now, every time you create a new entry or update an existing one, the contact information will be extracted to separate fields.
+
+Example: Extracting coordinates from a Location field into Real fields
+Suppose you have a Location field called myLocation. If you would like the coordinates as Real fields, create the Real fields, maybe LocationLatitude and LocationLongitude. The create two triggers, as follows:
+
+CreateBefore
+Event: Creating a new entry
+Phase: Before saving the entry
+Script: As follows
+var e = entry();
+var loc = e.field("myLocation");
+
+e.set("LocationLatitude", loc.lat);
+e.set("LocationLongitude", loc.lng);
+UpdateBefore
+Event: Updating an existing entry
+The rest the same as above.
+Now, every time you create a new entry or update an existing one, the coordinates for myLocation will be extracted to the Real fields.

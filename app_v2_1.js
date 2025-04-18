@@ -582,7 +582,241 @@ const Triggers = {
     },
     linkEntryBeforeSave() {
         const enD = entryDefault();
-        const mEn = masterEntry();
+        const mEn = maste// Refaktorovaný súbor app_v2_1.js s aplikovanými vylepšeniami a zachovaním funkčnosti pôvodného app_v2.js
+
+// Konfigurácia tabuliek, polí a sekcií pre lepšiu údržbu
+const CONFIG = {
+    data: {
+        name: 'ASISTANTO 2',
+        version: '2.04.0091',
+        app: 'ASISTANTO',
+        db: 'ASISTANTO DB',
+        errors: 'ASISTANTO Errors',
+        tenants: 'ASISTANTO Tenants',
+        scripts: 'ASISTANTO Scripts',
+        todo: 'ASISTANTO ToDo',
+        tenant: 'KRAJINKA'
+    },
+    libraries: {
+        errors: 'ASISTANTO Errors',
+        tenants: 'ASISTANTO Tenants',
+        app: 'ASISTANTO',
+        cpDiely: 'CP Diely',
+        cenovePonuky: 'Cenové ponuky v2',
+        sklad: 'Sklad',
+        cennikPrac: 'Cenník prác',
+        zavazky: 'Záväzky',
+        employees: 'Zamestnanci',
+        attendance: 'Dochádzka'
+    },
+    sections: {
+        material: 'Materiál',
+        prace: 'Práce',
+        ostatne: 'Ostatné',
+        stroje: 'Stroje',
+        doprava: 'Doprava'
+    },
+    fields: {
+        cenaCelkom: 'Cena celkom',
+        pocetHodin: 'Počítanie hodinových sadzieb',
+        zlavaNaSadzby: 'Počítať zľavy na sadzby',
+        typCenovejPonuky: 'Typ cenovej ponuky',
+        platnostPonuky: 'Platnosť ponuky',
+        platnostDo: 'Platnosť do',
+        identif: 'Identifikátor',
+        popisCenovejPonuky: 'Popis cenovej ponuky',
+        dielCenovejPonuky: 'Diel cenovej ponuky',
+        miestoRealizacie: 'Miesto realizácie',
+        klient: 'Klient',
+        uctovanieDopravy: 'Účtovanie dopravy',
+        nick: 'Nick',
+        lokalita: 'Lokalita'
+    },
+    colors: {
+        firebrick: '#B22222',
+        chartreuse: '#7FFF00',
+        mediumAquamarine: '#66CDAA',
+        marengo: '#4C5866',
+        mediumGray: '#BEBEBE',
+        nickel: '#727472',
+        stoneGray: '#928E85',
+        outerSpace: '#414A4C',
+        porcelain: '#FFFEFC',
+        white: '#FFFFFF',
+        chiffon: '#FBFAF2',
+        bone: '#E7DECC',
+        acousticWhite: '#EFECE1',
+        aircraftWhite: '#EDF2F8',
+        ceramic: '#FCFFF9',
+        brightWhite: '#F4F5F0',
+        brilliantWhite: '#EDF1FE'
+    }
+};
+
+// Globálny stav aplikácie
+const app = {
+    data: CONFIG.data,
+    tenant: {
+        name: null,
+        street: null,
+        city: null,
+        psc: null,
+        ico: null,
+        dic: null,
+        platca_dph: null
+    },
+    msg: null,
+    runningScript: null,
+    libFile: 'app_v2_1.js',
+    activeLib: {
+        name: null,
+        db: null,
+        ID: null,
+        prefix: null,
+        lastNum: null,
+        nextNum: null,
+        reservedNum: null,
+        removedNums: [],
+        isPrefix: null,
+        trim: null,
+        trailingDigit: null,
+        number: null,
+        lib: null,
+        entries: null,
+        en: null,
+        enD: null
+    },
+    season: null,
+    log: false,
+    debug: false,
+    dph: {
+        zakladna: null,
+        znizena: null
+    }
+};
+
+// Cache knižníc pre optimalizáciu
+const LibraryCache = {
+    _cache: {},
+    get(libName) {
+        if (!this._cache[libName]) {
+            this._cache[libName] = libByName(libName);
+        }
+        return this._cache[libName];
+    },
+    clear() {
+        this._cache = {};
+    }
+};
+
+// Pomocné funkcie pre bezpečný prístup k poliam a nastaveniam
+const Helpers = {
+    getField(entry, fieldName, defaultValue) {
+        if (defaultValue === undefined) {
+            defaultValue = null;
+        }
+        if(fieldName === undefined || fieldName === null) {fieldName = 'pole neexistuje' };
+        try {
+            let val;
+            // Použitie get objektu na získanie hodnoty, ak je definovaný
+            if (get && typeof get[fieldName] === 'function') {
+                val = get[fieldName](entry);
+            } else {
+                // Fallback na pôvodné volanie
+                val = entry.field(fieldName);
+            }
+            return val !== undefined && val !== null ? val : defaultValue;
+        } catch (e) {
+            if (app.log) message('Chyba pri čítaní poľa ' + fieldName + ': ' + e);
+            Logger.createError(e, 'Helpers.getField()');
+            return defaultValue;
+        }
+    },
+    setField(entry, fieldName, value) {
+        try {
+            // Použitie set objektu na nastavenie hodnoty, ak je definovaný
+            if (set && typeof set[fieldName] === 'function') {
+                set[fieldName](entry, value);
+                return;
+            }
+            // Fallback na pôvodné volanie
+            entry.set(fieldName, value);
+        } catch (e) {
+            if (app.log) message('Chyba pri zápise poľa ' + fieldName + ': ' + e);
+            Logger.createError(e, 'Helpers.setField()');
+        }
+    },
+    roundTimeToQuarter(time) {
+        const date = new Date(time);
+        date.setMilliseconds(0);
+        date.setSeconds(0);
+        const minutes = date.getMinutes();
+        const roundedMinutes = Math.round(minutes / 15) * 15;
+        date.setMinutes(roundedMinutes);
+        return date;
+    },
+    calculateWorkHours(start, end) {
+        return (end - start) / 3600000; // milisekundy na hodiny
+    },
+    padNumber(number, length) {
+        let str = '' + number;
+        while (str.length < length) {
+            str = '0' + str;
+        }
+        return str;
+    },
+    filterByDate(entries, maxDate, dateField) {
+        try {
+            const filtered = entries.filter(en => {
+                const d = en.field(dateField);
+                return d && d.getTime() <= maxDate.getTime();
+            });
+            filtered.sort((a, b) => b.field(dateField).getTime() - a.field(dateField).getTime());
+            return filtered;
+        } catch (e) {
+            if (app.log) message(`Chyba filterByDate: ${e}`);
+            return [];
+        }
+    }
+};
+
+// GETTERS
+const get = {
+    // app getters
+    library(libName){
+        app.activeLib.lib = lib()
+        app.activeLib.name = libName || lib().title
+        app.activeLib.entries = lib().entries()
+        app.activeLib.en = entry()
+        //app.activeLib.enD = entryDefault()
+    },
+    season(){
+        app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field('default season')
+        app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field('log')
+        app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
+    },
+    openLib(libName){  //parametre sú pre generátor chýb -- debug
+        try {
+            if(libName){
+                set.storeLib(); // keď je otvorená sekundárna knižnica ulož premenné
+            }
+            get.library(libName);
+            get.season();
+            let dbEntry = libByName(app.data.app).find(app.season)[0]; // TS: ibByName() je Memento funkcia
+            if (dbEntry !== undefined){
+                //if (app.log) {message('...openLibSeason: ' + app.season)}
+                const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.activeLib.name);
+                if (dbLib !== undefined){
+                    app.activeLib.db = dbLib[0];
+                    app.activeLib.ID = app.activeLib.db.field('ID');
+                    app.activeLib.prefix = app.activeLib.db.field('Prefix');
+                    // entry attributes
+                    app.activeLib.lastNum = app.activeLib.db.attr('posledné číslo');
+                    app.activeLib.nextNum = app.activeLib.db.attr('nasledujúce číslo');
+                    app.activeLib.reservedNum = app.activeLib.db.attr('rezervované číslo');
+                    app.activeLib.removedNums.concat(app.activeLib.db.attr('vymazané čísla'));
+                    app.activeLib.isPrefix = app.activeLib.db.attr('prefix');
+                    app.activeLib.trim = app.activerEntry();
         try {
             switch (app.activeLib.name) {
                 case 'Cenové ponuky v2':

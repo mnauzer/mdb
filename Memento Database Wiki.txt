@@ -1,0 +1,231 @@
+Main Page
+Jump to navigationJump to search
+« Page as of 2023-08-19, editions Mobile 5.0, Desktop 2.0 »
+Wiki
+Home	About
+Wiki | Memento	Getting started
+Wiki | Memento	Indexes
+Mobile | Desktop | Scripting	Support
+Wiki | Memento
+The Memento Wiki
+A user-created, user-supported base of knowledge for the Memento Database app
+Feel free to join us
+This wiki is a living document (or set of documents) and as such is always under development and is nevertheless always working; we are always doing the best we can with what we've got and making the most of it. If we know we need information, though we don't have it or haven't written it yet, it will just stop, with red links indicating pages yet to be written. You may also encounter pages that display an "UNDER DEVELOPMENT" note. We recommend you wait (from a few days to a few months, and (to be honest) occasionally a few years until the message goes away before reading, as it will likely be erroneous.
+
+While most aspects of Memento are common between the Mobile and Desktop editions, this wiki (generally) contains only information about the Mobile edition of Memento. Each page shows at the top of the page the version of the Mobile edition current as of the most recent change to the page. It also shows the version number of the Desktop edition current as of that date. Note the Help accessible within the app and from Help on the MementoDatabase.com Web site. Memento Help contains assistance for both the Mobile and Desktop editions.
+
+An index to the pages of the wiki may be accessed via the following Index in the form of a table containing links to Wiki pages grouped vertically by topic and horizontally by the columns of Overviews, Specifications, Techniques, Tips, How, & Tutorials. Use the Index & wiki links throughout the wiki to navigate around among the pages of the wiki.
+
+
+Contents
+1	Where do I start with Memento?
+2	Where do I go to learn how to use JavaScript to do more advanced things in Memento?
+3	Mobile Edition navigation index
+4	Scripting navigation index
+5	The Memento Database Desktop Edition
+5.1	Memento Database YouTube Channel
+5.2	Introduction
+5.3	Desktop Edition Welcome Page
+5.4	Main window interface
+5.5	Customizing the window interface
+6	Desktop Navigation Index
+7	Other assistance
+8	Previous, obsolete documentation (erroneous & misleading)
+Where do I start with Memento?
+To start at the beginning, read the Memento Overview.
+Read Library Overview about Memento's primary data structure.
+The Field Overview will get you started on the elements of data structure within libraries. Then, read in the Index, using Overviews as needed, and Articles, Tips, How-to, and Techniques to learn whether you need it. Use specifications to look up Memento components as needed.
+
+Where do I go to learn how to use JavaScript to do more advanced things in Memento?
+Advanced users, use the Index below to navigate in Memento.
+
+BEGINNERS IN MEMENTO JAVASCRIPT WANTING TO LEARN IT, go => HERE <= to learn.
+
+The wiki is continually under development, so stay tuned for more articles about Memento and its use.
+
+See what's new in Memento.
+
+See Whats New in the Memento Wiki.
+
+Read more about this wiki.
+
+Within Specifications (or Specs), begin with User Interface for descriptions of screens, cards, menus, buttons, dialogs, etc.
+
+Field is the best specification page for starting out with fields. Field Type is one of the most popular spec pages.
+
+
+
+Mobile Edition navigation index
+Topics	Overviews	Specs	About
+Memento Database	Memento Database Plans Features Comparison
+Memento Wiki
+Glossary
+Useful links
+Releases
+
+User Interface	How:Getting Started
+
+How:Simple To Do List
+Tutorial:Simple To Do List Enhancements
+Bill's mementos
+About:Color codes
+CaseStudy:Designing Memento databases:Photographic equipment
+
+Libraries
+& templates	Library
+Library Template
+
+Libraries List screen
+Library Edit screen
+Library Groups
+Library Protection
+
+How:Add a Library
+Fields, pages,
+& subheaders	Field
+Field Edit card
+Field Role (Display in the list as)
+Field Type
+Page
+
+Text fields
+
+Text
+Rich text (HTML)
+Phone number
+Email address
+Hyperlink
+Password
+Barcode
+Numeric fields
+
+Integer
+Integer values
+Currency
+Real number
+Rating
+Choice fields
+
+Boolean
+Single-choice list
+Radio buttons
+Multiple-choice list
+Checkboxes
+(Dynamic) List
+Calculated expression fields
+
+JavaScript
+Calculation
+Date fields
+
+Date
+DateTime
+Time fields
+
+Time
+DateTime
+Linking fields
+
+Link to entry
+Link to file
+Media fields
+
+Audio
+Image
+Signature
+Miscellaneous fields
+
+Contact
+Location
+Tags
+Special content fields
+Audio field
+Barcode field
+Contact field
+Location field
+Rich Text field
+Signature field
+Field Dependencies
+Using JavaScript in Memento
+
+Entries
+& entry lists	Entry
+Data analysis
+
+Entry View card
+Entry Edit card
+Libraries List screen
+Entries List screen
+
+How:Access a Previous Entry
+How:Slice & Dice Library Data
+
+The Memento mobile edition user interface	Screens & cards	Libraries List screen
+Library Edit screen
+Entries List screen
+Entry Edit card
+Entry View card
+File Manager card
+Attached Files card
+Charting data
+
+The Memento desktop edition user interface	The Memento desktop edition overview
+Windows & panes
+
+Linking		Calculation field
+Link To Entry field
+Link To File field
+
+Data Analysis (Slicing & dicing)
+(Sorting, grouping, filtering, aggregation, & charting)	Slicing & Dicing
+Aggregation
+
+Entries List screen
+Charting data
+
+How:Slice & Dice Library Data
+Installation
+& settings		Memento Settings
+Import, export,
+synchronization,
+backup, restore	Backup & Restore	Importing and exporting data
+Formatting Templates screen
+
+Tips:File Attachments
+Cloud, platforms,
+& collaboration	Platforms
+Cloud storage and Teamwork
+
+Cloud Library Status card
+Security	Privacy Policy
+Library Protection
+
+Products	Memento Clients
+Private Server
+Team for Business
+
+Tips:Team for Business
+Jump to the index
+
+Jump to the top
+
+
+
+Scripting navigation index
+Topics	Overviews	Specs	About
+Scripting, Calculation,
+& App Integration	Scripting	Calculation field
+JavaScript field
+Memento JavaScript Library
+Memento UI JavaScript Library
+Actions
+Data Sources
+Triggers
+Script Widgets
+
+Tasker Integration
+Trigger Examples
+How:Write scripts in JavaScript for Memento
+Tips:Using JavaScript in Memento
+
+Memento Database	Memento Database	Library fields	Memento Database Design
