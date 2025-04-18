@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0076',
+        version: '2.04.0077',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -821,12 +821,7 @@ function fillEntryDefault(en) {
                 en.set("Platnosť ponuky","10");
                 break;
             case "CP Diely":
-                let me = masterEntry()
-                if (me.length > 0){
-                    en.set("Typ cenovej ponuky",me.field("Typ cenovej ponuky"));
-                    en.set("Počítať zľavy na sadzby",me.field("Počítať zľavy na sadzby"));
-                    en.set("Účtovanie dopravy",me.field("Účtovanie dopravy"));
-                }
+
                 break;
             default:
                 break;
