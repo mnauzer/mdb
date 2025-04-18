@@ -4,7 +4,7 @@
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0085',
+        version: '2.04.0086',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -135,14 +135,14 @@ const Helpers = {
             // Použitie get objektu na získanie hodnoty, ak je definovaný
             if (get && typeof get[fieldName] === 'function') {
                 const val = get[fieldName](entry);
-                return val !== undefined && val !== null ? val : defaultValue;
+            } else {
+                // Fallback na pôvodné volanie
+                const val = entry.field(fieldName);
             }
-            // Fallback na pôvodné volanie
-            const val = entry.field(fieldName);
-            return val !== undefined && val !== null ? val : defaultValue;
+                return val !== undefined && val !== null ? val : defaultValue;
         } catch (e) {
             if (app.log) message('Chyba pri čítaní poľa ' + fieldName + ': ' + e);
-            return defaultValue;
+            Logger.createError(e, 'Helpers.getField()');
         }
     },
     setField(entry, fieldName, value) {
@@ -156,6 +156,7 @@ const Helpers = {
             entry.set(fieldName, value);
         } catch (e) {
             if (app.log) message('Chyba pri zápise poľa ' + fieldName + ': ' + e);
+            Logger.createError(e, 'Helpers.setField()');
         }
     },
     roundTimeToQuarter(time) {
