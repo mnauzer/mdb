@@ -187,7 +187,7 @@ const get = {
 }
 // SETTERS
 const set = {
-    ap(){
+    app(){
         //setAppScripts('set.app()', 'app.js' )
         try {
             this.storeLib(app.runningScript)
@@ -293,7 +293,6 @@ const set = {
         }
     },
     numberPrefix(){
-        //setAppScripts('set.numberPrefix()', 'app.js' )
         const current = app.activeLib.isPrefix
         try {
             app.activeLib.db.setAttr('prefix', !current)
@@ -308,16 +307,15 @@ const set = {
             message(error)
         }
     },
-    numbe(){
-        //setAppScripts('set.number()', 'app.js' )
+    number(){
         try {
             const lastNum = app.activeLib.nextNum;
             const nextNum = (Number(app.activeLib.nextNum) + 1);
             message('setting number ' + lastNum + '/' + nextNum + ' v activeLib.' + app.activeLib.name);
             app.activeLib.db.setAttr('posledné číslo', lastNum);
             app.activeLib.db.setAttr('nasledujúce číslo', nextNum );
-            this.storeLib(app.runningScript);
-            get.openLib(app.runningScript);
+            this.storeLib();
+            get.openLib();
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
         }
