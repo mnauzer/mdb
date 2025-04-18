@@ -12,7 +12,7 @@ const app = {
         tenant: 'KRAJINKA'
     },
     dialog:{
-        text:"" || "verzia: " + this.data.version
+        text: "verzia: " + this.data.version
     },
     tenant: {
         name: null,
@@ -154,6 +154,7 @@ const get = {
             //nullAppScripts()
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'get.openLib()');
         }
     },
     number(){
@@ -174,9 +175,10 @@ const get = {
             return newNumber
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'get.number()')
         }
     },
-    sadzbyDP(){
+    sadzbyDPH(){
         // nájdi sadzby DPH pre sezónu
         //setAppScripts('sadzbyDPH()', 'app.js' )
         try {
@@ -185,6 +187,7 @@ const get = {
             ////nullAppScripts()
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'sadzbyDPH()')
         }
     },
 }
@@ -196,7 +199,8 @@ const set = {
             this.storeLib(app.runningScript)
             //nullAppScripts()
         } catch (error) {
-            message(error)
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'set.app()')
         }
     },
     storeLib(){
@@ -770,6 +774,7 @@ myDialog.title("ASISTANTO")
         .show();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
+        createErrorEntry(error, 'libOpenBeforeShow()');
     }
 }
 const libOpenAfterShow = () => {
