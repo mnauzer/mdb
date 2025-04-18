@@ -2,8 +2,8 @@
 const COMMON_FIELDS = {
     VIEW: 'view',
     DATE: 'Dátum',
-    NUMBER: 'Číslo',
-    NUMBER_ENTRY: 'number_entry',
+    NUMBER: 'number',
+    NUMBER_ENTRY: 'Číslo',
     SEASON: 'sezóna',
     CREATED_BY: 'zapísal',
     CREATED_DATE: 'dátum zápisu'
