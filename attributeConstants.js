@@ -37,3 +37,5 @@ export const NOTES = {
     MESSAGE_ENTRY: 'generované scriptom createMsgEntry',
     ERROR_ENTRY: 'generované scriptom createErrorEntry'
 };
+//
+//

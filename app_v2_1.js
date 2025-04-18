@@ -63,7 +63,7 @@ const CONFIG = {
         typCenovejPonuky: 'Typ cenovej ponuky',
         platnostPonuky: 'Platnosť ponuky',
         platnostDo: 'Platnosť do',
-        identifikator: 'Identifikátor',
+        identif: 'Identifikátor',
         popisCenovejPonuky: 'Popis cenovej ponuky',
         dielCenovejPonuky: 'Diel cenovej ponuky',
         miestoRealizacie: 'Miesto realizácie',
@@ -280,12 +280,12 @@ const CenovePonuky = {
             const platnostPonuky = Helpers.getField(en, CONFIG.fields.platnostPonuky, 10);
             const datum = Helpers.getField(en, CONFIG.fields.datum, new Date());
             en.set(CONFIG.fields.platnostDo, new Date(moment(datum).add(platnostPonuky, 'days')));
-            if (!Helpers.getField(en, CONFIG.fields.identifikator, '')) {
+            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
                 const miesto = Helpers.getField(en, CONFIG.fields.miestoRealizacie, []);
                 if (miesto.length > 0) {
                     const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
                     if (klient.length > 0) {
-                        en.set(CONFIG.fields.identifikator, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
+                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
                     }
                 }
             }
@@ -304,12 +304,12 @@ const CenovePonuky = {
     },
     fillEntryCPDiely(en, mEn, isEdit) {
         try {
-            if (!Helpers.getField(en, CONFIG.fields.identifikator, '')) {
+            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
                 const miesto = Helpers.getField(mEn, CONFIG.fields.miestoRealizacie, []);
                 if (miesto.length > 0) {
                     const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
                     if (klient.length > 0) {
-                        en.set(CONFIG.fields.identifikator, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
+                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
                     }
                 }
             }
