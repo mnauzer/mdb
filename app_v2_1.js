@@ -4,7 +4,7 @@
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0087',
+        version: '2.04.0088',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -257,8 +257,8 @@ const get = {
                 // použi najprv vymazané čísla
             }
             const newNumber = app.activeLib.isPrefix
-            ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + padNumber(app.activeLib.nextNum, app.activeLib.trailingDigit)
-            : app.activeLib.ID + app.season.slice(app.activeLib.trim) + padNumber(app.activeLib.nextNum, app.activeLib.trailingDigit);
+            ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + Helpers.padNumber(app.activeLib.nextNum, app.activeLib.trailingDigit)
+            : app.activeLib.ID + app.season.slice(app.activeLib.trim) + Helpers.padNumber(app.activeLib.nextNum, app.activeLib.trailingDigit);
             app.activeLib.number = newNumber;
             if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.activeLib.name)}
             return newNumber
@@ -288,8 +288,7 @@ const set = {
             this.storeLib()
             //nullAppScripts()
         } catch (error) {
-            message('Chyba: ' + error + ', line:' + error.lineNumber);
-            createErrorEntry(error, 'set.app()')
+            Logger.createError(error, 'set.app()')
         }
     },
     storeLib(){
@@ -339,6 +338,7 @@ const set = {
             //nullAppScripts()
         } catch (error) {
             message(error)
+            Logger.createError(error, 'set.storeLib()')
         }
     },
     season(arg){
@@ -350,6 +350,7 @@ const set = {
             //nullAppScripts()
         } catch (error) {
             message(error)
+            Logger.createError(error, 'set.season()')
         }
     },
     log(){
@@ -368,6 +369,7 @@ const set = {
             //nullAppScripts()
         } catch (error) {
             message(error)
+            Logger.createError(error, 'set.log()')
         }
     },
     debug(){
@@ -386,6 +388,7 @@ const set = {
             //nullAppScripts()
         } catch (error) {
             message(error)
+            Logger.createError(error, 'set.debug()')
         }
     },
     numberPrefix(){
@@ -400,7 +403,8 @@ const set = {
             }
             //nullAppScripts()
         } catch (error) {
-            message(error)
+            Logger.createMsg('Chyba: ' + error + ', line:' + error.lineNumber);
+            Logger.createError(error, 'set.numberPrefix()')
         }
     },
     number(){
@@ -413,7 +417,8 @@ const set = {
             this.storeLib();
             get.openLib();
         } catch (error) {
-            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            Logger.createMsg('Chyba: ' + error + ', line:' + error.lineNumber);
+            Logger.createError(error, 'set.number()')
         }
     }
 }
