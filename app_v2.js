@@ -693,11 +693,7 @@ const zavazky = {
     }
 }
 
-const myDialog = dialog()
-myDialog.title("Hello")
-        .text("Welcome to our application.")
-        .positiveButton("OK", () => { /* Handle positive button click */ })
-        .show();
+
 
 // CENOVÉ PONUKY
 function fillEntryCP(entry, isEdit){
@@ -763,8 +759,12 @@ const libOpen = () => {
 const libOpenBeforeShow = () => {
     // trigger libOpen_beforeShow
     try {
-        message(app.data.name + ' v.' + app.data.version +
-        '\n' +  app.activeLib.name +' ' +  app.season )
+        const myDialog = dialog()
+myDialog.title("Hello")
+        .text("ASISTANTO v." + app.data.version )
+        .positiveButton("Pokračuj", () => { /* Handle positive button click */ })
+        .positiveButton("Zrušiť", () => {cancel(); /* Handle positive button click */ })
+        .show();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
