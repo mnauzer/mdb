@@ -1,5 +1,5 @@
 // Common fields used across multiple tables
-export const COMMON_FIELDS = {
+const COMMON_FIELDS = {
     VIEW: 'view',
     DATE: 'date',
     NUMBER: 'number',
@@ -10,10 +10,10 @@ export const COMMON_FIELDS = {
 };
 
 // Price Quote related fields
-export const PRICE_QUOTE_FIELDS = {
+const PRICE_QUOTE_FIELDS = {
     VALIDITY_PERIOD: 'Platnosť ponuky',
     VALID_UNTIL: 'Platnosť do',
-    IDENTIFIER: 'Identifikátor',
+    IDENTIF: 'Identifikátor',  // Zmenené z IDENTIFIER na IDENTIF
     DESCRIPTION: 'Popis cenovej ponuky',
     QUOTE_PART: 'Diel cenovej ponuky',
     LOCATION: 'Miesto realizácie',
@@ -28,7 +28,7 @@ export const PRICE_QUOTE_FIELDS = {
 };
 
 // Attendance related fields
-export const ATTENDANCE_FIELDS = {
+const ATTENDANCE_FIELDS = {
     ARRIVAL: 'Príchod',
     DEPARTURE: 'Odchod',
     LABOR_COSTS: 'Mzdové náklady',
@@ -43,7 +43,7 @@ export const ATTENDANCE_FIELDS = {
 };
 
 // Employee related fields
-export const EMPLOYEE_FIELDS = {
+const EMPLOYEE_FIELDS = {
     EMPLOYEE: 'Zamestnanec',
     RATE: 'Sadzba',
     VALID_FROM: 'Platnosť od',
@@ -56,7 +56,7 @@ export const EMPLOYEE_FIELDS = {
 };
 
 // Liability related fields
-export const LIABILITY_FIELDS = {
+const LIABILITY_FIELDS = {
     TYPE: 'Typ',
     AMOUNT: 'Suma',
     INFO: 'info',
@@ -65,7 +65,15 @@ export const LIABILITY_FIELDS = {
 };
 
 // Work record related fields
-export const WORK_RECORD_FIELDS = {
+const WORK_RECORD_FIELDS = {
     START_TIME: 'Začiatok',
     END_TIME: 'Koniec'
 };
+
+// Make constants globally available
+this.COMMON_FIELDS = COMMON_FIELDS;
+this.PRICE_QUOTE_FIELDS = PRICE_QUOTE_FIELDS;
+this.ATTENDANCE_FIELDS = ATTENDANCE_FIELDS;
+this.EMPLOYEE_FIELDS = EMPLOYEE_FIELDS;
+this.LIABILITY_FIELDS = LIABILITY_FIELDS;
+this.WORK_RECORD_FIELDS = WORK_RECORD_FIELDS;

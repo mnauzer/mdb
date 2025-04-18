@@ -1,5 +1,5 @@
 // Application configuration constants
-export const APP_CONFIG = {
+const APP_CONFIG = {
     name: 'ASISTANTO 2',
     version: '2.04.0079',
     app: 'ASISTANTO',
@@ -8,7 +8,7 @@ export const APP_CONFIG = {
 };
 
 // Section definitions
-export const SECTIONS = {
+const SECTIONS = {
     MATERIAL: 'Materiál',
     WORK: 'Práce',
     OTHER: 'Ostatné',
@@ -17,7 +17,7 @@ export const SECTIONS = {
 };
 
 // Color definitions
-export const COLORS = {
+const COLORS = {
     FIREBRICK: '#B22222',
     CHARTREUSE: '#7FFF00',
     MEDIUM_AQUAMARINE: '#66CDAA',
@@ -38,14 +38,14 @@ export const COLORS = {
 };
 
 // View states
-export const VIEW_STATES = {
+const VIEW_STATES = {
     EDIT: 'edit',
     PRINT: 'print',
     DEBUG: 'debug'
 };
 
 // Default values
-export const DEFAULTS = {
+const DEFAULTS = {
     ATTENDANCE: {
         ARRIVAL: '7:30',
         DEPARTURE: '14:30'
@@ -60,7 +60,7 @@ export const DEFAULTS = {
 };
 
 // System messages
-export const MESSAGES = {
+const MESSAGES = {
     MISSING_TIME: 'Missing time value',
     INVALID_TIMES: 'Invalid arrival/departure times',
     REQUIRES_ATTENTION: 'vyžaduje pozornosť',
@@ -68,3 +68,11 @@ export const MESSAGES = {
     AUTO_GENERATED: 'generované automaticky z dochádzky',
     WAGE_FOR_DAY: 'Mzda {0}, za deň'
 };
+
+// Make constants globally available
+this.APP_CONFIG = APP_CONFIG;
+this.SECTIONS = SECTIONS;
+this.COLORS = COLORS;
+this.VIEW_STATES = VIEW_STATES;
+this.DEFAULTS = DEFAULTS;
+this.MESSAGES = MESSAGES;
