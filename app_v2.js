@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0065',
+        version: '2.04.0066',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -696,6 +696,27 @@ const zavazky = {
     }
 }
 
+// CENOVÉ PONUKY
+function fillEntryCP(en, isEdit){
+    try {
+        en = en || lib().entry();
+        en.set("Platnosť do", en.field("Dátum") + (en.field("Platnosť ponuky") * 24 * 60 * 60 * 1000));
+        if (en.field("Identifikátor") == "") {
+            en.set("Identifikátor", en.field("Miesto")[0].field("Klient")[0].field("Nick") + ", " + en.field("Miesto")[0].field("Lokalita"));
+        }
+        if (en.field("Popis cenovej ponuky") == ""){
+            let diely = en.field("Diel cenovej ponuky");
+            let popis = "";
+            for (let i = 0; i < diely.length; i++){
+                popis = popis + diely[i].field("diel cenovej ponuky") + ", ";
+            }
+            en.set("Popis cenovej ponuky",popis);
+        }
+        } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
+// CENOVÉ PONUKY
 
 // TRIGGERS
 // TRIGGERS
@@ -803,7 +824,22 @@ function newEntryBeforeSave() {
 function newEntryAfterSave(){
     let en = lib().lastEntry();
     try {
-        prepocitatZaznamDochadzky(en, false);
+        switch (app.activeLib.name) {
+            case "Dochádzka":
+                prepocitatZaznamDochadzky(en, false);
+                break;
+            case "Evidencia prác":
+                break;
+            case "Pokladňa":
+                break;
+            case "Kniha jázd":
+                break;
+            case "Cenové ponuky v2":
+                fillEntryCP(en, false);
+                break;
+            default:
+                break;
+        }
         en.set(VIEW, VIEW_PRINT);
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
