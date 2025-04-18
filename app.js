@@ -150,7 +150,7 @@ const get = {
                 if (app.log) {message('...nie je vytvorené záznam pre sezónu ' + app.season)}
             }
             set.storeDb(app.runningScript)
-            nullAppScripts;()
+            //nullAppScripts();
         } catch (error) {
             message(error)
         }

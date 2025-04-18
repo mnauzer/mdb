@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0059',
+        version: '2.04.0060',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -456,42 +456,6 @@ function calculateTimeFromString(string) {
     const stringInMillis = time.getTime();
     return stringInMillis;
 }
-
-function kombinujDatumACas(date, time) {
-    // Získanie dátumovej časti z prvého dátumového údaja
-    const rok = date.getFullYear();
-    const mesiac = date.getMonth();
-    const den = date.getDate();
-
-    // Získanie časovej časti z druhého dátumového údaja
-    const hodiny = time.getHours();
-    const minuty = time.getMinutes();
-    const sekundy = time.getSeconds();
-    const milisekundy = time.getMilliseconds();
-
-    // Vytvorenie nového dátumového objektu s kombinovanými časťami
-    const kombinovanyDatum = new Date(rok, mesiac, den, hodiny, minuty, sekundy, milisekundy);
-
-    return kombinovanyDatum;
-}
-
-// Príklad použitia (predpokladáme, že máš dva dátumové objekty)
-// const datum1 = new Date("2025-04-20T10:00:00Z"); // Dátum, z ktorého chceme len dátum
-// const datum2 = new Date("2025-04-17T14:30:45Z"); // Dátum, z ktorého chceme len čas
-
-// const vyslednyDatum = kombinujDatumACas(datum1, datum2);
-// log("Pôvodný dátum 1: " + datum1);
-// log("Pôvodný dátum 2: " + datum2);
-// log("Kombinovaný dátum: " + vyslednyDatum);
-// message("Kombinovaný dátum: " + vyslednyDatum);
-
-// Ak pracuješ s poľami v Memento Database, môžeš použiť:
-// var datumZaznamu1 = entry().field("DatumPole1"); // Predpokladajme, že pole je dátumového typu
-// var casZaznamu2 = entry().field("DatumPole2"); // Predpokladajme, že pole je dátumového typu
-// var vyslednyDatumZPolia = kombinujDatumACas(datumZaznamu1, casZaznamu2);
-// entry().set("KombinovaneDatumPole", vyslednyDatumZPolia);
-// lib().save(entry());
-
 function calculateWorkHoursFromField() {
     const startTimeString = "07:30";
     const [hours, minutes] = startTimeString.split(":").map(Number);
@@ -502,39 +466,10 @@ function calculateWorkHoursFromField() {
     startDate.setMilliseconds(0);
     const startTimeInMillis = startDate.getTime();
     return startTimeInMillis; // Vráti čas v milisekundách od 1. januára 1970
-    //const endTimeInMillis = entry().field("KoniecPraceMillis"); // Získanie hodnoty z poľa "KoniecPraceMillis"
-//    const endTimeInMillis = entry().field("KoniecPraceMillis"); // Získanie hodnoty z poľa "KoniecPraceMillis"
-
-//     if (endTimeInMillis) {
-//         return (endTimeInMillis - startTimeInMillis) / 3600000;
-//     } else {
-//         return "Čas ukončenia nie je zadaný";
-//     }
 }
 function vypisCelyDatumovyUdaj(nazovDatumovehoPola) {
-  var datumovyUdaj = entry().field(nazovDatumovehoPola);
-
-  if (datumovyUdaj instanceof Date) {
-    log("Celý dátumový údaj z poľa '" + nazovDatumovehoPola + "': " + datumovyUdaj);
-    message("Celý dátumový údaj: " + datumovyUdaj);
-  } else {
-    log("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátumový údaj.");
-    message("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátum.");
-  }
+    var datumovyUdaj = entry().field(nazovDatumovehoPola);
 }
-function vypisCelyDatumovyUdaj(nazovDatumovehoPola) {
-  var datumovyUdaj = entry().field(nazovDatumovehoPola);
-
-  if (datumovyUdaj instanceof Date) {
-    log("Celý dátumový údaj z poľa '" + nazovDatumovehoPola + "': " + datumovyUdaj);
-    message("Celý dátumový údaj: " + datumovyUdaj);
-  } else {
-    log("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátumový údaj.");
-    message("Pole '" + nazovDatumovehoPola + "' neobsahuje platný dátum.");
-  }
-}
-
-calculateWorkHoursFromField(); // Toto by bol výraz v JavaScriptovom poli
 function registrujZavazky(employee, en, attr, isEdit){
     message("Registrujem záväzky");
     // ak sú staré záväzky, najprv vymaž
@@ -586,11 +521,6 @@ function prepocitatZaznamDochadzky(en, isEdit){
         // Validate and process time entries
         const prichod = validateAndRoundTime(en.field("Príchod"));
         const odchod = validateAndRoundTime(en.field("Odchod"));
-
-        vypisCelyDatumovyUdaj("Príchod");
-        vypisCelyDatumovyUdaj("Odchod");
-        vypisCelyDatumovyUdaj("Dátum");
-
 
         if (!prichod || !odchod || getTime(prichod) >= getTime(odchod)) {
             message('Invalid arrival/departure times, Príchod: ' + prichod + ', Odchod: ' + odchod);
@@ -801,7 +731,24 @@ function newEntry () {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
-function newEntryBeforeSave () {
+function newEntryOpen() {
+    get.openLib();
+    message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
+    let en = entryDefault();
+    try {
+        //buildDefaultEntry().set("Príchod", calculateTimeFromString('7:30'));
+        en.set(VIEW, VIEW_EDIT);
+        en.set('Príchod', calculateTimeFromString('7:30') );
+        en.set('Odchod', calculateTimeFromString('14:30') );
+        en.set(DATE, new Date());
+        en.set(CR, user());
+        en.set(CR_DATE, new Date());
+        en.set(SEASON, app.season);
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
+function newEntryBeforeSave() {
     let en = entryDefault();
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
