@@ -879,7 +879,7 @@ function newEntryAfterSave(){
                 fillEntryCP(en, false);
                 break;
             case "CP Diely":
-                fillEntryDielyCP(en, false);
+                fillEntryCPDiely(en, false);
             default:
                 break;
         }
