@@ -768,7 +768,7 @@ const libOpenBeforeShow = () => {
         const myDialog = dialog()
 myDialog.title(app.data.name)
         .text(app.data.version)
-        .view(ui().text('Hello, world!'))
+        //.view(ui().text('Hello, world!'))
         .neutralButton("Neutral", () => {cancel(); /* Handle positive button click */ })
         .negativeButton("Odísť", () => {cancel(); /* Handle positive button click */ })
         .positiveButton("Pokračuj", () => { /* Handle positive button click */ })
