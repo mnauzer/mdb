@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0064',
+        version: '2.04.0065',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -728,6 +728,32 @@ const libOpenAfterShow = () => {
 }
 
 // NEW ENTRY TRIGGERS
+function fillEntryDefault(en) {
+    try {
+        switch (app.activeLib.name) {
+            case "Dochádzka":
+                en.set("Príchod","7:30");
+                en.set("Odchod","14:30");
+                break;
+            case "Evidencia prác":
+                en.set("Začiatok","8:00");
+                en.set("Koniec","14:00");
+                break;
+            case "Pokladňa":
+                break;
+            case "Kniha jázd":
+                break;
+            case "Cenové ponuky v2":
+                en.set("Platnosť ponuky","10");
+                break;
+            default:
+                break;
+        }
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+        en.set(VIEW, VIEW_DEBUG);
+    }
+}
 function newEntry () {
     //get.openLib(app.runningScript);
     get.openLib();
@@ -757,6 +783,7 @@ function newEntryOpen() {
         en.set(CR, user());
         en.set(CR_DATE, new Date());
         en.set(SEASON, app.season);
+        fillEntryDefault(en);
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
         en.set(VIEW, VIEW_DEBUG);
