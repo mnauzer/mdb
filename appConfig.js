@@ -1,7 +1,7 @@
 // Application configuration constants
 const APP_CONFIG = {
     name: 'ASISTANTO 2',
-    version: '2.04.0080
+    version: '2.04.0080',
     app: 'ASISTANTO',
     db: 'ASISTANTO DB',
     tenant: 'KRAJINKA'
