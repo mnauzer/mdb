@@ -120,7 +120,7 @@ const get = {
     openLib(libName){  //parametre sú pre generátor chýb -- debug
         try {
             if(libName){
-                set.storeDb(app.runningScript); // keď je otvorená sekundárna knižnica ulož premenné
+                set.storeLib(); // keď je otvorená sekundárna knižnica ulož premenné
             }
             get.library(libName);
             get.season();
@@ -148,7 +148,7 @@ const get = {
             } else {
                 if (app.log) {message('...nie je vytvorené záznam pre sezónu ' + app.season)}
             }
-            set.storeDb(app.runningScript)
+            set.storeLib()
             //nullAppScripts()
         } catch (error) {
             message(error)
@@ -191,13 +191,13 @@ const set = {
     app(initScript){
         //setAppScripts('set.app()', 'app.js', initScript)
         try {
-            this.storeDb(app.runningScript)
+            this.storeLib(app.runningScript)
             //nullAppScripts()
         } catch (error) {
             message(error)
         }
     },
-    storeDb(){
+    storeLib(){
         try {
             // Store to ASISTANTO Tenants
             const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
@@ -317,7 +317,7 @@ const set = {
             message('setting number ' + lastNum + '/' + nextNum + ' v activeLib.' + app.activeLib.name);
             app.activeLib.db.setAttr('posledné číslo', lastNum);
             app.activeLib.db.setAttr('nasledujúce číslo', nextNum );
-            this.storeDb(app.runningScript);
+            this.storeLib(app.runningScript);
             get.openLib(app.runningScript);
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
@@ -647,7 +647,7 @@ function newEntryZavazky(employee, en, attrs) {
         zavazky.create(newEntry);
         app.activeLib.lastNum = app.activeLib.nextNum;
         app.activeLib.nextNum = (app.activeLib.nextNum) + 1;
-        set.storeDb();
+        set.storeLib();
         return true;
         // kontrola vytvorenia záznamu
     } catch (error) {
