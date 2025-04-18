@@ -122,7 +122,10 @@ const LibraryCache = {
 
 // Pomocné funkcie pre bezpečný prístup k poliam a nastaveniam
 const Helpers = {
-    getField(entry, fieldName, defaultValue = null) {
+    getField(entry, fieldName, defaultValue) {
+        if (defaultValue === undefined) {
+            defaultValue = null;
+        }
         try {
             const val = entry.field(fieldName);
             return val !== undefined && val !== null ? val : defaultValue;
