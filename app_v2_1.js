@@ -4,7 +4,7 @@
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0084',
+        version: '2.04.0085',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -109,6 +109,7 @@ const app = {
         znizena: null
     }
 };
+
 // Cache knižníc pre optimalizáciu
 const LibraryCache = {
     _cache: {},
@@ -247,65 +248,6 @@ const Logger = {
     }
 };
 
-// Funkcie pre spracovanie cenových ponúk a dielov
-const CenovePonuky = {
-    fillEntryCP(en, isEdit) {
-        try {
-            const platnostPonuky = Helpers.getField(en, CONFIG.fields.platnostPonuky, 10);
-            const datum = Helpers.getField(en, CONFIG.fields.datum, new Date());
-            en.set(CONFIG.fields.platnostDo, new Date(moment(datum).add(platnostPonuky, 'days')));
-            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
-                const miesto = Helpers.getField(en, CONFIG.fields.miestoRealizacie, []);
-                if (miesto.length > 0) {
-                    const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
-                    if (klient.length > 0) {
-                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
-                    }
-                }
-            }
-            if (!Helpers.getField(en, CONFIG.fields.popisCenovejPonuky, '')) {
-                const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
-                let popis = '';
-                for (let i = 0; i < diely.length; i++) {
-                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
-                }
-                en.set(CONFIG.fields.popisCenovejPonuky, popis);
-            }
-        } catch (error) {
-            message('Chyba: ' + error + ', line: ' + error.lineNumber);
-            Logger.createError(error, 'CenovePonuky.fillEntryCP');
-        }
-    },
-    fillEntryCPDiely(en, mEn, isEdit) {
-        try {
-            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
-                const miesto = Helpers.getField(mEn, CONFIG.fields.miestoRealizacie, []);
-                if (miesto.length > 0) {
-                    const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
-                    if (klient.length > 0) {
-                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
-                    }
-                }
-            }
-            if (!Helpers.getField(en, CONFIG.fields.popisCenovejPonuky, '')) {
-                const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
-                let popis = '';
-                for (let i = 0; i < diely.length; i++) {
-                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
-                }
-                en.set(CONFIG.fields.popisCenovejPonuky, popis);
-            }
-            if (mEn.length > 0) {
-                en.set(CONFIG.fields.typCenovejPonuky, mEn.field(CONFIG.fields.typCenovejPonuky));
-                en.set(CONFIG.fields.zlavaNaSadzby, mEn.field(CONFIG.fields.zlavaNaSadzby));
-                en.set(CONFIG.fields.uctovanieDopravy, mEn.field(CONFIG.fields.uctovanieDopravy));
-            }
-        } catch (error) {
-            message('Chyba: ' + error + ', line: ' + error.lineNumber);
-            Logger.createError(error, 'CenovePonuky.fillEntryCPDiely');
-        }
-    }
-};
 // Trigger funkcie
 const Triggers = {
     libOpen() {
@@ -313,6 +255,7 @@ const Triggers = {
             message(app.data.name + ' v.' + app.data.version + '\n' + app.activeLib.name + ' ' + app.season);
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
+            Logger.createError(error, 'Triggers.libOpen');
         }
     },
     createEntryOpen() {
@@ -405,6 +348,66 @@ const Triggers = {
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'Triggers.linkEntryBeforeSave');
+        }
+    }
+};
+
+// Funkcie pre spracovanie cenových ponúk a dielov
+const CenovePonuky = {
+    fillEntryCP(en, isEdit) {
+        try {
+            const platnostPonuky = Helpers.getField(en, CONFIG.fields.platnostPonuky, 10);
+            const datum = Helpers.getField(en, CONFIG.fields.datum, new Date());
+            en.set(CONFIG.fields.platnostDo, new Date(moment(datum).add(platnostPonuky, 'days')));
+            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
+                const miesto = Helpers.getField(en, CONFIG.fields.miestoRealizacie, []);
+                if (miesto.length > 0) {
+                    const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
+                    if (klient.length > 0) {
+                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
+                    }
+                }
+            }
+            if (!Helpers.getField(en, CONFIG.fields.popisCenovejPonuky, '')) {
+                const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
+                let popis = '';
+                for (let i = 0; i < diely.length; i++) {
+                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
+                }
+                en.set(CONFIG.fields.popisCenovejPonuky, popis);
+            }
+        } catch (error) {
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+            Logger.createError(error, 'CenovePonuky.fillEntryCP');
+        }
+    },
+    fillEntryCPDiely(en, mEn, isEdit) {
+        try {
+            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
+                const miesto = Helpers.getField(mEn, CONFIG.fields.miestoRealizacie, []);
+                if (miesto.length > 0) {
+                    const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
+                    if (klient.length > 0) {
+                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
+                    }
+                }
+            }
+            if (!Helpers.getField(en, CONFIG.fields.popisCenovejPonuky, '')) {
+                const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
+                let popis = '';
+                for (let i = 0; i < diely.length; i++) {
+                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
+                }
+                en.set(CONFIG.fields.popisCenovejPonuky, popis);
+            }
+            if (mEn.length > 0) {
+                en.set(CONFIG.fields.typCenovejPonuky, mEn.field(CONFIG.fields.typCenovejPonuky));
+                en.set(CONFIG.fields.zlavaNaSadzby, mEn.field(CONFIG.fields.zlavaNaSadzby));
+                en.set(CONFIG.fields.uctovanieDopravy, mEn.field(CONFIG.fields.uctovanieDopravy));
+            }
+        } catch (error) {
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+            Logger.createError(error, 'CenovePonuky.fillEntryCPDiely');
         }
     }
 };

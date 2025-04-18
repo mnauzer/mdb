@@ -39,9 +39,9 @@ const COLORS = {
 
 // View states
 const VIEW_STATES = {
-    EDIT: 'edit',
-    PRINT: 'print',
-    DEBUG: 'debug'
+    EDIT: 'Editácia',
+    PRINT: 'Tlač',
+    DEBUG: 'Debug'
 };
 
 // Default values
