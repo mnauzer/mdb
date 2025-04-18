@@ -368,7 +368,7 @@ const Triggers = {
             Logger.createError(error, 'Triggers.libOpenBeforeShow');
         }
     },
-    newEntryAfterSave() {
+    createEntryAfterSave() {
         const en = lib().lastEntry();
         try {
             switch (app.activeLib.name) {
