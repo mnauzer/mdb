@@ -1,12 +1,12 @@
 // Common fields used across multiple tables
 const COMMON_FIELDS = {
     VIEW: 'view',
-    DATE: 'date',
-    NUMBER: 'number',
+    DATE: 'Dátum',
+    NUMBER: 'Číslo',
     NUMBER_ENTRY: 'number_entry',
-    SEASON: 'season',
-    CREATED_BY: 'cr',
-    CREATED_DATE: 'cr_date'
+    SEASON: 'sezóna',
+    CREATED_BY: 'zapísal',
+    CREATED_DATE: 'dátum zápisu'
 };
 
 // Price Quote related fields
