@@ -4,7 +4,7 @@
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0089',
+        version: '2.04.0090',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -539,7 +539,7 @@ const Triggers = {
             Logger.createError(error, 'Triggers.createEntryOpen');
         }
     },
-    libOpenBeforeShow() {
+    libOpenBeforeShow() { // Otvorenie knižnice pred zobrazením
         try {
             const myDialog = dialog();
             myDialog.title(app.data.name + ' >>> ' + app.activeLib.name + ' >>> ' + app.season)
@@ -570,6 +570,8 @@ const Triggers = {
                 default:
                     break;
             }
+            app.activeLib.lastNum = app.activeLib.nextNum;
+            app.activeLib.nextNum++;
             en.set(COMMON_FIELDS.VIEW, VIEW_STATES.PRINT);
         } catch (error) {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
@@ -599,7 +601,7 @@ const Triggers = {
 
 // Funkcie pre spracovanie cenových ponúk a dielov
 const CenovePonuky = {
-    fillEntryCP(en, isEdit) {
+    fillEntryCP(en){
         try {
             const platnostPonuky = Helpers.getField(en, CONFIG.fields.platnostPonuky, 10);
             const datum = Helpers.getField(en, CONFIG.fields.datum, new Date());
@@ -626,7 +628,7 @@ const CenovePonuky = {
             Logger.createError(error, 'CenovePonuky.fillEntryCP');
         }
     },
-    fillEntryCPDiely(en, mEn, isEdit) {
+    fillEntryCPDiely(en, mEn) {
         try {
             if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
                 const miesto = Helpers.getField(mEn, CONFIG.fields.miestoRealizacie, []);
@@ -651,7 +653,7 @@ const CenovePonuky = {
                 en.set(CONFIG.fields.uctovanieDopravy, mEn.field(CONFIG.fields.uctovanieDopravy));
             }
         } catch (error) {
-            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+            Logger.createMsg('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'CenovePonuky.fillEntryCPDiely');
         }
     }
