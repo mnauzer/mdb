@@ -1,5 +1,5 @@
 // Table/Library definitions used in Memento Database
-export const TABLES = {
+const TABLES = {
     LIABILITIES: 'Záväzky',
     EMPLOYEE_RATES: 'Sadzby zamestnancov',
     ATTENDANCE: 'Dochádzka',
@@ -12,9 +12,13 @@ export const TABLES = {
 };
 
 // System tables
-export const SYSTEM_TABLES = {
+const SYSTEM_TABLES = {
     ERRORS: 'ASISTANTO Errors',
     TENANTS: 'ASISTANTO Tenants',
     SCRIPTS: 'ASISTANTO Scripts',
     TODO: 'ASISTANTO ToDo'
 };
+
+// Make constants globally available
+this.TABLES = TABLES;
+this.SYSTEM_TABLES = SYSTEM_TABLES;
