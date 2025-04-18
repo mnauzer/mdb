@@ -132,7 +132,7 @@ const Helpers = {
             defaultValue = null;
         }
         try {
-            const val = ""
+            let val;
             // Použitie get objektu na získanie hodnoty, ak je definovaný
             if (get && typeof get[fieldName] === 'function') {
                 val = get[fieldName](entry);
@@ -140,10 +140,11 @@ const Helpers = {
                 // Fallback na pôvodné volanie
                 val = entry.field(fieldName);
             }
-                return val !== undefined && val !== null ? val : defaultValue;
+            return val !== undefined && val !== null ? val : defaultValue;
         } catch (e) {
             if (app.log) message('Chyba pri čítaní poľa ' + fieldName + ': ' + e);
             Logger.createError(e, 'Helpers.getField()');
+            return defaultValue;
         }
     },
     setField(entry, fieldName, value) {
