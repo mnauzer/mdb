@@ -95,7 +95,17 @@ var std_ErrorHandler = {
     var prefix = severity === this.SEVERITY.ERROR ? 'Chyba: ' : 
                  severity === this.SEVERITY.WARNING ? 'Upozornenie: ' : 'Info: ';
     
-    message(prefix + error.toString());
+    var title = severity === this.SEVERITY.ERROR ? 'Chyba' : 
+                severity === this.SEVERITY.WARNING ? 'Upozornenie' : 'Informácia';
+    
+    var errorMessage = prefix + error.toString();
+    
+    // Use dialog instead of message
+    var myDialog = dialog();
+    myDialog.title(title)
+            .text(errorMessage)
+            .positiveButton('OK', function() {})
+            .show();
   },
   
   /**
