@@ -317,7 +317,7 @@ const Triggers = {
     },
     createEntryOpen() {
         try {
-            get.openLib();
+            lib();
             message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
             const en = entryDefault();
 
@@ -517,7 +517,7 @@ const Dochadzka = {
     },
     newEntryZavazky(employee, en, attrs) {
         try {
-            get.openLib(TABLES.ZAVAZKY);
+            lib(TABLES.ZAVAZKY);
             const popis = MESSAGES.WAGE_FOR_DAY.replace('{0}', employee.name);
             const zavazky = libByName(TABLES.ZAVAZKY);
             const newEntry = {};
@@ -536,7 +536,7 @@ const Dochadzka = {
             zavazky.create(newEntry);
             app.activeLib.lastNum = app.activeLib.nextNum;
             app.activeLib.nextNum += 1;
-            set.storeLib();
+            storeLib();
             return true;
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
