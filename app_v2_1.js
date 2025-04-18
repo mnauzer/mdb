@@ -542,9 +542,9 @@ const Triggers = {
     libOpenBeforeShow() {
         try {
             const myDialog = dialog();
-            myDialog.title(app.data.name)
+            myDialog.title(app.data.name + ' >>> ' + app.activeLib.name + ' >>> ' + app.season)
                 .text(app.data.version)
-                .neutralButton("Neutral", () => { cancel(); })
+                //.neutralButton("Neutral", () => { cancel(); })
                 .negativeButton("Odísť", () => { cancel(); })
                 .positiveButton("Pokračuj", () => { })
                 .autoDismiss(true)
