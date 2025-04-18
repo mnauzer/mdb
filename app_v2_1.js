@@ -4,7 +4,7 @@
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0088',
+        version: '2.04.0089',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -565,7 +565,7 @@ const Triggers = {
                     CenovePonuky.fillEntryCP(en, false);
                     break;
                 case 'CP Diely':
-                    CenovePonuky.fillEntryCPDiely(en, masterEntry(), false);
+                    CenovePonuky.fillEntryCPDiely(en, false);
                     break;
                 default:
                     break;
@@ -583,7 +583,9 @@ const Triggers = {
         try {
             switch (app.activeLib.name) {
                 case 'Cenové ponuky v2':
-                    CenovePonuky.fillEntryCPDiely(en, mEn, false);
+                    break;
+                case 'CP Diely':
+                    CenovePonuky.fillEntryCPDiely(en, false);
                     break;
                 default:
                     break;
@@ -620,7 +622,7 @@ const CenovePonuky = {
                 en.set(CONFIG.fields.popisCenovejPonuky, popis);
             }
         } catch (error) {
-            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+            Logger.createMsg('Chyba: ' + error + ', line: ' + error.lineNumber);
             Logger.createError(error, 'CenovePonuky.fillEntryCP');
         }
     },
