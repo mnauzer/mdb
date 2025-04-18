@@ -11,6 +11,9 @@ const app = {
         todo: 'ASISTANTO ToDo',
         tenant: 'KRAJINKA'
     },
+    dialog:{
+        text:"" || "verzia: " + this.data.version
+    },
     tenant: {
         name: null,
         street: null,
@@ -761,7 +764,7 @@ const libOpenBeforeShow = () => {
     try {
         const myDialog = dialog()
 myDialog.title("ASISTANTO")
-        .text("verzia v." + app.data.version )
+        .text(app.dialog.text)
         .positiveButton("Pokračuj", () => { /* Handle positive button click */ })
         .positiveButton("Odísť", () => {cancel(); /* Handle positive button click */ })
         .show();
