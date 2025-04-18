@@ -4,7 +4,7 @@
 const CONFIG = {
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0079',
+        version: '2.04.0082',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -549,10 +549,10 @@ const Dochadzka = {
 
 // Zamestnanci - Employees related functions
 const Zamestnanci = {
-    sadzba(employee, date) {
+    sadzba(employee, dateParam) {
         try {
             const links = employee.linksFrom(TABLES.SADZBY_ZAMESTNANCOV, EMPLOYEE_FIELDS.ZAMESTNANEC);
-            const filteredLinks = Helpers.filterByDate(links, date, EMPLOYEE_FIELDS.PLATNOST_OD);
+            const filteredLinks = Helpers.filterByDate(links, dateParam, EMPLOYEE_FIELDS.PLATNOST_OD);
             if (!filteredLinks || filteredLinks.length === 0) {
                 return null;
             } else {
