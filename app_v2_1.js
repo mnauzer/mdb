@@ -22,7 +22,8 @@ const CONFIG = {
         sklad: 'Sklad',
         cennikPrac: 'Cenník prác',
         zavazky: 'Záväzky',
-        zamestnanci: 'Zamestnanci'
+        employees: 'Zamestnanci',
+        attendance: 'Dochádzka'
     },
     sections: {
         material: 'Materiál',
@@ -131,6 +132,12 @@ const Helpers = {
             defaultValue = null;
         }
         try {
+            // Použitie get objektu na získanie hodnoty, ak je definovaný
+            if (get && typeof get[fieldName] === 'function') {
+                const val = get[fieldName](entry);
+                return val !== undefined && val !== null ? val : defaultValue;
+            }
+            // Fallback na pôvodné volanie
             const val = entry.field(fieldName);
             return val !== undefined && val !== null ? val : defaultValue;
         } catch (e) {
@@ -140,6 +147,12 @@ const Helpers = {
     },
     setField(entry, fieldName, value) {
         try {
+            // Použitie set objektu na nastavenie hodnoty, ak je definovaný
+            if (set && typeof set[fieldName] === 'function') {
+                set[fieldName](entry, value);
+                return;
+            }
+            // Fallback na pôvodné volanie
             entry.set(fieldName, value);
         } catch (e) {
             if (app.log) message('Chyba pri zápise poľa ' + fieldName + ': ' + e);
@@ -178,7 +191,229 @@ const Helpers = {
         }
     }
 };
+// GETTERS
+const get = {
+    // app getters
+    library(libName){
+        app.activeLib.lib = lib()
+        app.activeLib.name = libName || lib().title
+        app.activeLib.entries = lib().entries()
+        app.activeLib.en = entry()
+        //app.activeLib.enD = entryDefault()
+    },
+    season(){
+        app.season = libByName(app.data.tenants).find(app.data.tenant)[0].field('default season')
+        app.log = libByName(app.data.tenants).find(app.data.tenant)[0].field('log')
+        app.debug = libByName(app.data.tenants).find(app.data.tenant)[0].field('debug')
+    },
+    openLib(libName){  //parametre sú pre generátor chýb -- debug
+        try {
+            if(libName){
+                set.storeLib(); // keď je otvorená sekundárna knižnica ulož premenné
+            }
+            get.library(libName);
+            get.season();
+            let dbEntry = libByName(app.data.app).find(app.season)[0]; // TS: ibByName() je Memento funkcia
+            if (dbEntry !== undefined){
+                //if (app.log) {message('...openLibSeason: ' + app.season)}
+                const dbLib = dbEntry.field('Databázy').filter(en => en.field('Názov') == app.activeLib.name);
+                if (dbLib !== undefined){
+                    app.activeLib.db = dbLib[0];
+                    app.activeLib.ID = app.activeLib.db.field('ID');
+                    app.activeLib.prefix = app.activeLib.db.field('Prefix');
+                    // entry attributes
+                    app.activeLib.lastNum = app.activeLib.db.attr('posledné číslo');
+                    app.activeLib.nextNum = app.activeLib.db.attr('nasledujúce číslo');
+                    app.activeLib.reservedNum = app.activeLib.db.attr('rezervované číslo');
+                    app.activeLib.removedNums.concat(app.activeLib.db.attr('vymazané čísla'));
+                    app.activeLib.isPrefix = app.activeLib.db.attr('prefix');
+                    app.activeLib.trim = app.activeLib.db.attr('trim');
+                    app.activeLib.trailingDigit = app.activeLib.db.attr('trailing digit');
+                    app.activeLib.number = this.number();
+                    if (app.log) {message('...openLib: ' + dbEntry.name + ' - ' + app.activeLib.db.title)}
+                } else {
+                    if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.activeLib.name + ' v sezóne  ' + app.season)}
+                }
+            } else {
+                if (app.log) {message('...nie je vytvorené záznam pre sezónu ' + app.season)}
+            }
+            set.storeLib()
+            //nullAppScripts()
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'get.openLib()');
+        }
+    },
+    number(){
+        // vyskladaj nové číslo záznamu
+        //setAppScripts('get.number()', 'app.js' );
+        try {
+            // najprv zisti či nie sú vymazané čísla
+            if (app.activeLib.removedNums > 0){
+                if (app.log) {message('...removedNums: ' + app.activeLib.removedNums)}
+                // použi najprv vymazané čísla
+            }
+            const newNumber = app.activeLib.isPrefix
+            ? app.activeLib.prefix + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit)
+            : app.activeLib.ID + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit);
+            app.activeLib.number = newNumber;
+            if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.activeLib.name)}
+            return newNumber
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'get.number()')
+        }
+    },
+    sadzbyDPH(){
+        // nájdi sadzby DPH pre sezónu
+        //setAppScripts('sadzbyDPH()', 'app.js' )
+        try {
+            app.dph.zakladna = libByName(app.data.app).find(app.season)[0].field('Základná sadzba DPH')
+            app.dph.znizena = libByName(app.data.app).find(app.season)[0].field('Znížená sadzba DPH')
+            ////nullAppScripts()
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'sadzbyDPH()')
+        }
+    },
+}
+// SETTERS
+const set = {
+    app(){
+        //setAppScripts('set.app()', 'app.js' )
+        try {
+            this.storeLib()
+            //nullAppScripts()
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            createErrorEntry(error, 'set.app()')
+        }
+    },
+    storeLib(){
+        try {
+            // Store to ASISTANTO Tenants
+            const storeDB = libByName(app.data.tenants).find(app.data.tenant)[0]
+            storeDB.set('data.name', app.data.name)
+            storeDB.set('data.version', app.data.version)
+            storeDB.set('data.app', app.data.app)
+            storeDB.set('data.db', app.data.db)
+            storeDB.set('data.errors', app.data.errors)
+            storeDB.set('data.tenants', app.data.tenants)
+            storeDB.set('data.scripts', app.data.scripts)
+            storeDB.set('data.todo', app.data.todo)
+            storeDB.set('data.tenant', app.data.tenant)
+            storeDB.set('msg', app.msg)
+            storeDB.set('runningScript', )
+            storeDB.set('libFile', app.libFile)
+            storeDB.set('season', app.season)
+            storeDB.set('log', app.log)
+            storeDB.set('debug', app.debug)
+            storeDB.set('activeLib.name', app.activeLib.name)
+            storeDB.set('activeLib.db.id', app.activeLib.db ? app.activeLib.db.id : null)
+            storeDB.set('activeLib.prefix', app.activeLib.prefix)
+            storeDB.set('activeLib.lastNum', app.activeLib.lastNum)
+            storeDB.set('activeLib.nextNum', app.activeLib.nextNum)
+            storeDB.set('activeLib.reservedNum', app.activeLib.reservedNum)
+            storeDB.set('activeLib.removedNums', app.activeLib.removedNums)
+            storeDB.set('activeLib.isPrefix', app.activeLib.isPrefix)
+            storeDB.set('activeLib.trailingDigit', app.activeLib.trailingDigit)
+            storeDB.set('activeLib.trim', app.activeLib.trim)
+            storeDB.set('activeLib.number', app.activeLib.number)
+            storeDB.set('dph.zakladna', app.dph.zakladna)
+            storeDB.set('dph.znizena', app.dph.znizena)
+            storeDB.set('en.id', app.en ? app.en.id : null)
 
+            // Store to ASISTANTO open database
+
+            // TODO: vypínam toto padá apka R 30.10.2024
+            //message("zapnutý script app.js riadok 184")
+            app.activeLib.db.setAttr('názov', app.activeLib.name)
+            app.activeLib.db.setAttr('posledné číslo', app.activeLib.lastNum)
+            app.activeLib.db.setAttr('nasledujúce číslo', app.activeLib.nextNum)
+            app.activeLib.db.setAttr('rezervované číslo', app.activeLib.reservedNum)
+            app.activeLib.db.setAttr('vymazané čísla', app.activeLib.removedNums)
+            app.activeLib.db.setAttr('vygenerované číslo', app.activeLib.number)
+            //nullAppScripts()
+        } catch (error) {
+            message(error)
+        }
+    },
+    season(arg){
+        //setAppScripts('set.season()', 'app.js')
+        try {
+            libByName(app.data.tenants).find(app.data.tenant)[0].set('default season', arg)
+            get.openLib()
+            message('Nastavená sezóna: ' + app.season)
+            //nullAppScripts()
+        } catch (error) {
+            message(error)
+        }
+    },
+    log(){
+        //setAppScripts('set.log()', 'app.js')
+        try {
+            const lib = libByName(app.data.tenants).find(app.data.tenant)[0]
+            let isLog = lib.field('log')
+            if (isLog) {
+                isLog = false
+                message('log vypnutý')
+            } else {
+                isLog = true
+                message('log zapnutý')
+            }
+            lib.set('log', isLog)
+            //nullAppScripts()
+        } catch (error) {
+            message(error)
+        }
+    },
+    debug(){
+        //setAppScripts('set.debug()', 'app.js')
+        try {
+            const lib = libByName(app.data.tenants).find(app.data.tenant)[0]
+            let isDebug = lib.field('debug')
+            if (isDebug) {
+                isDebug = false
+                message('debug vypnutý')
+            } else {
+                isDebug = true
+                message('debug zapnutý')
+            }
+            lib.set('debug', isDebug)
+            //nullAppScripts()
+        } catch (error) {
+            message(error)
+        }
+    },
+    numberPrefix(){
+        const current = app.activeLib.isPrefix
+        try {
+            app.activeLib.db.setAttr('prefix', !current)
+            initApp()
+            if (app.log) {
+                message('prefix čísla zapnutý')
+            } else {
+                message('prefix čísla vypnutý')
+            }
+            //nullAppScripts()
+        } catch (error) {
+            message(error)
+        }
+    },
+    number(){
+        try {
+            const lastNum = app.activeLib.nextNum;
+            const nextNum = (Number(app.activeLib.nextNum) + 1);
+            message('setting number ' + lastNum + '/' + nextNum + ' v activeLib.' + app.activeLib.name);
+            app.activeLib.db.setAttr('posledné číslo', lastNum);
+            app.activeLib.db.setAttr('nasledujúce číslo', nextNum );
+            this.storeLib();
+            get.openLib();
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+        }
+    }
+}
 // Logovanie a správa chýb
 const Logger = {
     createLog(msg) {
@@ -260,7 +495,7 @@ const Triggers = {
     },
     createEntryOpen() {
         try {
-            lib();
+            get.openLib();
             message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
             const en = entryDefault();
 
@@ -277,7 +512,7 @@ const Triggers = {
 
             // Set library-specific defaults
             switch (app.activeLib.name) {
-                case 'Dochádzka':
+                case CONFIG.libraries.attendance:
                     en.set(ATTENDANCE_FIELDS.PRICHOD, '7:30');
                     en.set(ATTENDANCE_FIELDS.ODCHOD, '14:30');
                     break;
