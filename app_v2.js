@@ -171,7 +171,6 @@ const get = {
             : app.activeLib.ID + app.season.slice(app.activeLib.trim) + pad(app.activeLib.nextNum, app.activeLib.trailingDigit);
             app.activeLib.number = newNumber;
             if (app.log) {message('Nové číslo: ' + newNumber + ' v knižnici ' + app.activeLib.name)}
-            //nullAppScripts();
             return newNumber
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
@@ -727,7 +726,7 @@ function fillEntryCPDiely(entry, isEdit){
         let en = entry ;
         let me = masterEntry()
         if (en.field("Identifikátor") == "") {
-            en.set("Identifikátor", en.field("Miesto")[0].field("Klient")[0].field("Nick") + ", " + en.field("Miesto")[0].field("Lokalita"));
+            en.set("Identifikátor", me.field("Miesto realizácie")[0].field("Klient")[0].field("Nick") + ", " + me.field("Miesto realizácie")[0].field("Lokalita"));
         }
         if (en.field("Popis cenovej ponuky") == ""){
             let diely = en.field("Diel cenovej ponuky");
@@ -806,6 +805,14 @@ function fillEntryDefault(en) {
             case "Cenové ponuky v2":
                 en.set("Platnosť ponuky","10");
                 break;
+            case "CP Diely":
+                let me = masterEntry()
+                if (me.length > 0){
+                    en.set("Typ cenovej ponuky",me.field("Typ cenovej ponuky"));
+                    en.set("Počítať zľavy na sadzby",me.field("Počítať zľavy na sadzby"));
+                    en.set("Účtovanie dopravy",me.field("Účtovanie dopravy"));
+                }
+                break;
             default:
                 break;
         }
@@ -854,7 +861,7 @@ function newEntryBeforeSave() {
     let en = entryDefault();
     try {
         app.activeLib.lastNum = app.activeLib.nextNum;
-        app.activeLib.nextNum = Number(app.activeLib.nextNum) + 1;
+        app.activeLib.nextNum += 1;
         en.set(VIEW, VIEW_PRINT);
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
