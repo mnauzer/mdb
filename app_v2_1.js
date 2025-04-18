@@ -580,14 +580,14 @@ const Triggers = {
         }
     },
     linkEntryBeforeSave() {
-        const en = entryDefault();
+        const enD = entryDefault();
         const mEn = masterEntry();
         try {
             switch (app.activeLib.name) {
                 case 'Cenové ponuky v2':
                     break;
                 case 'CP Diely':
-                    CenovePonuky.fillEntryCPDiely(en, false);
+                    CenovePonuky.fillEntryCPDiely(enD, mEn);
                     break;
                 default:
                     break;
@@ -630,23 +630,7 @@ const CenovePonuky = {
     },
     fillEntryCPDiely(en, mEn) {
         try {
-            if (!Helpers.getField(en, CONFIG.fields.identif, '')) {
-                const miesto = Helpers.getField(mEn, CONFIG.fields.miestoRealizacie, []);
-                if (miesto.length > 0) {
-                    const klient = Helpers.getField(miesto[0], CONFIG.fields.klient, []);
-                    if (klient.length > 0) {
-                        en.set(CONFIG.fields.identif, klient[0].field(CONFIG.fields.nick) + ', ' + miesto[0].field(CONFIG.fields.lokalita));
-                    }
-                }
-            }
-            if (!Helpers.getField(en, CONFIG.fields.popisCenovejPonuky, '')) {
-                const diely = Helpers.getField(en, CONFIG.fields.dielCenovejPonuky, []);
-                let popis = '';
-                for (let i = 0; i < diely.length; i++) {
-                    popis += diely[i].field(CONFIG.fields.dielCenovejPonuky) + ', ';
-                }
-                en.set(CONFIG.fields.popisCenovejPonuky, popis);
-            }
+
             if (mEn.length > 0) {
                 en.set(CONFIG.fields.typCenovejPonuky, mEn.field(CONFIG.fields.typCenovejPonuky));
                 en.set(CONFIG.fields.zlavaNaSadzby, mEn.field(CONFIG.fields.zlavaNaSadzby));
