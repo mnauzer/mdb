@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0070',
+        version: '2.04.0071',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -769,8 +769,11 @@ const libOpenBeforeShow = () => {
         const myDialog = dialog()
 myDialog.title(app.data.name)
         .text(app.data.version)
+        .view(ui().text('Hello, world!'))
+        .neutralButton("Neutral", () => {cancel(); /* Handle positive button click */ })
+        .negativeButton("Odísť", () => {cancel(); /* Handle positive button click */ })
         .positiveButton("Pokračuj", () => { /* Handle positive button click */ })
-        .positiveButton("Odísť", () => {cancel(); /* Handle positive button click */ })
+        .autoDismiss(true)
         .show();
     } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
