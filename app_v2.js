@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0075',
+        version: '2.04.0076',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -718,12 +718,12 @@ function fillEntryCP(en, isEdit){
         createErrorEntry(error, 'fillEntryCP()');
     }
 }
-function fillEntryCPDiely(entry, isEdit){
+function fillEntryCPDiely(entry, mEn, isEdit){
     try {
         let en = entry ;
-        let me = masterEntry()
+
         if (en.field("Identifikátor") == "") {
-            en.set("Identifikátor", me.field("Miesto realizácie")[0].field("Klient")[0].field("Nick") + ", " + me.field("Miesto realizácie")[0].field("Lokalita"));
+            en.set("Identifikátor", mEn.field("Miesto realizácie")[0].field("Klient")[0].field("Nick") + ", " + mEn.field("Miesto realizácie")[0].field("Lokalita"));
         }
         if (en.field("Popis cenovej ponuky") == ""){
             let diely = en.field("Diel cenovej ponuky");
@@ -733,7 +733,7 @@ function fillEntryCPDiely(entry, isEdit){
             }
             en.set("Popis cenovej ponuky",popis);
         }
-        if (me.length > 0){
+        if (mEn.length > 0){
             en.set("Typ cenovej ponuky",me.field("Typ cenovej ponuky"));
             en.set("Počítať zľavy na sadzby",me.field("Počítať zľavy na sadzby"));
             en.set("Účtovanie dopravy",me.field("Účtovanie dopravy"));
@@ -741,6 +741,24 @@ function fillEntryCPDiely(entry, isEdit){
         } catch (error) {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
         createErrorEntry(error, 'fillEntryCP()');
+    }
+}
+function linkEntryBeforeSave(){
+    let en = entryDefault();
+    let mEn = masterEntry();
+    try {
+        switch (app.activeLib.name) {
+            case "Dochádzka":
+                break;
+            case "Cenové ponuky v2":
+                fillEntryCPDiely(en, mEn, isEdit);
+                break;
+            default:
+                break;
+        }
+    } catch (error) {
+    message('Chyba: ' + error + ', line:' + error.lineNumber);
+    createErrorEntry(error, 'lingEntryBeforeSave()');
     }
 }
 // CENOVÉ PONUKY
