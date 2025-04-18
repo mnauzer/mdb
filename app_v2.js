@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO 2',
-        version: '2.04.0074',
+        version: '2.04.0075',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -142,7 +142,7 @@ const get = {
                     app.activeLib.isPrefix = app.activeLib.db.attr('prefix');
                     app.activeLib.trim = app.activeLib.db.attr('trim');
                     app.activeLib.trailingDigit = app.activeLib.db.attr('trailing digit');
-                    app.activeLib.number = this.number(app.runningScript);
+                    app.activeLib.number = this.number();
                     if (app.log) {message('...openLib: ' + dbEntry.name + ' - ' + app.activeLib.db.title)}
                 } else {
                     if (app.log) {message('...nie je vytvorený záznam pre knižnicu ' + app.activeLib.name + ' v sezóne  ' + app.season)}
@@ -195,7 +195,7 @@ const set = {
     app(){
         //setAppScripts('set.app()', 'app.js' )
         try {
-            this.storeLib(app.runningScript)
+            this.storeLib()
             //nullAppScripts()
         } catch (error) {
             message('Chyba: ' + error + ', line:' + error.lineNumber);
@@ -216,7 +216,7 @@ const set = {
             storeDB.set('data.todo', app.data.todo)
             storeDB.set('data.tenant', app.data.tenant)
             storeDB.set('msg', app.msg)
-            storeDB.set('runningScript', app.runningScript)
+            storeDB.set('runningScript', )
             storeDB.set('libFile', app.libFile)
             storeDB.set('season', app.season)
             storeDB.set('log', app.log)
@@ -369,7 +369,6 @@ const createLogEntry = (msg) => {
         newLog['date'] = new Date()
         newLog['memento library'] = app.activeLib.name
         newLog['library'] = app.libFile
-        newLog['script'] = app.runningScript
         newLog['text'] = 'app store variables'
         newLog['variables'] = logAppVariableStore(msg)
         newLog['note'] = 'generované scriptom createLogEntry'
@@ -383,7 +382,6 @@ const createMsgEntry = (msg) => {
         newMsg['date'] = new Date()
         newMsg['memento library'] = app.activeLib.name
         newMsg['library'] = app.libFile
-        newMsg['script'] = app.runningScript
         newMsg['text'] = msg
         newMsg['variables'] = logAppVariableStore(msg)
         newMsg['note'] = 'generované scriptom createMsgEntry'
@@ -413,7 +411,7 @@ const employees = {
             const dateField ="Platnosť od";
             let sadzba = 0;
             filteredLinks = filterByDate(links, date, dateField);
-            if (filteredLinks.length < 0) {
+            if (!filteredLinks || filteredLinks.length === 0) {
                 msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu';
                 return null;
             } else {
@@ -542,7 +540,7 @@ function prepocitatZaznamDochadzky(en, isEdit){
         if (zamestnanci.length > 0) {
             for (let z = 0; z < zamestnanci.length; z++ ) {
                 // vyhľadanie aktuálnej sadzby zamestnanca
-                //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum, app.runningScript); // prepisovať zadanú hodinovku
+                //const hodinovka = sadzbaZamestnanca(zamestnanci[z], datum); // prepisovať zadanú hodinovku
                 employeeAtt.hodinovka = employees.sadzba(zamestnanci[z], datum), // prepisovať zadanú hodinovku0,
                 employeeAtt.odpracovane = totals.pracovnaDoba,
                 employeeAtt.dennaMzda = employeeAtt.odpracovane * (employeeAtt.hodinovka
@@ -579,14 +577,13 @@ function prepocitatZaznamDochadzky(en, isEdit){
 // ZAMESTNANCI
 function sadzbaZamestnanca(employee, date){
     // vyhľadá aktuálnu sadzbu zamestnanca k dátum "date", v poli "dateField"
-    // v databáze "LIB_SZ - sadzby zamestnancov"
     try {
         // odfiltruje záznamy sadzby z vyšším dátumom ako zadaný dátum
         const links = employee.linksFrom(LIBRARY.SZ, FLD_ZAM);
         const dateField ="Platnosť od";
         let sadzba = 0;
         filteredLinks = filterByDate(links, date, dateField);
-        if (filteredLinks == undefined || filteredLinks.length < 0) {
+        if (!filteredLinks || filteredLinks.length === 0) {
             msgTxt = 'Zamestnanec nemá zaevidovanú sadzbu k tomuto dátumu';
         } else {
             sadzba = filteredLinks[0].field("Sadzba");
@@ -822,7 +819,6 @@ function fillEntryDefault(en) {
     }
 }
 function newEntry () {
-    //get.openLib(app.runningScript);
     get.openLib();
     message('Knižnica: ' + app.activeLib.name + ' /' + app.data.version + '/ ' + app.season + ' / ' + app.activeLib.nextNum);
     let en = entryDefault();
@@ -929,7 +925,7 @@ function updateEntryAfterSave(){
 // DELETE ENTRY TRIGGERS
 function removeEntryBefore(en) {
    //setAppScripts('removeEntryBefore()', 'triggers.js');
-    get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    get.openLib(); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         const rmNum  = [];
         if (app.log) {message("BF...removing entry: " + en.field(NUMBER_ENTRY))}
@@ -954,7 +950,7 @@ function removeEntryBefore(en) {
 }
 function removeEntryAfter(en) {
     //setAppScripts('removeEntryAfter()', 'triggers.js');
-    get.openLib(app.runningScript); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
+    get.openLib(); //TODO: asi musí byt inicializované po každom novom načítaní knižnice app.js do trigger scriptu
     try {
         //if (app.log) {message("AF...removing entry: " + en.field(NUMBER_ENTRY))}
         switch (app.activeLib.name) {
