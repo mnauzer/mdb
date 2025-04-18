@@ -310,14 +310,6 @@ const Triggers = {
             message('Chyba: ' + error + ', line: ' + error.lineNumber);
         }
     },
-/*************  ✨ Windsurf Command ⭐  *************/
-    /**
-     * Trigger funkcia, ktorá sa spúští pri otvorení knižnice.
-     * Zobrazí dial gov dialog s informáciami o aplikácii.
-     * Ak je stlačené tlačidlo "Pokračuj", pokračuje sa s otvorením knižnice.
-     * Ak je stlačené tlačidlo "Odísť", je knižnica zatvorená.
-     */
-/*******  e504751e-5345-4676-8341-61d2661c0b1d  *******/
     libOpenBeforeShow() {
         try {
             const myDialog = dialog();
@@ -382,3 +374,169 @@ const Triggers = {
 // exports.linkEntryBeforeSave = Triggers.linkEntryBeforeSave;
 
 // Ďalšie funkcie a logika môžu byť refaktorované podobným spôsobom podľa potreby
+
+// Dochadzka - Attendance related functions and triggers
+const Dochadzka = {
+    validateAndRoundTime(time) {
+        if (!time) {
+            message('Missing time value');
+            return null;
+        }
+        return this.roundTimeQ(time);
+    },
+    roundTimeQ(time) {
+        const timeToReturn = new Date(time);
+        timeToReturn.setMilliseconds(Math.round(timeToReturn.getMilliseconds() / 1000) * 1000);
+        timeToReturn.setSeconds(Math.round(timeToReturn.getSeconds() / 60) * 60);
+        timeToReturn.setMinutes(Math.round(timeToReturn.getMinutes() / 15) * 15);
+        return timeToReturn;
+    },
+    calculateWorkHours(start, end) {
+        return (end - start) / 3600000; // milliseconds to hours
+    },
+    prepocitatZaznamDochadzky(en, isEdit) {
+        try {
+            en = en || lib().entry();
+            const datum = en.field(DATE);
+            const zavazky = en.field("Generovať záväzky");
+            const zamestnanci = en.field("Zamestnanci");
+            const evidenciaPrac = en.field("Práce");
+            const totals = {
+                mzdy: 0,
+                odpracovane: 0,
+                evidencia: 0,
+                prestoje: 0,
+                pracovnaDoba: 0
+            };
+
+            const prichod = this.validateAndRoundTime(en.field("Príchod"));
+            const odchod = this.validateAndRoundTime(en.field("Odchod"));
+
+            if (!prichod || !odchod || this.getTime(prichod) >= this.getTime(odchod)) {
+                message('Invalid arrival/departure times, Príchod: ' + prichod + ', Odchod: ' + odchod);
+                return;
+            } else {
+                en.set("Príchod", prichod);
+                en.set("Odchod", odchod);
+            }
+
+            const employeeAtt = {
+                odpracovane: 0,
+                hodinovka: 0,
+                dennaMzda: 0
+            };
+
+            totals.pracovnaDoba = this.calculateWorkHours(prichod, odchod);
+
+            if (zamestnanci.length > 0) {
+                for (let z = 0; z < zamestnanci.length; z++) {
+                    employeeAtt.hodinovka = Zamestnanci.sadzba(zamestnanci[z], datum);
+                    employeeAtt.odpracovane = totals.pracovnaDoba;
+                    employeeAtt.dennaMzda = employeeAtt.odpracovane * (employeeAtt.hodinovka
+                        + zamestnanci[z].attr("+príplatok (€/h)"))
+                        + zamestnanci[z].attr("+prémia (€)")
+                        - zamestnanci[z].attr("-pokuta (€)");
+
+                    Zamestnanci.setEmployeeAttributes(zamestnanci[z], employeeAtt);
+
+                    totals.mzdy += employeeAtt.dennaMzda;
+                    totals.odpracovane += employeeAtt.odpracovane;
+
+                    if (zavazky) {
+                        Dochadzka.registrujZavazky(zamestnanci[z], en, employeeAtt, isEdit);
+                    }
+                }
+            }
+
+            totals.prestoje = totals.odpracovane - totals.evidencia;
+
+            en.set("Mzdové náklady", totals.mzdy.toFixed(2));
+            en.set("Pracovná doba", totals.pracovnaDoba.toFixed(2));
+            en.set("Odpracované", totals.odpracovane.toFixed(2));
+            en.set("Na zákazkách", totals.evidencia.toFixed(2));
+            en.set("Prestoje", totals.prestoje.toFixed(2));
+
+            if (totals.evidencia > totals.odpracovane) {
+                en.set("appMsg", 'vyžaduje pozornosť');
+            }
+
+            if (app.log) {
+                message("...hotovo");
+            }
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+        }
+    },
+    registrujZavazky(employee, en, attr, isEdit) {
+        try {
+            if (isEdit) {
+                let zavazky = en.linksFrom(LIBRARY.ZVK, app.activeLib.db.title);
+                let filtered = zavazky.filter(el => el.field("Zamestnanec")[0].name == employee.name);
+                filtered.forEach(el => {
+                    el.trash();
+                });
+            }
+            this.newEntryZavazky(employee, en, attr);
+        } catch (error) {
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+        }
+    },
+    newEntryZavazky(employee, en, attrs) {
+        try {
+            get.openLib(LIBRARY.ZVK);
+            const popis = "Mzda " + employee.name + ", za deň ";
+            const zavazky = libByName(LIBRARY.ZVK);
+            const newEntry = {};
+            newEntry[NUMBER] = app.activeLib.number;
+            newEntry[NUMBER_ENTRY] = app.activeLib.nextNum;
+            newEntry[DATE] = new Date();
+            newEntry["Typ"] = "Mzdy";
+            newEntry["Zamestnanec"] = employee;
+            newEntry["Dochádzka"] = en;
+            newEntry["info"] = "generované automaticky z dochádzky";
+            newEntry["Popis"] = popis;
+            newEntry["Suma"] = attrs.dennaMzda.toFixed(2);
+            newEntry[SEASON] = app.season;
+            newEntry[CR] = user();
+            newEntry[CR_DATE] = new Date();
+            zavazky.create(newEntry);
+            app.activeLib.lastNum = app.activeLib.nextNum;
+            app.activeLib.nextNum += 1;
+            set.storeLib();
+            return true;
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+        }
+    },
+    getTime(date) {
+        return date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+    }
+};
+
+// Zamestnanci - Employees related functions
+const Zamestnanci = {
+    sadzba(employee, date) {
+        try {
+            const links = employee.linksFrom(LIBRARY.SZ, FLD_ZAM);
+            const dateField = "Platnosť od";
+            const filteredLinks = filterByDate(links, date, dateField);
+            if (!filteredLinks || filteredLinks.length === 0) {
+                return null;
+            } else {
+                return filteredLinks[0].field("Sadzba");
+            }
+        } catch (error) {
+            message('Chyba: ' + error + ', line:' + error.lineNumber);
+            return null;
+        }
+    },
+    setEmployeeAttributes(employee, employeeAttributes) {
+        try {
+            employee.setAttr("odpracované", employeeAttributes.odpracovane);
+            employee.setAttr("hodinovka", employeeAttributes.hodinovka);
+            employee.setAttr("denná mzda", employeeAttributes.dennaMzda);
+        } catch (error) {
+            message('Chyba: ' + error + ', line: ' + error.lineNumber);
+        }
+    }
+};
