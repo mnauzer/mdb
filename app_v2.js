@@ -2,7 +2,7 @@ const app = {
     // app store
     data: {
         name: 'ASISTANTO',
-        version: '2.04.0062',
+        version: '2.04.0063',
         app: 'ASISTANTO',
         db: 'ASISTANTO DB',
         errors: 'ASISTANTO Errors',
@@ -709,6 +709,24 @@ const libOpen = () => {
         message('Chyba: ' + error + ', line:' + error.lineNumber);
     }
 }
+
+const libOpenBeforeShow = () => {
+    // trigger libOpen_beforeShow
+    try {
+        message(app.data.name + ' v.' + app.data.version +
+        '\n' +  app.activeLib.name +' ' +  app.season )
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
+const libOpenAfterShow = () => {
+    // trigger libOpen_afterShow
+    try {
+    } catch (error) {
+        message('Chyba: ' + error + ', line:' + error.lineNumber);
+    }
+}
+
 // NEW ENTRY TRIGGERS
 function newEntry () {
     //get.openLib(app.runningScript);
