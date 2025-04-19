@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faktúra č. {{invoice.number}}</title>
+    <style>
+        :root {
+            --primary-color: {{styles.primaryColor}};
+            --secondary-color: {{styles.secondaryColor}};
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #343a40;
+            --font-family: 'Arial', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --border-color: #dee2e6;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 20px;
+            font-size: 14px;
+        }
+        
+        .invoice-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid var(--border-color);
+            background-color: #fff;
+        }
+        
+        .invoice-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .logo-section {
+            width: 40%;
+        }
+        
+        .document-section {
+            width: 40%;
+            text-align: right;
+        }
+        
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+        }
+        
+        .barcode {
+            margin-top: 10px;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .invoice-title {
+            color: var(--secondary-color);
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-number {
+            color: var(--primary-color);
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        .invoice-parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .invoice-party {
+            width: 48%;
+        }
+        
+        .party-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .party-name {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .invoice-info {
+            background-color: var(--light-gray);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .info-row {
+            margin-bottom: 5px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-right: 5px;
+        }
+        
+        .invoice-items {
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 8px;
+            font-weight: normal;
+        }
+        
+        td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .invoice-summary {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin-left: 20px;
+        }
+        
+        .summary-table {
+            width: 60%;
+            margin-left: auto;
+        }
+        
+        .summary-table table {
+            width: 100%;
+        }
+        
+        .summary-table th {
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .summary-table td {
+            padding: 5px 8px;
+        }
+        
+        .total-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            padding: 10px 0;
+            border-top: 2px solid var(--primary-color);
+            text-align: right;
+        }
+        
+        .payment-info {
+            margin-top: 30px;
+            background-color: var(--light-gray);
+            padding: 15px;
+            border-radius: 3px;
+        }
+        
+        .payment-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .payment-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .payment-row {
+            display: flex;
+        }
+        
+        .payment-label {
+            font-weight: bold;
+            width: 150px;
+        }
+        
+        .invoice-notes {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 3px;
+        }
+        
+        .notes-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .invoice-footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 12px;
+            color: var(--dark-gray);
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                background-color: #fff;
+            }
+            
+            .invoice-container {
+                border: none;
+                padding: 10px;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <div class="invoice-header">
+            <div class="logo-section">
+                {{#if company.logo}}
+                <img src="{{company.logo}}" alt="Logo" class="logo">
+                {{else}}
+                <h2 style="color: var(--primary-color);">{{company.name}}</h2>
+                {{/if}}
+            </div>
+            
+            <div class="document-section">
+                <div class="invoice-title">FAKTÚRA - daňový doklad</div>
+                <div class="invoice-number">č. {{invoice.number}}</div>
+                {{#if invoice.barcode}}
+                <img src="{{invoice.barcode}}" alt="Čiarový kód" class="barcode">
+                {{/if}}
+            </div>
+        </div>
+        
+        <div class="invoice-parties">
+            <div class="invoice-party">
+                <div class="party-title">DODÁVATEĽ</div>
+                <div class="party-name">{{company.name}}</div>
+                <div>{{company.address}}</div>
+                <div>{{company.info}}</div>
+                <div>{{company.contact}}</div>
+            </div>
+            
+            <div class="invoice-party">
+                <div class="party-title">ODBERATEĽ</div>
+                <div class="party-name">{{customer.name}}</div>
+                <div>{{customer.address}}</div>
+                <div>{{customer.info}}</div>
+            </div>
+        </div>
+        
+        <div class="invoice-info">
+            <div class="info-group">
+                <div class="info-row">
+                    <span class="info-label">Dátum vystavenia:</span> {{invoice.issueDate}}
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Dátum zdaniteľného plnenia:</span> {{invoice.taxDate}}
+                </div>
+            </div>
+            <div class="info-group">
+                <div class="info-row">
+                    <span class="info-label">Dátum splatnosti:</span> {{invoice.dueDate}}
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Spôsob úhrady:</span> {{invoice.paymentMethod}}
+                </div>
+            </div>
+        </div>
+        
+        <div class="invoice-items">
+            <table>
+                <thead>
+                    <tr>
+                        <th>P.č.</th>
+                        <th>Popis</th>
+                        <th class="text-center">Množstvo</th>
+                        <th class="text-center">MJ</th>
+                        <th class="text-right">Cena za MJ bez DPH</th>
+                        <th class="text-center">DPH %</th>
+                        <th class="text-right">Cena bez DPH</th>
+                        <th class="text-right">DPH</th>
+                        <th class="text-right">Celkom s DPH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                    <tr>
+                        <td>{{index}}</td>
+                        <td>{{description}}</td>
+                        <td class="text-center">{{quantity}}</td>
+                        <td class="text-center">{{unit}}</td>
+                        <td class="text-right">{{unitPriceWithoutVat}} {{../invoice.currency}}</td>
+                        <td class="text-center">{{vatRate}}</td>
+                        <td class="text-right">{{priceWithoutVat}} {{../invoice.currency}}</td>
+                        <td class="text-right">{{vatAmount}} {{../invoice.currency}}</td>
+                        <td class="text-right">{{total}} {{../invoice.currency}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="invoice-summary">
+            <div class="summary-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sadzba DPH</th>
+                            <th>Základ</th>
+                            <th>Výška DPH</th>
+                            <th>Celkom</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each invoice.vatSummary}}
+                        <tr>
+                            <td class="text-center">{{rate}} %</td>
+                            <td class="text-right">{{base}} {{../invoice.currency}}</td>
+                            <td class="text-right">{{amount}} {{../invoice.currency}}</td>
+                            <td class="text-right">{{total}} {{../invoice.currency}}</td>
+                        </tr>
+                        {{/each}}
+                        <tr>
+                            <td colspan="3" class="text-right"><strong>Celkom k úhrade:</strong></td>
+                            <td class="text-right"><strong>{{invoice.totalAmount}} {{invoice.currency}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            {{#if invoice.qrCode}}
+            <div>
+                <img src="{{invoice.qrCode}}" alt="QR kód" class="qr-code">
+            </div>
+            {{/if}}
+        </div>
+        
+        {{#if invoice.paymentInfo}}
+        <div class="payment-info">
+            <div class="payment-title">Platobné údaje</div>
+            <div class="payment-details">
+                <div class="payment-row">
+                    <div class="payment-label">Banka:</div>
+                    <div>{{invoice.paymentInfo.bank}}</div>
+                </div>
+                
+                <div class="payment-row">
+                    <div class="payment-label">IBAN:</div>
+                    <div>{{invoice.paymentInfo.iban}}</div>
+                </div>
+                
+                <div class="payment-row">
+                    <div class="payment-label">SWIFT:</div>
+                    <div>{{invoice.paymentInfo.swift}}</div>
+                </div>
+                
+                <div class="payment-row">
+                    <div class="payment-label">Variabilný symbol:</div>
+                    <div>{{invoice.paymentInfo.variableSymbol}}</div>
+                </div>
+                
+                <div class="payment-row">
+                    <div class="payment-label">Konštantný symbol:</div>
+                    <div>{{invoice.paymentInfo.constantSymbol}}</div>
+                </div>
+                
+                <div class="payment-row">
+                    <div class="payment-label">Špecifický symbol:</div>
+                    <div>{{invoice.paymentInfo.specificSymbol}}</div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        
+        {{#if invoice.notes}}
+        <div class="invoice-notes">
+            <div class="notes-title">Poznámky</div>
+            <div>{{invoice.notes}}</div>
+        </div>
+        {{/if}}
+        
+        <div class="invoice-footer">
+            <p>Faktúra bola vygenerovaná elektronicky a je platná bez podpisu a pečiatky.</p>
+            <p>Ďakujeme za Vašu dôveru.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{form.title}}</title>
+    <style>
+        :root {
+            --primary-color: {{styles.primaryColor}};
+            --secondary-color: {{styles.secondaryColor}};
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #343a40;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .form-title {
+            color: var(--secondary-color);
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .form-description {
+            color: var(--dark-gray);
+            margin-top: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 4px;
+            font-family: var(--font-family);
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .checkbox-group,
+        .radio-group {
+            margin-top: 10px;
+        }
+        
+        .checkbox-item,
+        .radio-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .checkbox-item input,
+        .radio-item input {
+            margin-right: 10px;
+        }
+        
+        .help-text {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        
+        .form-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding-right: 15px;
+            padding-left: 15px;
+            box-sizing: border-box;
+        }
+        
+        .form-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 12px 24px;
+            font-size: 16px;
+            line-height: 1.5;
+            border-radius: 4px;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            color: #fff;
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            margin-right: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+        }
+        
+        .form-footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+            text-align: center;
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+        
+        @media (max-width: 768px) {
+            .form-col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            {{#if company.logo}}
+            <img src="{{company.logo}}" alt="Logo" class="logo">
+            {{/if}}
+            
+            <div class="form-title">{{form.title}}</div>
+            {{#if form.description}}
+            <div class="form-description">{{form.description}}</div>
+            {{/if}}
+        </div>
+        
+        <form action="{{form.submitUrl}}" method="{{form.submitMethod}}">
+            {{#each fields}}
+                {{#if this.rowStart}}
+                <div class="form-row">
+                {{/if}}
+                
+                {{#if this.column}}
+                <div class="form-col">
+                {{/if}}
+                
+                <div class="form-group">
+                    {{#if this.label}}
+                    <label for="{{this.id}}" class="{{#if this.required}}required{{/if}}">{{this.label}}</label>
+                    {{/if}}
+                    
+                    {{#if_eq this.type "text"}}
+                    <input type="text" id="{{this.id}}" name="{{this.name}}" 
+                        {{#if this.placeholder}}placeholder="{{this.placeholder}}"{{/if}} 
+                        {{#if this.value}}value="{{this.value}}"{{/if}} 
+                        {{#if this.required}}required{{/if}}>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "email"}}
+                    <input type="email" id="{{this.id}}" name="{{this.name}}" 
+                        {{#if this.placeholder}}placeholder="{{this.placeholder}}"{{/if}} 
+                        {{#if this.value}}value="{{this.value}}"{{/if}} 
+                        {{#if this.required}}required{{/if}}>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "tel"}}
+                    <input type="tel" id="{{this.id}}" name="{{this.name}}" 
+                        {{#if this.placeholder}}placeholder="{{this.placeholder}}"{{/if}} 
+                        {{#if this.value}}value="{{this.value}}"{{/if}} 
+                        {{#if this.required}}required{{/if}}>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "number"}}
+                    <input type="number" id="{{this.id}}" name="{{this.name}}" 
+                        {{#if this.placeholder}}placeholder="{{this.placeholder}}"{{/if}} 
+                        {{#if this.value}}value="{{this.value}}"{{/if}} 
+                        {{#if this.required}}required{{/if}}>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "date"}}
+                    <input type="date" id="{{this.id}}" name="{{this.name}}" 
+                        {{#if this.value}}value="{{this.value}}"{{/if}} 
+                        {{#if this.required}}required{{/if}}>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "textarea"}}
+                    <textarea id="{{this.id}}" name="{{this.name}}" 
+                        {{#if this.placeholder}}placeholder="{{this.placeholder}}"{{/if}} 
+                        {{#if this.required}}required{{/if}}>{{this.value}}</textarea>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "select"}}
+                    <select id="{{this.id}}" name="{{this.name}}" {{#if this.required}}required{{/if}}>
+                        {{#if this.placeholder}}
+                        <option value="" disabled {{#unless this.value}}selected{{/unless}}>{{this.placeholder}}</option>
+                        {{/if}}
+                        
+                        {{#each this.options}}
+                        <option value="{{this.value}}" {{#if_eq ../value this.value}}selected{{/if_eq}}>{{this.label}}</option>
+                        {{/each}}
+                    </select>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "checkbox"}}
+                    <div class="checkbox-group">
+                        {{#each this.options}}
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="{{../id}}_{{@index}}" name="{{../name}}[]" value="{{this.value}}" 
+                                {{#if_contains ../value this.value}}checked{{/if_contains}}>
+                            <label for="{{../id}}_{{@index}}">{{this.label}}</label>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if_eq}}
+                    
+                    {{#if_eq this.type "radio"}}
+                    <div class="radio-group">
+                        {{#each this.options}}
+                        <div class="radio-item">
+                            <input type="radio" id="{{../id}}_{{@index}}" name="{{../name}}" value="{{this.value}}" 
+                                {{#if_eq ../value this.value}}checked{{/if_eq}}>
+                            <label for="{{../id}}_{{@index}}">{{this.label}}</label>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{/if_eq}}
+                    
+                    {{#if this.helpText}}
+                    <div class="help-text">{{this.helpText}}</div>
+                    {{/if}}
+                </div>
+                
+                {{#if this.column}}
+                </div>
+                {{/if}}
+                
+                {{#if this.rowEnd}}
+                </div>
+                {{/if}}
+            {{/each}}
+            
+            <div class="form-actions">
+                {{#if form.resetButton}}
+                <button type="reset" class="btn btn-secondary">{{form.resetButtonText}}</button>
+                {{/if}}
+                <button type="submit" class="btn btn-primary">{{form.submitButtonText}}</button>
+            </div>
+        </form>
+        
+        <div class="form-footer">
+            <p>{{form.footerText}}</p>
+        </div>
+    </div>
+    
+    <script>
+        // Pomocné funkcie pre šablónu
+        function ifEq(a, b, options) {
+            if (a === b) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+        
+        function ifContains(array, value, options) {
+            if (Array.isArray(array) && array.indexOf(value) !== -1) {
+                return options.fn(this);
+            }
+            return options.inverse(this);
+        }
+    </script>
+</body>
+</html>

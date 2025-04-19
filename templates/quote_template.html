@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cenová ponuka č. {{quote.number}}</title>
+    <style>
+        :root {
+            --primary-color: {{styles.primaryColor}};
+            --secondary-color: {{styles.secondaryColor}};
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #343a40;
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .quote-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid var(--medium-gray);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+        
+        .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .logo {
+            max-width: 200px;
+            max-height: 80px;
+        }
+        
+        .quote-title {
+            color: var(--secondary-color);
+            font-size: 28px;
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .quote-number {
+            color: var(--primary-color);
+            font-size: 18px;
+            margin-top: 5px;
+        }
+        
+        .quote-parties {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        .quote-party {
+            width: 48%;
+        }
+        
+        .party-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        .party-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .quote-info {
+            background-color: var(--light-gray);
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .quote-items {
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: left;
+            padding: 10px;
+        }
+        
+        td {
+            padding: 10px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--light-gray);
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .quote-summary {
+            margin-top: 20px;
+            text-align: right;
+        }
+        
+        .total-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            padding: 10px 0;
+            border-top: 2px solid var(--primary-color);
+        }
+        
+        .quote-notes {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+        }
+        
+        .notes-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .quote-footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid var(--medium-gray);
+            text-align: center;
+            font-size: 14px;
+            color: var(--dark-gray);
+        }
+        
+        .validity {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        @media print {
+            body {
+                padding: 0;
+                background-color: #fff;
+            }
+            
+            .quote-container {
+                box-shadow: none;
+                border: none;
+                padding: 10px;
+            }
+            
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quote-container">
+        <div class="quote-header">
+            {{#if company.logo}}
+            <div>
+                <img src="{{company.logo}}" alt="Logo" class="logo">
+            </div>
+            {{else}}
+            <div>
+                <h2 style="color: var(--primary-color);">{{company.name}}</h2>
+            </div>
+            {{/if}}
+            
+            <div>
+                <div class="quote-title">CENOVÁ PONUKA</div>
+                <div class="quote-number">č. {{quote.number}}</div>
+            </div>
+        </div>
+        
+        <div class="quote-parties">
+            <div class="quote-party">
+                <div class="party-title">DODÁVATEĽ</div>
+                <div class="party-name">{{company.name}}</div>
+                <div>{{company.address}}</div>
+                <div>{{company.info}}</div>
+                <div>{{company.contact}}</div>
+            </div>
+            
+            <div class="quote-party">
+                <div class="party-title">ODBERATEĽ</div>
+                <div class="party-name">{{customer.name}}</div>
+                <div>{{customer.address}}</div>
+                <div>{{customer.info}}</div>
+            </div>
+        </div>
+        
+        <div class="quote-info">
+            <div class="info-row">
+                <div><span class="info-label">Dátum vystavenia:</span> {{quote.issueDate}}</div>
+                <div><span class="info-label">Platnosť do:</span> {{quote.validUntil}}</div>
+            </div>
+        </div>
+        
+        <div class="quote-items">
+            <table>
+                <thead>
+                    <tr>
+                        <th>P.č.</th>
+                        <th>Popis</th>
+                        <th>Množstvo</th>
+                        <th>Jednotková cena</th>
+                        <th>Celkom</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each items}}
+                    <tr>
+                        <td>{{index}}</td>
+                        <td>{{description}}</td>
+                        <td>{{quantity}}</td>
+                        <td class="text-right">{{unitPrice}} {{../quote.currency}}</td>
+                        <td class="text-right">{{total}} {{../quote.currency}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            
+            <div class="quote-summary">
+                <div class="total-amount">Celková suma: {{quote.totalAmount}} {{quote.currency}}</div>
+            </div>
+        </div>
+        
+        {{#if quote.notes}}
+        <div class="quote-notes">
+            <div class="notes-title">Poznámky</div>
+            <div>{{quote.notes}}</div>
+        </div>
+        {{/if}}
+        
+        <div class="quote-footer">
+            <p class="validity">Táto cenová ponuka je platná do {{quote.validUntil}}.</p>
+            <p>Tento dokument bol vygenerovaný automaticky a je platný bez podpisu.</p>
+        </div>
+    </div>
+</body>
+</html>
