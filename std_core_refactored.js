@@ -91,38 +91,38 @@ std.Core = {
    */
   _initAppState: function() {
     // Make sure app object exists
-    if (typeof app === 'undefined') {
-      window.app = {};
+if (typeof app === 'undefined') {
+        window.app = {};
     }
     
     // Initialize app.data if it doesn't exist
     if (!app.data) {
       // Check if Constants module is available
-      var constants = (typeof std !== 'undefined' && std.Constants) ? 
-                      std.Constants.APP : 
-                      {
-                        NAME: 'ASISTANTO',
-                        VERSION: '2.0.0',
-                        APP: 'ASISTANTO',
-                        DB: 'ASISTANTO DB',
-                        ERRORS: 'ASISTANTO Errors',
-                        TENANTS: 'ASISTANTO Tenants',
-                        SCRIPTS: 'ASISTANTO Scripts',
-                        TODO: 'ASISTANTO ToDo',
-                        TENANT: 'ASISTANTO'
-                      };
-      
-      app.data = {
-        name: constants.NAME,
-        version: constants.VERSION,
-        app: constants.APP,
-        db: constants.DB,
-        errors: constants.ERRORS,
-        tenants: constants.TENANTS,
-        scripts: constants.SCRIPTS,
-        todo: constants.TODO,
-        tenant: constants.TENANT
-      };
+    var constants = (typeof std !== 'undefined' && std.Constants) ? 
+            std.Constants.APP : 
+            {
+            NAME: 'ASISTANTO',
+            VERSION: '2.0.0',
+            APP: 'ASISTANTO',
+            DB: 'ASISTANTO DB',
+            ERRORS: 'ASISTANTO Errors',
+            TENANTS: 'ASISTANTO Tenants',
+            SCRIPTS: 'ASISTANTO Scripts',
+            TODO: 'ASISTANTO ToDo',
+            TENANT: 'ASISTANTO'
+                    };
+    
+    app.data = {
+    name: constants.NAME,
+    version: constants.VERSION,
+    app: constants.APP,
+    db: constants.DB,
+    errors: constants.ERRORS,
+    tenants: constants.TENANTS,
+    scripts: constants.SCRIPTS,
+    todo: constants.TODO,
+    tenant: constants.TENANT
+    };
     }
     
     // Initialize other app properties if they don't exist

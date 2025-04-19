@@ -48,9 +48,9 @@ std.Triggers = {
         // Use dialog instead of message
         var welcomeDialog = dialog();
         welcomeDialog.title('Welcome')
-                     .text(app.data.name + ' v.' + app.data.version + '\n' + libName + ' ' + (app.season || ''))
-                     .positiveButton('OK', function() {})
-                     .show();
+                    .text(app.data.name + ' v.' + app.data.version + '\n' + libName + ' ' + (app.season || ''))
+                    .positiveButton('OK', function() {})
+                    .show();
       } else {
         // Use dialog instead of message
         var simpleDialog = dialog();
@@ -71,9 +71,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in libOpen: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in libOpen: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   },
@@ -114,9 +114,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in libOpenBeforeShow: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in libOpenBeforeShow: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   },
@@ -195,9 +195,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in createEntryOpen: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in createEntryOpen: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   },
@@ -244,9 +244,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in createEntryAfterSave: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in createEntryAfterSave: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
       
       // Set debug view state on error
@@ -294,9 +294,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in entryBeforeSave: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in entryBeforeSave: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   },
@@ -327,9 +327,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in entryAfterSave: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in entryAfterSave: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   },
@@ -374,9 +374,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in linkEntryBeforeSave: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in linkEntryBeforeSave: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   },
@@ -398,6 +398,10 @@ std.Triggers = {
       if (typeof std !== 'undefined' && std.Constants) {
         if (libName === std.Constants.LIBRARIES.RECORDS.ATTENDANCE && typeof std !== 'undefined' && std.Attendance) {
           // Additional processing when opening an attendance entry
+        } else if (libName === std.Constants.LIBRARIES.PROJECTS.PRICE_QUOTES && typeof std !== 'undefined' && std.PriceQuotes) {
+          // Additional processing when opening an PriceQuotes entry
+        } else if (libName === std.Constants.LIBRARIES.PROJECTS.PRICE_QUOTES_PARTS && typeof std !== 'undefined' && std.PriceQuotesParts) {
+          // Additional processing when opening an PriceQuotesParts entry
         }
       }
     } catch (e) {
@@ -407,9 +411,9 @@ std.Triggers = {
         // Use dialog instead of message
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error in entryOpen: ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error in entryOpen: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
     }
   }

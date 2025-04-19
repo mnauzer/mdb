@@ -93,7 +93,7 @@ var std_ErrorHandler = {
    */
   displayToUser: function(error, severity) {
     var prefix = severity === this.SEVERITY.ERROR ? 'Chyba: ' : 
-                 severity === this.SEVERITY.WARNING ? 'Upozornenie: ' : 'Info: ';
+                severity === this.SEVERITY.WARNING ? 'Upozornenie: ' : 'Info: ';
     
     var title = severity === this.SEVERITY.ERROR ? 'Chyba' : 
                 severity === this.SEVERITY.WARNING ? 'Upozornenie' : 'Informácia';
@@ -114,10 +114,10 @@ var std_ErrorHandler = {
    */
   _logAppState: function() {
     return 'appName: ' + (app.data ? app.data.name : 'unknown') + '\n' +
-           'version: ' + (app.data ? app.data.version : 'unknown') + '\n' +
-           'season: ' + (app.season || 'unknown') + '\n' +
-           'activeLib: ' + (app.activeLib ? app.activeLib.name : 'unknown') + '\n' +
-           'user: ' + user();
+          'version: ' + (app.data ? app.data.version : 'unknown') + '\n' +
+          'season: ' + (app.season || 'unknown') + '\n' +
+          'activeLib: ' + (app.activeLib ? app.activeLib.name : 'unknown') + '\n' +
+          'user: ' + user();
   },
   
   /**

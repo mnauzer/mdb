@@ -368,9 +368,9 @@ var std_FieldLister = {
       // Use dialog instead of message
       var processDialog = dialog();
       processDialog.title('Informácia')
-                   .text('Processing table: ' + tableName)
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Processing table: ' + tableName)
+                  .positiveButton('OK', function() {})
+                  .show();
       
       // List fields
       var fields = this.listFields(tableName);
@@ -385,9 +385,9 @@ var std_FieldLister = {
         // Use dialog instead of message
         var successDialog = dialog();
         successDialog.title('Informácia')
-                     .text('Successfully processed table: ' + tableName)
-                     .positiveButton('OK', function() {})
-                     .show();
+                    .text('Successfully processed table: ' + tableName)
+                    .positiveButton('OK', function() {})
+                    .show();
       }
       
       return success;

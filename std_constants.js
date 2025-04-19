@@ -82,10 +82,10 @@ var std_Constants = {
       LOCATIONS: 'Miesta',
       PLANT_DATABASE: 'Databáza rastlín',
       ACCOUNTS: 'Účty',
-      EMPLOYEE_RATES: 'Sadzby zamestnancov',
-      WORK_HOUR_LIMITS: 'Limity pracovných hodín',
-      SEASONAL_WORK_PRICES: 'Sezónne ceny prác a strojov',
-      SEASONAL_MATERIAL_PRICES: 'Sezónne ceny materiálu',
+      EMPLOYEE_RATES: 'sadzby zamestnancov',
+      WORK_HOUR_LIMITS: 'limity pracovných hodín',
+      SEASONAL_WORK_PRICES: 'sezónne ceny prác a strojov',
+      SEASONAL_MATERIAL_PRICES: 'sezónne ceny materiálu',
       MACHINES: 'Stroje'
     }
   },
@@ -252,11 +252,11 @@ var std_Constants = {
   
   // System messages
   MESSAGES: {
-    MISSING_TIME: 'Missing time value',
-    INVALID_TIMES: 'Invalid arrival/departure times',
-    REQUIRES_ATTENTION: 'vyžaduje pozornosť',
+    MISSING_TIME: 'Chýbajúci čas',
+    INVALID_TIMES: 'Zlý čas príchodu/odchodu',
+    REQUIRES_ATTENTION: 'Vyžaduje pozornosť',
     DONE: '...hotovo',
-    AUTO_GENERATED: 'generované automaticky z dochádzky',
+    AUTO_GENERATED: 'Generované automaticky z dochádzky',
     WAGE_FOR_DAY: 'Mzda {0}, za deň'
   },
   

@@ -65,9 +65,9 @@ std.LibraryCache = {
         // Use dialog for error
         var errorDialog = dialog();
         errorDialog.title('Chyba')
-                   .text('Error getting library: ' + libName + ' - ' + e.toString())
-                   .positiveButton('OK', function() {})
-                   .show();
+                  .text('Error getting library: ' + libName + ' - ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
       }
       return null;
     }
