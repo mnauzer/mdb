@@ -170,7 +170,54 @@ var defaultArrival = std.Constants.DEFAULTS.ATTENDANCE.ARRIVAL;
 
 Modul std_errorHandler.js poskytuje jednotný spôsob spracovania chýb, logovania a zobrazovania chybových hlásení. Modul je navrhnutý tak, aby minimalizoval dopad chýb na používateľa a poskytoval užitočné informácie pre vývojárov pri riešení problémov.
 
-#### 2.2.1 Typy chýb
+#### 2.2.1 Implementácia console objektu
+
+Memento Database nemá natívnu podporu pre `console.log()` a podobné funkcie, ktoré sú bežné v iných JavaScript prostrediach. Modul std_errorHandler.js preto implementuje vlastný `console` objekt s nasledujúcimi metódami:
+
+- **console.log** - Logovanie bežných správ
+- **console.warn** - Logovanie varovných správ
+- **console.error** - Logovanie chybových správ
+
+Tieto metódy zapisujú správy do databázy ASISTANTO Errors s príslušným typom (LOG, WARNING, ERROR) a obsahujú robustné ošetrenie chýb s fallbackom na dialog() metódu.
+
+Príklad implementácie:
+
+```javascript
+// Vytvorenie console objektu ak neexistuje
+if (typeof console === 'undefined') {
+  var console = {
+    log: function(message) {
+      try {
+        // Zápis do databázy ASISTANTO Errors
+        var logLib = libByName('ASISTANTO Errors');
+        if (logLib) {
+          var entry = logLib.create();
+          entry.set('Typ', 'LOG');
+          entry.set('Zdroj', 'console.log');
+          entry.set('Správa', message);
+          entry.set('Dátum', new Date());
+          entry.set('Používateľ', user());
+          entry.save();
+        }
+      } catch (e) {
+        // Fallback na dialog
+        try {
+          var errorDialog = dialog();
+          errorDialog.title('Console Log Error')
+                    .text('Failed to log message: ' + message)
+                    .positiveButton('OK', function() {})
+                    .show();
+        } catch (dialogError) {
+          // Tiché zlyhanie ak zlyhá aj dialog
+        }
+      }
+    },
+    // Podobne implementované warn a error metódy
+  };
+}
+```
+
+#### 2.2.2 Typy chýb
 
 Modul rozlišuje nasledujúce typy chýb:
 
@@ -179,7 +226,7 @@ Modul rozlišuje nasledujúce typy chýb:
 - **Validačné chyby** - Chyby súvisiace s validáciou dát (napr. neplatné vstupy)
 - **Biznis chyby** - Chyby súvisiace s biznis logikou (napr. nedostatok prostriedkov)
 
-#### 2.2.2 Logovanie chýb
+#### 2.2.3 Logovanie chýb
 
 Modul poskytuje nasledujúce funkcie pre logovanie:
 
@@ -189,13 +236,16 @@ Modul poskytuje nasledujúce funkcie pre logovanie:
 
 Všetky logy sú ukladané do databázy ASISTANTO Errors, ktorá obsahuje nasledujúce polia:
 
-- **Typ** - Typ záznamu (ERROR, WARNING, INFO)
+- **Typ** - Typ záznamu (ERROR, WARNING, INFO, LOG)
 - **Zdroj** - Zdroj záznamu (názov modulu a funkcie)
 - **Správa** - Text správy
 - **Dátum** - Dátum a čas vytvorenia záznamu
 - **Používateľ** - Používateľ, ktorý vyvolal akciu
+- **Poznámka** - Dodatočné informácie o chybe
 
-#### 2.2.3 Zobrazovanie chybových hlásení
+#### 2.2.4 Zobrazovanie chybových hlásení
+
+Modul používa dialog() metódu namiesto message() metódy pre zobrazovanie chybových hlásení, čo umožňuje zobrazenie viacriadkových správ a poskytuje lepšiu používateľskú skúsenosť.
 
 Modul poskytuje funkcie pre zobrazovanie chybových hlásení používateľovi:
 
@@ -204,11 +254,16 @@ Modul poskytuje funkcie pre zobrazovanie chybových hlásení používateľovi:
 - **createValidationError** - Vytvorenie a zobrazenie validačnej chyby
 - **createBusinessError** - Vytvorenie a zobrazenie biznis chyby
 
-Chybové hlásenia sú zobrazované pomocou dialógových okien, ktoré obsahujú názov chyby, zdroj chyby a text chyby.
+Chybové hlásenia sú zobrazované pomocou dialógových okien, ktoré obsahujú názov chyby, zdroj chyby a text chyby. Modul obsahuje viacúrovňový fallback mechanizmus pre prípad zlyhania primárneho spôsobu zobrazovania chýb.
 
-#### 2.2.4 Príklady použitia
+#### 2.2.5 Príklady použitia
 
 ```javascript
+// Použitie console objektu
+console.log("Informačná správa");
+console.warn("Varovná správa");
+console.error("Chybová správa");
+
 // Spracovanie systémovej chyby
 try {
   // Kód, ktorý môže vyvolať chybu
@@ -226,6 +281,26 @@ std.ErrorHandler.logWarning("MyModule", "myFunction", "Neštandardná situácia"
 // Logovanie chyby
 std.ErrorHandler.logError("MyModule", "myFunction", "Nepodarilo sa načítať dáta");
 ```
+
+#### 2.2.6 Výhody vylepšeného spracovania chýb
+
+Vylepšené spracovanie chýb prináša nasledujúce výhody:
+
+1. **Robustnosť**:
+   - Viacúrovňové ošetrenie chýb zabezpečuje, že aj v prípade zlyhania primárneho mechanizmu sa použije záložný
+   - Tiché zlyhanie v najhoršom prípade zabraňuje kaskádovým chybám
+
+2. **Lepšia diagnostika**:
+   - Všetky chyby sú zaznamenané v databáze "ASISTANTO Errors"
+   - Záznamy obsahujú detailné informácie vrátane zdroja, času a používateľa
+
+3. **Používateľsky prívetivé hlásenia**:
+   - Použitie dialog() metódy umožňuje zobrazenie viacriadkových chybových hlásení
+   - Konzistentný formát chybových hlásení v celej aplikácii
+
+4. **Spätná kompatibilita**:
+   - Riešenie je plne kompatibilné s existujúcim kódom
+   - Zachováva všetky pôvodné funkcie a správanie
 
 ### 2.3 std_utils.js - Utility funkcie
 
