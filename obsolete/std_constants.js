@@ -3,30 +3,14 @@
 // Prefix: std_
 
 /**
- * Consolidated constants for the entire ASISTANTO STD framework
+ * Consolidated constants for the entire application
  * Combines and organizes constants from multiple files:
  * - appConstants.js
  * - fieldConstants.js
  * - tableConstants.js
  * - attributeConstants.js
  */
-
-// Create namespace if it doesn't exist
-if (typeof std === 'undefined') {
-  var std = {};
-}
-
-// Constants module
-std.Constants = {
-  // Framework information
-  FRAMEWORK: {
-    NAME: 'ASISTANTO STD',
-    VERSION: '1.0.0',
-    AUTHOR: 'ASISTANTO Team',
-    DESCRIPTION: 'Standardized framework for Memento Database',
-    REPOSITORY: 'https://github.com/username/asistanto-std'
-  },
-
+var std_Constants = {
   // Application configuration
   APP: {
     NAME: 'ASISTANTO 2',
@@ -39,7 +23,7 @@ std.Constants = {
     TODO: 'ASISTANTO ToDo',
     TENANT: 'KRAJINKA'
   },
-
+  
   // Library/Table definitions
   LIBRARIES: {
     // System libraries
@@ -49,10 +33,9 @@ std.Constants = {
       ERRORS: 'ASISTANTO Errors',
       TENANTS: 'ASISTANTO Tenants',
       SCRIPTS: 'ASISTANTO Scripts',
-      FIELDS: 'ASISTANTO Fields',
       TODO: 'ASISTANTO ToDo'
     },
-
+    
     // Project libraries
     PROJECTS: {
       PRICE_QUOTES: 'Cenové ponuky v2',
@@ -67,7 +50,7 @@ std.Constants = {
       TRANSPORT_REPORT: 'Výkaz dopravy',
       CONSTRUCTION_DIARY: 'Stavebný denník'
     },
-
+    
     // Administration libraries
     ADMIN: {
       INVENTORY: 'Invenúry',
@@ -79,7 +62,7 @@ std.Constants = {
       RECEIVABLES: 'Pohľadávky',
       LIABILITIES: 'Záväzky'
     },
-
+    
     // Records libraries
     RECORDS: {
       CASH_REGISTER: 'Pokladňa',
@@ -87,7 +70,7 @@ std.Constants = {
       ATTENDANCE: 'Dochádzka',
       TRAVEL_LOG: 'Kniha jázd'
     },
-
+    
     // Database libraries
     DATABASES: {
       INVENTORY: 'Sklad',
@@ -106,7 +89,7 @@ std.Constants = {
       MACHINES: 'Stroje'
     }
   },
-
+  
   // Field definitions
   FIELDS: {
     // Common fields used across multiple tables
@@ -123,7 +106,7 @@ std.Constants = {
       ENTRY_COLOR: 'farba záznamu',
       BACKGROUND_COLOR: 'farba pozadia'
     },
-
+    
     // Price Quote related fields
     PRICE_QUOTE: {
       VALIDITY_PERIOD: 'Platnosť ponuky',
@@ -141,7 +124,7 @@ std.Constants = {
       TOTAL_PRICE: 'Cena celkom',
       HOURLY_RATES: 'Počítanie hodinových sadzieb'
     },
-
+    
     // Attendance related fields
     ATTENDANCE: {
       ARRIVAL: 'Príchod',
@@ -156,7 +139,7 @@ std.Constants = {
       EMPLOYEES: 'Zamestnanci',
       WORK: 'Práce'
     },
-
+    
     // Employee related fields
     EMPLOYEE: {
       EMPLOYEE: 'Zamestnanec',
@@ -169,7 +152,7 @@ std.Constants = {
       HOURLY_RATE_ATTR: 'hodinovka',
       DAILY_WAGE_ATTR: 'denná mzda'
     },
-
+    
     // Liability related fields
     LIABILITY: {
       TYPE: 'Typ',
@@ -178,13 +161,13 @@ std.Constants = {
       DESCRIPTION: 'Popis',
       ATTENDANCE: 'Dochádzka'
     },
-
+    
     // Work record related fields
     WORK_RECORD: {
       START_TIME: 'Začiatok',
       END_TIME: 'Koniec'
     },
-
+    
     // Invoice related fields
     INVOICE: {
       SUPPLIER: 'Dodávateľ',
@@ -197,17 +180,9 @@ std.Constants = {
       VAT: 'DPH',
       AMOUNT_WITH_VAT: 'Suma s DPH',
       PAID: 'Uhradená'
-    },
-
-    // Travel log related fields
-    TRAVEL_LOG: {
-      STOPS: 'Zástavky',
-      DISTANCE: 'Vzdialenosť (km)',
-      DURATION: 'Trvanie (hod)',
-      COORDINATES: 'Súradnice'
     }
   },
-
+  
   // Section definitions
   SECTIONS: {
     MATERIAL: 'Materiál',
@@ -216,23 +191,23 @@ std.Constants = {
     MACHINES: 'Stroje',
     TRANSPORT: 'Doprava'
   },
-
+  
   // Color definitions
   COLORS: {
     // Reds
     FIREBRICK: '#B22222',
-
+    
     // Greens
     CHARTREUSE: '#7FFF00',
     MEDIUM_AQUAMARINE: '#66CDAA',
-
+    
     // Grays
     MARENGO: '#4C5866',
     MEDIUM_GRAY: '#BEBEBE',
     NICKEL: '#727472',
     STONE_GRAY: '#928E85',
     OUTER_SPACE: '#414A4C',
-
+    
     // Whites
     PORCELAIN: '#FFFEFC',
     WHITE: '#FFFFFF',
@@ -243,7 +218,7 @@ std.Constants = {
     CERAMIC: '#FCFFF9',
     BRIGHT_WHITE: '#F4F5F0',
     BRILLIANT_WHITE: '#EDF1FE',
-
+    
     // Memento colors
     MEM_RED: '#B22222',
     MEM_GREEN: '#669966',
@@ -252,14 +227,14 @@ std.Constants = {
     MEM_LIGHT_YELLOW: '#FFFFCC',
     MEM_LIGHT_BLUE: '#CCFFFF'
   },
-
+  
   // View states
   VIEW_STATES: {
     EDIT: 'Editácia',
     PRINT: 'Tlač',
     DEBUG: 'Debug'
   },
-
+  
   // Default values
   DEFAULTS: {
     ATTENDANCE: {
@@ -274,7 +249,7 @@ std.Constants = {
       VALIDITY_PERIOD: '10'
     }
   },
-
+  
   // System messages
   MESSAGES: {
     MISSING_TIME: 'Chýbajúci čas',
@@ -284,7 +259,7 @@ std.Constants = {
     AUTO_GENERATED: 'Generované automaticky z dochádzky',
     WAGE_FOR_DAY: 'Mzda {0}, za deň'
   },
-
+  
   // Employee attribute constants
   EMPLOYEE_ATTRIBUTES: {
     HOURS_WORKED: 'odpracované',
@@ -294,38 +269,38 @@ std.Constants = {
     FIXED_BONUS: '+prémia (€)',
     PENALTY: '-pokuta (€)'
   },
-
+  
   // Wage type constants
   WAGE_TYPES: {
     WAGES: 'Mzdy'
   },
-
+  
   // Calculation related constants
   CALCULATION: {
     // Time constants
     MILLISECONDS_PER_HOUR: 3600000,
     SECONDS_PER_MINUTE: 60,
     MINUTES_PER_QUARTER: 15,
-
+    
     // Decimal places for financial calculations
     DECIMAL_PLACES: 2
   },
-
+  
   // Entry type constants
   ENTRY_TYPES: {
     LOG: 'log',
     MESSAGE: 'msg',
     ERROR: 'error'
   },
-
+  
   // Note constants
   NOTES: {
     LOG_ENTRY: 'generované scriptom createLogEntry',
     MESSAGE_ENTRY: 'generované scriptom createMsgEntry',
     ERROR_ENTRY: 'generované scriptom createErrorEntry',
-    STD_ERROR_ENTRY: 'generované scriptom std.ErrorHandler'
+    STD_ERROR_ENTRY: 'generované scriptom std_ErrorHandler'
   }
 };
 
 // Make available globally
-this.std_Constants = std.Constants;
+this.std_Constants = std_Constants;
