@@ -86,7 +86,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Log Error')
-                    .text('Failed to log message: ' + message + '\nError: ' + e.toString())
+                    .text('Failed to log message: ' + message + '\nError: ' + e.toString() + '\nLine: ' + e.lineNumber)
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
