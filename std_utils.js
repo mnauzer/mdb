@@ -850,35 +850,105 @@ std.Utils = {
           return "";
         }
 
-        // Get current season
+        // Get default season from ASISTANTO Tenants
+        var defaultSeason = "";
+        var seasonEntry = null;
         var seasonEntries = [];
+
         try {
-          seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
-          if (seasonEntries.length === 0) {
-            seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
-            if (seasonEntries.length === 0) {
-              if (typeof std !== 'undefined' && std.ErrorHandler) {
-                std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "No active season found");
-              }
-              return "";
+          // First, find the default season setting in ASISTANTO Tenants
+          var defaultSeasonEntries = [];
+          try {
+            // Try to find entries with default season field
+            defaultSeasonEntries = asistentoLib.find("default season != ''");
+          } catch (defaultSeasonError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logWarning("Utils", "EntryNumber.generateEntryNumber",
+                "Error finding default season: " + defaultSeasonError.toString());
             }
+          }
+
+          // If we found entries with default season, get the default season value
+          if (defaultSeasonEntries && defaultSeasonEntries.length > 0) {
+            try {
+              defaultSeason = defaultSeasonEntries[0].field("default season");
+            } catch (defaultSeasonFieldError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.generateEntryNumber",
+                  "Error getting default season field: " + defaultSeasonFieldError.toString());
+              }
+            }
+          }
+
+          // If we have a default season, find the matching season entry
+          if (defaultSeason) {
+            try {
+              seasonEntries = asistentoLib.find("Sezóna = '" + defaultSeason + "'");
+            } catch (seasonFindError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.generateEntryNumber",
+                  "Error finding season by default season: " + seasonFindError.toString());
+              }
+            }
+          }
+
+          // If we couldn't find the season by default season, try the standard approach
+          if (!seasonEntries || seasonEntries.length === 0) {
+            try {
+              seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+              if (seasonEntries.length === 0) {
+                seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+              }
+            } catch (standardSeasonError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.generateEntryNumber",
+                  "Error finding season by operation mode: " + standardSeasonError.toString());
+              }
+            }
+          }
+
+          // If we still couldn't find a season, use current year as fallback
+          if (!seasonEntries || seasonEntries.length === 0) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "No active season found");
+            }
+
+            // Use current year as fallback
+            var currentDate = new Date();
+            var currentYear = currentDate.getFullYear().toString();
+
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logWarning("Utils", "EntryNumber.generateEntryNumber",
+                "Using current year as fallback: " + currentYear);
+            }
+
+            return libName + "-" + currentYear + "-001";
+          }
+
+          // Get the season entry and season value
+          seasonEntry = seasonEntries[0];
+          var season = "";
+          try {
+            season = seasonEntry.field("Sezóna");
+          } catch (seasonFieldError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber",
+                "Error getting season field: " + seasonFieldError.toString());
+            }
+
+            // Use current year as fallback
+            var currentDate = new Date();
+            season = currentDate.getFullYear().toString();
           }
         } catch (seasonError) {
           if (typeof std !== 'undefined' && std.ErrorHandler) {
-            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error finding season: " + seasonError.toString());
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber",
+              "Error in season processing: " + seasonError.toString());
           }
-          return "";
-        }
 
-        var seasonEntry = seasonEntries[0];
-        var season = "";
-        try {
-          season = seasonEntry.field("Sezóna");
-        } catch (seasonFieldError) {
-          if (typeof std !== 'undefined' && std.ErrorHandler) {
-            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error getting season field: " + seasonFieldError.toString());
-          }
-          return "";
+          // Use current year as fallback
+          var currentDate = new Date();
+          season = currentDate.getFullYear().toString();
         }
 
         // Find database in the season entry
@@ -1105,19 +1175,80 @@ std.Utils = {
           return false;
         }
 
-        // Get current season
-        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
-        if (seasonEntries.length === 0) {
-          seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
-          if (seasonEntries.length === 0) {
+        // Get default season from ASISTANTO Tenants
+        var defaultSeason = "";
+        var seasonEntry = null;
+        var seasonEntries = [];
+
+        try {
+          // First, find the default season setting in ASISTANTO Tenants
+          var defaultSeasonEntries = [];
+          try {
+            // Try to find entries with default season field
+            defaultSeasonEntries = asistentoLib.find("default season != ''");
+          } catch (defaultSeasonError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logWarning("Utils", "EntryNumber.updateEntryNumberInfo",
+                "Error finding default season: " + defaultSeasonError.toString());
+            }
+          }
+
+          // If we found entries with default season, get the default season value
+          if (defaultSeasonEntries && defaultSeasonEntries.length > 0) {
+            try {
+              defaultSeason = defaultSeasonEntries[0].field("default season");
+            } catch (defaultSeasonFieldError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.updateEntryNumberInfo",
+                  "Error getting default season field: " + defaultSeasonFieldError.toString());
+              }
+            }
+          }
+
+          // If we have a default season, find the matching season entry
+          if (defaultSeason) {
+            try {
+              seasonEntries = asistentoLib.find("Sezóna = '" + defaultSeason + "'");
+            } catch (seasonFindError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.updateEntryNumberInfo",
+                  "Error finding season by default season: " + seasonFindError.toString());
+              }
+            }
+          }
+
+          // If we couldn't find the season by default season, try the standard approach
+          if (!seasonEntries || seasonEntries.length === 0) {
+            try {
+              seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+              if (seasonEntries.length === 0) {
+                seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+              }
+            } catch (standardSeasonError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.updateEntryNumberInfo",
+                  "Error finding season by operation mode: " + standardSeasonError.toString());
+              }
+            }
+          }
+
+          // If we still couldn't find a season, return false
+          if (!seasonEntries || seasonEntries.length === 0) {
             if (typeof std !== 'undefined' && std.ErrorHandler) {
               std.ErrorHandler.logError("Utils", "EntryNumber.updateEntryNumberInfo", "No active season found");
             }
             return false;
           }
-        }
 
-        var seasonEntry = seasonEntries[0];
+          // Get the season entry
+          seasonEntry = seasonEntries[0];
+        } catch (seasonError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.updateEntryNumberInfo",
+              "Error in season processing: " + seasonError.toString());
+          }
+          return false;
+        }
 
         // Find database in the season entry
         var databases = seasonEntry.field("Databázy");
@@ -1217,19 +1348,80 @@ std.Utils = {
           return false;
         }
 
-        // Get current season
-        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
-        if (seasonEntries.length === 0) {
-          seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
-          if (seasonEntries.length === 0) {
+        // Get default season from ASISTANTO Tenants
+        var defaultSeason = "";
+        var seasonEntry = null;
+        var seasonEntries = [];
+
+        try {
+          // First, find the default season setting in ASISTANTO Tenants
+          var defaultSeasonEntries = [];
+          try {
+            // Try to find entries with default season field
+            defaultSeasonEntries = asistentoLib.find("default season != ''");
+          } catch (defaultSeasonError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logWarning("Utils", "EntryNumber.handleEntryDeletion",
+                "Error finding default season: " + defaultSeasonError.toString());
+            }
+          }
+
+          // If we found entries with default season, get the default season value
+          if (defaultSeasonEntries && defaultSeasonEntries.length > 0) {
+            try {
+              defaultSeason = defaultSeasonEntries[0].field("default season");
+            } catch (defaultSeasonFieldError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.handleEntryDeletion",
+                  "Error getting default season field: " + defaultSeasonFieldError.toString());
+              }
+            }
+          }
+
+          // If we have a default season, find the matching season entry
+          if (defaultSeason) {
+            try {
+              seasonEntries = asistentoLib.find("Sezóna = '" + defaultSeason + "'");
+            } catch (seasonFindError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.handleEntryDeletion",
+                  "Error finding season by default season: " + seasonFindError.toString());
+              }
+            }
+          }
+
+          // If we couldn't find the season by default season, try the standard approach
+          if (!seasonEntries || seasonEntries.length === 0) {
+            try {
+              seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+              if (seasonEntries.length === 0) {
+                seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+              }
+            } catch (standardSeasonError) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logWarning("Utils", "EntryNumber.handleEntryDeletion",
+                  "Error finding season by operation mode: " + standardSeasonError.toString());
+              }
+            }
+          }
+
+          // If we still couldn't find a season, return false
+          if (!seasonEntries || seasonEntries.length === 0) {
             if (typeof std !== 'undefined' && std.ErrorHandler) {
               std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion", "No active season found");
             }
             return false;
           }
-        }
 
-        var seasonEntry = seasonEntries[0];
+          // Get the season entry
+          seasonEntry = seasonEntries[0];
+        } catch (seasonError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion",
+              "Error in season processing: " + seasonError.toString());
+          }
+          return false;
+        }
 
         // Find database in the season entry
         var databases = seasonEntry.field("Databázy");
