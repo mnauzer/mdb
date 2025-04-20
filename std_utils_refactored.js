@@ -1136,6 +1136,366 @@ std.Utils = {
       // This is just a wrapper around getCurrentValue with a specific date
       return this.getCurrentValue(tableName, keyField, keyValue, valueField, dateField, specificDate, exactMatch);
     }
+  },
+  
+  /**
+   * Entry Number Generator utilities
+   * Provides functions for generating and managing entry numbers
+   */
+  EntryNumber: {
+    /**
+     * Generate a new entry number for a database
+     * @param {Object} entry - The entry to generate a number for
+     * @returns {String} - The generated entry number
+     */
+    generateEntryNumber: function(entry) {
+      try {
+        if (!entry) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Entry is null or undefined");
+          }
+          return "";
+        }
+        
+        // Get current library
+        var currentLib = entry.lib();
+        var libName = currentLib.title;
+        
+        // Get ASISTANTO database
+        var asistentoLib = libByName(std.Constants.APP.TENANTS);
+        if (!asistentoLib) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "ASISTANTO database not found");
+          }
+          return "";
+        }
+        
+        // Get current season
+        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+        if (seasonEntries.length === 0) {
+          seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+          if (seasonEntries.length === 0) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "No active season found");
+            }
+            return "";
+          }
+        }
+        
+        var seasonEntry = seasonEntries[0];
+        var season = seasonEntry.field("Sezóna");
+        
+        // Find database in the season entry
+        var databases = seasonEntry.field("Databázy");
+        var dbEntry = null;
+        
+        for (var i = 0; i < databases.length; i++) {
+          if (databases[i].field("názov") === libName) {
+            dbEntry = databases[i];
+            break;
+          }
+        }
+        
+        if (!dbEntry) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Database not found in ASISTANTO: " + libName);
+          }
+          return "";
+        }
+        
+        // Get ASISTANTO DB database
+        var asistentoDBLib = libByName(std.Constants.APP.DB);
+        if (!asistentoDBLib) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "ASISTANTO DB database not found");
+          }
+          return "";
+        }
+        
+        // Find database in ASISTANTO DB
+        var dbInfoEntries = asistentoDBLib.find("Názov = '" + libName + "'");
+        if (dbInfoEntries.length === 0) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Database not found in ASISTANTO DB: " + libName);
+          }
+          return "";
+        }
+        
+        var dbInfo = dbInfoEntries[0];
+        
+        // Get number generation parameters
+        var usePrefix = dbEntry.field("prefix");
+        var trimDigits = dbEntry.field("trim") || 0;
+        var trailingDigits = dbEntry.field("trailing digit") || 3;
+        var deletedNumbers = dbEntry.field("vymazané čísla") || "";
+        var nextNumber = dbEntry.field("nasledujúce číslo") || 1;
+        
+        // Check if there are deleted numbers to reuse
+        var entryNumber = 0;
+        if (deletedNumbers && deletedNumbers.trim() !== "") {
+          var deletedNumbersArray = deletedNumbers.split(",").map(function(num) {
+            return parseInt(num.trim(), 10);
+          }).filter(function(num) {
+            return !isNaN(num);
+          }).sort(function(a, b) {
+            return a - b;
+          });
+          
+          if (deletedNumbersArray.length > 0) {
+            entryNumber = deletedNumbersArray[0];
+            
+            // Store the deleted number for later removal
+            entry.setAttr("_deletedNumber", entryNumber.toString());
+          }
+        }
+        
+        // If no deleted number was found, use the next number
+        if (entryNumber === 0) {
+          entryNumber = nextNumber;
+          
+          // Store the next number for later update
+          entry.setAttr("_nextNumber", (nextNumber + 1).toString());
+        }
+        
+        // Format the entry number
+        var formattedEntryNumber = this._formatEntryNumber(entryNumber, trailingDigits);
+        
+        // Format the season
+        var formattedSeason = season;
+        if (trimDigits > 0 && season.length > trimDigits) {
+          formattedSeason = season.substring(season.length - trimDigits);
+        }
+        
+        // Generate the final entry number
+        var finalEntryNumber = "";
+        if (usePrefix) {
+          // Use prefix from ASISTANTO DB
+          finalEntryNumber = dbInfo.field("Prefix") + formattedSeason + formattedEntryNumber;
+        } else {
+          // Use ID from ASISTANTO DB
+          finalEntryNumber = dbInfo.field("ID") + formattedSeason + formattedEntryNumber;
+        }
+        
+        // Store the generated number in the entry
+        entry.setAttr("_generatedNumber", finalEntryNumber);
+        
+        return finalEntryNumber;
+      } catch (e) {
+        if (typeof std !== 'undefined' && std.ErrorHandler) {
+          std.ErrorHandler.createSystemError(e, "Utils.EntryNumber.generateEntryNumber", true);
+        }
+        return "";
+      }
+    },
+    
+    /**
+     * Update entry number information in ASISTANTO database after saving an entry
+     * @param {Object} entry - The saved entry
+     * @returns {Boolean} - True if successful, false otherwise
+     */
+    updateEntryNumberInfo: function(entry) {
+      try {
+        if (!entry) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.updateEntryNumberInfo", "Entry is null or undefined");
+          }
+          return false;
+        }
+        
+        // Get current library
+        var currentLib = entry.lib();
+        var libName = currentLib.title;
+        
+        // Get ASISTANTO database
+        var asistentoLib = libByName(std.Constants.APP.TENANTS);
+        if (!asistentoLib) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.updateEntryNumberInfo", "ASISTANTO database not found");
+          }
+          return false;
+        }
+        
+        // Get current season
+        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+        if (seasonEntries.length === 0) {
+          seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+          if (seasonEntries.length === 0) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.updateEntryNumberInfo", "No active season found");
+            }
+            return false;
+          }
+        }
+        
+        var seasonEntry = seasonEntries[0];
+        
+        // Find database in the season entry
+        var databases = seasonEntry.field("Databázy");
+        var dbEntryIndex = -1;
+        
+        for (var i = 0; i < databases.length; i++) {
+          if (databases[i].field("názov") === libName) {
+            dbEntryIndex = i;
+            break;
+          }
+        }
+        
+        if (dbEntryIndex === -1) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.updateEntryNumberInfo", "Database not found in ASISTANTO: " + libName);
+          }
+          return false;
+        }
+        
+        var dbEntry = databases[dbEntryIndex];
+        
+        // Get the stored values from the entry
+        var deletedNumber = entry.attr("_deletedNumber");
+        var nextNumber = entry.attr("_nextNumber");
+        var generatedNumber = entry.attr("_generatedNumber");
+        
+        // Update the database entry
+        if (deletedNumber) {
+          // Remove the used deleted number
+          var deletedNumbers = dbEntry.field("vymazané čísla") || "";
+          var deletedNumbersArray = deletedNumbers.split(",").map(function(num) {
+            return num.trim();
+          }).filter(function(num) {
+            return num !== "" && num !== deletedNumber;
+          });
+          
+          dbEntry.set("vymazané čísla", deletedNumbersArray.join(","));
+          dbEntry.set("posledné číslo", parseInt(deletedNumber, 10));
+          dbEntry.set("vygenerované číslo", generatedNumber);
+        } else if (nextNumber) {
+          // Update the next number
+          dbEntry.set("posledné číslo", parseInt(nextNumber, 10) - 1);
+          dbEntry.set("nasledujúce číslo", parseInt(nextNumber, 10));
+          dbEntry.set("vygenerované číslo", generatedNumber);
+        }
+        
+        // Clear the stored values from the entry
+        entry.setAttr("_deletedNumber", "");
+        entry.setAttr("_nextNumber", "");
+        
+        return true;
+      } catch (e) {
+        if (typeof std !== 'undefined' && std.ErrorHandler) {
+          std.ErrorHandler.createSystemError(e, "Utils.EntryNumber.updateEntryNumberInfo", true);
+        }
+        return false;
+      }
+    },
+    
+    /**
+     * Handle entry deletion by adding the entry number to the deleted numbers list
+     * @param {Object} entry - The entry being deleted
+     * @returns {Boolean} - True if successful, false otherwise
+     */
+    handleEntryDeletion: function(entry) {
+      try {
+        if (!entry) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion", "Entry is null or undefined");
+          }
+          return false;
+        }
+        
+        // Get current library
+        var currentLib = entry.lib();
+        var libName = currentLib.title;
+        
+        // Get entry number
+        var entryNumber = entry.field(std.Constants.FIELDS.COMMON.NUMBER_ENTRY);
+        if (!entryNumber) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion", "Entry number not found");
+          }
+          return false;
+        }
+        
+        // Get ASISTANTO database
+        var asistentoLib = libByName(std.Constants.APP.TENANTS);
+        if (!asistentoLib) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion", "ASISTANTO database not found");
+          }
+          return false;
+        }
+        
+        // Get current season
+        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+        if (seasonEntries.length === 0) {
+          seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+          if (seasonEntries.length === 0) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion", "No active season found");
+            }
+            return false;
+          }
+        }
+        
+        var seasonEntry = seasonEntries[0];
+        
+        // Find database in the season entry
+        var databases = seasonEntry.field("Databázy");
+        var dbEntryIndex = -1;
+        
+        for (var i = 0; i < databases.length; i++) {
+          if (databases[i].field("názov") === libName) {
+            dbEntryIndex = i;
+            break;
+          }
+        }
+        
+        if (dbEntryIndex === -1) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.handleEntryDeletion", "Database not found in ASISTANTO: " + libName);
+          }
+          return false;
+        }
+        
+        var dbEntry = databases[dbEntryIndex];
+        
+        // Add the entry number to the deleted numbers list
+        var deletedNumbers = dbEntry.field("vymazané čísla") || "";
+        var deletedNumbersArray = deletedNumbers.split(",").map(function(num) {
+          return num.trim();
+        }).filter(function(num) {
+          return num !== "";
+        });
+        
+        // Add the entry number if it's not already in the list
+        if (deletedNumbersArray.indexOf(entryNumber.toString()) === -1) {
+          deletedNumbersArray.push(entryNumber.toString());
+        }
+        
+        // Update the deleted numbers field
+        dbEntry.set("vymazané čísla", deletedNumbersArray.join(","));
+        
+        return true;
+      } catch (e) {
+        if (typeof std !== 'undefined' && std.ErrorHandler) {
+          std.ErrorHandler.createSystemError(e, "Utils.EntryNumber.handleEntryDeletion", true);
+        }
+        return false;
+      }
+    },
+    
+    /**
+     * Format an entry number with leading zeros
+     * @param {Number} number - The number to format
+     * @param {Number} digits - The number of digits
+     * @returns {String} - The formatted number
+     * @private
+     */
+    _formatEntryNumber: function(number, digits) {
+      var str = number.toString();
+      while (str.length < digits) {
+        str = "0" + str;
+      }
+      return str;
+    }
   }
 };
 

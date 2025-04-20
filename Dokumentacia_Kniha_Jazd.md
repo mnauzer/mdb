@@ -1,6 +1,6 @@
 # Dokumentácia ku knižnici Kniha jázd
 
-Táto dokumentácia popisuje, ako používať knižnicu `libKnihaJazd.js` pre výpočet prejdenej trasy a vzdialenosti v databáze Kniha jázd pomocou Google Maps API.
+Táto dokumentácia popisuje, ako používať štandardnú knižnicu `std.KnihaJazd` pre výpočet prejdenej trasy a vzdialenosti v databáze Kniha jázd pomocou Google Maps API.
 
 ## Obsah
 
@@ -16,7 +16,7 @@ Táto dokumentácia popisuje, ako používať knižnicu `libKnihaJazd.js` pre v�
 
 ## Prehľad knižnice
 
-Knižnica `libKnihaJazd.js` poskytuje funkcie pre výpočet prejdenej trasy a vzdialenosti v databáze Kniha jázd. Knižnica využíva Google Maps API pre presný výpočet trasy medzi zástavkami a ako zálohu používa Haversine vzorec pre výpočet priamej vzdialenosti.
+Knižnica `std.KnihaJazd` poskytuje funkcie pre výpočet prejdenej trasy a vzdialenosti v databáze Kniha jázd. Knižnica využíva Google Maps API pre presný výpočet trasy medzi zástavkami a ako zálohu používa Haversine vzorec pre výpočet priamej vzdialenosti.
 
 Hlavné funkcie knižnice:
 
@@ -40,7 +40,7 @@ Pre správne fungovanie knižnice potrebujete:
 ## Inštalácia
 
 1. Skopírujte súbor `libKnihaJazd.js` do vášho projektu v Memento Database
-2. Pridajte akcie do vašich knižníc, ktoré budú volať funkcie z knižnice
+2. Pridajte akcie do vašich knižníc, ktoré budú volať funkcie z knižnice `std.KnihaJazd`
 3. Uistite sa, že máte správne nastavený API kľúč pre Google Maps v databáze ASISTANTO Tenants
 
 ## Štruktúra databáz
@@ -58,12 +58,9 @@ Databáza Kniha jázd by mala obsahovať nasledujúce polia:
 Databáza Miesta by mala obsahovať nasledujúce polia:
 
 - **Názov** - Názov miesta (typ: Text)
-- **Latitude** - Zemepisná šírka (typ: Number)
-- **Longitude** - Zemepisná dĺžka (typ: Number)
+- **Súradnice** - Geografické súradnice miesta (typ: Location)
 
-Alternatívne názvy polí pre súradnice:
-- **Zemepisná šírka** / **Zemepisná dĺžka**
-- **Lat** / **Lng**
+Pole typu Location v Memento Database obsahuje súradnice vo formáte "lat,lng" (zemepisná šírka, zemepisná dĺžka).
 
 ### ASISTANTO Tenants
 
@@ -568,9 +565,9 @@ Ak sa zobrazí chyba "Knižnica 'Miesta' nebola nájdená", skontrolujte nasledu
 
 Ak sa zobrazí upozornenie "Miesto 'XYZ' nemá súradnice", skontrolujte nasledujúce:
 
-1. Uistite sa, že záznam miesta obsahuje polia pre súradnice (Latitude/Longitude, Zemepisná šírka/Zemepisná dĺžka, alebo Lat/Lng)
-2. Uistite sa, že polia obsahujú platné číselné hodnoty
-3. Ak používate iné názvy polí, upravte kód v knižnici
+1. Uistite sa, že záznam miesta obsahuje pole "Súradnice" typu Location
+2. Uistite sa, že pole obsahuje platné súradnice vo formáte "lat,lng" (napr. "48.1486,17.1077")
+3. Ak používate iný názov poľa, upravte konštantu FIELD_COORDINATES v knižnici
 
 ### Chyba pri výpočte vzdialenosti: OVER_QUERY_LIMIT
 

@@ -145,14 +145,39 @@ std.Triggers = {
         // Set date
         utils.Field.setValue(en, constants.FIELDS.COMMON.DATE, new Date());
         
-        // Set number if available
-        if (typeof app !== 'undefined' && app.activeLib && app.activeLib.number) {
+        // Generate entry number
+        var entryNumber = utils.EntryNumber.generateEntryNumber(en);
+        if (entryNumber) {
+          utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER, entryNumber);
+          
+          // Get the raw entry number (without prefix and season) from the entry attributes
+          var rawEntryNumber = en.attr("_deletedNumber") || en.attr("_nextNumber");
+          if (rawEntryNumber) {
+            utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER_ENTRY, parseInt(rawEntryNumber, 10));
+          }
+        } else if (typeof app !== 'undefined' && app.activeLib && app.activeLib.number) {
+          // Fallback to old method if entry number generation fails
           utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER, app.activeLib.number);
           utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER_ENTRY, app.activeLib.nextNum);
         }
         
-        // Set season if available
-        if (typeof app !== 'undefined' && app.season) {
+        // Get current season from ASISTANTO database
+        var asistentoLib = libByName(constants.APP.TENANTS);
+        if (asistentoLib) {
+          var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+          if (seasonEntries.length === 0) {
+            seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+          }
+          
+          if (seasonEntries.length > 0) {
+            var season = seasonEntries[0].field("Sezóna");
+            utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, season);
+          } else if (typeof app !== 'undefined' && app.season) {
+            // Fallback to app.season if ASISTANTO database is not available
+            utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, app.season);
+          }
+        } else if (typeof app !== 'undefined' && app.season) {
+          // Fallback to app.season if ASISTANTO database is not available
           utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, app.season);
         }
         
@@ -184,7 +209,8 @@ std.Triggers = {
         var infoDialog = dialog();
         infoDialog.title('Informácia')
                   .text('Knižnica: ' + libName + ' /' + (app.data ? app.data.version : '') + '/ ' + 
-                        (app.season || '') + ' / ' + (app.activeLib.nextNum || ''))
+                        (utils.Field.getValue(en, constants.FIELDS.COMMON.SEASON) || '') + ' / ' + 
+                        (utils.Field.getValue(en, constants.FIELDS.COMMON.NUMBER) || ''))
                   .positiveButton('OK', function() {})
                   .show();
       }
@@ -228,14 +254,17 @@ std.Triggers = {
           // This would be implemented in a std.PriceQuotes module
         }
         
-        // Update number sequence
+        // Update entry number information in ASISTANTO database
+        utils.EntryNumber.updateEntryNumberInfo(en);
+        
+        // Update number sequence (legacy support)
         if (typeof app !== 'undefined' && app.activeLib) {
           app.activeLib.lastNum = app.activeLib.nextNum;
           app.activeLib.nextNum++;
-          
-          // Update entry view state
-          utils.Field.setValue(en, constants.FIELDS.COMMON.VIEW, constants.VIEW_STATES.PRINT);
         }
+        
+        // Update entry view state
+        utils.Field.setValue(en, constants.FIELDS.COMMON.VIEW, constants.VIEW_STATES.PRINT);
       }
     } catch (e) {
       if (typeof std !== 'undefined' && std.ErrorHandler) {
@@ -416,6 +445,48 @@ std.Triggers = {
                   .show();
       }
     }
+  },
+  
+  /**
+   * Entry delete trigger
+   * Called when an entry is being deleted
+   */
+  entryDelete: function() {
+    try {
+      // Get the current entry
+      var en = entry();
+      
+      // Get the current library
+      var currentLib = lib();
+      var libName = currentLib.title;
+      
+      // Process library-specific logic
+      if (typeof std !== 'undefined' && std.Constants && std.Utils) {
+        var constants = std.Constants;
+        var utils = std.Utils;
+        
+        // Handle entry deletion by adding the entry number to the deleted numbers list
+        utils.EntryNumber.handleEntryDeletion(en);
+        
+        // Additional library-specific processing if needed
+        if (libName === constants.LIBRARIES.RECORDS.ATTENDANCE && typeof std !== 'undefined' && std.Attendance) {
+          // Additional processing when deleting an attendance entry
+        } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTES && typeof std !== 'undefined' && std.PriceQuotes) {
+          // Additional processing when deleting a price quote entry
+        }
+      }
+    } catch (e) {
+      if (typeof std !== 'undefined' && std.ErrorHandler) {
+        std.ErrorHandler.createSystemError(e, 'std.Triggers.entryDelete', true);
+      } else {
+        // Use dialog instead of message
+        var errorDialog = dialog();
+        errorDialog.title('Chyba')
+                  .text('Error in entryDelete: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
+      }
+    }
   }
 };
 
@@ -451,6 +522,10 @@ function linkEntryBeforeSave() {
 
 function entryOpen() {
   return std.Triggers.entryOpen();
+}
+
+function entryDelete() {
+  return std.Triggers.entryDelete();
 }
 
 // For backward compatibility

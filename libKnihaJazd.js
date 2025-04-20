@@ -1,16 +1,43 @@
 /**
  * Memento Database - Kniha jázd
  * 
- * Knižnica pre prácu s databázou Kniha jázd, ktorá umožňuje
+ * Štandardná knižnica pre prácu s databázou Kniha jázd, ktorá umožňuje
  * výpočet prejdenej trasy a vzdialenosti pomocou Google Maps API.
  * 
- * Autor: Cline
- * Verzia: 1.0
- * Dátum: 19.4.2025
+ * @module std.KnihaJazd
+ * @author Cline
+ * @version 1.0.0
+ * @date 2025-04-19
  */
 
-// Globálny objekt pre knižnicu Kniha jázd
-var libKnihaJazd = {
+// Inicializácia globálneho objektu std, ak ešte neexistuje
+var std = std || {};
+
+// Inicializácia modulu pre chybové hlásenia, ak ešte neexistuje
+std.ErrorHandler = std.ErrorHandler || {
+    logError: function(module, method, error, details) {
+        console.error("[" + module + "." + method + "] " + error + (details ? ": " + details : ""));
+    },
+    showError: function(message, error) {
+        var errorMessage = message + (error ? ": " + error.message : "");
+        console.error(errorMessage);
+        message(errorMessage);
+    }
+};
+
+// Modul pre prácu s knihou jázd
+std.KnihaJazd = {
+    // Konštanty
+    MODULE_NAME: "KnihaJazd",
+    DB_TENANTS: "ASISTANTO Tenants",
+    DB_PLACES: "Miesta",
+    FIELD_API_KEY: "API Google Maps",
+    FIELD_COORDINATES: "Súradnice",
+    FIELD_STOPS: "Zástavky",
+    FIELD_DISTANCE: "Vzdialenosť (km)",
+    FIELD_DURATION: "Trvanie (hod)",
+    FIELD_NAME: "Názov",
+    
     /**
      * Získa API kľúč pre Google Maps z databázy ASISTANTO Tenants
      * @returns {String} API kľúč pre Google Maps alebo prázdny reťazec v prípade chyby
@@ -18,31 +45,31 @@ var libKnihaJazd = {
     getGoogleMapsApiKey: function() {
         try {
             // Získanie knižnice ASISTANTO Tenants
-            var tenantsLib = libByName("ASISTANTO Tenants");
+            var tenantsLib = libByName(this.DB_TENANTS);
             if (!tenantsLib) {
-                message("Chyba: Knižnica 'ASISTANTO Tenants' nebola nájdená.");
+                std.ErrorHandler.logError(this.MODULE_NAME, "getGoogleMapsApiKey", "Knižnica '" + this.DB_TENANTS + "' nebola nájdená");
                 return "";
             }
             
             // Získanie aktuálneho záznamu tenanta
-            var tenantId = getTenantId(); // Predpokladáme, že existuje funkcia na získanie ID tenanta
+            var tenantId = std.Utils.getTenantId(); // Predpokladáme, že existuje funkcia na získanie ID tenanta
             var tenantEntries = tenantsLib.find("ID = '" + tenantId + "'");
             
             if (tenantEntries.length === 0) {
-                message("Chyba: Záznam tenanta s ID '" + tenantId + "' nebol nájdený.");
+                std.ErrorHandler.logError(this.MODULE_NAME, "getGoogleMapsApiKey", "Záznam tenanta s ID '" + tenantId + "' nebol nájdený");
                 return "";
             }
             
             // Získanie API kľúča
-            var apiKey = tenantEntries[0].field("API Google Maps");
+            var apiKey = tenantEntries[0].field(this.FIELD_API_KEY);
             if (!apiKey) {
-                message("Chyba: API kľúč pre Google Maps nie je nastavený v databáze ASISTANTO Tenants.");
+                std.ErrorHandler.logError(this.MODULE_NAME, "getGoogleMapsApiKey", "API kľúč pre Google Maps nie je nastavený v databáze " + this.DB_TENANTS);
                 return "";
             }
             
             return apiKey;
         } catch (e) {
-            message("Chyba pri získavaní API kľúča: " + e.message);
+            std.ErrorHandler.logError(this.MODULE_NAME, "getGoogleMapsApiKey", "Neočakávaná chyba", e.message);
             return "";
         }
     },
@@ -55,35 +82,30 @@ var libKnihaJazd = {
     getPlaceCoordinates: function(placeEntry) {
         try {
             if (!placeEntry) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "getPlaceCoordinates", "Neplatný záznam miesta");
                 return null;
             }
             
-            // Získanie súradníc z polí záznamu
-            var lat = placeEntry.field("Latitude");
-            var lng = placeEntry.field("Longitude");
+            // Získanie súradníc z poľa typu Location
+            var coordinates = placeEntry.field(this.FIELD_COORDINATES);
+            if (!coordinates) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "getPlaceCoordinates", "Miesto '" + placeEntry.field(this.FIELD_NAME) + "' nemá súradnice");
+                return null;
+            }
             
-            // Kontrola, či sú súradnice k dispozícii
-            if (!lat || !lng) {
-                // Skúsime alternatívne názvy polí
-                lat = placeEntry.field("Zemepisná šírka");
-                lng = placeEntry.field("Zemepisná dĺžka");
-                
-                if (!lat || !lng) {
-                    // Skúsime ešte ďalšie alternatívne názvy polí
-                    lat = placeEntry.field("Lat");
-                    lng = placeEntry.field("Lng");
-                    
-                    if (!lat || !lng) {
-                        return null;
-                    }
-                }
+            // Pole typu Location obsahuje súradnice vo formáte "lat,lng"
+            var parts = coordinates.split(",");
+            if (parts.length !== 2) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "getPlaceCoordinates", "Neplatný formát súradníc", coordinates);
+                return null;
             }
             
             // Konverzia na čísla
-            lat = parseFloat(lat);
-            lng = parseFloat(lng);
+            var lat = parseFloat(parts[0]);
+            var lng = parseFloat(parts[1]);
             
             if (isNaN(lat) || isNaN(lng)) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "getPlaceCoordinates", "Neplatné súradnice", coordinates);
                 return null;
             }
             
@@ -92,7 +114,7 @@ var libKnihaJazd = {
                 lng: lng
             };
         } catch (e) {
-            message("Chyba pri získavaní súradníc miesta: " + e.message);
+            std.ErrorHandler.logError(this.MODULE_NAME, "getPlaceCoordinates", "Neočakávaná chyba", e.message);
             return null;
         }
     },
@@ -105,20 +127,21 @@ var libKnihaJazd = {
     getTripStopCoordinates: function(tripEntry) {
         try {
             if (!tripEntry) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "getTripStopCoordinates", "Neplatný záznam jazdy");
                 return [];
             }
             
             // Získanie knižnice Miesta
-            var placesLib = libByName("Miesta");
+            var placesLib = libByName(this.DB_PLACES);
             if (!placesLib) {
-                message("Chyba: Knižnica 'Miesta' nebola nájdená.");
+                std.ErrorHandler.logError(this.MODULE_NAME, "getTripStopCoordinates", "Knižnica '" + this.DB_PLACES + "' nebola nájdená");
                 return [];
             }
             
             // Získanie zástavok z jazdy
-            var stops = tripEntry.field("Zástavky");
+            var stops = tripEntry.field(this.FIELD_STOPS);
             if (!stops || stops.length === 0) {
-                message("Upozornenie: Jazda nemá žiadne zástavky.");
+                std.ErrorHandler.logError(this.MODULE_NAME, "getTripStopCoordinates", "Jazda nemá žiadne zástavky");
                 return [];
             }
             
@@ -137,7 +160,7 @@ var libKnihaJazd = {
                     placeEntry = stop;
                 } else if (typeof stop === 'string') {
                     // Názov miesta - vyhľadanie v knižnici
-                    var placeEntries = placesLib.find("Názov = '" + stop + "'");
+                    var placeEntries = placesLib.find(this.FIELD_NAME + " = '" + stop + "'");
                     if (placeEntries.length > 0) {
                         placeEntry = placeEntries[0];
                     }
@@ -149,14 +172,14 @@ var libKnihaJazd = {
                     if (coords) {
                         coordinates.push(coords);
                     } else {
-                        message("Upozornenie: Miesto '" + (placeEntry.field("Názov") || "Neznáme") + "' nemá súradnice.");
+                        std.ErrorHandler.logError(this.MODULE_NAME, "getTripStopCoordinates", "Miesto '" + (placeEntry.field(this.FIELD_NAME) || "Neznáme") + "' nemá súradnice");
                     }
                 }
             }
             
             return coordinates;
         } catch (e) {
-            message("Chyba pri získavaní súradníc zástavok: " + e.message);
+            std.ErrorHandler.logError(this.MODULE_NAME, "getTripStopCoordinates", "Neočakávaná chyba", e.message);
             return [];
         }
     },
@@ -169,6 +192,11 @@ var libKnihaJazd = {
      */
     calculateHaversineDistance: function(point1, point2) {
         try {
+            if (!point1 || !point2) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "calculateHaversineDistance", "Neplatné súradnice bodov");
+                return 0;
+            }
+            
             var R = 6371; // Polomer Zeme v km
             var dLat = this._toRad(point2.lat - point1.lat);
             var dLon = this._toRad(point2.lng - point1.lng);
@@ -182,7 +210,7 @@ var libKnihaJazd = {
             
             return d;
         } catch (e) {
-            message("Chyba pri výpočte Haversine vzdialenosti: " + e.message);
+            std.ErrorHandler.logError(this.MODULE_NAME, "calculateHaversineDistance", "Neočakávaná chyba", e.message);
             return 0;
         }
     },
@@ -203,8 +231,11 @@ var libKnihaJazd = {
      * @returns {Promise} Promise s výsledkom výpočtu {distance, duration, status}
      */
     calculateRouteDistance: function(coordinates) {
+        var self = this;
+        
         try {
             if (!coordinates || coordinates.length < 2) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "calculateRouteDistance", "Neplatné súradnice alebo nedostatok bodov");
                 return Promise.resolve({
                     distance: 0,
                     duration: 0,
@@ -215,6 +246,7 @@ var libKnihaJazd = {
             // Získanie API kľúča
             var apiKey = this.getGoogleMapsApiKey();
             if (!apiKey) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "calculateRouteDistance", "Chýba API kľúč pre Google Maps");
                 return Promise.resolve({
                     distance: 0,
                     duration: 0,
@@ -279,6 +311,7 @@ var libKnihaJazd = {
                                         status: "OK"
                                     });
                                 } else {
+                                    std.ErrorHandler.logError(self.MODULE_NAME, "calculateRouteDistance", "Google Maps API vrátilo chybu", response.status || "UNKNOWN_ERROR");
                                     resolve({
                                         distance: 0,
                                         duration: 0,
@@ -286,9 +319,11 @@ var libKnihaJazd = {
                                     });
                                 }
                             } catch (e) {
+                                std.ErrorHandler.logError(self.MODULE_NAME, "calculateRouteDistance", "Chyba pri spracovaní odpovede", e.message);
                                 reject(e);
                             }
                         } else {
+                            std.ErrorHandler.logError(self.MODULE_NAME, "calculateRouteDistance", "HTTP chyba", http.status);
                             reject(new Error("HTTP Error: " + http.status));
                         }
                     }
@@ -297,7 +332,7 @@ var libKnihaJazd = {
                 http.send();
             });
         } catch (e) {
-            message("Chyba pri výpočte vzdialenosti trasy: " + e.message);
+            std.ErrorHandler.logError(this.MODULE_NAME, "calculateRouteDistance", "Neočakávaná chyba", e.message);
             return Promise.resolve({
                 distance: 0,
                 duration: 0,
@@ -314,6 +349,7 @@ var libKnihaJazd = {
     calculateTripDistance: function(tripEntry) {
         try {
             if (!tripEntry) {
+                std.ErrorHandler.logError(this.MODULE_NAME, "calculateTripDistance", "Neplatný záznam jazdy");
                 return Promise.resolve({
                     distance: 0,
                     duration: 0,
@@ -326,6 +362,7 @@ var libKnihaJazd = {
             
             if (coordinates.length < 2) {
                 // Ak nemáme aspoň 2 body, nemôžeme vypočítať trasu
+                std.ErrorHandler.logError(this.MODULE_NAME, "calculateTripDistance", "Nedostatok zástavok pre výpočet trasy (minimum 2)");
                 return Promise.resolve({
                     distance: 0,
                     duration: 0,
@@ -336,7 +373,7 @@ var libKnihaJazd = {
             // Výpočet vzdialenosti trasy
             return this.calculateRouteDistance(coordinates);
         } catch (e) {
-            message("Chyba pri výpočte vzdialenosti jazdy: " + e.message);
+            std.ErrorHandler.logError(this.MODULE_NAME, "calculateTripDistance", "Neočakávaná chyba", e.message);
             return Promise.resolve({
                 distance: 0,
                 duration: 0,
@@ -356,6 +393,7 @@ var libKnihaJazd = {
         return new Promise(function(resolve, reject) {
             try {
                 if (!tripEntry) {
+                    std.ErrorHandler.logError(self.MODULE_NAME, "updateTripDistance", "Neplatný záznam jazdy");
                     resolve({
                         success: false,
                         message: "Neplatný záznam jazdy",
@@ -371,8 +409,8 @@ var libKnihaJazd = {
                         try {
                             if (result.status === "OK") {
                                 // Aktualizácia polí v zázname
-                                tripEntry.set("Vzdialenosť (km)", result.distance);
-                                tripEntry.set("Trvanie (hod)", result.duration);
+                                tripEntry.set(self.FIELD_DISTANCE, result.distance);
+                                tripEntry.set(self.FIELD_DURATION, result.duration);
                                 
                                 resolve({
                                     success: true,
@@ -390,8 +428,10 @@ var libKnihaJazd = {
                                 }
                                 
                                 // Aktualizácia polí v zázname
-                                tripEntry.set("Vzdialenosť (km)", haversineDistance);
-                                tripEntry.set("Trvanie (hod)", haversineDistance / 60); // Odhad: 60 km/h
+                                tripEntry.set(self.FIELD_DISTANCE, haversineDistance);
+                                tripEntry.set(self.FIELD_DURATION, haversineDistance / 60); // Odhad: 60 km/h
+                                
+                                std.ErrorHandler.logError(self.MODULE_NAME, "updateTripDistance", "Použitý Haversine vzorec namiesto Google Maps API", result.status);
                                 
                                 resolve({
                                     success: true,
@@ -401,16 +441,50 @@ var libKnihaJazd = {
                                 });
                             }
                         } catch (e) {
+                            std.ErrorHandler.logError(self.MODULE_NAME, "updateTripDistance", "Chyba pri aktualizácii polí", e.message);
                             reject(e);
                         }
                     })
                     .catch(function(error) {
+                        std.ErrorHandler.logError(self.MODULE_NAME, "updateTripDistance", "Chyba pri výpočte vzdialenosti", error.message);
                         reject(error);
                     });
             } catch (e) {
+                std.ErrorHandler.logError(self.MODULE_NAME, "updateTripDistance", "Neočakávaná chyba", e.message);
                 reject(e);
             }
         });
+    }
+};
+
+// Inicializácia modulu pre pomocné funkcie, ak ešte neexistuje
+std.Utils = std.Utils || {
+    /**
+     * Získa ID aktuálneho tenanta
+     * @returns {String} ID tenanta alebo prázdny reťazec v prípade chyby
+     */
+    getTenantId: function() {
+        try {
+            // Možnosť 1: Získanie z globálnej premennej
+            if (typeof TENANT_ID !== 'undefined') {
+                return TENANT_ID;
+            }
+            
+            // Možnosť 2: Získanie z knižnice nastavení
+            var settingsLib = libByName("Nastavenia");
+            if (settingsLib) {
+                var settingsEntries = settingsLib.find("Názov = 'TENANT_ID'");
+                if (settingsEntries.length > 0) {
+                    return settingsEntries[0].field("Hodnota");
+                }
+            }
+            
+            // Možnosť 3: Použitie predvolenej hodnoty
+            return "default";
+        } catch (e) {
+            std.ErrorHandler.logError("Utils", "getTenantId", "Neočakávaná chyba", e.message);
+            return "";
+        }
     }
 };
 
@@ -419,19 +493,23 @@ var libKnihaJazd = {
  * @returns {void}
  */
 function calculateTripDistanceAction() {
-    var e = entry();
-    
-    libKnihaJazd.updateTripDistance(e)
-        .then(function(result) {
-            if (result.success) {
-                message(result.message + "\n\nVzdialenosť: " + result.distance.toFixed(2) + " km\nTrvanie: " + (result.duration * 60).toFixed(0) + " minút");
-            } else {
-                message("Chyba: " + result.message);
-            }
-        })
-        .catch(function(error) {
-            message("Chyba pri výpočte vzdialenosti jazdy: " + error.message);
-        });
+    try {
+        var e = entry();
+        
+        std.KnihaJazd.updateTripDistance(e)
+            .then(function(result) {
+                if (result.success) {
+                    message(result.message + "\n\nVzdialenosť: " + result.distance.toFixed(2) + " km\nTrvanie: " + (result.duration * 60).toFixed(0) + " minút");
+                } else {
+                    std.ErrorHandler.showError("Chyba pri výpočte vzdialenosti jazdy", { message: result.message });
+                }
+            })
+            .catch(function(error) {
+                std.ErrorHandler.showError("Chyba pri výpočte vzdialenosti jazdy", error);
+            });
+    } catch (e) {
+        std.ErrorHandler.showError("Neočakávaná chyba pri výpočte vzdialenosti jazdy", e);
+    }
 }
 
 /**
@@ -439,50 +517,56 @@ function calculateTripDistanceAction() {
  * @returns {void}
  */
 function calculateBulkTripDistanceAction() {
-    var lib = lib();
-    var entries = lib.entries();
-    
-    if (entries.length === 0) {
-        message("Knižnica neobsahuje žiadne záznamy.");
-        return;
-    }
-    
-    var count = 0;
-    var totalDistance = 0;
-    var errors = 0;
-    
-    // Funkcia pre sekvenčné spracovanie záznamov
-    function processEntry(index) {
-        if (index >= entries.length) {
-            // Všetky záznamy boli spracované
-            message("Výpočet vzdialenosti bol dokončený.\n\nSpracované záznamy: " + count + "\nCelková vzdialenosť: " + totalDistance.toFixed(2) + " km\nChyby: " + errors);
+    try {
+        var lib = lib();
+        var entries = lib.entries();
+        
+        if (entries.length === 0) {
+            message("Knižnica neobsahuje žiadne záznamy.");
             return;
         }
         
-        var entry = entries[index];
+        var count = 0;
+        var totalDistance = 0;
+        var errors = 0;
         
-        libKnihaJazd.updateTripDistance(entry)
-            .then(function(result) {
-                if (result.success) {
-                    count++;
-                    totalDistance += result.distance;
-                } else {
+        // Funkcia pre sekvenčné spracovanie záznamov
+        function processEntry(index) {
+            if (index >= entries.length) {
+                // Všetky záznamy boli spracované
+                message("Výpočet vzdialenosti bol dokončený.\n\nSpracované záznamy: " + count + "\nCelková vzdialenosť: " + totalDistance.toFixed(2) + " km\nChyby: " + errors);
+                return;
+            }
+            
+            var entry = entries[index];
+            
+            std.KnihaJazd.updateTripDistance(entry)
+                .then(function(result) {
+                    if (result.success) {
+                        count++;
+                        totalDistance += result.distance;
+                    } else {
+                        errors++;
+                        std.ErrorHandler.logError("KnihaJazd", "calculateBulkTripDistanceAction", "Chyba pri výpočte vzdialenosti pre záznam", result.message);
+                    }
+                    
+                    // Spracovanie ďalšieho záznamu
+                    processEntry(index + 1);
+                })
+                .catch(function(error) {
                     errors++;
-                }
-                
-                // Spracovanie ďalšieho záznamu
-                processEntry(index + 1);
-            })
-            .catch(function(error) {
-                errors++;
-                
-                // Spracovanie ďalšieho záznamu
-                processEntry(index + 1);
-            });
+                    std.ErrorHandler.logError("KnihaJazd", "calculateBulkTripDistanceAction", "Neočakávaná chyba pri výpočte vzdialenosti", error.message);
+                    
+                    // Spracovanie ďalšieho záznamu
+                    processEntry(index + 1);
+                });
+        }
+        
+        // Spustenie spracovania od prvého záznamu
+        processEntry(0);
+    } catch (e) {
+        std.ErrorHandler.showError("Neočakávaná chyba pri hromadnom výpočte vzdialenosti", e);
     }
-    
-    // Spustenie spracovania od prvého záznamu
-    processEntry(0);
 }
 
 /**
@@ -490,109 +574,82 @@ function calculateBulkTripDistanceAction() {
  * @returns {void}
  */
 function calculateDistanceBetweenPlacesAction() {
-    var placesLib = libByName("Miesta");
-    
-    if (!placesLib) {
-        message("Chyba: Knižnica 'Miesta' nebola nájdená.");
-        return;
-    }
-    
-    // Získanie zoznamu miest
-    var places = placesLib.entries();
-    
-    if (places.length < 2) {
-        message("Knižnica 'Miesta' neobsahuje dostatok záznamov (minimum 2).");
-        return;
-    }
-    
-    // Vytvorenie zoznamu miest pre výber
-    var placeNames = [];
-    for (var i = 0; i < places.length; i++) {
-        placeNames.push(places[i].field("Názov"));
-    }
-    
-    // Výber prvého miesta
-    var startPlace = prompt("Vyberte začiatočné miesto", placeNames);
-    if (!startPlace) {
-        return;
-    }
-    
-    // Výber druhého miesta
-    var endPlace = prompt("Vyberte cieľové miesto", placeNames);
-    if (!endPlace) {
-        return;
-    }
-    
-    // Nájdenie záznamov miest
-    var startPlaceEntry = placesLib.find("Názov = '" + startPlace + "'")[0];
-    var endPlaceEntry = placesLib.find("Názov = '" + endPlace + "'")[0];
-    
-    if (!startPlaceEntry || !endPlaceEntry) {
-        message("Chyba: Jedno alebo obe miesta neboli nájdené.");
-        return;
-    }
-    
-    // Získanie súradníc
-    var startCoords = libKnihaJazd.getPlaceCoordinates(startPlaceEntry);
-    var endCoords = libKnihaJazd.getPlaceCoordinates(endPlaceEntry);
-    
-    if (!startCoords || !endCoords) {
-        message("Chyba: Jedno alebo obe miesta nemajú súradnice.");
-        return;
-    }
-    
-    // Výpočet vzdialenosti
-    libKnihaJazd.calculateRouteDistance([startCoords, endCoords])
-        .then(function(result) {
-            if (result.status === "OK") {
-                message("Vzdialenosť medzi miestami:\n\n" +
-                        "Začiatok: " + startPlace + "\n" +
-                        "Cieľ: " + endPlace + "\n\n" +
-                        "Vzdialenosť: " + result.distance.toFixed(2) + " km\n" +
-                        "Trvanie: " + (result.duration * 60).toFixed(0) + " minút");
-            } else {
-                // Výpočet vzdialenosti pomocou Haversine vzorca ako záloha
-                var haversineDistance = libKnihaJazd.calculateHaversineDistance(startCoords, endCoords);
-                
-                message("Vzdialenosť medzi miestami (priama vzdialenosť):\n\n" +
-                        "Začiatok: " + startPlace + "\n" +
-                        "Cieľ: " + endPlace + "\n\n" +
-                        "Vzdialenosť: " + haversineDistance.toFixed(2) + " km\n" +
-                        "Poznámka: Použitý Haversine vzorec (Google Maps API: " + result.status + ")");
-            }
-        })
-        .catch(function(error) {
-            message("Chyba pri výpočte vzdialenosti: " + error.message);
-        });
-}
-
-/**
- * Pomocná funkcia pre získanie ID aktuálneho tenanta
- * @returns {String} ID tenanta alebo prázdny reťazec v prípade chyby
- */
-function getTenantId() {
     try {
-        // Implementácia závisí od vašej aplikácie
-        // Toto je len príklad, ako by mohla vyzerať
+        var placesLib = libByName(std.KnihaJazd.DB_PLACES);
         
-        // Možnosť 1: Získanie z globálnej premennej
-        if (typeof TENANT_ID !== 'undefined') {
-            return TENANT_ID;
+        if (!placesLib) {
+            std.ErrorHandler.showError("Knižnica '" + std.KnihaJazd.DB_PLACES + "' nebola nájdená");
+            return;
         }
         
-        // Možnosť 2: Získanie z knižnice nastavení
-        var settingsLib = libByName("Nastavenia");
-        if (settingsLib) {
-            var settingsEntries = settingsLib.find("Názov = 'TENANT_ID'");
-            if (settingsEntries.length > 0) {
-                return settingsEntries[0].field("Hodnota");
-            }
+        // Získanie zoznamu miest
+        var places = placesLib.entries();
+        
+        if (places.length < 2) {
+            message("Knižnica '" + std.KnihaJazd.DB_PLACES + "' neobsahuje dostatok záznamov (minimum 2).");
+            return;
         }
         
-        // Možnosť 3: Použitie predvolenej hodnoty
-        return "default";
+        // Vytvorenie zoznamu miest pre výber
+        var placeNames = [];
+        for (var i = 0; i < places.length; i++) {
+            placeNames.push(places[i].field(std.KnihaJazd.FIELD_NAME));
+        }
+        
+        // Výber prvého miesta
+        var startPlace = prompt("Vyberte začiatočné miesto", placeNames);
+        if (!startPlace) {
+            return;
+        }
+        
+        // Výber druhého miesta
+        var endPlace = prompt("Vyberte cieľové miesto", placeNames);
+        if (!endPlace) {
+            return;
+        }
+        
+        // Nájdenie záznamov miest
+        var startPlaceEntry = placesLib.find(std.KnihaJazd.FIELD_NAME + " = '" + startPlace + "'")[0];
+        var endPlaceEntry = placesLib.find(std.KnihaJazd.FIELD_NAME + " = '" + endPlace + "'")[0];
+        
+        if (!startPlaceEntry || !endPlaceEntry) {
+            std.ErrorHandler.showError("Jedno alebo obe miesta neboli nájdené");
+            return;
+        }
+        
+        // Získanie súradníc
+        var startCoords = std.KnihaJazd.getPlaceCoordinates(startPlaceEntry);
+        var endCoords = std.KnihaJazd.getPlaceCoordinates(endPlaceEntry);
+        
+        if (!startCoords || !endCoords) {
+            std.ErrorHandler.showError("Jedno alebo obe miesta nemajú súradnice");
+            return;
+        }
+        
+        // Výpočet vzdialenosti
+        std.KnihaJazd.calculateRouteDistance([startCoords, endCoords])
+            .then(function(result) {
+                if (result.status === "OK") {
+                    message("Vzdialenosť medzi miestami:\n\n" +
+                            "Začiatok: " + startPlace + "\n" +
+                            "Cieľ: " + endPlace + "\n\n" +
+                            "Vzdialenosť: " + result.distance.toFixed(2) + " km\n" +
+                            "Trvanie: " + (result.duration * 60).toFixed(0) + " minút");
+                } else {
+                    // Výpočet vzdialenosti pomocou Haversine vzorca ako záloha
+                    var haversineDistance = std.KnihaJazd.calculateHaversineDistance(startCoords, endCoords);
+                    
+                    message("Vzdialenosť medzi miestami (priama vzdialenosť):\n\n" +
+                            "Začiatok: " + startPlace + "\n" +
+                            "Cieľ: " + endPlace + "\n\n" +
+                            "Vzdialenosť: " + haversineDistance.toFixed(2) + " km\n" +
+                            "Poznámka: Použitý Haversine vzorec (Google Maps API: " + result.status + ")");
+                }
+            })
+            .catch(function(error) {
+                std.ErrorHandler.showError("Chyba pri výpočte vzdialenosti", error);
+            });
     } catch (e) {
-        message("Chyba pri získavaní ID tenanta: " + e.message);
-        return "";
+        std.ErrorHandler.showError("Neočakávaná chyba pri výpočte vzdialenosti medzi miestami", e);
     }
 }
