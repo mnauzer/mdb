@@ -785,47 +785,126 @@ std.Utils = {
           return "";
         }
 
-        // Get current library
-        var currentLib = entry.lib();
-        var libName = currentLib.title;
+        // Get current library - handle both Entry and EntryDefault objects
+        var currentLib = null;
+        var libName = "";
+
+        try {
+          // For regular Entry objects
+          if (typeof entry.lib === 'function') {
+            currentLib = entry.lib();
+            if (currentLib && typeof currentLib.title === 'string') {
+              libName = currentLib.title;
+            }
+          } else {
+            // For EntryDefault objects, get the current library directly
+            currentLib = lib();
+            if (currentLib && typeof currentLib.title === 'string') {
+              libName = currentLib.title;
+            }
+          }
+
+          if (!libName) {
+            throw new Error("Could not determine library name");
+          }
+        } catch (libError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Failed to get library: " + libError.toString());
+          }
+
+          // Try alternative approach to get library name
+          try {
+            if (typeof app !== 'undefined' && app.activeLib && app.activeLib.name) {
+              libName = app.activeLib.name;
+            } else {
+              // Last resort - try to get from global context
+              var globalLib = lib();
+              libName = globalLib.title;
+            }
+          } catch (altLibError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Failed to get library using alternative methods: " + altLibError.toString());
+            }
+            return "";
+          }
+        }
 
         // Get ASISTANTO database
         var constants = (typeof std !== 'undefined' && std.Constants) ?
                         std.Constants :
                         { APP: { TENANTS: 'ASISTANTO Tenants', DB: 'ASISTANTO DB' } };
 
-        var asistentoLib = libByName(constants.APP.TENANTS);
-        if (!asistentoLib) {
+        var asistentoLib = null;
+        try {
+          asistentoLib = libByName(constants.APP.TENANTS);
+          if (!asistentoLib) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "ASISTANTO database not found");
+            }
+            return "";
+          }
+        } catch (tenantError) {
           if (typeof std !== 'undefined' && std.ErrorHandler) {
-            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "ASISTANTO database not found");
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error accessing ASISTANTO database: " + tenantError.toString());
           }
           return "";
         }
 
         // Get current season
-        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
-        if (seasonEntries.length === 0) {
-          seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+        var seasonEntries = [];
+        try {
+          seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
           if (seasonEntries.length === 0) {
-            if (typeof std !== 'undefined' && std.ErrorHandler) {
-              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "No active season found");
+            seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+            if (seasonEntries.length === 0) {
+              if (typeof std !== 'undefined' && std.ErrorHandler) {
+                std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "No active season found");
+              }
+              return "";
             }
-            return "";
           }
+        } catch (seasonError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error finding season: " + seasonError.toString());
+          }
+          return "";
         }
 
         var seasonEntry = seasonEntries[0];
-        var season = seasonEntry.field("Sezóna");
+        var season = "";
+        try {
+          season = seasonEntry.field("Sezóna");
+        } catch (seasonFieldError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error getting season field: " + seasonFieldError.toString());
+          }
+          return "";
+        }
 
         // Find database in the season entry
-        var databases = seasonEntry.field("Databázy");
-        var dbEntry = null;
-
-        for (var i = 0; i < databases.length; i++) {
-          if (databases[i].field("názov") === libName) {
-            dbEntry = databases[i];
-            break;
+        var databases = [];
+        try {
+          databases = seasonEntry.field("Databázy");
+        } catch (dbFieldError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error getting databases field: " + dbFieldError.toString());
           }
+          return "";
+        }
+
+        var dbEntry = null;
+        try {
+          for (var i = 0; i < databases.length; i++) {
+            if (databases[i].field("názov") === libName) {
+              dbEntry = databases[i];
+              break;
+            }
+          }
+        } catch (dbEntryError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error finding database entry: " + dbEntryError.toString());
+          }
+          return "";
         }
 
         if (!dbEntry) {
@@ -836,19 +915,35 @@ std.Utils = {
         }
 
         // Get ASISTANTO DB database
-        var asistentoDBLib = libByName(constants.APP.DB);
-        if (!asistentoDBLib) {
+        var asistentoDBLib = null;
+        try {
+          asistentoDBLib = libByName(constants.APP.DB);
+          if (!asistentoDBLib) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "ASISTANTO DB database not found");
+            }
+            return "";
+          }
+        } catch (dbLibError) {
           if (typeof std !== 'undefined' && std.ErrorHandler) {
-            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "ASISTANTO DB database not found");
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error accessing ASISTANTO DB: " + dbLibError.toString());
           }
           return "";
         }
 
         // Find database in ASISTANTO DB
-        var dbInfoEntries = asistentoDBLib.find("Názov = '" + libName + "'");
-        if (dbInfoEntries.length === 0) {
+        var dbInfoEntries = [];
+        try {
+          dbInfoEntries = asistentoDBLib.find("Názov = '" + libName + "'");
+          if (dbInfoEntries.length === 0) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Database not found in ASISTANTO DB: " + libName);
+            }
+            return "";
+          }
+        } catch (dbInfoError) {
           if (typeof std !== 'undefined' && std.ErrorHandler) {
-            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Database not found in ASISTANTO DB: " + libName);
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error finding database info: " + dbInfoError.toString());
           }
           return "";
         }
@@ -856,28 +951,54 @@ std.Utils = {
         var dbInfo = dbInfoEntries[0];
 
         // Get number generation parameters
-        var usePrefix = dbEntry.field("prefix");
-        var trimDigits = dbEntry.field("trim") || 0;
-        var trailingDigits = dbEntry.field("trailing digit") || 3;
-        var deletedNumbers = dbEntry.field("vymazané čísla") || "";
-        var nextNumber = dbEntry.field("nasledujúce číslo") || 1;
+        var usePrefix = false;
+        var trimDigits = 0;
+        var trailingDigits = 3;
+        var deletedNumbers = "";
+        var nextNumber = 1;
+
+        try {
+          usePrefix = dbEntry.field("prefix");
+          trimDigits = dbEntry.field("trim") || 0;
+          trailingDigits = dbEntry.field("trailing digit") || 3;
+          deletedNumbers = dbEntry.field("vymazané čísla") || "";
+          nextNumber = dbEntry.field("nasledujúce číslo") || 1;
+        } catch (paramError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error getting number parameters: " + paramError.toString());
+          }
+          // Continue with defaults
+        }
 
         // Check if there are deleted numbers to reuse
         var entryNumber = 0;
         if (deletedNumbers && deletedNumbers.trim() !== "") {
-          var deletedNumbersArray = deletedNumbers.split(",").map(function(num) {
-            return parseInt(num.trim(), 10);
-          }).filter(function(num) {
-            return !isNaN(num);
-          }).sort(function(a, b) {
-            return a - b;
-          });
+          try {
+            var deletedNumbersArray = deletedNumbers.split(",").map(function(num) {
+              return parseInt(num.trim(), 10);
+            }).filter(function(num) {
+              return !isNaN(num);
+            }).sort(function(a, b) {
+              return a - b;
+            });
 
-          if (deletedNumbersArray.length > 0) {
-            entryNumber = deletedNumbersArray[0];
+            if (deletedNumbersArray.length > 0) {
+              entryNumber = deletedNumbersArray[0];
 
-            // Store the deleted number for later removal
-            entry.setAttr("_deletedNumber", entryNumber.toString());
+              // Store the deleted number for later removal
+              try {
+                entry.setAttr("_deletedNumber", entryNumber.toString());
+              } catch (attrError) {
+                if (typeof std !== 'undefined' && std.ErrorHandler) {
+                  std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error setting _deletedNumber attribute: " + attrError.toString());
+                }
+              }
+            }
+          } catch (deletedNumError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error processing deleted numbers: " + deletedNumError.toString());
+            }
+            // Continue with next number
           }
         }
 
@@ -886,30 +1007,63 @@ std.Utils = {
           entryNumber = nextNumber;
 
           // Store the next number for later update
-          entry.setAttr("_nextNumber", (nextNumber + 1).toString());
+          try {
+            entry.setAttr("_nextNumber", (nextNumber + 1).toString());
+          } catch (nextNumError) {
+            if (typeof std !== 'undefined' && std.ErrorHandler) {
+              std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error setting _nextNumber attribute: " + nextNumError.toString());
+            }
+          }
         }
 
         // Format the entry number
-        var formattedEntryNumber = this._formatEntryNumber(entryNumber, trailingDigits);
+        var formattedEntryNumber = "";
+        try {
+          formattedEntryNumber = this._formatEntryNumber(entryNumber, trailingDigits);
+        } catch (formatError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error formatting entry number: " + formatError.toString());
+          }
+          formattedEntryNumber = entryNumber.toString();
+        }
 
         // Format the season
         var formattedSeason = season;
-        if (trimDigits > 0 && season.length > trimDigits) {
-          formattedSeason = season.substring(season.length - trimDigits);
+        try {
+          if (trimDigits > 0 && season.length > trimDigits) {
+            formattedSeason = season.substring(season.length - trimDigits);
+          }
+        } catch (seasonFormatError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error formatting season: " + seasonFormatError.toString());
+          }
         }
 
         // Generate the final entry number
         var finalEntryNumber = "";
-        if (usePrefix) {
-          // Use prefix from ASISTANTO DB
-          finalEntryNumber = dbInfo.field("Prefix") + formattedSeason + formattedEntryNumber;
-        } else {
-          // Use ID from ASISTANTO DB
-          finalEntryNumber = dbInfo.field("ID") + formattedSeason + formattedEntryNumber;
+        try {
+          if (usePrefix) {
+            // Use prefix from ASISTANTO DB
+            finalEntryNumber = dbInfo.field("Prefix") + formattedSeason + formattedEntryNumber;
+          } else {
+            // Use ID from ASISTANTO DB
+            finalEntryNumber = dbInfo.field("ID") + formattedSeason + formattedEntryNumber;
+          }
+        } catch (finalNumError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error generating final number: " + finalNumError.toString());
+          }
+          finalEntryNumber = libName + "-" + formattedSeason + formattedEntryNumber;
         }
 
         // Store the generated number in the entry
-        entry.setAttr("_generatedNumber", finalEntryNumber);
+        try {
+          entry.setAttr("_generatedNumber", finalEntryNumber);
+        } catch (genNumError) {
+          if (typeof std !== 'undefined' && std.ErrorHandler) {
+            std.ErrorHandler.logError("Utils", "EntryNumber.generateEntryNumber", "Error setting _generatedNumber attribute: " + genNumError.toString());
+          }
+        }
 
         return finalEntryNumber;
       } catch (e) {
