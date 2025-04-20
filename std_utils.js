@@ -861,7 +861,7 @@ std.Utils = {
           try {
             // Try to find entries with default season field
             defaultSeasonEntries = asistentoLib.entries()[0];
-            message(defaultSeasonEntries.length + " entries found with default season field");
+            message(asistentoLib.title + " has " + defaultSeasonEntries.length + " entries found with default season field");
           } catch (defaultSeasonError) {
             if (typeof std !== 'undefined' && std.ErrorHandler) {
               std.ErrorHandler.logWarning("Utils", "EntryNumber.generateEntryNumber",
