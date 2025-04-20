@@ -20,15 +20,101 @@ if (typeof console === 'undefined') {
      */
     log: function(message, script, line, parameters, attributes) {
       try {
+        // First, try to show the message in a dialog for immediate feedback
+        // This is especially useful for debugging when logging fails
+        if (typeof dialog === 'function') {
+          try {
+            // Only show dialog for important messages to avoid dialog spam
+            if (message && message.toString().indexOf("ERROR") !== -1) {
+              var quickDialog = dialog();
+              quickDialog.title('Log Message')
+                        .text(message.toString())
+                        .positiveButton('OK', function() {})
+                        .show();
+            }
+          } catch (dialogError) {
+            // Silent fail for dialog
+          }
+        }
+
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
-          var logLib = libByName('ASISTANTO Errors');
+          // Try multiple possible error library names
+          var errorLibNames = ['ASISTANTO Errors', 'Errors', 'Error Log', 'Log'];
+          var logLib = null;
+
+          // Try to find an error logging library
+          for (var i = 0; i < errorLibNames.length; i++) {
+            try {
+              logLib = libByName(errorLibNames[i]);
+              if (logLib) {
+                break;
+              }
+            } catch (libError) {
+              // Continue to next library name
+            }
+          }
+
           if (logLib) {
-            var entry = logLib.create();
+            // Create entry with error handling
+            var entry = null;
+            try {
+              entry = logLib.create();
+            } catch (createError) {
+              // If create fails, try to show error in dialog
+              if (typeof dialog === 'function') {
+                try {
+                  var createErrorDialog = dialog();
+                  createErrorDialog.title('Error Creating Log Entry')
+                                 .text('Failed to create entry: ' + createError.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                } catch (dialogError) {
+                  // Silent fail for dialog
+                }
+              }
+              return; // Exit if we can't create an entry
+            }
+
+            if (!entry) {
+              return; // Exit if entry is null
+            }
+
+            // Get field names to handle different database structures
+            var typeField = 'type';
+            var dateField = 'date';
+            var libraryField = 'memento library';
+            var scriptField = 'script';
+            var lineField = 'line';
+            var textField = 'text';
+            var userField = 'user';
+            var parametersField = 'parameters';
+            var attributesField = 'attributes';
+
+            // Try to detect field names if they're different
+            try {
+              var fields = logLib.fields();
+              if (fields && fields.length > 0) {
+                for (var i = 0; i < fields.length; i++) {
+                  var fieldName = fields[i].name.toLowerCase();
+                  if (fieldName.indexOf('typ') !== -1) typeField = fields[i].name;
+                  else if (fieldName.indexOf('dat') !== -1) dateField = fields[i].name;
+                  else if (fieldName.indexOf('lib') !== -1) libraryField = fields[i].name;
+                  else if (fieldName.indexOf('scr') !== -1) scriptField = fields[i].name;
+                  else if (fieldName.indexOf('lin') !== -1) lineField = fields[i].name;
+                  else if (fieldName.indexOf('tex') !== -1 || fieldName.indexOf('msg') !== -1 || fieldName.indexOf('mes') !== -1) textField = fields[i].name;
+                  else if (fieldName.indexOf('use') !== -1) userField = fields[i].name;
+                  else if (fieldName.indexOf('par') !== -1) parametersField = fields[i].name;
+                  else if (fieldName.indexOf('att') !== -1) attributesField = fields[i].name;
+                }
+              }
+            } catch (fieldsError) {
+              // Continue with default field names
+            }
 
             // Safely set fields with null checks
-            try { entry.set('type', 'log'); } catch(e) {message(e, 'line: ' +e.lineNumber)}
-            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' +e.lineNumber)}
+            try { entry.set(typeField, 'log'); } catch(e) {}
+            try { entry.set(dateField, new Date()); } catch(e) {}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -37,30 +123,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(libraryField, libTitle); } catch(e) {}
 
-            try { entry.set('script', script || 'console.log'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(scriptField, script || 'console.log'); } catch(e) {}
+            try { entry.set(lineField, line || 'unknown'); } catch(e) {}
+            try { entry.set(textField, message ? message.toString() : 'No message'); } catch(e) {}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(userField, currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
-                entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(parametersField, JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
               try {
-                entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(attributesField, JSON.stringify(attributes));
+              } catch(e) {}
             }
 
             // Save entry with try-catch
@@ -71,11 +157,35 @@ if (typeof console === 'undefined') {
               try {
                 // Try to save with minimal fields
                 var minimalEntry = logLib.create();
-                minimalEntry.set('type', 'log');
-                minimalEntry.set('text', 'Failed to save log: ' + message);
+                minimalEntry.set(typeField, 'log');
+                minimalEntry.set(textField, 'Failed to save log: ' + message);
                 minimalEntry.save();
               } catch(saveError) {
-                // Nothing more we can do
+                // If save fails, try to show error in dialog
+                if (typeof dialog === 'function') {
+                  try {
+                    var saveErrorDialog = dialog();
+                    saveErrorDialog.title('Error Saving Log Entry')
+                                 .text('Failed to save entry: ' + e.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                  } catch (dialogError) {
+                    // Silent fail for dialog
+                  }
+                }
+              }
+            }
+          } else {
+            // If no error library exists, try to show message in dialog
+            if (typeof dialog === 'function') {
+              try {
+                var noLibDialog = dialog();
+                noLibDialog.title('No Error Library')
+                          .text('No error logging library found. Message: ' + message)
+                          .positiveButton('OK', function() {})
+                          .show();
+              } catch (dialogError) {
+                // Silent fail for dialog
               }
             }
           }
@@ -86,7 +196,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Log Error')
-                    .text('Failed to log message: ' + message + '\nError: ' + e.toString() + '\nLine: ' + e.lineNumber)
+                    .text('Failed to log message: ' + message + '\nError: ' + e.toString())
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -105,15 +215,101 @@ if (typeof console === 'undefined') {
      */
     warn: function(message, script, line, parameters, attributes) {
       try {
+        // First, try to show the message in a dialog for immediate feedback
+        // This is especially useful for debugging when logging fails
+        if (typeof dialog === 'function') {
+          try {
+            // Only show dialog for important messages to avoid dialog spam
+            if (message && message.toString().indexOf("WARNING") !== -1) {
+              var quickDialog = dialog();
+              quickDialog.title('Warning Message')
+                        .text(message.toString())
+                        .positiveButton('OK', function() {})
+                        .show();
+            }
+          } catch (dialogError) {
+            // Silent fail for dialog
+          }
+        }
+
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
-          var logLib = libByName('ASISTANTO Errors');
+          // Try multiple possible error library names
+          var errorLibNames = ['ASISTANTO Errors', 'Errors', 'Error Log', 'Log'];
+          var logLib = null;
+
+          // Try to find an error logging library
+          for (var i = 0; i < errorLibNames.length; i++) {
+            try {
+              logLib = libByName(errorLibNames[i]);
+              if (logLib) {
+                break;
+              }
+            } catch (libError) {
+              // Continue to next library name
+            }
+          }
+
           if (logLib) {
-            var entry = logLib.create();
+            // Create entry with error handling
+            var entry = null;
+            try {
+              entry = logLib.create();
+            } catch (createError) {
+              // If create fails, try to show error in dialog
+              if (typeof dialog === 'function') {
+                try {
+                  var createErrorDialog = dialog();
+                  createErrorDialog.title('Error Creating Warning Entry')
+                                 .text('Failed to create entry: ' + createError.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                } catch (dialogError) {
+                  // Silent fail for dialog
+                }
+              }
+              return; // Exit if we can't create an entry
+            }
+
+            if (!entry) {
+              return; // Exit if entry is null
+            }
+
+            // Get field names to handle different database structures
+            var typeField = 'type';
+            var dateField = 'date';
+            var libraryField = 'memento library';
+            var scriptField = 'script';
+            var lineField = 'line';
+            var textField = 'text';
+            var userField = 'user';
+            var parametersField = 'parameters';
+            var attributesField = 'attributes';
+
+            // Try to detect field names if they're different
+            try {
+              var fields = logLib.fields();
+              if (fields && fields.length > 0) {
+                for (var i = 0; i < fields.length; i++) {
+                  var fieldName = fields[i].name.toLowerCase();
+                  if (fieldName.indexOf('typ') !== -1) typeField = fields[i].name;
+                  else if (fieldName.indexOf('dat') !== -1) dateField = fields[i].name;
+                  else if (fieldName.indexOf('lib') !== -1) libraryField = fields[i].name;
+                  else if (fieldName.indexOf('scr') !== -1) scriptField = fields[i].name;
+                  else if (fieldName.indexOf('lin') !== -1) lineField = fields[i].name;
+                  else if (fieldName.indexOf('tex') !== -1 || fieldName.indexOf('msg') !== -1 || fieldName.indexOf('mes') !== -1) textField = fields[i].name;
+                  else if (fieldName.indexOf('use') !== -1) userField = fields[i].name;
+                  else if (fieldName.indexOf('par') !== -1) parametersField = fields[i].name;
+                  else if (fieldName.indexOf('att') !== -1) attributesField = fields[i].name;
+                }
+              }
+            } catch (fieldsError) {
+              // Continue with default field names
+            }
 
             // Safely set fields with null checks
-            try { entry.set('type', 'warn'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(typeField, 'warn'); } catch(e) {}
+            try { entry.set(dateField, new Date()); } catch(e) {}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -122,30 +318,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(libraryField, libTitle); } catch(e) {}
 
-            try { entry.set('script', script || 'console.warn'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(scriptField, script || 'console.warn'); } catch(e) {}
+            try { entry.set(lineField, line || 'unknown'); } catch(e) {}
+            try { entry.set(textField, message ? message.toString() : 'No message'); } catch(e) {}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(userField, currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
-                entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(parametersField, JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
               try {
-                entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(attributesField, JSON.stringify(attributes));
+              } catch(e) {}
             }
 
             // Save entry with try-catch
@@ -156,11 +352,35 @@ if (typeof console === 'undefined') {
               try {
                 // Try to save with minimal fields
                 var minimalEntry = logLib.create();
-                minimalEntry.set('type', 'warn');
-                minimalEntry.set('text', 'Failed to save warning: ' + message);
+                minimalEntry.set(typeField, 'warn');
+                minimalEntry.set(textField, 'Failed to save warning: ' + message);
                 minimalEntry.save();
               } catch(saveError) {
-                // Nothing more we can do
+                // If save fails, try to show error in dialog
+                if (typeof dialog === 'function') {
+                  try {
+                    var saveErrorDialog = dialog();
+                    saveErrorDialog.title('Error Saving Warning Entry')
+                                 .text('Failed to save entry: ' + e.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                  } catch (dialogError) {
+                    // Silent fail for dialog
+                  }
+                }
+              }
+            }
+          } else {
+            // If no error library exists, try to show message in dialog
+            if (typeof dialog === 'function') {
+              try {
+                var noLibDialog = dialog();
+                noLibDialog.title('No Error Library')
+                          .text('No error logging library found. Warning: ' + message)
+                          .positiveButton('OK', function() {})
+                          .show();
+              } catch (dialogError) {
+                // Silent fail for dialog
               }
             }
           }
@@ -170,7 +390,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Warning Error')
-                    .text('Failed to log warning: ' + message + '\nError: ' + e.toString()+ '\nLine: ' + e.lineNumber)
+                    .text('Failed to log warning: ' + message + '\nError: ' + e.toString())
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -189,15 +409,99 @@ if (typeof console === 'undefined') {
      */
     error: function(message, script, line, parameters, attributes) {
       try {
+        // First, try to show the message in a dialog for immediate feedback
+        // This is especially useful for debugging when logging fails
+        if (typeof dialog === 'function') {
+          try {
+            // Always show dialog for error messages
+            var quickDialog = dialog();
+            quickDialog.title('Error Message')
+                      .text(message ? message.toString() : 'Unknown error')
+                      .positiveButton('OK', function() {})
+                      .show();
+          } catch (dialogError) {
+            // Silent fail for dialog
+          }
+        }
+
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
-          var logLib = libByName('ASISTANTO Errors');
+          // Try multiple possible error library names
+          var errorLibNames = ['ASISTANTO Errors', 'Errors', 'Error Log', 'Log'];
+          var logLib = null;
+
+          // Try to find an error logging library
+          for (var i = 0; i < errorLibNames.length; i++) {
+            try {
+              logLib = libByName(errorLibNames[i]);
+              if (logLib) {
+                break;
+              }
+            } catch (libError) {
+              // Continue to next library name
+            }
+          }
+
           if (logLib) {
-            var entry = logLib.create();
+            // Create entry with error handling
+            var entry = null;
+            try {
+              entry = logLib.create();
+            } catch (createError) {
+              // If create fails, try to show error in dialog
+              if (typeof dialog === 'function') {
+                try {
+                  var createErrorDialog = dialog();
+                  createErrorDialog.title('Error Creating Error Entry')
+                                 .text('Failed to create entry: ' + createError.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                } catch (dialogError) {
+                  // Silent fail for dialog
+                }
+              }
+              return; // Exit if we can't create an entry
+            }
+
+            if (!entry) {
+              return; // Exit if entry is null
+            }
+
+            // Get field names to handle different database structures
+            var typeField = 'type';
+            var dateField = 'date';
+            var libraryField = 'memento library';
+            var scriptField = 'script';
+            var lineField = 'line';
+            var textField = 'text';
+            var userField = 'user';
+            var parametersField = 'parameters';
+            var attributesField = 'attributes';
+
+            // Try to detect field names if they're different
+            try {
+              var fields = logLib.fields();
+              if (fields && fields.length > 0) {
+                for (var i = 0; i < fields.length; i++) {
+                  var fieldName = fields[i].name.toLowerCase();
+                  if (fieldName.indexOf('typ') !== -1) typeField = fields[i].name;
+                  else if (fieldName.indexOf('dat') !== -1) dateField = fields[i].name;
+                  else if (fieldName.indexOf('lib') !== -1) libraryField = fields[i].name;
+                  else if (fieldName.indexOf('scr') !== -1) scriptField = fields[i].name;
+                  else if (fieldName.indexOf('lin') !== -1) lineField = fields[i].name;
+                  else if (fieldName.indexOf('tex') !== -1 || fieldName.indexOf('msg') !== -1 || fieldName.indexOf('mes') !== -1) textField = fields[i].name;
+                  else if (fieldName.indexOf('use') !== -1) userField = fields[i].name;
+                  else if (fieldName.indexOf('par') !== -1) parametersField = fields[i].name;
+                  else if (fieldName.indexOf('att') !== -1) attributesField = fields[i].name;
+                }
+              }
+            } catch (fieldsError) {
+              // Continue with default field names
+            }
 
             // Safely set fields with null checks
-            try { entry.set('type', 'error'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(typeField, 'error'); } catch(e) {}
+            try { entry.set(dateField, new Date()); } catch(e) {}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -206,30 +510,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(libraryField, libTitle); } catch(e) {}
 
-            try { entry.set('script', script || 'console.error'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(scriptField, script || 'console.error'); } catch(e) {}
+            try { entry.set(lineField, line || 'unknown'); } catch(e) {}
+            try { entry.set(textField, message ? message.toString() : 'No message'); } catch(e) {}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(userField, currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
-                entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(parametersField, JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
               try {
-                entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(attributesField, JSON.stringify(attributes));
+              } catch(e) {}
             }
 
             // Save entry with try-catch
@@ -240,11 +544,35 @@ if (typeof console === 'undefined') {
               try {
                 // Try to save with minimal fields
                 var minimalEntry = logLib.create();
-                minimalEntry.set('type', 'error');
-                minimalEntry.set('text', 'Failed to save error: ' + message);
+                minimalEntry.set(typeField, 'error');
+                minimalEntry.set(textField, 'Failed to save error: ' + message);
                 minimalEntry.save();
               } catch(saveError) {
-                // Nothing more we can do
+                // If save fails, try to show error in dialog
+                if (typeof dialog === 'function') {
+                  try {
+                    var saveErrorDialog = dialog();
+                    saveErrorDialog.title('Error Saving Error Entry')
+                                 .text('Failed to save entry: ' + e.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                  } catch (dialogError) {
+                    // Silent fail for dialog
+                  }
+                }
+              }
+            }
+          } else {
+            // If no error library exists, try to show message in dialog
+            if (typeof dialog === 'function') {
+              try {
+                var noLibDialog = dialog();
+                noLibDialog.title('No Error Library')
+                          .text('No error logging library found. Error: ' + message)
+                          .positiveButton('OK', function() {})
+                          .show();
+              } catch (dialogError) {
+                // Silent fail for dialog
               }
             }
           }
@@ -254,7 +582,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Error')
-                    .text('Failed to log error: ' + message + '\nError: ' + e.toString()+ '\nLine: ' + e.lineNumber)
+                    .text('Failed to log error: ' + message + '\nError: ' + e.toString())
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -273,15 +601,101 @@ if (typeof console === 'undefined') {
      */
     msg: function(message, script, line, parameters, attributes) {
       try {
+        // First, try to show the message in a dialog for immediate feedback
+        // This is especially useful for debugging when logging fails
+        if (typeof dialog === 'function') {
+          try {
+            // Only show dialog for important messages to avoid dialog spam
+            if (message && message.toString().indexOf("IMPORTANT") !== -1) {
+              var quickDialog = dialog();
+              quickDialog.title('Message')
+                        .text(message.toString())
+                        .positiveButton('OK', function() {})
+                        .show();
+            }
+          } catch (dialogError) {
+            // Silent fail for dialog
+          }
+        }
+
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
-          var logLib = libByName('ASISTANTO Errors');
+          // Try multiple possible error library names
+          var errorLibNames = ['ASISTANTO Errors', 'Errors', 'Error Log', 'Log'];
+          var logLib = null;
+
+          // Try to find an error logging library
+          for (var i = 0; i < errorLibNames.length; i++) {
+            try {
+              logLib = libByName(errorLibNames[i]);
+              if (logLib) {
+                break;
+              }
+            } catch (libError) {
+              // Continue to next library name
+            }
+          }
+
           if (logLib) {
-            var entry = logLib.create();
+            // Create entry with error handling
+            var entry = null;
+            try {
+              entry = logLib.create();
+            } catch (createError) {
+              // If create fails, try to show error in dialog
+              if (typeof dialog === 'function') {
+                try {
+                  var createErrorDialog = dialog();
+                  createErrorDialog.title('Error Creating Message Entry')
+                                 .text('Failed to create entry: ' + createError.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                } catch (dialogError) {
+                  // Silent fail for dialog
+                }
+              }
+              return; // Exit if we can't create an entry
+            }
+
+            if (!entry) {
+              return; // Exit if entry is null
+            }
+
+            // Get field names to handle different database structures
+            var typeField = 'type';
+            var dateField = 'date';
+            var libraryField = 'memento library';
+            var scriptField = 'script';
+            var lineField = 'line';
+            var textField = 'text';
+            var userField = 'user';
+            var parametersField = 'parameters';
+            var attributesField = 'attributes';
+
+            // Try to detect field names if they're different
+            try {
+              var fields = logLib.fields();
+              if (fields && fields.length > 0) {
+                for (var i = 0; i < fields.length; i++) {
+                  var fieldName = fields[i].name.toLowerCase();
+                  if (fieldName.indexOf('typ') !== -1) typeField = fields[i].name;
+                  else if (fieldName.indexOf('dat') !== -1) dateField = fields[i].name;
+                  else if (fieldName.indexOf('lib') !== -1) libraryField = fields[i].name;
+                  else if (fieldName.indexOf('scr') !== -1) scriptField = fields[i].name;
+                  else if (fieldName.indexOf('lin') !== -1) lineField = fields[i].name;
+                  else if (fieldName.indexOf('tex') !== -1 || fieldName.indexOf('msg') !== -1 || fieldName.indexOf('mes') !== -1) textField = fields[i].name;
+                  else if (fieldName.indexOf('use') !== -1) userField = fields[i].name;
+                  else if (fieldName.indexOf('par') !== -1) parametersField = fields[i].name;
+                  else if (fieldName.indexOf('att') !== -1) attributesField = fields[i].name;
+                }
+              }
+            } catch (fieldsError) {
+              // Continue with default field names
+            }
 
             // Safely set fields with null checks
-            try { entry.set('type', 'message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(typeField, 'message'); } catch(e) {}
+            try { entry.set(dateField, new Date()); } catch(e) {}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -290,30 +704,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(libraryField, libTitle); } catch(e) {}
 
-            try { entry.set('script', script || 'console.msg'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set(scriptField, script || 'console.msg'); } catch(e) {}
+            try { entry.set(lineField, line || 'unknown'); } catch(e) {}
+            try { entry.set(textField, message ? message.toString() : 'No message'); } catch(e) {}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {message(e, 'line: ' + e.lineNumber)}
-            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            } catch(e) {}
+            try { entry.set(userField, currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
-                entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(parametersField, JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
               try {
-                entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {message(e, 'line: ' + e.lineNumber)}
+                entry.set(attributesField, JSON.stringify(attributes));
+              } catch(e) {}
             }
 
             // Save entry with try-catch
@@ -324,11 +738,35 @@ if (typeof console === 'undefined') {
               try {
                 // Try to save with minimal fields
                 var minimalEntry = logLib.create();
-                minimalEntry.set('type', 'message');
-                minimalEntry.set('text', 'Failed to save message: ' + message);
+                minimalEntry.set(typeField, 'message');
+                minimalEntry.set(textField, 'Failed to save message: ' + message);
                 minimalEntry.save();
               } catch(saveError) {
-                // Nothing more we can do
+                // If save fails, try to show error in dialog
+                if (typeof dialog === 'function') {
+                  try {
+                    var saveErrorDialog = dialog();
+                    saveErrorDialog.title('Error Saving Message Entry')
+                                 .text('Failed to save entry: ' + e.toString())
+                                 .positiveButton('OK', function() {})
+                                 .show();
+                  } catch (dialogError) {
+                    // Silent fail for dialog
+                  }
+                }
+              }
+            }
+          } else {
+            // If no error library exists, try to show message in dialog
+            if (typeof dialog === 'function') {
+              try {
+                var noLibDialog = dialog();
+                noLibDialog.title('No Error Library')
+                          .text('No error logging library found. Message: ' + message)
+                          .positiveButton('OK', function() {})
+                          .show();
+              } catch (dialogError) {
+                // Silent fail for dialog
               }
             }
           }
@@ -338,7 +776,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Message Error')
-                    .text('Failed to log message: ' + message + '\nError: ' + e.toString()+ '\nLine: ' + e.lineNumber)
+                    .text('Failed to log message: ' + message + '\nError: ' + e.toString())
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -897,8 +1335,8 @@ std.ErrorHandler = {
       var errorEntry = errorLib.create();
 
       // Safely set fields with null checks
-      try { errorEntry.set("type", errorType); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-      try { errorEntry.set("date", new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("type", errorType); } catch(e) {}
+      try { errorEntry.set("date", new Date()); } catch(e) {}
 
       // Safely get library title
       var libTitle = "unknown";
@@ -907,30 +1345,30 @@ std.ErrorHandler = {
         if (currentLib && typeof currentLib.title === 'string') {
           libTitle = currentLib.title;
         }
-      } catch(e) {message(e, 'line: ' + e.lineNumber)}
-      try { errorEntry.set("memento library", libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      } catch(e) {}
+      try { errorEntry.set("memento library", libTitle); } catch(e) {}
 
-      try { errorEntry.set("script", source || "unknown"); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-      try { errorEntry.set("line", lineNumber || "unknown"); } catch(e) {message(e, 'line: ' + e.lineNumber)}
-      try { errorEntry.set("text", message ? message.toString() : "No message"); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("script", source || "unknown"); } catch(e) {}
+      try { errorEntry.set("line", lineNumber || "unknown"); } catch(e) {}
+      try { errorEntry.set("text", message ? message.toString() : "No message"); } catch(e) {}
 
       // Safely get user
       var currentUser = "unknown";
       try {
         currentUser = user();
-      } catch(e) {message(e, 'line: ' + e.lineNumber)}
-      try { errorEntry.set("user", currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      } catch(e) {}
+      try { errorEntry.set("user", currentUser); } catch(e) {}
 
       // Set parameters and attributes if provided
       if (parameters) {
         try {
           errorEntry.set("parameters", JSON.stringify(parameters));
-        } catch(e) {message(e, 'line: ' + e.lineNumber)}
+        } catch(e) {}
       }
       if (attributes) {
         try {
           errorEntry.set("attributes", JSON.stringify(attributes));
-        } catch(e) {message(e, 'line: ' + e.lineNumber)}
+        } catch(e) {}
       }
 
       // Save entry with try-catch
