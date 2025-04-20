@@ -27,8 +27,8 @@ if (typeof console === 'undefined') {
             var entry = logLib.create();
 
             // Safely set fields with null checks
-            try { entry.set('type', 'log'); } catch(e) {}
-            try { entry.set('date', new Date()); } catch(e) {}
+            try { entry.set('type', 'log'); } catch(e) {message(e, 'line: ' +e.lineNumber)}
+            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' +e.lineNumber)}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -37,30 +37,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {}
-            try { entry.set('memento library', libTitle); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
-            try { entry.set('script', script || 'console.log'); } catch(e) {}
-            try { entry.set('line', line || 'unknown'); } catch(e) {}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+            try { entry.set('script', script || 'console.log'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
             } catch(e) {}
-            try { entry.set('user', currentUser); } catch(e) {}
+            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
                 entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
             if (attributes) {
               try {
                 entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
 
             // Save entry with try-catch
