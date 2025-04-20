@@ -48,7 +48,7 @@ if (typeof console === 'undefined') {
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
             try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Set parameters and attributes if provided
@@ -112,8 +112,8 @@ if (typeof console === 'undefined') {
             var entry = logLib.create();
 
             // Safely set fields with null checks
-            try { entry.set('type', 'warn'); } catch(e) {}
-            try { entry.set('date', new Date()); } catch(e) {}
+            try { entry.set('type', 'warn'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -122,30 +122,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {}
-            try { entry.set('memento library', libTitle); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
-            try { entry.set('script', script || 'console.warn'); } catch(e) {}
-            try { entry.set('line', line || 'unknown'); } catch(e) {}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+            try { entry.set('script', script || 'console.warn'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {}
-            try { entry.set('user', currentUser); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
                 entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
             if (attributes) {
               try {
                 entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
 
             // Save entry with try-catch
@@ -196,8 +196,8 @@ if (typeof console === 'undefined') {
             var entry = logLib.create();
 
             // Safely set fields with null checks
-            try { entry.set('type', 'error'); } catch(e) {}
-            try { entry.set('date', new Date()); } catch(e) {}
+            try { entry.set('type', 'error'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -206,30 +206,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {}
-            try { entry.set('memento library', libTitle); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
-            try { entry.set('script', script || 'console.error'); } catch(e) {}
-            try { entry.set('line', line || 'unknown'); } catch(e) {}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+            try { entry.set('script', script || 'console.error'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {}
-            try { entry.set('user', currentUser); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
                 entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
             if (attributes) {
               try {
                 entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
 
             // Save entry with try-catch
@@ -280,8 +280,8 @@ if (typeof console === 'undefined') {
             var entry = logLib.create();
 
             // Safely set fields with null checks
-            try { entry.set('type', 'message'); } catch(e) {}
-            try { entry.set('date', new Date()); } catch(e) {}
+            try { entry.set('type', 'message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('date', new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get library title
             var libTitle = "unknown";
@@ -290,30 +290,30 @@ if (typeof console === 'undefined') {
               if (currentLib && typeof currentLib.title === 'string') {
                 libTitle = currentLib.title;
               }
-            } catch(e) {}
-            try { entry.set('memento library', libTitle); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('memento library', libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
-            try { entry.set('script', script || 'console.msg'); } catch(e) {}
-            try { entry.set('line', line || 'unknown'); } catch(e) {}
-            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+            try { entry.set('script', script || 'console.msg'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('line', line || 'unknown'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Safely get user
             var currentUser = "unknown";
             try {
               currentUser = user();
-            } catch(e) {}
-            try { entry.set('user', currentUser); } catch(e) {}
+            } catch(e) {message(e, 'line: ' + e.lineNumber)}
+            try { entry.set('user', currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
             // Set parameters and attributes if provided
             if (parameters) {
               try {
                 entry.set('parameters', JSON.stringify(parameters));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
             if (attributes) {
               try {
                 entry.set('attributes', JSON.stringify(attributes));
-              } catch(e) {}
+              } catch(e) {message(e, 'line: ' + e.lineNumber)}
             }
 
             // Save entry with try-catch
@@ -897,8 +897,8 @@ std.ErrorHandler = {
       var errorEntry = errorLib.create();
 
       // Safely set fields with null checks
-      try { errorEntry.set("type", errorType); } catch(e) {}
-      try { errorEntry.set("date", new Date()); } catch(e) {}
+      try { errorEntry.set("type", errorType); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("date", new Date()); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
       // Safely get library title
       var libTitle = "unknown";
@@ -907,30 +907,30 @@ std.ErrorHandler = {
         if (currentLib && typeof currentLib.title === 'string') {
           libTitle = currentLib.title;
         }
-      } catch(e) {}
-      try { errorEntry.set("memento library", libTitle); } catch(e) {}
+      } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("memento library", libTitle); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
-      try { errorEntry.set("script", source || "unknown"); } catch(e) {}
-      try { errorEntry.set("line", lineNumber || "unknown"); } catch(e) {}
-      try { errorEntry.set("text", message ? message.toString() : "No message"); } catch(e) {}
+      try { errorEntry.set("script", source || "unknown"); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("line", lineNumber || "unknown"); } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("text", message ? message.toString() : "No message"); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
       // Safely get user
       var currentUser = "unknown";
       try {
         currentUser = user();
-      } catch(e) {}
-      try { errorEntry.set("user", currentUser); } catch(e) {}
+      } catch(e) {message(e, 'line: ' + e.lineNumber)}
+      try { errorEntry.set("user", currentUser); } catch(e) {message(e, 'line: ' + e.lineNumber)}
 
       // Set parameters and attributes if provided
       if (parameters) {
         try {
           errorEntry.set("parameters", JSON.stringify(parameters));
-        } catch(e) {}
+        } catch(e) {message(e, 'line: ' + e.lineNumber)}
       }
       if (attributes) {
         try {
           errorEntry.set("attributes", JSON.stringify(attributes));
-        } catch(e) {}
+        } catch(e) {message(e, 'line: ' + e.lineNumber)}
       }
 
       // Save entry with try-catch
