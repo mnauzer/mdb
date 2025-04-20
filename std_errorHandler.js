@@ -170,7 +170,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Warning Error')
-                    .text('Failed to log warning: ' + message + '\nError: ' + e.toString())
+                    .text('Failed to log warning: ' + message + '\nError: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -254,7 +254,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Error')
-                    .text('Failed to log error: ' + message + '\nError: ' + e.toString())
+                    .text('Failed to log error: ' + message + '\nError: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -338,7 +338,7 @@ if (typeof console === 'undefined') {
         try {
           var errorDialog = dialog();
           errorDialog.title('Console Message Error')
-                    .text('Failed to log message: ' + message + '\nError: ' + e.toString())
+                    .text('Failed to log message: ' + message + '\nError: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -421,7 +421,7 @@ std.ErrorHandler = {
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('System Error')
-                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                 .positiveButton('OK', function() {})
                 .show();
 
@@ -483,7 +483,7 @@ std.ErrorHandler = {
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('Database Error')
-                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                 .positiveButton('OK', function() {})
                 .show();
 
@@ -545,7 +545,7 @@ std.ErrorHandler = {
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('Validation Error')
-                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                 .positiveButton('OK', function() {})
                 .show();
 
@@ -607,7 +607,7 @@ std.ErrorHandler = {
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('Business Error')
-                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString()+ '\nLine: ' + e.lineNumber)
                 .positiveButton('OK', function() {})
                 .show();
 
