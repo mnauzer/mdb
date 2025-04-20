@@ -860,7 +860,7 @@ std.Utils = {
           var defaultSeasonEntries = [];
           try {
             // Try to find entries with default season field
-            defaultSeasonEntries = asistentoLib.entries()[0].field("default season");
+            defaultSeasonEntries = asistentoLib.entries()[0];
             message(defaultSeasonEntries.length + " entries found with default season field");
           } catch (defaultSeasonError) {
             if (typeof std !== 'undefined' && std.ErrorHandler) {
