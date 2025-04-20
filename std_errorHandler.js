@@ -10,18 +10,37 @@
 // Create console object if it doesn't exist
 if (typeof console === 'undefined') {
   var console = {
-    log: function(message) {
+    /**
+     * Log a message to the console and error log
+     * @param {String} message - The message to log
+     * @param {String} script - The script name (optional)
+     * @param {String} line - The line number (optional)
+     * @param {Object} parameters - The function parameters (optional)
+     * @param {Object} attributes - The attributes (optional)
+     */
+    log: function(message, script, line, parameters, attributes) {
       try {
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('Typ', 'LOG');
-            entry.set('Zdroj', 'console.log');
-            entry.set('Správa', message);
-            entry.set('Dátum', new Date());
-            entry.set('Používateľ', user());
+            entry.set('type', 'log');
+            entry.set('date', new Date());
+            entry.set('memento library', lib().title);
+            entry.set('script', script || 'console.log');
+            entry.set('line', line || 'unknown');
+            entry.set('text', message);
+            entry.set('user', user());
+
+            // Set parameters and attributes if provided
+            if (parameters) {
+              entry.set('parameters', JSON.stringify(parameters));
+            }
+            if (attributes) {
+              entry.set('attributes', JSON.stringify(attributes));
+            }
+
             entry.save();
           }
         }
@@ -40,18 +59,37 @@ if (typeof console === 'undefined') {
       }
     },
 
-    warn: function(message) {
+    /**
+     * Log a warning to the console and error log
+     * @param {String} message - The message to log
+     * @param {String} script - The script name (optional)
+     * @param {String} line - The line number (optional)
+     * @param {Object} parameters - The function parameters (optional)
+     * @param {Object} attributes - The attributes (optional)
+     */
+    warn: function(message, script, line, parameters, attributes) {
       try {
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('Typ', 'WARNING');
-            entry.set('Zdroj', 'console.warn');
-            entry.set('Správa', message);
-            entry.set('Dátum', new Date());
-            entry.set('Používateľ', user());
+            entry.set('type', 'warn');
+            entry.set('date', new Date());
+            entry.set('memento library', lib().title);
+            entry.set('script', script || 'console.warn');
+            entry.set('line', line || 'unknown');
+            entry.set('text', message);
+            entry.set('user', user());
+
+            // Set parameters and attributes if provided
+            if (parameters) {
+              entry.set('parameters', JSON.stringify(parameters));
+            }
+            if (attributes) {
+              entry.set('attributes', JSON.stringify(attributes));
+            }
+
             entry.save();
           }
         }
@@ -69,18 +107,37 @@ if (typeof console === 'undefined') {
       }
     },
 
-    error: function(message) {
+    /**
+     * Log an error to the console and error log
+     * @param {String} message - The message to log
+     * @param {String} script - The script name (optional)
+     * @param {String} line - The line number (optional)
+     * @param {Object} parameters - The function parameters (optional)
+     * @param {Object} attributes - The attributes (optional)
+     */
+    error: function(message, script, line, parameters, attributes) {
       try {
         // Log to a dedicated log library if available
         if (typeof libByName === 'function') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('Typ', 'ERROR');
-            entry.set('Zdroj', 'console.error');
-            entry.set('Správa', message);
-            entry.set('Dátum', new Date());
-            entry.set('Používateľ', user());
+            entry.set('type', 'error');
+            entry.set('date', new Date());
+            entry.set('memento library', lib().title);
+            entry.set('script', script || 'console.error');
+            entry.set('line', line || 'unknown');
+            entry.set('text', message);
+            entry.set('user', user());
+
+            // Set parameters and attributes if provided
+            if (parameters) {
+              entry.set('parameters', JSON.stringify(parameters));
+            }
+            if (attributes) {
+              entry.set('attributes', JSON.stringify(attributes));
+            }
+
             entry.save();
           }
         }
@@ -90,6 +147,54 @@ if (typeof console === 'undefined') {
           var errorDialog = dialog();
           errorDialog.title('Console Error')
                     .text('Failed to log error: ' + message + '\nError: ' + e.toString())
+                    .positiveButton('OK', function() {})
+                    .show();
+        } catch (dialogError) {
+          // Completely silent fail if even dialog fails
+        }
+      }
+    },
+
+    /**
+     * Log a message to the console and error log
+     * @param {String} message - The message to log
+     * @param {String} script - The script name (optional)
+     * @param {String} line - The line number (optional)
+     * @param {Object} parameters - The function parameters (optional)
+     * @param {Object} attributes - The attributes (optional)
+     */
+    msg: function(message, script, line, parameters, attributes) {
+      try {
+        // Log to a dedicated log library if available
+        if (typeof libByName === 'function') {
+          var logLib = libByName('ASISTANTO Errors');
+          if (logLib) {
+            var entry = logLib.create();
+            entry.set('type', 'message');
+            entry.set('date', new Date());
+            entry.set('memento library', lib().title);
+            entry.set('script', script || 'console.msg');
+            entry.set('line', line || 'unknown');
+            entry.set('text', message);
+            entry.set('user', user());
+
+            // Set parameters and attributes if provided
+            if (parameters) {
+              entry.set('parameters', JSON.stringify(parameters));
+            }
+            if (attributes) {
+              entry.set('attributes', JSON.stringify(attributes));
+            }
+
+            entry.save();
+          }
+        }
+      } catch (e) {
+        // Silent fail with fallback to dialog
+        try {
+          var errorDialog = dialog();
+          errorDialog.title('Console Message Error')
+                    .text('Failed to log message: ' + message + '\nError: ' + e.toString())
                     .positiveButton('OK', function() {})
                     .show();
         } catch (dialogError) {
@@ -108,6 +213,37 @@ if (typeof std === 'undefined') {
 // Error Handler module
 std.ErrorHandler = {
   /**
+   * Extract line number from an error object
+   * @param {Error} error - The error object
+   * @returns {String} - The line number or "unknown"
+   * @private
+   */
+  _getErrorLineNumber: function(error) {
+    try {
+      if (error instanceof Error) {
+        // Try to get line number from lineNumber property
+        if (error.lineNumber) {
+          return error.lineNumber;
+        }
+
+        // Try to extract line number from stack trace
+        if (error.stack) {
+          var stackLines = error.stack.split('\n');
+          for (var i = 0; i < stackLines.length; i++) {
+            var match = stackLines[i].match(/:(\d+):\d+/);
+            if (match && match[1]) {
+              return match[1];
+            }
+          }
+        }
+      }
+      return "unknown";
+    } catch (e) {
+      return "unknown";
+    }
+  },
+
+  /**
    * Create a system error entry in the error log
    * @param {Error|String} error - The error object or error message
    * @param {String} source - The source of the error (function name)
@@ -116,31 +252,54 @@ std.ErrorHandler = {
    */
   createSystemError: function(error, source, showMessage) {
     try {
-      // Get error message
+      // Get error message and line number
       var errorMessage = error;
+      var lineNumber = "unknown";
+
       if (error instanceof Error) {
         errorMessage = error.message;
+        lineNumber = this._getErrorLineNumber(error);
       }
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("SYSTEM", source, errorMessage);
+      // Create error entry with line number
+      var errorEntry = this._createErrorEntry("SYSTEM", source, errorMessage, lineNumber);
 
       // Show message if requested
       if (showMessage) {
-        this._showErrorMessage("System Error", source, errorMessage);
+        this._showErrorMessage("System Error", source, errorMessage, lineNumber);
       }
 
       return errorEntry;
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in createSystemError: " + e.toString());
+      console.error("Error in createSystemError: " + e.toString());
 
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('System Error')
-                .text('Error in ' + source + ': ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
                 .positiveButton('OK', function() {})
                 .show();
+
+      // Try to create error entry directly
+      try {
+        var constants = { APP: { ERRORS: 'ASISTANTO Errors' }, NOTES: { STD_ERROR_ENTRY: 'generované scriptom std.ErrorHandler' } };
+        var errorLib = libByName(constants.APP.ERRORS);
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("Typ", "SYSTEM");
+          fallbackEntry.set("Zdroj", source);
+          fallbackEntry.set("Správa", errorMessage);
+          fallbackEntry.set("Dátum", new Date());
+          fallbackEntry.set("Používateľ", user());
+          fallbackEntry.set("Poznámka", "Fallback error entry");
+          fallbackEntry.set("Riadok", "unknown");
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
 
       return null;
     }
@@ -155,31 +314,54 @@ std.ErrorHandler = {
    */
   createDatabaseError: function(error, source, showMessage) {
     try {
-      // Get error message
+      // Get error message and line number
       var errorMessage = error;
+      var lineNumber = "unknown";
+
       if (error instanceof Error) {
         errorMessage = error.message;
+        lineNumber = this._getErrorLineNumber(error);
       }
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("DATABASE", source, errorMessage);
+      // Create error entry with line number
+      var errorEntry = this._createErrorEntry("DATABASE", source, errorMessage, lineNumber);
 
       // Show message if requested
       if (showMessage) {
-        this._showErrorMessage("Database Error", source, errorMessage);
+        this._showErrorMessage("Database Error", source, errorMessage, lineNumber);
       }
 
       return errorEntry;
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in createDatabaseError: " + e.toString());
+      console.error("Error in createDatabaseError: " + e.toString());
 
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('Database Error')
-                .text('Error in ' + source + ': ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
                 .positiveButton('OK', function() {})
                 .show();
+
+      // Try to create error entry directly
+      try {
+        var constants = { APP: { ERRORS: 'ASISTANTO Errors' }, NOTES: { STD_ERROR_ENTRY: 'generované scriptom std.ErrorHandler' } };
+        var errorLib = libByName(constants.APP.ERRORS);
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("Typ", "DATABASE");
+          fallbackEntry.set("Zdroj", source);
+          fallbackEntry.set("Správa", errorMessage);
+          fallbackEntry.set("Dátum", new Date());
+          fallbackEntry.set("Používateľ", user());
+          fallbackEntry.set("Poznámka", "Fallback error entry");
+          fallbackEntry.set("Riadok", "unknown");
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
 
       return null;
     }
@@ -194,31 +376,54 @@ std.ErrorHandler = {
    */
   createValidationError: function(error, source, showMessage) {
     try {
-      // Get error message
+      // Get error message and line number
       var errorMessage = error;
+      var lineNumber = "unknown";
+
       if (error instanceof Error) {
         errorMessage = error.message;
+        lineNumber = this._getErrorLineNumber(error);
       }
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("VALIDATION", source, errorMessage);
+      // Create error entry with line number
+      var errorEntry = this._createErrorEntry("VALIDATION", source, errorMessage, lineNumber);
 
       // Show message if requested
       if (showMessage) {
-        this._showErrorMessage("Validation Error", source, errorMessage);
+        this._showErrorMessage("Validation Error", source, errorMessage, lineNumber);
       }
 
       return errorEntry;
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in createValidationError: " + e.toString());
+      console.error("Error in createValidationError: " + e.toString());
 
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('Validation Error')
-                .text('Error in ' + source + ': ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
                 .positiveButton('OK', function() {})
                 .show();
+
+      // Try to create error entry directly
+      try {
+        var constants = { APP: { ERRORS: 'ASISTANTO Errors' }, NOTES: { STD_ERROR_ENTRY: 'generované scriptom std.ErrorHandler' } };
+        var errorLib = libByName(constants.APP.ERRORS);
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("Typ", "VALIDATION");
+          fallbackEntry.set("Zdroj", source);
+          fallbackEntry.set("Správa", errorMessage);
+          fallbackEntry.set("Dátum", new Date());
+          fallbackEntry.set("Používateľ", user());
+          fallbackEntry.set("Poznámka", "Fallback error entry");
+          fallbackEntry.set("Riadok", "unknown");
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
 
       return null;
     }
@@ -233,31 +438,54 @@ std.ErrorHandler = {
    */
   createBusinessError: function(error, source, showMessage) {
     try {
-      // Get error message
+      // Get error message and line number
       var errorMessage = error;
+      var lineNumber = "unknown";
+
       if (error instanceof Error) {
         errorMessage = error.message;
+        lineNumber = this._getErrorLineNumber(error);
       }
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("BUSINESS", source, errorMessage);
+      // Create error entry with line number
+      var errorEntry = this._createErrorEntry("BUSINESS", source, errorMessage, lineNumber);
 
       // Show message if requested
       if (showMessage) {
-        this._showErrorMessage("Business Error", source, errorMessage);
+        this._showErrorMessage("Business Error", source, errorMessage, lineNumber);
       }
 
       return errorEntry;
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in createBusinessError: " + e.toString());
+      console.error("Error in createBusinessError: " + e.toString());
 
       // Use dialog instead of message
       var errorDialog = dialog();
       errorDialog.title('Business Error')
-                .text('Error in ' + source + ': ' + errorMessage + '\n\nAdditional error: ' + e.toString())
+                .text('Error in ' + source + ' (line: unknown): ' + errorMessage + '\n\nAdditional error: ' + e.toString())
                 .positiveButton('OK', function() {})
                 .show();
+
+      // Try to create error entry directly
+      try {
+        var constants = { APP: { ERRORS: 'ASISTANTO Errors' }, NOTES: { STD_ERROR_ENTRY: 'generované scriptom std.ErrorHandler' } };
+        var errorLib = libByName(constants.APP.ERRORS);
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("Typ", "BUSINESS");
+          fallbackEntry.set("Zdroj", source);
+          fallbackEntry.set("Správa", errorMessage);
+          fallbackEntry.set("Dátum", new Date());
+          fallbackEntry.set("Používateľ", user());
+          fallbackEntry.set("Poznámka", "Fallback error entry");
+          fallbackEntry.set("Riadok", "unknown");
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
 
       return null;
     }
@@ -268,20 +496,50 @@ std.ErrorHandler = {
    * @param {String} module - The module name
    * @param {String} function - The function name
    * @param {String} message - The error message
+   * @param {String} lineNumber - The line number (optional)
+   * @param {Object} parameters - The function parameters (optional)
+   * @param {Object} attributes - The attributes (optional)
    * @returns {Object} - The created error entry
    */
-  logError: function(module, functionName, message) {
+  logError: function(module, functionName, message, lineNumber, parameters, attributes) {
     try {
+      // Format the script name
+      var scriptName = module + "." + functionName;
+
       // Log to console
-      console.log("ERROR: [" + module + "." + functionName + "] " + message);
+      console.error("ERROR: [" + scriptName + "] " + message, scriptName, lineNumber, parameters, attributes);
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("LOG", module + "." + functionName, message);
-
-      return errorEntry;
+      return null; // console.error already creates the entry
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in logError: " + e.toString());
+      try {
+        // Try direct approach to create entry
+        var errorLib = libByName('ASISTANTO Errors');
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("type", "error");
+          fallbackEntry.set("date", new Date());
+          fallbackEntry.set("memento library", lib().title);
+          fallbackEntry.set("script", module + "." + functionName);
+          fallbackEntry.set("line", lineNumber || "unknown");
+          fallbackEntry.set("text", message);
+          fallbackEntry.set("user", user());
+
+          // Set parameters and attributes if provided
+          if (parameters) {
+            fallbackEntry.set("parameters", JSON.stringify(parameters));
+          }
+          if (attributes) {
+            fallbackEntry.set("attributes", JSON.stringify(attributes));
+          }
+
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
+
       return null;
     }
   },
@@ -291,20 +549,50 @@ std.ErrorHandler = {
    * @param {String} module - The module name
    * @param {String} function - The function name
    * @param {String} message - The warning message
+   * @param {String} lineNumber - The line number (optional)
+   * @param {Object} parameters - The function parameters (optional)
+   * @param {Object} attributes - The attributes (optional)
    * @returns {Object} - The created error entry
    */
-  logWarning: function(module, functionName, message) {
+  logWarning: function(module, functionName, message, lineNumber, parameters, attributes) {
     try {
+      // Format the script name
+      var scriptName = module + "." + functionName;
+
       // Log to console
-      console.log("WARNING: [" + module + "." + functionName + "] " + message);
+      console.warn("WARNING: [" + scriptName + "] " + message, scriptName, lineNumber, parameters, attributes);
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("WARNING", module + "." + functionName, message);
-
-      return errorEntry;
+      return null; // console.warn already creates the entry
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in logWarning: " + e.toString());
+      try {
+        // Try direct approach to create entry
+        var errorLib = libByName('ASISTANTO Errors');
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("type", "warn");
+          fallbackEntry.set("date", new Date());
+          fallbackEntry.set("memento library", lib().title);
+          fallbackEntry.set("script", module + "." + functionName);
+          fallbackEntry.set("line", lineNumber || "unknown");
+          fallbackEntry.set("text", message);
+          fallbackEntry.set("user", user());
+
+          // Set parameters and attributes if provided
+          if (parameters) {
+            fallbackEntry.set("parameters", JSON.stringify(parameters));
+          }
+          if (attributes) {
+            fallbackEntry.set("attributes", JSON.stringify(attributes));
+          }
+
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
+
       return null;
     }
   },
@@ -314,20 +602,103 @@ std.ErrorHandler = {
    * @param {String} module - The module name
    * @param {String} function - The function name
    * @param {String} message - The info message
+   * @param {String} lineNumber - The line number (optional)
+   * @param {Object} parameters - The function parameters (optional)
+   * @param {Object} attributes - The attributes (optional)
    * @returns {Object} - The created error entry
    */
-  logInfo: function(module, functionName, message) {
+  logInfo: function(module, functionName, message, lineNumber, parameters, attributes) {
     try {
+      // Format the script name
+      var scriptName = module + "." + functionName;
+
       // Log to console
-      console.log("INFO: [" + module + "." + functionName + "] " + message);
+      console.log("INFO: [" + scriptName + "] " + message, scriptName, lineNumber, parameters, attributes);
 
-      // Create error entry
-      var errorEntry = this._createErrorEntry("INFO", module + "." + functionName, message);
-
-      return errorEntry;
+      return null; // console.log already creates the entry
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in logInfo: " + e.toString());
+      try {
+        // Try direct approach to create entry
+        var errorLib = libByName('ASISTANTO Errors');
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("type", "log");
+          fallbackEntry.set("date", new Date());
+          fallbackEntry.set("memento library", lib().title);
+          fallbackEntry.set("script", module + "." + functionName);
+          fallbackEntry.set("line", lineNumber || "unknown");
+          fallbackEntry.set("text", message);
+          fallbackEntry.set("user", user());
+
+          // Set parameters and attributes if provided
+          if (parameters) {
+            fallbackEntry.set("parameters", JSON.stringify(parameters));
+          }
+          if (attributes) {
+            fallbackEntry.set("attributes", JSON.stringify(attributes));
+          }
+
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
+
+      return null;
+    }
+  },
+
+  /**
+   * Log a message to the console and error log
+   * @param {String} module - The module name
+   * @param {String} function - The function name
+   * @param {String} message - The message
+   * @param {String} lineNumber - The line number (optional)
+   * @param {Object} parameters - The function parameters (optional)
+   * @param {Object} attributes - The attributes (optional)
+   * @returns {Object} - The created error entry
+   */
+  logMessage: function(module, functionName, message, lineNumber, parameters, attributes) {
+    try {
+      // Format the script name
+      var scriptName = module + "." + functionName;
+
+      // Log to console
+      console.msg("MESSAGE: [" + scriptName + "] " + message, scriptName, lineNumber, parameters, attributes);
+
+      return null; // console.msg already creates the entry
+    } catch (e) {
+      // Fallback if error handling fails
+      try {
+        // Try direct approach to create entry
+        var errorLib = libByName('ASISTANTO Errors');
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("type", "message");
+          fallbackEntry.set("date", new Date());
+          fallbackEntry.set("memento library", lib().title);
+          fallbackEntry.set("script", module + "." + functionName);
+          fallbackEntry.set("line", lineNumber || "unknown");
+          fallbackEntry.set("text", message);
+          fallbackEntry.set("user", user());
+
+          // Set parameters and attributes if provided
+          if (parameters) {
+            fallbackEntry.set("parameters", JSON.stringify(parameters));
+          }
+          if (attributes) {
+            fallbackEntry.set("attributes", JSON.stringify(attributes));
+          }
+
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
+
       return null;
     }
   },
@@ -337,33 +708,66 @@ std.ErrorHandler = {
    * @param {String} type - The type of error
    * @param {String} source - The source of the error
    * @param {String} message - The error message
+   * @param {String} lineNumber - The line number where the error occurred
+   * @param {Object} parameters - The function parameters (optional)
+   * @param {Object} attributes - The attributes (optional)
    * @returns {Object} - The created error entry
    * @private
    */
-  _createErrorEntry: function(type, source, message) {
+  _createErrorEntry: function(type, source, message, lineNumber, parameters, attributes) {
     try {
       // Get constants
       var constants = (typeof std !== 'undefined' && std.Constants) ?
                       std.Constants :
-                      { APP: { ERRORS: 'ASISTANTO Errors' }, NOTES: { STD_ERROR_ENTRY: 'generované scriptom std.ErrorHandler' } };
+                      { APP: { ERRORS: 'ASISTANTO Errors' } };
 
       // Get error library
       var errorLib = libByName(constants.APP.ERRORS);
       if (!errorLib) {
-        console.log("Error library not found: " + constants.APP.ERRORS);
+        console.error("Error library not found: " + constants.APP.ERRORS, "std_errorHandler.js", "_createErrorEntry");
         return null;
+      }
+
+      // Map error type to database type field
+      var errorType = "error";
+      switch(type) {
+        case "SYSTEM":
+        case "DATABASE":
+        case "VALIDATION":
+        case "BUSINESS":
+        case "ERROR":
+          errorType = "error";
+          break;
+        case "WARNING":
+          errorType = "warn";
+          break;
+        case "INFO":
+          errorType = "log";
+          break;
+        case "MESSAGE":
+          errorType = "message";
+          break;
       }
 
       // Create error entry
       var errorEntry = errorLib.create();
 
-      // Set error fields
-      errorEntry.set("Typ", type);
-      errorEntry.set("Zdroj", source);
-      errorEntry.set("Správa", message);
-      errorEntry.set("Dátum", new Date());
-      errorEntry.set("Používateľ", user());
-      errorEntry.set("Poznámka", constants.NOTES.STD_ERROR_ENTRY);
+      // Set error fields according to database structure
+      errorEntry.set("type", errorType);
+      errorEntry.set("date", new Date());
+      errorEntry.set("memento library", lib().title);
+      errorEntry.set("script", source);
+      errorEntry.set("line", lineNumber || "unknown");
+      errorEntry.set("text", message);
+      errorEntry.set("user", user());
+
+      // Set parameters and attributes if provided
+      if (parameters) {
+        errorEntry.set("parameters", JSON.stringify(parameters));
+      }
+      if (attributes) {
+        errorEntry.set("attributes", JSON.stringify(attributes));
+      }
 
       // Save error entry
       errorEntry.save();
@@ -371,7 +775,27 @@ std.ErrorHandler = {
       return errorEntry;
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in _createErrorEntry: " + e.toString());
+      console.error("Error in _createErrorEntry: " + e.toString(), "std_errorHandler.js", "_createErrorEntry");
+
+      // Try direct approach to create entry
+      try {
+        var errorLib = libByName('ASISTANTO Errors');
+        if (errorLib) {
+          var fallbackEntry = errorLib.create();
+          fallbackEntry.set("type", "error");
+          fallbackEntry.set("date", new Date());
+          fallbackEntry.set("memento library", lib().title);
+          fallbackEntry.set("script", source);
+          fallbackEntry.set("line", lineNumber || "unknown");
+          fallbackEntry.set("text", "Fallback error: " + message);
+          fallbackEntry.set("user", user());
+          fallbackEntry.save();
+          return fallbackEntry;
+        }
+      } catch (fallbackError) {
+        // Nothing more we can do
+      }
+
       return null;
     }
   },
@@ -381,26 +805,41 @@ std.ErrorHandler = {
    * @param {String} title - The title of the error message
    * @param {String} source - The source of the error
    * @param {String} message - The error message
+   * @param {String} lineNumber - The line number where the error occurred
    * @private
    */
-  _showErrorMessage: function(title, source, message) {
+  _showErrorMessage: function(title, source, message, lineNumber) {
     try {
       // Use dialog instead of message
       var errorDialog = dialog();
+      var displayText = 'Error in ' + source;
+
+      // Add line number if available
+      if (lineNumber && lineNumber !== "unknown") {
+        displayText += ' (line: ' + lineNumber + ')';
+      }
+
+      displayText += ': ' + message;
+
       errorDialog.title(title)
-                .text('Error in ' + source + ': ' + message)
+                .text(displayText)
                 .positiveButton('OK', function() {})
                 .show();
     } catch (e) {
       // Fallback if error handling fails
-      console.log("Error in _showErrorMessage: " + e.toString());
+      console.error("Error in _showErrorMessage: " + e.toString());
 
       // Try another approach to show dialog
       try {
         // Create a new dialog object with minimal configuration
         var fallbackDialog = dialog();
+        var fallbackText = title + ': ' + message;
+        if (lineNumber && lineNumber !== "unknown") {
+          fallbackText += ' (line: ' + lineNumber + ')';
+        }
+
         fallbackDialog.title('Error')
-                     .text(title + ': ' + message)
+                     .text(fallbackText)
                      .positiveButton('OK', function() {})
                      .show();
       } catch (dialogError) {

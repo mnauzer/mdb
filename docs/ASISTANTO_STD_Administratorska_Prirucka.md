@@ -174,11 +174,12 @@ Modul std_errorHandler.js poskytuje jednotný spôsob spracovania chýb, logovan
 
 Memento Database nemá natívnu podporu pre `console.log()` a podobné funkcie, ktoré sú bežné v iných JavaScript prostrediach. Modul std_errorHandler.js preto implementuje vlastný `console` objekt s nasledujúcimi metódami:
 
-- **console.log** - Logovanie bežných správ
-- **console.warn** - Logovanie varovných správ
-- **console.error** - Logovanie chybových správ
+- **console.log** - Logovanie bežných správ (typ 'log')
+- **console.warn** - Logovanie varovných správ (typ 'warn')
+- **console.error** - Logovanie chybových správ (typ 'error')
+- **console.msg** - Logovanie používateľských správ (typ 'message')
 
-Tieto metódy zapisujú správy do databázy ASISTANTO Errors s príslušným typom (LOG, WARNING, ERROR) a obsahujú robustné ošetrenie chýb s fallbackom na dialog() metódu.
+Tieto metódy zapisujú správy do databázy ASISTANTO Errors s príslušným typom a obsahujú robustné ošetrenie chýb s fallbackom na dialog() metódu.
 
 Príklad implementácie:
 
@@ -186,17 +187,28 @@ Príklad implementácie:
 // Vytvorenie console objektu ak neexistuje
 if (typeof console === 'undefined') {
   var console = {
-    log: function(message) {
+    log: function(message, script, line, parameters, attributes) {
       try {
         // Zápis do databázy ASISTANTO Errors
         var logLib = libByName('ASISTANTO Errors');
         if (logLib) {
           var entry = logLib.create();
-          entry.set('Typ', 'LOG');
-          entry.set('Zdroj', 'console.log');
-          entry.set('Správa', message);
-          entry.set('Dátum', new Date());
-          entry.set('Používateľ', user());
+          entry.set('type', 'log');
+          entry.set('date', new Date());
+          entry.set('memento library', lib().title);
+          entry.set('script', script || 'console.log');
+          entry.set('line', line || 'unknown');
+          entry.set('text', message);
+          entry.set('user', user());
+
+          // Set parameters and attributes if provided
+          if (parameters) {
+            entry.set('parameters', JSON.stringify(parameters));
+          }
+          if (attributes) {
+            entry.set('attributes', JSON.stringify(attributes));
+          }
+
           entry.save();
         }
       } catch (e) {
@@ -212,10 +224,17 @@ if (typeof console === 'undefined') {
         }
       }
     },
-    // Podobne implementované warn a error metódy
+    // Podobne implementované warn, error a msg metódy
   };
 }
 ```
+
+Každá metóda prijíma nasledujúce parametre:
+- **message** (povinný) - Správa, ktorá sa má zaznamenať
+- **script** (voliteľný) - Názov skriptu, ktorý vygeneroval správu
+- **line** (voliteľný) - Číslo riadku, kde bola správa vygenerovaná
+- **parameters** (voliteľný) - Parametre funkcie, ktorá vygenerovala správu (ako objekt)
+- **attributes** (voliteľný) - Atribúty súvisiace so správou (ako objekt)
 
 #### 2.2.2 Typy chýb
 
