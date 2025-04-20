@@ -29,51 +29,72 @@ libOpen: function() {
 try {
     // Initialize the core module if available
     if (typeof std !== 'undefined' && std.Core && !std.Core._initialized) {
-    std.Core.init();
+        try {
+            std.Core.init();
+        } catch (initError) {
+            console.error("Failed to initialize Core module", "std_triggers.js", "libOpen", initError);
+        }
     }
 
-    // Get the current library
-    var currentLib = lib();
-    var libName = currentLib.title;
-
-    // Update app state
-    if (typeof app !== 'undefined' && app.activeLib) {
-    app.activeLib.name = libName;
-    app.activeLib.lib = currentLib;
-    app.activeLib.entries = currentLib.entries();
+    // Get the current library safely
+    var libName = "unknown";
+    try {
+        var currentLib = lib();
+        if (currentLib && typeof currentLib.title === 'string') {
+            libName = currentLib.title;
+        }
+    } catch (libError) {
+        console.error("Failed to get library information", "std_triggers.js", "libOpen", libError);
     }
 
-    // Show welcome message
-    if (typeof app !== 'undefined' && app.data) {
-    // Use dialog instead of message
-    var welcomeDialog = dialog();
-    welcomeDialog.title('Welcome')
-                .text(app.data.name + ' v.' + app.data.version + '\n' + libName + ' ' + (app.season || ''))
-                .positiveButton('OK', function() {})
-                .show();
-    } else {
-    // Use dialog instead of message
-    var simpleDialog = dialog();
-    simpleDialog.title('Welcome')
-                .text('Welcome to ' + libName)
-                .positiveButton('OK', function() {})
-                .show();
+    // Update app state safely
+    try {
+        if (typeof app !== 'undefined' && app.activeLib) {
+            app.activeLib.name = libName;
+            app.activeLib.lib = currentLib;
+            app.activeLib.entries = currentLib.entries();
+        }
+    } catch (appError) {
+        console.error("Failed to update app state", "std_triggers.js", "libOpen", appError);
+    }
+
+    // Show welcome message safely
+    try {
+        if (typeof app !== 'undefined' && app.data) {
+            // Use dialog instead of message
+            var welcomeDialog = dialog();
+            welcomeDialog.title('Welcome')
+                        .text(app.data.name + ' v.' + app.data.version + '\n' + libName + ' ' + (app.season || ''))
+                        .positiveButton('OK', function() {})
+                        .show();
+        } else {
+            // Use dialog instead of message
+            var simpleDialog = dialog();
+            simpleDialog.title('Welcome')
+                        .text('Welcome to ' + libName)
+                        .positiveButton('OK', function() {})
+                        .show();
+        }
+    } catch (dialogError) {
+        console.error("Failed to show welcome dialog", "std_triggers.js", "libOpen", dialogError);
     }
 
     // Log the event
-    if (typeof std !== 'undefined' && std.ErrorHandler) {
-    std.ErrorHandler.logInfo("Triggers", "libOpen", "Library opened: " + libName);
-    }
+    console.log("Library opened: " + libName, "std_triggers.js", "libOpen");
+
 } catch (e) {
-    if (typeof std !== 'undefined' && std.ErrorHandler) {
-    std.ErrorHandler.createSystemError(e, "std.Triggers.libOpen", true);
-    } else {
-    // Use dialog instead of message
-    var errorDialog = dialog();
-    errorDialog.title('Chyba')
-                .text('Error in libOpen: ' + e.toString())
-                .positiveButton('OK', function() {})
-                .show();
+    // Use console.error for logging the error
+    console.error("Error in libOpen: " + e.toString(), "std_triggers.js", "libOpen", e);
+
+    // Show error dialog
+    try {
+        var errorDialog = dialog();
+        errorDialog.title('Chyba')
+                  .text('Error in libOpen: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
+    } catch (dialogError) {
+        // Nothing more we can do if even dialog fails
     }
 }
 },
@@ -84,39 +105,57 @@ try {
  */
 libOpenBeforeShow: function() {
 try {
-    // Get the current library
-    var currentLib = lib();
-    var libName = currentLib.title;
-
-    // Show dialog
-    var dialogTitle = '';
-    var dialogText = '';
-
-    if (typeof app !== 'undefined' && app.data) {
-    dialogTitle = app.data.name + ' >>> ' + libName + ' >>> ' + (app.season || '');
-    dialogText = app.data.version;
-    } else {
-    dialogTitle = 'Opening Library';
-    dialogText = libName;
+    // Get the current library safely
+    var libName = "unknown";
+    try {
+        var currentLib = lib();
+        if (currentLib && typeof currentLib.title === 'string') {
+            libName = currentLib.title;
+        }
+    } catch (libError) {
+        console.error("Failed to get library information", "std_triggers.js", "libOpenBeforeShow", libError);
     }
 
-    var myDialog = dialog();
-    myDialog.title(dialogTitle)
-    .text(dialogText)
-    .negativeButton('Odísť', function() { cancel(); })
-    .positiveButton('Pokračuj', function() {})
-    .autoDismiss(true)
-    .show();
-} catch (e) {
-    if (typeof std !== 'undefined' && std.ErrorHandler) {
-    std.ErrorHandler.createSystemError(e, "std.Triggers.libOpenBeforeShow", true);
-    } else {
-    // Use dialog instead of message
-    var errorDialog = dialog();
-    errorDialog.title('Chyba')
-                .text('Error in libOpenBeforeShow: ' + e.toString())
-                .positiveButton('OK', function() {})
+    // Show dialog safely
+    try {
+        var dialogTitle = '';
+        var dialogText = '';
+
+        if (typeof app !== 'undefined' && app.data) {
+            dialogTitle = app.data.name + ' >>> ' + libName + ' >>> ' + (app.season || '');
+            dialogText = app.data.version;
+        } else {
+            dialogTitle = 'Opening Library';
+            dialogText = libName;
+        }
+
+        var myDialog = dialog();
+        myDialog.title(dialogTitle)
+                .text(dialogText)
+                .negativeButton('Odísť', function() { cancel(); })
+                .positiveButton('Pokračuj', function() {})
+                .autoDismiss(true)
                 .show();
+    } catch (dialogError) {
+        console.error("Failed to show dialog", "std_triggers.js", "libOpenBeforeShow", dialogError);
+    }
+
+    // Log success
+    console.log("Library before show processed: " + libName, "std_triggers.js", "libOpenBeforeShow");
+
+} catch (e) {
+    // Use console.error for logging the error
+    console.error("Error in libOpenBeforeShow: " + e.toString(), "std_triggers.js", "libOpenBeforeShow", e);
+
+    // Show error dialog
+    try {
+        var errorDialog = dialog();
+        errorDialog.title('Chyba')
+                  .text('Error in libOpenBeforeShow: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
+    } catch (dialogError) {
+        // Nothing more we can do if even dialog fails
     }
 }
 },
@@ -127,103 +166,200 @@ try {
  */
 createEntryOpen: function() {
 try {
-    // Get the current library
-    var currentLib = lib();
-    var libName = currentLib.title;
+    // Get the current library safely
+    var libName = "unknown";
+    var currentLib = null;
+    try {
+        currentLib = lib();
+        if (currentLib && typeof currentLib.title === 'string') {
+            libName = currentLib.title;
+        }
+    } catch (libError) {
+        console.error("Failed to get library information", "std_triggers.js", "createEntryOpen", libError);
+    }
 
-    // Get the default entry
-    var en = entryDefault();
+    // Get the default entry safely
+    var en = null;
+    try {
+        en = entryDefault();
+        if (!en) {
+            console.error("Failed to get default entry", "std_triggers.js", "createEntryOpen");
+            return;
+        }
+    } catch (entryError) {
+        console.error("Failed to get default entry", "std_triggers.js", "createEntryOpen", entryError);
+        return;
+    }
 
     // Set basic fields
     if (typeof std !== 'undefined' && std.Constants) {
-    var constants = std.Constants;
-    var utils = std.Utils;
+        try {
+            var constants = std.Constants;
+            var utils = std.Utils;
 
-    // Set view state
-    utils.Field.setValue(en, constants.FIELDS.COMMON.VIEW, constants.VIEW_STATES.EDIT);
+            // Set view state safely
+            try {
+                utils.Field.setValue(en, constants.FIELDS.COMMON.VIEW, constants.VIEW_STATES.EDIT);
+            } catch (viewError) {
+                console.error("Failed to set view state", "std_triggers.js", "createEntryOpen", viewError);
+            }
 
-    // Set date
-    utils.Field.setValue(en, constants.FIELDS.COMMON.DATE, new Date());
+            // Set date safely
+            try {
+                utils.Field.setValue(en, constants.FIELDS.COMMON.DATE, new Date());
+            } catch (dateError) {
+                console.error("Failed to set date", "std_triggers.js", "createEntryOpen", dateError);
+            }
 
-    // Generate entry number
-    var entryNumber = utils.EntryNumber.generateEntryNumber(en);
-    if (entryNumber) {
-        utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER, entryNumber);
+            // Generate entry number safely
+            try {
+                var entryNumber = utils.EntryNumber.generateEntryNumber(en);
+                if (entryNumber) {
+                    utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER, entryNumber);
 
-        // Get the raw entry number (without prefix and season) from the entry attributes
-        var rawEntryNumber = en.attr("_deletedNumber") || en.attr("_nextNumber");
-        if (rawEntryNumber) {
-        utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER_ENTRY, parseInt(rawEntryNumber, 10));
+                    // Get the raw entry number (without prefix and season) from the entry attributes
+                    var rawEntryNumber = en.attr("_deletedNumber") || en.attr("_nextNumber");
+                    if (rawEntryNumber) {
+                        utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER_ENTRY, parseInt(rawEntryNumber, 10));
+                    }
+                } else if (typeof app !== 'undefined' && app.activeLib && app.activeLib.number) {
+                    // Fallback to old method if entry number generation fails
+                    utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER, app.activeLib.number);
+                    utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER_ENTRY, app.activeLib.nextNum);
+                }
+            } catch (numberError) {
+                console.error("Failed to generate entry number", "std_triggers.js", "createEntryOpen", numberError);
+            }
+
+            // Get current season from ASISTANTO database safely
+            try {
+                var asistentoLib = libByName(constants.APP.TENANTS);
+                if (asistentoLib) {
+                    var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
+                    if (seasonEntries.length === 0) {
+                        seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
+                    }
+
+                    if (seasonEntries.length > 0) {
+                        var season = seasonEntries[0].field("Sezóna");
+                        utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, season);
+                    } else if (typeof app !== 'undefined' && app.season) {
+                        // Fallback to app.season if ASISTANTO database is not available
+                        utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, app.season);
+                    }
+                } else if (typeof app !== 'undefined' && app.season) {
+                    // Fallback to app.season if ASISTANTO database is not available
+                    utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, app.season);
+                }
+            } catch (seasonError) {
+                console.error("Failed to get season information", "std_triggers.js", "createEntryOpen", seasonError);
+            }
+
+            // Set creation metadata safely
+            try {
+                var currentUser = "unknown";
+                try {
+                    currentUser = user();
+                } catch (userError) {
+                    console.error("Failed to get user", "std_triggers.js", "createEntryOpen", userError);
+                }
+
+                utils.Field.setValue(en, constants.FIELDS.COMMON.CREATED_BY, currentUser);
+                utils.Field.setValue(en, constants.FIELDS.COMMON.CREATED_DATE, new Date());
+            } catch (metadataError) {
+                console.error("Failed to set creation metadata", "std_triggers.js", "createEntryOpen", metadataError);
+            }
+
+            // Set library-specific defaults safely
+            try {
+                if (libName === constants.LIBRARIES.RECORDS.ATTENDANCE) {
+                    utils.Field.setValue(en, constants.FIELDS.ATTENDANCE.ARRIVAL, constants.DEFAULTS.ATTENDANCE.ARRIVAL);
+                    utils.Field.setValue(en, constants.FIELDS.ATTENDANCE.DEPARTURE, constants.DEFAULTS.ATTENDANCE.DEPARTURE);
+                } else if (libName === constants.LIBRARIES.RECORDS.WORK_RECORDS) {
+                    utils.Field.setValue(en, constants.FIELDS.WORK_RECORD.START_TIME, constants.DEFAULTS.WORK_RECORDS.START_TIME);
+                    utils.Field.setValue(en, constants.FIELDS.WORK_RECORD.END_TIME, constants.DEFAULTS.WORK_RECORDS.END_TIME);
+                } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTES) {
+                    utils.Field.setValue(en, constants.FIELDS.PRICE_QUOTE.VALIDITY_PERIOD, constants.DEFAULTS.PRICE_QUOTES.VALIDITY_PERIOD);
+                }
+            } catch (defaultsError) {
+                console.error("Failed to set library-specific defaults", "std_triggers.js", "createEntryOpen", defaultsError);
+            }
+        } catch (constantsError) {
+            console.error("Failed to use std.Constants", "std_triggers.js", "createEntryOpen", constantsError);
+
+            // Fallback if constants are not available
+            try {
+                en.set('view', 'Editácia');
+                en.set('Dátum', new Date());
+                en.set('zapísal', user());
+                en.set('dátum zápisu', new Date());
+            } catch (fallbackError) {
+                console.error("Failed to set fallback fields", "std_triggers.js", "createEntryOpen", fallbackError);
+            }
         }
-    } else if (typeof app !== 'undefined' && app.activeLib && app.activeLib.number) {
-        // Fallback to old method if entry number generation fails
-        utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER, app.activeLib.number);
-        utils.Field.setValue(en, constants.FIELDS.COMMON.NUMBER_ENTRY, app.activeLib.nextNum);
-    }
-
-    // Get current season from ASISTANTO database
-    var asistentoLib = libByName(constants.APP.TENANTS);
-    if (asistentoLib) {
-        var seasonEntries = asistentoLib.find("Prevádzka appky = 'Ostrý režim'");
-        if (seasonEntries.length === 0) {
-        seasonEntries = asistentoLib.find("Prevádzka appky = 'Testovanie'");
-        }
-
-        if (seasonEntries.length > 0) {
-        var season = seasonEntries[0].field("Sezóna");
-        utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, season);
-        } else if (typeof app !== 'undefined' && app.season) {
-        // Fallback to app.season if ASISTANTO database is not available
-        utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, app.season);
-        }
-    } else if (typeof app !== 'undefined' && app.season) {
-        // Fallback to app.season if ASISTANTO database is not available
-        utils.Field.setValue(en, constants.FIELDS.COMMON.SEASON, app.season);
-    }
-
-    // Set creation metadata
-    utils.Field.setValue(en, constants.FIELDS.COMMON.CREATED_BY, user());
-    utils.Field.setValue(en, constants.FIELDS.COMMON.CREATED_DATE, new Date());
-
-    // Set library-specific defaults
-    if (libName === constants.LIBRARIES.RECORDS.ATTENDANCE) {
-        utils.Field.setValue(en, constants.FIELDS.ATTENDANCE.ARRIVAL, constants.DEFAULTS.ATTENDANCE.ARRIVAL);
-        utils.Field.setValue(en, constants.FIELDS.ATTENDANCE.DEPARTURE, constants.DEFAULTS.ATTENDANCE.DEPARTURE);
-    } else if (libName === constants.LIBRARIES.RECORDS.WORK_RECORDS) {
-        utils.Field.setValue(en, constants.FIELDS.WORK_RECORD.START_TIME, constants.DEFAULTS.WORK_RECORDS.START_TIME);
-        utils.Field.setValue(en, constants.FIELDS.WORK_RECORD.END_TIME, constants.DEFAULTS.WORK_RECORDS.END_TIME);
-    } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTES) {
-        utils.Field.setValue(en, constants.FIELDS.PRICE_QUOTE.VALIDITY_PERIOD, constants.DEFAULTS.PRICE_QUOTES.VALIDITY_PERIOD);
-    }
     } else {
-    // Fallback if constants are not available
-    en.set('view', 'Editácia');
-    en.set('Dátum', new Date());
-    en.set('zapísal', user());
-    en.set('dátum zápisu', new Date());
+        // Fallback if constants are not available
+        try {
+            en.set('view', 'Editácia');
+            en.set('Dátum', new Date());
+            en.set('zapísal', user());
+            en.set('dátum zápisu', new Date());
+        } catch (fallbackError) {
+            console.error("Failed to set fallback fields", "std_triggers.js", "createEntryOpen", fallbackError);
+        }
     }
 
-    // Show message
-    if (typeof app !== 'undefined' && app.activeLib) {
-    // Use dialog instead of message
-    var infoDialog = dialog();
-    infoDialog.title('Informácia')
-                .text('Knižnica: ' + libName + ' /' + (app.data ? app.data.version : '') + '/ ' +
-                    (utils && utils.Field ? utils.Field.getValue(en, constants.FIELDS.COMMON.SEASON) || '' : '') + ' / ' +
-                    (utils && utils.Field ? utils.Field.getValue(en, constants.FIELDS.COMMON.NUMBER) || '' : ''))
-                .positiveButton('OK', function() {})
-                .show();
+    // Show message safely
+    try {
+        if (typeof app !== 'undefined' && app.activeLib) {
+            // Use dialog instead of message
+            var infoDialog = dialog();
+            var dialogText = 'Knižnica: ' + libName;
+
+            if (app.data && app.data.version) {
+                dialogText += ' /' + app.data.version + '/';
+            }
+
+            if (typeof std !== 'undefined' && std.Constants && std.Utils && std.Utils.Field) {
+                var constants = std.Constants;
+                var utils = std.Utils;
+
+                var season = utils.Field.getValue(en, constants.FIELDS.COMMON.SEASON) || '';
+                if (season) {
+                    dialogText += ' ' + season + ' /';
+                }
+
+                var number = utils.Field.getValue(en, constants.FIELDS.COMMON.NUMBER) || '';
+                if (number) {
+                    dialogText += ' ' + number;
+                }
+            }
+
+            infoDialog.title('Informácia')
+                      .text(dialogText)
+                      .positiveButton('OK', function() {})
+                      .show();
+        }
+    } catch (dialogError) {
+        console.error("Failed to show information dialog", "std_triggers.js", "createEntryOpen", dialogError);
     }
+
+    // Log success
+    console.log("Entry created successfully", "std_triggers.js", "createEntryOpen");
+
 } catch (e) {
-    if (typeof std !== 'undefined' && std.ErrorHandler) {
-    std.ErrorHandler.createSystemError(e, "std.Triggers.createEntryOpen", true);
-    } else {
-    // Use dialog instead of message
-    var errorDialog = dialog();
-    errorDialog.title('Chyba')
-                .text('Error in createEntryOpen: ' + e.toString())
-                .positiveButton('OK', function() {})
-                .show();
+    // Use console.error for logging the error
+    console.error("Error in createEntryOpen: " + e.toString(), "std_triggers.js", "createEntryOpen", e);
+
+    // Show error dialog
+    try {
+        var errorDialog = dialog();
+        errorDialog.title('Chyba')
+                  .text('Error in createEntryOpen: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
+    } catch (dialogError) {
+        // Nothing more we can do if even dialog fails
     }
 }
 },
@@ -234,54 +370,110 @@ try {
  */
 createEntryAfterSave: function() {
 try {
-    // Get the current library
-    var currentLib = lib();
-    var libName = currentLib.title;
-    var en = currentLib.lastEntry();
+    // Get the current library safely
+    var libName = "unknown";
+    var currentLib = null;
+    var en = null;
 
-    // Process library-specific logic
+    try {
+        currentLib = lib();
+        if (currentLib && typeof currentLib.title === 'string') {
+            libName = currentLib.title;
+        }
+
+        // Get the last entry safely
+        try {
+            en = currentLib.lastEntry();
+            if (!en) {
+                console.error("Failed to get last entry", "std_triggers.js", "createEntryAfterSave");
+                return;
+            }
+        } catch (entryError) {
+            console.error("Failed to get last entry", "std_triggers.js", "createEntryAfterSave", entryError);
+            return;
+        }
+    } catch (libError) {
+        console.error("Failed to get library information", "std_triggers.js", "createEntryAfterSave", libError);
+        return;
+    }
+
+    // Process library-specific logic safely
     if (typeof std !== 'undefined' && std.Constants) {
-    var constants = std.Constants;
-    var utils = std.Utils;
+        try {
+            var constants = std.Constants;
+            var utils = std.Utils;
 
-    if (libName === constants.LIBRARIES.RECORDS.ATTENDANCE && typeof std !== 'undefined' && std.Attendance) {
-        std.Attendance.processAttendanceRecord(en, false);
-    } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTES) {
-        // Process price quote logic
-        // This would be implemented in a std.PriceQuotes module
-    } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTE_PARTS) {
-        // Process price quote parts logic
-        // This would be implemented in a std.PriceQuotes module
+            // Process library-specific logic safely
+            try {
+                if (libName === constants.LIBRARIES.RECORDS.ATTENDANCE && typeof std !== 'undefined' && std.Attendance) {
+                    std.Attendance.processAttendanceRecord(en, false);
+                } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTES) {
+                    // Process price quote logic
+                    // This would be implemented in a std.PriceQuotes module
+                } else if (libName === constants.LIBRARIES.PROJECTS.PRICE_QUOTE_PARTS) {
+                    // Process price quote parts logic
+                    // This would be implemented in a std.PriceQuotes module
+                }
+            } catch (processError) {
+                console.error("Failed to process library-specific logic", "std_triggers.js", "createEntryAfterSave", processError);
+            }
+
+            // Update entry number information in ASISTANTO database safely
+            try {
+                utils.EntryNumber.updateEntryNumberInfo(en);
+            } catch (numberError) {
+                console.error("Failed to update entry number information", "std_triggers.js", "createEntryAfterSave", numberError);
+            }
+
+            // Update number sequence (legacy support) safely
+            try {
+                if (typeof app !== 'undefined' && app.activeLib) {
+                    app.activeLib.lastNum = app.activeLib.nextNum;
+                    app.activeLib.nextNum++;
+                }
+            } catch (sequenceError) {
+                console.error("Failed to update number sequence", "std_triggers.js", "createEntryAfterSave", sequenceError);
+            }
+
+            // Update entry view state safely
+            try {
+                utils.Field.setValue(en, constants.FIELDS.COMMON.VIEW, constants.VIEW_STATES.PRINT);
+            } catch (viewError) {
+                console.error("Failed to update view state", "std_triggers.js", "createEntryAfterSave", viewError);
+            }
+        } catch (constantsError) {
+            console.error("Failed to use std.Constants", "std_triggers.js", "createEntryAfterSave", constantsError);
+        }
     }
 
-    // Update entry number information in ASISTANTO database
-    utils.EntryNumber.updateEntryNumberInfo(en);
+    // Log success
+    console.log("Entry after save processed successfully", "std_triggers.js", "createEntryAfterSave");
 
-    // Update number sequence (legacy support)
-    if (typeof app !== 'undefined' && app.activeLib) {
-        app.activeLib.lastNum = app.activeLib.nextNum;
-        app.activeLib.nextNum++;
-    }
-
-    // Update entry view state
-    utils.Field.setValue(en, constants.FIELDS.COMMON.VIEW, constants.VIEW_STATES.PRINT);
-    }
 } catch (e) {
-    if (typeof std !== 'undefined' && std.ErrorHandler) {
-    std.ErrorHandler.createSystemError(e, "std.Triggers.createEntryAfterSave", true);
-    } else {
-    // Use dialog instead of message
-    var errorDialog = dialog();
-    errorDialog.title('Chyba')
-                .text('Error in createEntryAfterSave: ' + e.toString())
-                .positiveButton('OK', function() {})
-                .show();
+    // Use console.error for logging the error
+    console.error("Error in createEntryAfterSave: " + e.toString(), "std_triggers.js", "createEntryAfterSave", e);
+
+    // Show error dialog
+    try {
+        var errorDialog = dialog();
+        errorDialog.title('Chyba')
+                  .text('Error in createEntryAfterSave: ' + e.toString())
+                  .positiveButton('OK', function() {})
+                  .show();
+    } catch (dialogError) {
+        // Nothing more we can do if even dialog fails
     }
 
-    // Set debug view state on error
-    if (typeof std !== 'undefined' && std.Constants) {
-    var en = lib().lastEntry();
-    std.Utils.Field.setValue(en, std.Constants.FIELDS.COMMON.VIEW, std.Constants.VIEW_STATES.DEBUG);
+    // Set debug view state on error safely
+    try {
+        if (typeof std !== 'undefined' && std.Constants) {
+            var debugEntry = lib().lastEntry();
+            if (debugEntry) {
+                std.Utils.Field.setValue(debugEntry, std.Constants.FIELDS.COMMON.VIEW, std.Constants.VIEW_STATES.DEBUG);
+            }
+        }
+    } catch (debugError) {
+        console.error("Failed to set debug view state", "std_triggers.js", "createEntryAfterSave", debugError);
     }
 }
 },

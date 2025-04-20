@@ -25,23 +25,59 @@ if (typeof console === 'undefined') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('type', 'log');
-            entry.set('date', new Date());
-            entry.set('memento library', lib().title);
-            entry.set('script', script || 'console.log');
-            entry.set('line', line || 'unknown');
-            entry.set('text', message);
-            entry.set('user', user());
+
+            // Safely set fields with null checks
+            try { entry.set('type', 'log'); } catch(e) {}
+            try { entry.set('date', new Date()); } catch(e) {}
+
+            // Safely get library title
+            var libTitle = "unknown";
+            try {
+              var currentLib = lib();
+              if (currentLib && typeof currentLib.title === 'string') {
+                libTitle = currentLib.title;
+              }
+            } catch(e) {}
+            try { entry.set('memento library', libTitle); } catch(e) {}
+
+            try { entry.set('script', script || 'console.log'); } catch(e) {}
+            try { entry.set('line', line || 'unknown'); } catch(e) {}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+
+            // Safely get user
+            var currentUser = "unknown";
+            try {
+              currentUser = user();
+            } catch(e) {}
+            try { entry.set('user', currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
-              entry.set('parameters', JSON.stringify(parameters));
+              try {
+                entry.set('parameters', JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
-              entry.set('attributes', JSON.stringify(attributes));
+              try {
+                entry.set('attributes', JSON.stringify(attributes));
+              } catch(e) {}
             }
 
-            entry.save();
+            // Save entry with try-catch
+            try {
+              entry.save();
+            } catch(e) {
+              // Try alternative approach if save fails
+              try {
+                // Try to save with minimal fields
+                var minimalEntry = logLib.create();
+                minimalEntry.set('type', 'log');
+                minimalEntry.set('text', 'Failed to save log: ' + message);
+                minimalEntry.save();
+              } catch(saveError) {
+                // Nothing more we can do
+              }
+            }
           }
         }
       } catch (e) {
@@ -74,23 +110,59 @@ if (typeof console === 'undefined') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('type', 'warn');
-            entry.set('date', new Date());
-            entry.set('memento library', lib().title);
-            entry.set('script', script || 'console.warn');
-            entry.set('line', line || 'unknown');
-            entry.set('text', message);
-            entry.set('user', user());
+
+            // Safely set fields with null checks
+            try { entry.set('type', 'warn'); } catch(e) {}
+            try { entry.set('date', new Date()); } catch(e) {}
+
+            // Safely get library title
+            var libTitle = "unknown";
+            try {
+              var currentLib = lib();
+              if (currentLib && typeof currentLib.title === 'string') {
+                libTitle = currentLib.title;
+              }
+            } catch(e) {}
+            try { entry.set('memento library', libTitle); } catch(e) {}
+
+            try { entry.set('script', script || 'console.warn'); } catch(e) {}
+            try { entry.set('line', line || 'unknown'); } catch(e) {}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+
+            // Safely get user
+            var currentUser = "unknown";
+            try {
+              currentUser = user();
+            } catch(e) {}
+            try { entry.set('user', currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
-              entry.set('parameters', JSON.stringify(parameters));
+              try {
+                entry.set('parameters', JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
-              entry.set('attributes', JSON.stringify(attributes));
+              try {
+                entry.set('attributes', JSON.stringify(attributes));
+              } catch(e) {}
             }
 
-            entry.save();
+            // Save entry with try-catch
+            try {
+              entry.save();
+            } catch(e) {
+              // Try alternative approach if save fails
+              try {
+                // Try to save with minimal fields
+                var minimalEntry = logLib.create();
+                minimalEntry.set('type', 'warn');
+                minimalEntry.set('text', 'Failed to save warning: ' + message);
+                minimalEntry.save();
+              } catch(saveError) {
+                // Nothing more we can do
+              }
+            }
           }
         }
       } catch (e) {
@@ -122,23 +194,59 @@ if (typeof console === 'undefined') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('type', 'error');
-            entry.set('date', new Date());
-            entry.set('memento library', lib().title);
-            entry.set('script', script || 'console.error');
-            entry.set('line', line || 'unknown');
-            entry.set('text', message);
-            entry.set('user', user());
+
+            // Safely set fields with null checks
+            try { entry.set('type', 'error'); } catch(e) {}
+            try { entry.set('date', new Date()); } catch(e) {}
+
+            // Safely get library title
+            var libTitle = "unknown";
+            try {
+              var currentLib = lib();
+              if (currentLib && typeof currentLib.title === 'string') {
+                libTitle = currentLib.title;
+              }
+            } catch(e) {}
+            try { entry.set('memento library', libTitle); } catch(e) {}
+
+            try { entry.set('script', script || 'console.error'); } catch(e) {}
+            try { entry.set('line', line || 'unknown'); } catch(e) {}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+
+            // Safely get user
+            var currentUser = "unknown";
+            try {
+              currentUser = user();
+            } catch(e) {}
+            try { entry.set('user', currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
-              entry.set('parameters', JSON.stringify(parameters));
+              try {
+                entry.set('parameters', JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
-              entry.set('attributes', JSON.stringify(attributes));
+              try {
+                entry.set('attributes', JSON.stringify(attributes));
+              } catch(e) {}
             }
 
-            entry.save();
+            // Save entry with try-catch
+            try {
+              entry.save();
+            } catch(e) {
+              // Try alternative approach if save fails
+              try {
+                // Try to save with minimal fields
+                var minimalEntry = logLib.create();
+                minimalEntry.set('type', 'error');
+                minimalEntry.set('text', 'Failed to save error: ' + message);
+                minimalEntry.save();
+              } catch(saveError) {
+                // Nothing more we can do
+              }
+            }
           }
         }
       } catch (e) {
@@ -170,23 +278,59 @@ if (typeof console === 'undefined') {
           var logLib = libByName('ASISTANTO Errors');
           if (logLib) {
             var entry = logLib.create();
-            entry.set('type', 'message');
-            entry.set('date', new Date());
-            entry.set('memento library', lib().title);
-            entry.set('script', script || 'console.msg');
-            entry.set('line', line || 'unknown');
-            entry.set('text', message);
-            entry.set('user', user());
+
+            // Safely set fields with null checks
+            try { entry.set('type', 'message'); } catch(e) {}
+            try { entry.set('date', new Date()); } catch(e) {}
+
+            // Safely get library title
+            var libTitle = "unknown";
+            try {
+              var currentLib = lib();
+              if (currentLib && typeof currentLib.title === 'string') {
+                libTitle = currentLib.title;
+              }
+            } catch(e) {}
+            try { entry.set('memento library', libTitle); } catch(e) {}
+
+            try { entry.set('script', script || 'console.msg'); } catch(e) {}
+            try { entry.set('line', line || 'unknown'); } catch(e) {}
+            try { entry.set('text', message ? message.toString() : 'No message'); } catch(e) {}
+
+            // Safely get user
+            var currentUser = "unknown";
+            try {
+              currentUser = user();
+            } catch(e) {}
+            try { entry.set('user', currentUser); } catch(e) {}
 
             // Set parameters and attributes if provided
             if (parameters) {
-              entry.set('parameters', JSON.stringify(parameters));
+              try {
+                entry.set('parameters', JSON.stringify(parameters));
+              } catch(e) {}
             }
             if (attributes) {
-              entry.set('attributes', JSON.stringify(attributes));
+              try {
+                entry.set('attributes', JSON.stringify(attributes));
+              } catch(e) {}
             }
 
-            entry.save();
+            // Save entry with try-catch
+            try {
+              entry.save();
+            } catch(e) {
+              // Try alternative approach if save fails
+              try {
+                // Try to save with minimal fields
+                var minimalEntry = logLib.create();
+                minimalEntry.set('type', 'message');
+                minimalEntry.set('text', 'Failed to save message: ' + message);
+                minimalEntry.save();
+              } catch(saveError) {
+                // Nothing more we can do
+              }
+            }
           }
         }
       } catch (e) {
@@ -752,25 +896,58 @@ std.ErrorHandler = {
       // Create error entry
       var errorEntry = errorLib.create();
 
-      // Set error fields according to database structure
-      errorEntry.set("type", errorType);
-      errorEntry.set("date", new Date());
-      errorEntry.set("memento library", lib().title);
-      errorEntry.set("script", source);
-      errorEntry.set("line", lineNumber || "unknown");
-      errorEntry.set("text", message);
-      errorEntry.set("user", user());
+      // Safely set fields with null checks
+      try { errorEntry.set("type", errorType); } catch(e) {}
+      try { errorEntry.set("date", new Date()); } catch(e) {}
+
+      // Safely get library title
+      var libTitle = "unknown";
+      try {
+        var currentLib = lib();
+        if (currentLib && typeof currentLib.title === 'string') {
+          libTitle = currentLib.title;
+        }
+      } catch(e) {}
+      try { errorEntry.set("memento library", libTitle); } catch(e) {}
+
+      try { errorEntry.set("script", source || "unknown"); } catch(e) {}
+      try { errorEntry.set("line", lineNumber || "unknown"); } catch(e) {}
+      try { errorEntry.set("text", message ? message.toString() : "No message"); } catch(e) {}
+
+      // Safely get user
+      var currentUser = "unknown";
+      try {
+        currentUser = user();
+      } catch(e) {}
+      try { errorEntry.set("user", currentUser); } catch(e) {}
 
       // Set parameters and attributes if provided
       if (parameters) {
-        errorEntry.set("parameters", JSON.stringify(parameters));
+        try {
+          errorEntry.set("parameters", JSON.stringify(parameters));
+        } catch(e) {}
       }
       if (attributes) {
-        errorEntry.set("attributes", JSON.stringify(attributes));
+        try {
+          errorEntry.set("attributes", JSON.stringify(attributes));
+        } catch(e) {}
       }
 
-      // Save error entry
-      errorEntry.save();
+      // Save entry with try-catch
+      try {
+        errorEntry.save();
+      } catch(e) {
+        // Try alternative approach if save fails
+        try {
+          // Try to save with minimal fields
+          var minimalEntry = errorLib.create();
+          minimalEntry.set("type", "error");
+          minimalEntry.set("text", "Failed to save error entry: " + message);
+          minimalEntry.save();
+        } catch(saveError) {
+          // Nothing more we can do
+        }
+      }
 
       return errorEntry;
     } catch (e) {
