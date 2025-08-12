@@ -250,14 +250,14 @@ var MementoUtils = (function() {
         index = index || 0;
         
         try {
-            entry.setAttr(fieldName, index, attrName, value);
+            entry.field(fieldName).setAttr(attrName, value);
             return true;
         } catch (e) {
             // Fallback na priamy prístup
             try {
                 var links = entry.field(fieldName);
                 if (links && links[index]) {
-                    links[index].setAttr(attrName, value);
+                    links[index].field(fieldName).setAttr(attrName, value);
                     return true;
                 }
             } catch (e2) {
@@ -280,13 +280,13 @@ var MementoUtils = (function() {
         index = index || 0;
         
         try {
-            return entry.getAttr(fieldName, index, attrName) || defaultValue || null;
+            return entry.attr(attrName) || defaultValue || null;
         } catch (e) {
             // Fallback na priamy prístup
             try {
                 var links = entry.field(fieldName);
                 if (links && links[index]) {
-                    return links[index].getAttr(attrName) || defaultValue || null;
+                    return links[index].attr(attrName) || defaultValue || null;
                 }
             } catch (e2) {
                 return defaultValue || null;
