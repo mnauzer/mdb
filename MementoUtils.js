@@ -257,7 +257,7 @@ var MementoUtils = (function() {
             try {
                 var links = entry.field(fieldName);
                 if (links && links[index]) {
-                    links[index].field(fieldName).setAttr(attrName, value);
+                    links[index].setAttr(attrName, value);
                     return true;
                 }
             } catch (e2) {
