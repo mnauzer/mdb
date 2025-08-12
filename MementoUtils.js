@@ -709,51 +709,143 @@ var MementoUtils = (function() {
      * @param {Entry} debugEntry - Entry pre debug log
      * @return {string|null} API kľúč alebo null
      */
+   // ========================================
+    // AI API KEY MANAGEMENT - OPRAVENÁ VERZIA
+    // ========================================
+
+    /**
+     * Načítanie API kľúča z knižnice ASISTANTO API
+     * @param {string} providerName - Názov providera ("OpenAi", "Perplexity", "OpenRouter")
+     * @param {Entry} debugEntry - Entry pre debug log
+     * @return {string|null} API kľúč alebo null
+     */
     function getApiKey(providerName, debugEntry) {
         if (!providerName) return null;
         
         try {
-            var apiLib = libByName("ASISTANTO Api");
-            var fieldVariations = [
-                "API " + providerName,
-                "AI " + providerName,
-                providerName + " API",
-                providerName + " Key"
-            ];
-            
-            // Hľadáme záznam s API kľúčmi
-            var apiEntries = apiLib.entries();
-            if (!apiEntries || apiEntries.length === 0) {
-                if (debugEntry) addError(debugEntry, "ASISTANTO Api knižnica je prázdna");
+            var apiLib = libByName("ASISTANTO API");
+            if (!apiLib) {
+                if (debugEntry) addError(debugEntry, "Knižnica 'ASISTANTO API' neexistuje");
                 return null;
             }
             
-            // Berieme prvý záznam (predpokladáme jeden záznam s API kľúčmi)
-            var apiEntry = apiEntries[0];
+            var apiEntries = apiLib.entries();
+            if (!apiEntries || apiEntries.length === 0) {
+                if (debugEntry) addError(debugEntry, "Knižnica 'ASISTANTO API' je prázdna");
+                return null;
+            }
             
-            // Skúšame rôzne variácie názvov polí
-            for (var i = 0; i < fieldVariations.length; i++) {
-                var key = safeFieldAccess(apiEntry, fieldVariations[i], null);
-                if (key && key.trim() !== "") {
-                    if (debugEntry) {
-                        addDebug(debugEntry, "✅ API Key loaded for " + providerName + " (field: " + fieldVariations[i] + ")");
+            if (debugEntry) {
+                addDebug(debugEntry, "🔍 Hľadám API kľúč pre provider: " + providerName);
+                addDebug(debugEntry, "📚 Počet záznamov v ASISTANTO API: " + apiEntries.length);
+            }
+            
+            // Hľadáme záznam s matching providerom
+            for (var i = 0; i < apiEntries.length; i++) {
+                var apiEntry = apiEntries[i];
+                var entryProvider = safeFieldAccess(apiEntry, "provider", "");
+                var entryApi = safeFieldAccess(apiEntry, "api", "");
+                var entryNazov = safeFieldAccess(apiEntry, "názov", "");
+                
+                if (debugEntry) {
+                    addDebug(debugEntry, "📋 Záznam " + (i + 1) + ": provider='" + entryProvider + "', názov='" + entryNazov + "'");
+                }
+                
+                // Porovnáme provider (case-insensitive)
+                if (entryProvider && entryProvider.toLowerCase() === providerName.toLowerCase()) {
+                    if (entryApi && entryApi.trim() !== "") {
+                        if (debugEntry) {
+                            addDebug(debugEntry, "✅ API kľúč nájdený pre " + providerName + " (názov: " + entryNazov + ")");
+                        }
+                        return entryApi.trim();
+                    } else {
+                        if (debugEntry) {
+                            addError(debugEntry, "❌ Záznam pre " + providerName + " má prázdny API kľúč");
+                        }
+                        return null;
                     }
-                    return key.trim();
                 }
             }
             
             if (debugEntry) {
-                addError(debugEntry, "❌ API Key not found for " + providerName + ". Tried fields: " + fieldVariations.join(", "));
+                addError(debugEntry, "❌ API kľúč pre provider '" + providerName + "' nebol nájdený");
+                
+                // Debug: Vypíš všetkých dostupných providerov
+                var availableProviders = [];
+                for (var j = 0; j < apiEntries.length; j++) {
+                    var provider = safeFieldAccess(apiEntries[j], "provider", "");
+                    if (provider) availableProviders.push(provider);
+                }
+                addDebug(debugEntry, "📋 Dostupní provideri: " + availableProviders.join(", "));
             }
             return null;
             
         } catch (e) {
             if (debugEntry) {
-                addError(debugEntry, "Failed to get API key for " + providerName + ": " + e);
+                addError(debugEntry, "Chyba pri načítaní API kľúča pre " + providerName + ": " + e.toString());
             }
             return null;
         }
     }
+
+    /**
+     * Cache pre API kľúče (optimalizácia)
+     */
+    var _apiKeyCache = {};
+    var _apiKeyCacheTimestamp = {};
+    var API_CACHE_TTL = 300000; // 5 minút v ms
+
+    function getCachedApiKey(providerName, debugEntry) {
+        if (!providerName) return null;
+        
+        var now = Date.now();
+        var cacheKey = providerName.toLowerCase();
+        
+        // Kontrola či je cache platný
+        if (_apiKeyCache[cacheKey] && _apiKeyCacheTimestamp[cacheKey]) {
+            var age = now - _apiKeyCacheTimestamp[cacheKey];
+            if (age < API_CACHE_TTL) {
+                if (debugEntry) {
+                    addDebug(debugEntry, "💾 API kľúč pre " + providerName + " načítaný z cache");
+                }
+                return _apiKeyCache[cacheKey];
+            } else {
+                // Cache expired
+                delete _apiKeyCache[cacheKey];
+                delete _apiKeyCacheTimestamp[cacheKey];
+                if (debugEntry) {
+                    addDebug(debugEntry, "⏰ Cache pre " + providerName + " expiroval");
+                }
+            }
+        }
+        
+        // Načítaj fresh hodnotu
+        var apiKey = getApiKey(providerName, debugEntry);
+        if (apiKey) {
+            _apiKeyCache[cacheKey] = apiKey;
+            _apiKeyCacheTimestamp[cacheKey] = now;
+            if (debugEntry) {
+                addDebug(debugEntry, "💾 API kľúč pre " + providerName + " uložený do cache");
+            }
+        }
+        
+        return apiKey;
+    }
+
+    /**
+     * Vyčistenie API key cache (pre manuálne refresh)
+     * @param {string} providerName - Konkrétny provider alebo null pre všetkých
+     */
+    function clearApiKeyCache(providerName) {
+        if (providerName) {
+            var cacheKey = providerName.toLowerCase();
+            delete _apiKeyCache[cacheKey];
+            delete _apiKeyCacheTimestamp[cacheKey];
+        } else {
+            _apiKeyCache = {};
+            _apiKeyCacheTimestamp = {};
+        }
+    } 
 
     /**
      * Cache pre API kľúče (optimalizácia)
@@ -765,6 +857,52 @@ var MementoUtils = (function() {
             _apiKeyCache[providerName] = getApiKey(providerName, debugEntry);
         }
         return _apiKeyCache[providerName];
+    }
+
+    /**
+     * Testovacia funkcia pre overenie API kľúčov
+     * @param {Entry} debugEntry - Entry pre debug výstup
+     */
+    function testApiKeys(debugEntry) {
+        if (!debugEntry) return;
+        
+        var providersToTest = ["OpenAi", "Perplexity", "OpenRouter"];
+        
+        addDebug(debugEntry, "🧪 === TEST API KĽÚČOV ===");
+        
+        try {
+            var apiLib = libByName("ASISTANTO API");
+            var apiEntries = apiLib.entries();
+            
+            addDebug(debugEntry, "📚 Knižnica ASISTANTO API: " + apiEntries.length + " záznamov");
+            
+            // Vypíš štruktúru knižnice
+            for (var i = 0; i < apiEntries.length; i++) {
+                var entry = apiEntries[i];
+                var provider = safeFieldAccess(entry, "provider", "N/A");
+                var nazov = safeFieldAccess(entry, "názov", "N/A");
+                var apiLength = safeFieldAccess(entry, "api", "").length;
+                
+                addDebug(debugEntry, "📋 Záznam " + (i + 1) + ": '" + provider + "' | '" + nazov + "' | API: " + apiLength + " znakov");
+            }
+            
+            // Test každého providera
+            for (var j = 0; j < providersToTest.length; j++) {
+                var providerName = providersToTest[j];
+                var apiKey = getApiKey(providerName, debugEntry);
+                
+                if (apiKey) {
+                    addDebug(debugEntry, "✅ " + providerName + ": API kľúč OK (" + apiKey.length + " znakov)");
+                } else {
+                    addDebug(debugEntry, "❌ " + providerName + ": API kľúč nenájdený");
+                }
+            }
+            
+        } catch (e) {
+            addError(debugEntry, "Test API kľúčov zlyhal: " + e.toString());
+        }
+        
+        addDebug(debugEntry, "🧪 === KONIEC TESTU ===");
     }
 
     // ========================================
@@ -1264,12 +1402,14 @@ var MementoUtils = (function() {
         processBatch: processBatch,
         
         // AI Functions
-        getApiKey: getApiKey,
-        getCachedApiKey: getCachedApiKey,
         callAI: callAI,
         aiAnalyzeEntry: aiAnalyzeEntry,
         aiGenerateSQL: aiGenerateSQL,
-        
+         // API Key Management
+        getApiKey: getApiKey,
+        getCachedApiKey: getCachedApiKey,
+        clearApiKeyCache: clearApiKeyCache,
+        testApiKeys: testApiKeys,
         // Enhanced SQL
         smartSQL: smartSQL,
         sqlWithAIInterpretation: sqlWithAIInterpretation,
