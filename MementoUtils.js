@@ -176,34 +176,56 @@ var MementoUtils = (function() {
      * @param {Entry} debugEntry - Entry pre debug log (optional)
      * @return {Array} Array výsledkov alebo prázdny array
      */
-    function safeLinksFrom(sourceObject, targetLibrary, backLinkField, debugEntry) {
-        if (!sourceObject || !targetLibrary || !backLinkField) {
-            if (debugEntry) {
-                addDebug(debugEntry, "❌ LinksFrom: Missing parameters");
-            }
-            return [];
-        }
+    // function safeLinksFrom(sourceObject, targetLibrary, backLinkField, debugEntry) {
+    //     if (!sourceObject || !targetLibrary || !backLinkField) {
+    //         if (debugEntry) {
+    //             addDebug(debugEntry, "❌ LinksFrom: Missing parameters");
+    //         }
+    //         return [];
+    //     }
         
-        try {
-            var results = sourceObject.linksFrom(targetLibrary, backLinkField);
+    //     try {
+    //         var results = sourceObject.linksFrom(targetLibrary, backLinkField);
             
-            if (debugEntry) {
-                if (results && results.length > 0) {
-                    addDebug(debugEntry, "✅ LinksFrom '" + targetLibrary + "': " + results.length + " záznamov");
-                } else {
-                    addDebug(debugEntry, "⚠️ LinksFrom '" + targetLibrary + "': 0 záznamov");
-                }
-            }
+    //         if (debugEntry) {
+    //             if (results && results.length > 0) {
+    //                 addDebug(debugEntry, "✅ LinksFrom '" + targetLibrary + "': " + results.length + " záznamov");
+    //             } else {
+    //                 addDebug(debugEntry, "⚠️ LinksFrom '" + targetLibrary + "': 0 záznamov");
+    //             }
+    //         }
             
-            return results || [];
-        } catch (e) {
-            if (debugEntry) {
-                addError(debugEntry, "LinksFrom failed: " + e.toString());
-            }
-            return [];
-        }
+    //         return results || [];
+    //     } catch (e) {
+    //         if (debugEntry) {
+    //             addError(debugEntry, "LinksFrom failed: " + e.toString());
+    //         }
+    //         return [];
+    //     }
+    // }
+    function safeLinksFrom(sourceEntry, targetLibraryName, backLinkFieldName, debugEntry) {
+    if (!sourceEntry || !targetLibraryName || !backLinkFieldName) {
+        if (debugEntry) addDebug(debugEntry, "❌ LinksFrom: Missing parameters");
+        return [];
     }
     
+    try {
+        // V Memento sa volá na entry objektu, nie na poli
+        var results = sourceEntry.linksFrom(targetLibraryName, backLinkFieldName);
+        
+        if (debugEntry) {
+            var count = results ? results.length : 0;
+            addDebug(debugEntry, "✅ LinksFrom '" + targetLibraryName + "': " + count + " záznamov");
+        }
+        
+        return results || [];
+    } catch (e) {
+        if (debugEntry) {
+            addError(debugEntry, "LinksFrom failed: " + e.toString());
+        }
+        return [];
+    }
+}
     /**
      * Hľadanie súvisiacich záznamov cez rôzne variácie názvov polí
      * @param {Entry} sourceObject - Zdrojový objekt
@@ -549,34 +571,62 @@ var MementoUtils = (function() {
      * @param {Date} date - Dátum pre kontext (optional)
      * @return {number} Počet hodín
      */
-    function calculateHours(startTime, endTime, date) {
-        if (!startTime || !endTime) return 0;
+    // function calculateHours(startTime, endTime, date) {
+    //     if (!startTime || !endTime) return 0;
         
-        try {
-            var start, end;
+    //     try {
+    //         var start, end;
             
-            // Ak máme len čas bez dátumu
-            if (startTime.length <= 5 && endTime.length <= 5) {
-                var baseDate = date ? moment(date) : moment();
-                start = moment(baseDate.format("YYYY-MM-DD") + " " + startTime);
-                end = moment(baseDate.format("YYYY-MM-DD") + " " + endTime);
+    //         // Ak máme len čas bez dátumu
+    //         if (startTime.length <= 5 && endTime.length <= 5) {
+    //             var baseDate = date ? moment(date) : moment();
+    //             start = moment(baseDate.format("YYYY-MM-DD") + " " + startTime);
+    //             end = moment(baseDate.format("YYYY-MM-DD") + " " + endTime);
                 
-                // Ak koniec je skôr ako začiatok, pridáme deň
+    //             // Ak koniec je skôr ako začiatok, pridáme deň
+    //             if (end.isBefore(start)) {
+    //                 end.add(1, "day");
+    //             }
+    //         } else {
+    //             start = moment(startTime);
+    //             end = moment(endTime);
+    //         }
+            
+    //         var hours = end.diff(start, "hours", true);
+    //         return Math.round(hours * 100) / 100; // Zaokrúhli na 2 desatinné miesta
+    //     } catch (e) {
+    //         return 0;
+    //     }
+    // }
+    function calculateHours(startTime, endTime, date) {
+    if (!startTime || !endTime) return 0;
+    
+    try {
+        var start, end;
+        var baseDate = date ? new Date(date) : new Date();
+        
+        // Testuj či moment existuje
+        if (typeof moment !== 'undefined') {
+            if (startTime.length <= 5 && endTime.length <= 5) {
+                var baseMoment = moment(baseDate);
+                start = moment(baseMoment.format("YYYY-MM-DD") + " " + startTime, "YYYY-MM-DD HH:mm");
+                end = moment(baseMoment.format("YYYY-MM-DD") + " " + endTime, "YYYY-MM-DD HH:mm");
+                
                 if (end.isBefore(start)) {
                     end.add(1, "day");
                 }
-            } else {
-                start = moment(startTime);
-                end = moment(endTime);
+                
+                return Math.round(end.diff(start, "hours", true) * 100) / 100;
             }
-            
-            var hours = end.diff(start, "hours", true);
-            return Math.round(hours * 100) / 100; // Zaokrúhli na 2 desatinné miesta
-        } catch (e) {
-            return 0;
         }
+        
+        // Fallback na native Date ak moment zlyhal
+        return calculateHoursNative(startTime, endTime, baseDate);
+    } catch (e) {
+        return 0;
     }
-    
+}
+
     /**
      * Kontrola či je víkend
      * @param {Date|string} date - Dátum
@@ -649,7 +699,531 @@ var MementoUtils = (function() {
         
         return results;
     }
-    
+    // ========================================
+    // AI API KEY MANAGEMENT
+    // ========================================
+
+    /**
+     * Načítanie API kľúčov z knižnice ASISTANTO Api
+     * @param {string} providerName - Názov providera ("Perplexity", "OpenAi", "OpenRouter")
+     * @param {Entry} debugEntry - Entry pre debug log
+     * @return {string|null} API kľúč alebo null
+     */
+    function getApiKey(providerName, debugEntry) {
+        if (!providerName) return null;
+        
+        try {
+            var apiLib = libByName("ASISTANTO Api");
+            var fieldVariations = [
+                "API " + providerName,
+                "AI " + providerName,
+                providerName + " API",
+                providerName + " Key"
+            ];
+            
+            // Hľadáme záznam s API kľúčmi
+            var apiEntries = apiLib.entries();
+            if (!apiEntries || apiEntries.length === 0) {
+                if (debugEntry) addError(debugEntry, "ASISTANTO Api knižnica je prázdna");
+                return null;
+            }
+            
+            // Berieme prvý záznam (predpokladáme jeden záznam s API kľúčmi)
+            var apiEntry = apiEntries[0];
+            
+            // Skúšame rôzne variácie názvov polí
+            for (var i = 0; i < fieldVariations.length; i++) {
+                var key = safeFieldAccess(apiEntry, fieldVariations[i], null);
+                if (key && key.trim() !== "") {
+                    if (debugEntry) {
+                        addDebug(debugEntry, "✅ API Key loaded for " + providerName + " (field: " + fieldVariations[i] + ")");
+                    }
+                    return key.trim();
+                }
+            }
+            
+            if (debugEntry) {
+                addError(debugEntry, "❌ API Key not found for " + providerName + ". Tried fields: " + fieldVariations.join(", "));
+            }
+            return null;
+            
+        } catch (e) {
+            if (debugEntry) {
+                addError(debugEntry, "Failed to get API key for " + providerName + ": " + e);
+            }
+            return null;
+        }
+    }
+
+    /**
+     * Cache pre API kľúče (optimalizácia)
+     */
+    var _apiKeyCache = {};
+
+    function getCachedApiKey(providerName, debugEntry) {
+        if (!_apiKeyCache[providerName]) {
+            _apiKeyCache[providerName] = getApiKey(providerName, debugEntry);
+        }
+        return _apiKeyCache[providerName];
+    }
+
+    // ========================================
+    // UNIVERSAL AI CLIENT
+    // ========================================
+
+    /**
+     * Konfigurácia pre rôznych AI providerov
+     */
+    var AI_PROVIDERS = {
+        "OpenAi": {
+            baseUrl: "https://api.openai.com/v1/chat/completions",
+            headers: function(apiKey) {
+                return {
+                    "Authorization": "Bearer " + apiKey,
+                    "Content-Type": "application/json"
+                };
+            },
+            payload: function(prompt, model, options) {
+                return JSON.stringify({
+                    model: model || "gpt-4o-mini",
+                    messages: [
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: options.maxTokens || 1000,
+                    temperature: options.temperature || 0.7
+                });
+            },
+            parseResponse: function(response) {
+                var data = JSON.parse(response);
+                return data.choices && data.choices[0] && data.choices[0].message 
+                    ? data.choices[0].message.content 
+                    : "No response";
+            }
+        },
+        
+        "Perplexity": {
+            baseUrl: "https://api.perplexity.ai/chat/completions",
+            headers: function(apiKey) {
+                return {
+                    "Authorization": "Bearer " + apiKey,
+                    "Content-Type": "application/json"
+                };
+            },
+            payload: function(prompt, model, options) {
+                return JSON.stringify({
+                    model: model || "llama-3.1-sonar-small-128k-online",
+                    messages: [
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: options.maxTokens || 1000,
+                    temperature: options.temperature || 0.7
+                });
+            },
+            parseResponse: function(response) {
+                var data = JSON.parse(response);
+                return data.choices && data.choices[0] && data.choices[0].message 
+                    ? data.choices[0].message.content 
+                    : "No response";
+            }
+        },
+        
+        "OpenRouter": {
+            baseUrl: "https://openrouter.ai/api/v1/chat/completions",
+            headers: function(apiKey) {
+                return {
+                    "Authorization": "Bearer " + apiKey,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://mementodatabase.app",
+                    "X-Title": "Memento Database Script"
+                };
+            },
+            payload: function(prompt, model, options) {
+                return JSON.stringify({
+                    model: model || "anthropic/claude-3.5-haiku",
+                    messages: [
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ],
+                    max_tokens: options.maxTokens || 1000,
+                    temperature: options.temperature || 0.7
+                });
+            },
+            parseResponse: function(response) {
+                var data = JSON.parse(response);
+                return data.choices && data.choices[0] && data.choices[0].message 
+                    ? data.choices[0].message.content 
+                    : "No response";
+            }
+        }
+    };
+
+    /**
+     * Univerzálne volanie AI providera
+     * @param {string} provider - Názov providera ("OpenAi", "Perplexity", "OpenRouter")
+     * @param {string} prompt - Prompt pre AI
+     * @param {Object} options - Nastavenia {model, maxTokens, temperature, debugEntry}
+     * @return {Object} {success: boolean, response: string, error: string}
+     */
+    function callAI(provider, prompt, options) {
+        options = options || {};
+        var debugEntry = options.debugEntry;
+        
+        if (!provider || !prompt) {
+            var error = "Missing provider or prompt";
+            if (debugEntry) addError(debugEntry, "AI Call failed: " + error);
+            return {success: false, error: error, response: null};
+        }
+        
+        // Získaj API kľúč
+        var apiKey = getCachedApiKey(provider, debugEntry);
+        if (!apiKey) {
+            var error = "API key not found for " + provider;
+            if (debugEntry) addError(debugEntry, "AI Call failed: " + error);
+            return {success: false, error: error, response: null};
+        }
+        
+        // Získaj konfiguráciu providera
+        var providerConfig = AI_PROVIDERS[provider];
+        if (!providerConfig) {
+            var error = "Unsupported AI provider: " + provider;
+            if (debugEntry) addError(debugEntry, "AI Call failed: " + error);
+            return {success: false, error: error, response: null};
+        }
+        
+        try {
+            if (debugEntry) {
+                addDebug(debugEntry, "🤖 AI Call: " + provider + " (" + (options.model || "default") + ")");
+                addDebug(debugEntry, "📝 Prompt: " + prompt.substring(0, 100) + "...");
+            }
+            
+            // Priprav HTTP request
+            var httpClient = http();
+            var headers = providerConfig.headers(apiKey);
+            
+            // Nastav headers
+            for (var headerName in headers) {
+                httpClient.headers()[headerName] = headers[headerName];
+            }
+            
+            // Priprav payload
+            var payload = providerConfig.payload(prompt, options.model, options);
+            
+            // Vykonaj POST request
+            var response = httpClient.post(providerConfig.baseUrl, payload);
+            
+            if (response.statusCode >= 200 && response.statusCode < 300) {
+                var aiResponse = providerConfig.parseResponse(response.body);
+                
+                if (debugEntry) {
+                    addDebug(debugEntry, "✅ AI Response received (" + response.body.length + " chars)");
+                    addDebug(debugEntry, "🔍 Response: " + aiResponse.substring(0, 200) + "...");
+                }
+                
+                return {
+                    success: true, 
+                    response: aiResponse, 
+                    error: null,
+                    statusCode: response.statusCode,
+                    provider: provider
+                };
+            } else {
+                var error = "HTTP " + response.statusCode + ": " + response.body;
+                if (debugEntry) addError(debugEntry, "AI Call HTTP error: " + error);
+                return {success: false, error: error, response: null};
+            }
+            
+        } catch (e) {
+            var error = "AI Call exception: " + e.toString();
+            if (debugEntry) addError(debugEntry, error);
+            return {success: false, error: error, response: null};
+        }
+    }
+
+    // ========================================
+    // SPECIALIZED AI FUNCTIONS
+    // ========================================
+
+    /**
+     * AI analýza dát zo záznamu
+     * @param {Entry} sourceEntry - Záznam na analýzu
+     * @param {Array} fieldsToAnalyze - Polia na analýzu
+     * @param {string} analysisType - Typ analýzy ("summarize", "classify", "extract")
+     * @param {Object} options - Nastavenia
+     * @return {Object} Výsledok analýzy
+     */
+    function aiAnalyzeEntry(sourceEntry, fieldsToAnalyze, analysisType, options) {
+        options = options || {};
+        var provider = options.provider || "OpenAi";
+        var debugEntry = options.debugEntry;
+        
+        if (!sourceEntry || !fieldsToAnalyze || fieldsToAnalyze.length === 0) {
+            return {success: false, error: "Missing required parameters"};
+        }
+        
+        try {
+            // Priprav dáta pre analýzu
+            var dataForAnalysis = {};
+            for (var i = 0; i < fieldsToAnalyze.length; i++) {
+                var fieldName = fieldsToAnalyze[i];
+                var fieldValue = safeFieldAccess(sourceEntry, fieldName, "");
+                if (fieldValue) {
+                    dataForAnalysis[fieldName] = fieldValue.toString().substring(0, 1000); // Limit na 1000 chars
+                }
+            }
+            
+            // Priprav prompt podľa typu analýzy
+            var prompt = "";
+            var dataJson = JSON.stringify(dataForAnalysis, null, 2);
+            
+            switch(analysisType) {
+                case "summarize":
+                    prompt = "Analyzed následujúce dáta a vytvor stručné zhrnutie v slovenčine:\n\n" + dataJson;
+                    break;
+                case "classify":
+                    prompt = "Analyzuj následujúce dáta a zaraď ich do vhodnej kategórie. Vráť len názov kategórie:\n\n" + dataJson;
+                    break;
+                case "extract":
+                    prompt = "Z následujúcich dát extrahuj kľúčové informácie a vráť ich ako JSON:\n\n" + dataJson;
+                    break;
+                case "sentiment":
+                    prompt = "Analyzuj sentiment následujúcich dát. Vráť: Pozitívny/Negatívny/Neutrálny:\n\n" + dataJson;
+                    break;
+                default:
+                    prompt = options.customPrompt ? options.customPrompt + "\n\n" + dataJson : dataJson;
+            }
+            
+            if (debugEntry) {
+                addDebug(debugEntry, "🧠 AI Analysis: " + analysisType + " na " + fieldsToAnalyze.length + " poliach");
+            }
+            
+            // Zavolaj AI
+            var aiResult = callAI(provider, prompt, {
+                model: options.model,
+                maxTokens: options.maxTokens || 500,
+                temperature: options.temperature || 0.3,
+                debugEntry: debugEntry
+            });
+            
+            if (aiResult.success) {
+                return {
+                    success: true,
+                    analysis: aiResult.response,
+                    analysisType: analysisType,
+                    fieldsAnalyzed: fieldsToAnalyze,
+                    provider: provider
+                };
+            } else {
+                return aiResult;
+            }
+            
+        } catch (e) {
+            var error = "AI Analysis failed: " + e.toString();
+            if (debugEntry) addError(debugEntry, error);
+            return {success: false, error: error};
+        }
+    }
+
+    /**
+     * AI generovanie SQL dotazov z prirodzeného jazyka
+     * @param {string} naturalLanguageQuery - Dotaz v prirodzenom jazyku
+     * @param {Array} availableTables - Zoznam dostupných tabuliek/knižníc
+     * @param {Object} options - Nastavenia
+     * @return {Object} Výsledok s SQL dotazom
+     */
+    function aiGenerateSQL(naturalLanguageQuery, availableTables, options) {
+        options = options || {};
+        var provider = options.provider || "OpenAi";
+        var debugEntry = options.debugEntry;
+        
+        if (!naturalLanguageQuery) {
+            return {success: false, error: "Missing natural language query"};
+        }
+        
+        try {
+            var tablesInfo = availableTables ? availableTables.join(", ") : "všetky dostupné tabuľky";
+            
+            var prompt = `Vygeneruj SQL dotaz na základe tohto požiadavku v slovenčine: "${naturalLanguageQuery}"
+
+    Dostupné tabuľky: ${tablesInfo}
+
+    Pravidlá:
+    - Vráť iba SQL dotaz bez dodatočného textu
+    - Používaj SQLite syntax
+    - Názvy tabuliek a stĺpcov používaj presne ako sú zadané
+    - Pre slovenčinu používaj COLLATE NOCASE pre porovnávanie textu
+
+    SQL dotaz:`;
+
+            if (debugEntry) {
+                addDebug(debugEntry, "🔍 AI SQL Generation: " + naturalLanguageQuery.substring(0, 100));
+            }
+            
+            var aiResult = callAI(provider, prompt, {
+                model: options.model,
+                maxTokens: options.maxTokens || 300,
+                temperature: 0.1, // Nízka temperatura pre presnosť
+                debugEntry: debugEntry
+            });
+            
+            if (aiResult.success) {
+                // Vyčisti SQL dotaz
+                var sqlQuery = aiResult.response
+                    .replace(/```
+                    .replace(/```/g, "")
+                    .replace(/^SQL dotaz:/gi, "")
+                    .trim();
+                
+                return {
+                    success: true,
+                    sqlQuery: sqlQuery,
+                    originalQuery: naturalLanguageQuery,
+                    provider: provider
+                };
+            } else {
+                return aiResult;
+            }
+            
+        } catch (e) {
+            var error = "AI SQL Generation failed: " + e.toString();
+            if (debugEntry) addError(debugEntry, error);
+            return {success: false, error: error};
+        }
+    }
+
+    // ========================================
+    // ENHANCED SQL OPERATIONS
+    // ========================================
+
+    /**
+     * Rozšírené SQL operácie s AI podporou
+     * @param {string} query - SQL dotaz alebo prirodzený jazyk
+     * @param {Object} options - Nastavenia
+     * @return {Object} Výsledky dotazu
+     */
+    function smartSQL(query, options) {
+        options = options || {};
+        var debugEntry = options.debugEntry;
+        var returnType = options.returnType || "objects";
+        
+        if (!query || query.trim() === "") {
+            return {success: false, error: "Empty query"};
+        }
+        
+        try {
+            var finalQuery = query.trim();
+            
+            // Ak query nevyzerá ako SQL, použij AI na generovanie
+            if (!finalQuery.toUpperCase().startsWith("SELECT") && 
+                !finalQuery.toUpperCase().startsWith("UPDATE") && 
+                !finalQuery.toUpperCase().startsWith("INSERT") && 
+                !finalQuery.toUpperCase().startsWith("DELETE")) {
+                
+                if (debugEntry) {
+                    addDebug(debugEntry, "🤖 Natural language detected, generating SQL...");
+                }
+                
+                var aiSqlResult = aiGenerateSQL(query, options.availableTables, {
+                    provider: options.aiProvider,
+                    debugEntry: debugEntry
+                });
+                
+                if (!aiSqlResult.success) {
+                    return aiSqlResult;
+                }
+                
+                finalQuery = aiSqlResult.sqlQuery;
+                
+                if (debugEntry) {
+                    addDebug(debugEntry, "📝 Generated SQL: " + finalQuery);
+                }
+            }
+            
+            // Vykonaj SQL dotaz
+            var sqlResult = sql(finalQuery);
+            var data;
+            
+            switch(returnType.toLowerCase()) {
+                case "objects":
+                    data = sqlResult.asObjects();
+                    break;
+                case "entries":
+                    data = sqlResult.asEntries();
+                    break;
+                case "int":
+                case "number":
+                    data = sqlResult.asInt();
+                    break;
+                case "string":
+                    data = sqlResult.asString();
+                    break;
+                default:
+                    data = sqlResult.asObjects();
+            }
+            
+            if (debugEntry) {
+                var resultCount = Array.isArray(data) ? data.length : (typeof data === "number" ? data : 1);
+                addDebug(debugEntry, "✅ SQL executed successfully. Results: " + resultCount);
+            }
+            
+            return {
+                success: true,
+                data: data,
+                query: finalQuery,
+                resultType: returnType
+            };
+            
+        } catch (e) {
+            var error = "Smart SQL failed: " + e.toString() + "\nQuery: " + finalQuery;
+            if (debugEntry) addError(debugEntry, error);
+            return {success: false, error: error, query: finalQuery};
+        }
+    }
+
+    /**
+     * SQL dotaz s AI interpretáciou výsledkov
+     * @param {string} query - SQL dotaz
+     * @param {string} interpretationPrompt - Ako interpretovať výsledky
+     * @param {Object} options - Nastavenia
+     */
+    function sqlWithAIInterpretation(query, interpretationPrompt, options) {
+        options = options || {};
+        var debugEntry = options.debugEntry;
+        
+        // Vykonaj SQL dotaz
+        var sqlResult = smartSQL(query, options);
+        
+        if (!sqlResult.success) {
+            return sqlResult;
+        }
+        
+        // AI interpretácia výsledkov
+        var dataForAI = JSON.stringify(sqlResult.data, null, 2);
+        var prompt = interpretationPrompt + "\n\nDáta z SQL dotazu:\n" + dataForAI;
+        
+        var aiResult = callAI(options.aiProvider || "OpenAi", prompt, {
+            model: options.aiModel,
+            maxTokens: options.maxTokens || 800,
+            debugEntry: debugEntry
+        });
+        
+        return {
+            success: true,
+            sqlData: sqlResult.data,
+            sqlQuery: sqlResult.query,
+            aiInterpretation: aiResult.success ? aiResult.response : "AI interpretation failed: " + aiResult.error,
+            aiSuccess: aiResult.success
+        };
+    }
+
+
     // ========================================
     // PUBLIC API
     // ========================================
@@ -693,6 +1267,19 @@ var MementoUtils = (function() {
         // Batch operácie
         processBatch: processBatch,
         
+        // AI Functions
+        getApiKey: getApiKey,
+        getCachedApiKey: getCachedApiKey,
+        callAI: callAI,
+        aiAnalyzeEntry: aiAnalyzeEntry,
+        aiGenerateSQL: aiGenerateSQL,
+        
+        // Enhanced SQL
+        smartSQL: smartSQL,
+        sqlWithAIInterpretation: sqlWithAIInterpretation,
+        
+        // AI Provider Config
+        AI_PROVIDERS: AI_PROVIDERS,
         // Konfigurácia
         DEFAULT_CONFIG: DEFAULT_CONFIG
     };
