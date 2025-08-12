@@ -1038,65 +1038,61 @@ var MementoUtils = (function() {
      * @param {Object} options - Nastavenia
      * @return {Object} Výsledok s SQL dotazom
      */
+
     function aiGenerateSQL(naturalLanguageQuery, availableTables, options) {
-        options = options || {};
-        var provider = options.provider || "OpenAi";
-        var debugEntry = options.debugEntry;
-        
-        if (!naturalLanguageQuery) {
-            return {success: false, error: "Missing natural language query"};
-        }
-        
-        try {
-            var tablesInfo = availableTables ? availableTables.join(", ") : "všetky dostupné tabuľky";
-            
-            var prompt = `Vygeneruj SQL dotaz na základe tohto požiadavku v slovenčine: "${naturalLanguageQuery}"
-
-    Dostupné tabuľky: ${tablesInfo}
-
-    Pravidlá:
-    - Vráť iba SQL dotaz bez dodatočného textu
-    - Používaj SQLite syntax
-    - Názvy tabuliek a stĺpcov používaj presne ako sú zadané
-    - Pre slovenčinu používaj COLLATE NOCASE pre porovnávanie textu
-
-    SQL dotaz:`;
-
-            if (debugEntry) {
-                addDebug(debugEntry, "🔍 AI SQL Generation: " + naturalLanguageQuery.substring(0, 100));
-            }
-            
-            var aiResult = callAI(provider, prompt, {
-                model: options.model,
-                maxTokens: options.maxTokens || 300,
-                temperature: 0.1, // Nízka temperatura pre presnosť
-                debugEntry: debugEntry
-            });
-            
-            if (aiResult.success) {
-                // Vyčisti SQL dotaz
-                var sqlQuery = aiResult.response
-                    .replace(/```
-                    .replace(/```/g, "")
-                    .replace(/^SQL dotaz:/gi, "")
-                    .trim();
-                
-                return {
-                    success: true,
-                    sqlQuery: sqlQuery,
-                    originalQuery: naturalLanguageQuery,
-                    provider: provider
-                };
-            } else {
-                return aiResult;
-            }
-            
-        } catch (e) {
-            var error = "AI SQL Generation failed: " + e.toString();
-            if (debugEntry) addError(debugEntry, error);
-            return {success: false, error: error};
-        }
+    options = options || {};
+    var provider = options.provider || "OpenAi";
+    var debugEntry = options.debugEntry;
+    
+    if (!naturalLanguageQuery) {
+        return {success: false, error: "Missing natural language query"};
     }
+    
+    try {
+        var tablesInfo = availableTables ? availableTables.join(", ") : "všetky dostupné tabuľky";
+        
+        var prompt = 
+            "Vygeneruj SQL dotaz na základe tohto požiadavku v slovenčine: \"" + naturalLanguageQuery + "\"\n\n" +
+            "Dostupné tabuľky: " + tablesInfo + "\n\n" +
+            "Pravidlá:\n" +
+            "- Vráť iba SQL dotaz bez dodatočného textu\n" +
+            "- Používaj SQLite syntax\n" +
+            "- Názvy tabuliek a stĺpcov používaj presne ako sú zadané\n" +
+            "- Pre slovenčinu používaj COLLATE NOCASE pre porovnávanie textu\n\n" +
+            "SQL dotaz:";
+
+        if (debugEntry) {
+            addDebug(debugEntry, "🔍 AI SQL Generation: " + naturalLanguageQuery.substring(0, 100));
+        }
+        
+        var aiResult = callAI(provider, prompt, {
+            model: options.model,
+            maxTokens: options.maxTokens || 300,
+            temperature: 0.1,
+            debugEntry: debugEntry
+        });
+        
+        if (aiResult.success) {
+            var sqlQuery = cleanSqlResponse(aiResult.response);
+            
+            return {
+                success: true,
+                sqlQuery: sqlQuery,
+                originalQuery: naturalLanguageQuery,
+                provider: provider
+            };
+        } else {
+            return aiResult;
+        }
+        
+    } catch (e) {
+        var error = "AI SQL Generation failed: " + e.toString();
+        if (debugEntry) addError(debugEntry, error);
+        return {success: false, error: error};
+    }
+}
+
+
 
     // ========================================
     // ENHANCED SQL OPERATIONS
