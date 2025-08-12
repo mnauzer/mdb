@@ -245,28 +245,57 @@ var MementoUtils = (function() {
      * @param {any} value - Hodnota atribútu
      * @param {number} index - Index objektu v poli (default 0)
      */
-    function safeSetAttribute(entry, fieldName, attrName, value, index) {
-        if (!entry || !fieldName || !attrName) return false;
-        index = index || 0;
+    // function safeSetAttribute(entry, fieldName, attrName, value, index) {
+    //     if (!entry || !fieldName || !attrName) return false;
+    //     index = index || 0;
         
-        try {
-            entry.field(fieldName).setAttr(attrName, value);
-            return true;
-        } catch (e) {
-            // Fallback na priamy prístup
-            try {
-                var links = entry.field(fieldName);
-                if (links && links[index]) {
-                    links[index].setAttr(attrName, value);
-                    return true;
-                }
-            } catch (e2) {
-                return false;
-            }
-        }
-        return false;
-    }
+    //     try {
+    //         entry.field(fieldName).setAttr(attrName, value);
+    //         return true;
+    //     } catch (e) {
+    //         // Fallback na priamy prístup
+    //         try {
+    //             var links = entry.field(fieldName);
+    //             if (links && links[index]) {
+    //                 links[index].setAttr(attrName, value);
+    //                 return true;
+    //             }
+    //         } catch (e2) {
+    //             return false;
+    //         }
+    //     }
+    //     return false;
+    // }
+    function safeSetAttribute(entry, fieldName, attrName, value, index) {
+    if (!entry || !fieldName || !attrName) return false;
+    index = index || 0;
     
+    try {
+        var linkField = entry.field(fieldName);
+        if (!linkField || linkField.length === 0) return false;
+        
+        // SPRÁVNY spôsob: setAttr sa volá na samotnom link objekte
+        if (Array.isArray(linkField)) {
+            if (linkField[index]) {
+                linkField[index].setAttr(attrName, value);
+                return true;
+            }
+        } else {
+            // Pre single link
+            linkField.setAttr(attrName, value);
+            return true;
+        }
+    } catch (e) {
+        // Alternatívny prístup cez priamy set
+        try {
+            entry.set(fieldName + "." + attrName, value);
+            return true;
+        } catch (e2) {
+            return false;
+        }
+    }
+    return false;
+}
     /**
      * Bezpečné získanie atribútu
      * @param {Entry} entry - Entry objekt
@@ -275,25 +304,52 @@ var MementoUtils = (function() {
      * @param {number} index - Index objektu v poli (default 0)
      * @param {any} defaultValue - Default hodnota
      */
-    function safeGetAttribute(entry, fieldName, attrName, index, defaultValue) {
-        if (!entry || !fieldName || !attrName) return defaultValue || null;
-        index = index || 0;
+    // function safeGetAttribute(entry, fieldName, attrName, index, defaultValue) {
+    //     if (!entry || !fieldName || !attrName) return defaultValue || null;
+    //     index = index || 0;
         
-        try {
-            return entry.attr(attrName) || defaultValue || null;
-        } catch (e) {
-            // Fallback na priamy prístup
-            try {
-                var links = entry.field(fieldName);
-                if (links && links[index]) {
-                    return links[index].attr(attrName) || defaultValue || null;
-                }
-            } catch (e2) {
-                return defaultValue || null;
+    //     try {
+    //         return entry.attr(attrName) || defaultValue || null;
+    //     } catch (e) {
+    //         // Fallback na priamy prístup
+    //         try {
+    //             var links = entry.field(fieldName);
+    //             if (links && links[index]) {
+    //                 return links[index].attr(attrName) || defaultValue || null;
+    //             }
+    //         } catch (e2) {
+    //             return defaultValue || null;
+    //         }
+    //     }
+    //     return defaultValue || null;
+    // }
+    function safeGetAttribute(entry, fieldName, attrName, index, defaultValue) {
+    if (!entry || !fieldName || !attrName) return defaultValue || null;
+    index = index || 0;
+    
+    try {
+        var linkField = entry.field(fieldName);
+        if (!linkField) return defaultValue || null;
+        
+        // SPRÁVNY spôsob: attr() sa volá na link objekte
+        if (Array.isArray(linkField)) {
+            if (linkField[index]) {
+                return linkField[index].attr(attrName) || defaultValue || null;
             }
+        } else {
+            // Pre single link
+            return linkField.attr(attrName) || defaultValue || null;
         }
-        return defaultValue || null;
+    } catch (e) {
+        // Alternatívny prístup
+        try {
+            return entry.field(fieldName + "." + attrName) || defaultValue || null;
+        } catch (e2) {
+            return defaultValue || null;
+        }
     }
+    return defaultValue || null;
+}
     
     /**
      * Nastavenie default hodnoty ak pole je prázdne a znovu načítanie
