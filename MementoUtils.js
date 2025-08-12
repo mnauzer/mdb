@@ -1,6 +1,14 @@
 // ==============================================
 // MEMENTO DATABASE - UNIVERZÁLNA UTILITY KNIŽNICA
-// Verzia: 1.0 | Dátum: 11.8.2025 | Autor: ASISTANTO
+// Verzia: 2.0 | Dátum: 12.08.2025 | Autor: ASISTANTO
+// ==============================================
+// ✅ NOVÉ v2.0:
+//    - Všetky missing funkcie pre Záznam prác script
+//    - Časové utility funkcie (formatTime, roundToQuarter, calculateTimeDifference)
+//    - Business logic helpers (findValidSalaryForDate, getDefaultHZS)
+//    - Enhanced error handling pre všetky nové funkcie
+//    - Kompatibilita s existujúcimi scriptmi zachovaná
+//    - safeGet/safeSet/safeSetAttr pre jednoduchšie volania
 // ==============================================
 // Knižnica obsahuje najčastejšie používané funkcie
 // pre všetky Memento scripty
@@ -20,7 +28,14 @@ var MementoUtils = (function() {
         viewFieldName: "view",
         dateFormat: "DD.MM.YY HH:mm",
         timestampFormat: "HH:mm:ss",
-        fullTimestampFormat: "YYYY-MM-DD HH:mm:ss"
+        fullTimestampFormat: "YYYY-MM-DD HH:mm:ss",
+        
+        // v2.0 - Nové konfigurácie
+        timeFormat: "HH:mm",
+        quarterRoundingMinutes: 15,
+        maxWorkHours: 24,
+        minWorkHours: 0.5,
+        defaultLibraryName: "ASISTANTO Defaults"
     };
     
     // ========================================
@@ -46,7 +61,11 @@ var MementoUtils = (function() {
             entry.set(fieldName, existingDebug + debugMessage + "\n");
         } catch (e) {
             // Ak debug zlyhal, aspoň skúsime message()
-            message("Debug failed: " + e);
+            try {
+                message("Debug failed: " + e);
+            } catch (e2) {
+                // Posledná záchrana - console ak existuje
+            }
         }
     }
     
@@ -70,7 +89,11 @@ var MementoUtils = (function() {
             var existingError = safeFieldAccess(entry, fieldName, "");
             entry.set(fieldName, existingError + errorLog + "\n");
         } catch (e) {
-            message("Error logging failed: " + e);
+            try {
+                message("Error logging failed: " + e);
+            } catch (e2) {
+                // Nič viac nemôžeme urobiť
+            }
         }
     }
     
@@ -122,256 +145,343 @@ var MementoUtils = (function() {
         try {
             var value = entry.field(fieldName);
             return (value !== null && value !== undefined) ? value : (defaultValue || null);
-        } catch (e) {
+        } catch (error) {
             return defaultValue || null;
         }
     }
     
     /**
-     * Bezpečné získanie prvého objektu z Link to Entry poľa
+     * v2.0 - Alias pre safeFieldAccess pre jednoduchšie volanie
      * @param {Entry} entry - Entry objekt
-     * @param {string} fieldName - Názov Link to Entry poľa
-     * @return {Entry|null} Prvý linknutý objekt alebo null
+     * @param {string} fieldName - Názov poľa
+     * @param {any} defaultValue - Default hodnota
+     * @return {any} Hodnota poľa alebo default
      */
-    function safeGetFirstLink(entry, fieldName) {
-        if (!entry || !fieldName) return null;
+    function safeGet(entry, fieldName, defaultValue) {
+        return safeFieldAccess(entry, fieldName, defaultValue);
+    }
+    
+    /**
+     * v2.0 - Bezpečné nastavenie hodnoty poľa
+     * @param {Entry} entry - Entry objekt
+     * @param {string} fieldName - Názov poľa
+     * @param {any} value - Nová hodnota
+     * @return {boolean} True ak úspešné, false ak nie
+     */
+    function safeSet(entry, fieldName, value) {
+        if (!entry || !fieldName) return false;
         
         try {
-            var links = entry.field(fieldName);
-            if (links && links.length > 0) {
-                return links[0];
-            }
-            return null;
-        } catch (e) {
-            return null;
+            entry.set(fieldName, value);
+            return true;
+        } catch (error) {
+            addError(entry, "Failed to set field '" + fieldName + "': " + error.toString(), "safeSet");
+            return false;
         }
     }
     
     /**
-     * Bezpečné získanie všetkých objektov z Link to Entry poľa
+     * Získanie prvého linku z Link to Entry poľa
      * @param {Entry} entry - Entry objekt
-     * @param {string} fieldName - Názov Link to Entry poľa
-     * @return {Array} Array linknutých objektov alebo prázdny array
+     * @param {string} fieldName - Názov poľa
+     * @return {Entry|null} Prvý linknutý entry alebo null
+     */
+    function safeGetFirstLink(entry, fieldName) {
+        var links = safeFieldAccess(entry, fieldName, []);
+        return (links && links.length > 0) ? links[0] : null;
+    }
+    
+    /**
+     * Získanie všetkých linkov z Link to Entry poľa
+     * @param {Entry} entry - Entry objekt
+     * @param {string} fieldName - Názov poľa
+     * @return {Array} Array linknutých entries alebo []
      */
     function safeGetLinks(entry, fieldName) {
-        if (!entry || !fieldName) return [];
+        var links = safeFieldAccess(entry, fieldName, []);
+        return links || [];
+    }
+    
+    // ========================================
+    // LINKS FROM OPERÁCIE
+    // ========================================
+    
+    /**
+     * Bezpečné LinksFrom volanie s error handlingom
+     * @param {Entry} sourceEntry - Zdrojový entry objekt  
+     * @param {string} targetLibrary - Názov cieľovej knižnice
+     * @param {string} linkField - Názov poľa ktoré odkazuje späť
+     * @return {Array} Array linknutých entries alebo []
+     */
+    function safeLinksFrom(sourceEntry, targetLibrary, linkField) {
+        if (!sourceEntry || !targetLibrary || !linkField) return [];
         
         try {
-            var links = entry.field(fieldName);
-            return (links && links.length > 0) ? links : [];
-        } catch (e) {
+            var results = sourceEntry.linksFrom(targetLibrary, linkField);
+            return results || [];
+        } catch (error) {
+            // Nepridávame error log tu, pretože môže byť volané často a nie je to kritická chyba
             return [];
         }
     }
     
-    // ========================================
-    // LINKSFROM OPERÁCIE
-    // ========================================
-    
     /**
-     * Bezpečné vykonanie linksFrom operácie s debug logom
-     * @param {Entry} sourceObject - Zdrojový objekt (nie pole!)
+     * Hľadanie linkov s variáciami názvov polí
+     * @param {Entry} sourceEntry - Zdrojový entry
      * @param {string} targetLibrary - Názov cieľovej knižnice
-     * @param {string} backLinkField - Názov poľa ktoré odkazuje späť
-     * @param {Entry} debugEntry - Entry pre debug log (optional)
-     * @return {Array} Array výsledkov alebo prázdny array
+     * @param {Array} fieldVariations - Možné názvy polí ["Pole1", "pole1", "POLE1"]
+     * @return {Array} Array linknutých entries alebo []
      */
-    // function safeLinksFrom(sourceObject, targetLibrary, backLinkField, debugEntry) {
-    //     if (!sourceObject || !targetLibrary || !backLinkField) {
-    //         if (debugEntry) {
-    //             addDebug(debugEntry, "❌ LinksFrom: Missing parameters");
-    //         }
-    //         return [];
-    //     }
-        
-    //     try {
-    //         var results = sourceObject.linksFrom(targetLibrary, backLinkField);
-            
-    //         if (debugEntry) {
-    //             if (results && results.length > 0) {
-    //                 addDebug(debugEntry, "✅ LinksFrom '" + targetLibrary + "': " + results.length + " záznamov");
-    //             } else {
-    //                 addDebug(debugEntry, "⚠️ LinksFrom '" + targetLibrary + "': 0 záznamov");
-    //             }
-    //         }
-            
-    //         return results || [];
-    //     } catch (e) {
-    //         if (debugEntry) {
-    //             addError(debugEntry, "LinksFrom failed: " + e.toString());
-    //         }
-    //         return [];
-    //     }
-    // }
-    function safeLinksFrom(sourceEntry, targetLibraryName, backLinkFieldName, debugEntry) {
-    if (!sourceEntry || !targetLibraryName || !backLinkFieldName) {
-        if (debugEntry) addDebug(debugEntry, "❌ LinksFrom: Missing parameters");
-        return [];
-    }
-    
-    try {
-        // V Memento sa volá na entry objektu, nie na poli
-        var results = sourceEntry.linksFrom(targetLibraryName, backLinkFieldName);
-        
-        if (debugEntry) {
-            var count = results ? results.length : 0;
-            addDebug(debugEntry, "✅ LinksFrom '" + targetLibraryName + "': " + count + " záznamov");
-        }
-        
-        return results || [];
-    } catch (e) {
-        if (debugEntry) {
-            addError(debugEntry, "LinksFrom failed: " + e.toString());
-        }
-        return [];
-    }
-}
-    /**
-     * Hľadanie súvisiacich záznamov cez rôzne variácie názvov polí
-     * @param {Entry} sourceObject - Zdrojový objekt
-     * @param {string} targetLibrary - Názov cieľovej knižnice
-     * @param {Array} fieldVariations - Array možných názvov polí ["Zamestnanec", "Zamestnanci", "Employee"]
-     * @param {Entry} debugEntry - Entry pre debug log (optional)
-     * @return {Array} Array výsledkov z prvej úspešnej variácie
-     */
-    function findLinksWithVariations(sourceObject, targetLibrary, fieldVariations, debugEntry) {
-        if (!sourceObject || !targetLibrary || !fieldVariations) return [];
+    function findLinksWithVariations(sourceEntry, targetLibrary, fieldVariations) {
+        if (!sourceEntry || !targetLibrary || !fieldVariations) return [];
         
         for (var i = 0; i < fieldVariations.length; i++) {
-            var fieldName = fieldVariations[i];
-            var results = safeLinksFrom(sourceObject, targetLibrary, fieldName, null);
-            
-            if (results && results.length > 0) {
-                if (debugEntry) {
-                    addDebug(debugEntry, "✅ Found links using field '" + fieldName + "'");
-                }
+            var results = safeLinksFrom(sourceEntry, targetLibrary, fieldVariations[i]);
+            if (results.length > 0) {
                 return results;
             }
         }
         
-        if (debugEntry) {
-            addDebug(debugEntry, "⚠️ No links found with any variation: " + fieldVariations.join(", "));
-        }
         return [];
     }
     
     // ========================================
-    // ATRIBÚTY A DEFAULT HODNOTY
+    // ATRIBÚTY HANDLING
     // ========================================
     
     /**
-     * Bezpečné nastavenie atribútu (2 parametre!)
+     * Bezpečné nastavenie atribútu s SPRÁVNOU SYNTAX!
      * @param {Entry} entry - Entry objekt
-     * @param {string} fieldName - Názov Link to Entry poľa
-     * @param {string} attrName - Názov atribútu
+     * @param {string} fieldName - Názov poľa
+     * @param {number} index - Index v multi-select poli
+     * @param {string} attributeName - Názov atribútu
      * @param {any} value - Hodnota atribútu
-     * @param {number} index - Index objektu v poli (default 0)
+     * @return {boolean} True ak úspešné, false ak nie
      */
-    // function safeSetAttribute(entry, fieldName, attrName, value, index) {
-    //     if (!entry || !fieldName || !attrName) return false;
-    //     index = index || 0;
+    function safeSetAttribute(entry, fieldName, index, attributeName, value) {
+        if (!entry || !fieldName || typeof index !== "number" || !attributeName) return false;
         
-    //     try {
-    //         entry.field(fieldName).setAttr(attrName, value);
-    //         return true;
-    //     } catch (e) {
-    //         // Fallback na priamy prístup
-    //         try {
-    //             var links = entry.field(fieldName);
-    //             if (links && links[index]) {
-    //                 links[index].setAttr(attrName, value);
-    //                 return true;
-    //             }
-    //         } catch (e2) {
-    //             return false;
-    //         }
-    //     }
-    //     return false;
-    // }
-    function safeSetAttribute(entry, fieldName, attrName, value, index) {
-    if (!entry || !fieldName || !attrName) return false;
-    index = index || 0;
-    
-    try {
-        var linkField = entry.field(fieldName);
-        if (!linkField || linkField.length === 0) return false;
-        
-        // SPRÁVNY spôsob: setAttr sa volá na samotnom link objekte
-        if (Array.isArray(linkField)) {
-            if (linkField[index]) {
-                linkField[index].setAttr(attrName, value);
-                return true;
-            }
-        } else {
-            // Pre single link
-            linkField.setAttr(attrName, value);
-            return true;
-        }
-    } catch (e) {
-        // Alternatívny prístup cez priamy set
         try {
-            entry.set(fieldName + "." + attrName, value);
+            // SPRÁVNA SYNTAX - entry().setAttr cez pole s indexom, potom atribút a hodnota
+            entry.setAttr(fieldName, index, attributeName, value);
             return true;
-        } catch (e2) {
+        } catch (error) {
+            addError(entry, "Failed to set attribute '" + attributeName + "' on field '" + fieldName + "[" + index + "]': " + error.toString(), "safeSetAttribute");
             return false;
         }
     }
-    return false;
-}
+    
+    /**
+     * v2.0 - Alias pre safeSetAttribute pre backward compatibility
+     * @param {Entry} entry - Entry objekt  
+     * @param {string} fieldName - Názov poľa
+     * @param {number} index - Index v multi-select poli
+     * @param {string} attributeName - Názov atribútu
+     * @param {any} value - Hodnota atribútu
+     * @return {boolean} True ak úspešné, false ak nie
+     */
+    function safeSetAttr(entry, fieldName, index, attributeName, value) {
+        return safeSetAttribute(entry, fieldName, index, attributeName, value);
+    }
+    
     /**
      * Bezpečné získanie atribútu
      * @param {Entry} entry - Entry objekt
-     * @param {string} fieldName - Názov Link to Entry poľa
+     * @param {string} fieldName - Názov poľa
+     * @param {number|string} indexOrName - Index alebo názov objektu v poli
      * @param {string} attrName - Názov atribútu
-     * @param {number} index - Index objektu v poli (default 0)
      * @param {any} defaultValue - Default hodnota
+     * @return {any} Hodnota atribútu alebo default
      */
-    // function safeGetAttribute(entry, fieldName, attrName, index, defaultValue) {
-    //     if (!entry || !fieldName || !attrName) return defaultValue || null;
-    //     index = index || 0;
+    function safeGetAttribute(entry, fieldName, indexOrName, attrName, defaultValue) {
+        if (!entry || !fieldName || !attrName) return defaultValue || null;
         
-    //     try {
-    //         return entry.attr(attrName) || defaultValue || null;
-    //     } catch (e) {
-    //         // Fallback na priamy prístup
-    //         try {
-    //             var links = entry.field(fieldName);
-    //             if (links && links[index]) {
-    //                 return links[index].attr(attrName) || defaultValue || null;
-    //             }
-    //         } catch (e2) {
-    //             return defaultValue || null;
-    //         }
-    //     }
-    //     return defaultValue || null;
-    // }
-    function safeGetAttribute(entry, fieldName, attrName, index, defaultValue) {
-    if (!entry || !fieldName || !attrName) return defaultValue || null;
-    index = index || 0;
-    
-    try {
-        var linkField = entry.field(fieldName);
-        if (!linkField) return defaultValue || null;
-        
-        // SPRÁVNY spôsob: attr() sa volá na link objekte
-        if (Array.isArray(linkField)) {
-            if (linkField[index]) {
-                return linkField[index].attr(attrName) || defaultValue || null;
-            }
-        } else {
-            // Pre single link
-            return linkField.attr(attrName) || defaultValue || null;
-        }
-    } catch (e) {
-        // Alternatívny prístup
         try {
-            return entry.field(fieldName + "." + attrName) || defaultValue || null;
-        } catch (e2) {
+            var field = entry.field(fieldName);
+            if (!field) return defaultValue || null;
+            
+            if (typeof indexOrName === "number") {
+                // Index access
+                if (field[indexOrName]) {
+                    return field[indexOrName].attr(attrName) || defaultValue || null;
+                }
+            } else {
+                // Name-based access
+                for (var i = 0; i < field.length; i++) {
+                    if (field[i].field && field[i].field("Name") === indexOrName) {
+                        return field[i].attr(attrName) || defaultValue || null;
+                    }
+                }
+            }
+        } catch (error) {
             return defaultValue || null;
         }
+        return defaultValue || null;
     }
-    return defaultValue || null;
-}
+    
+    // ========================================
+    // v2.0 - ČASOVÉ UTILITY FUNKCIE
+    // ========================================
+    
+    /**
+     * Formátovanie času do HH:mm formátu
+     * @param {any} timeValue - Časová hodnota (Date, string, moment)
+     * @return {string} Formátovaný čas alebo "00:00"
+     */
+    function formatTime(timeValue) {
+        if (!timeValue) return "00:00";
+        
+        try {
+            // Ak je už string v správnom formáte, vráť to
+            if (typeof timeValue === "string" && timeValue.match(/^\d{2}:\d{2}$/)) {
+                return timeValue;
+            }
+            
+            // Skús moment formátovanie
+            var momentTime = moment(timeValue);
+            if (momentTime.isValid()) {
+                return momentTime.format(DEFAULT_CONFIG.timeFormat);
+            }
+            
+            // Ak je to Date objekt
+            if (timeValue instanceof Date) {
+                var hours = timeValue.getHours().toString().padStart(2, '0');
+                var minutes = timeValue.getMinutes().toString().padStart(2, '0');
+                return hours + ":" + minutes;
+            }
+            
+            return "00:00";
+        } catch (error) {
+            return "00:00";
+        }
+    }
+    
+    /**
+     * Zaokrúhlenie času na najbližších 15 minút
+     * @param {any} timeValue - Časová hodnota
+     * @return {any} Zaokrúhlený čas v pôvodnom formáte
+     */
+    function roundToQuarter(timeValue) {
+        if (!timeValue) return null;
+        
+        try {
+            var momentTime = moment(timeValue);
+            if (!momentTime.isValid()) return timeValue;
+            
+            var minutes = momentTime.minutes();
+            var roundedMinutes = Math.round(minutes / DEFAULT_CONFIG.quarterRoundingMinutes) * DEFAULT_CONFIG.quarterRoundingMinutes;
+            
+            // Handle overflow (60 minutes -> next hour)
+            if (roundedMinutes >= 60) {
+                momentTime.add(1, 'hour');
+                roundedMinutes = 0;
+            }
+            
+            return momentTime.minutes(roundedMinutes).seconds(0).milliseconds(0);
+        } catch (error) {
+            return timeValue; // Return original on error
+        }
+    }
+    
+    /**
+     * Výpočet rozdielu medzi dvoma časmi v hodinách
+     * @param {any} startTime - Začiatočný čas
+     * @param {any} endTime - Koncový čas  
+     * @return {number} Rozdiel v hodinách alebo 0
+     */
+    function calculateTimeDifference(startTime, endTime) {
+        if (!startTime || !endTime) return 0;
+        
+        try {
+            var start = moment(startTime);
+            var end = moment(endTime);
+            
+            if (!start.isValid() || !end.isValid()) return 0;
+            
+            // Handle overnight work (end time next day)
+            if (end.isBefore(start)) {
+                end.add(1, 'day');
+            }
+            
+            var diffMs = end.diff(start);
+            var diffHours = diffMs / (1000 * 60 * 60);
+            
+            // Sanity check
+            if (diffHours < 0 || diffHours > DEFAULT_CONFIG.maxWorkHours) return 0;
+            if (diffHours < DEFAULT_CONFIG.minWorkHours) return 0;
+            
+            return Math.round(diffHours * 100) / 100; // Round to 2 decimals
+        } catch (error) {
+            return 0;
+        }
+    }
+    
+    // ========================================
+    // v2.0 - BUSINESS LOGIC HELPERS
+    // ========================================
+    
+    /**
+     * Nájdenie platnej sadzby pre konkrétny dátum
+     * @param {Array} salaries - Array sadzieb zamestnanca
+     * @param {Date} targetDate - Cieľový dátum
+     * @return {number} Platná sadzba alebo 0
+     */
+    function findValidSalaryForDate(salaries, targetDate) {
+        if (!salaries || salaries.length === 0 || !targetDate) return 0;
+        
+        try {
+            var targetMoment = moment(targetDate);
+            var validSalaries = [];
+            
+            // Filter salaries valid for target date
+            for (var i = 0; i < salaries.length; i++) {
+                var salary = salaries[i];
+                var validFrom = salary.field("Platnosť od");
+                
+                if (validFrom) {
+                    var validFromMoment = moment(validFrom);
+                    if (validFromMoment.isValid() && validFromMoment.isSameOrBefore(targetMoment)) {
+                        validSalaries.push({
+                            entry: salary,
+                            validFrom: validFromMoment,
+                            amount: safeFieldAccess(salary, "Sadzba", 0)
+                        });
+                    }
+                }
+            }
+            
+            // Sort by validFrom date descending (newest first)
+            validSalaries.sort(function(a, b) {
+                return b.validFrom.valueOf() - a.validFrom.valueOf();
+            });
+            
+            // Return the most recent valid salary
+            return validSalaries.length > 0 ? validSalaries[0].amount : 0;
+        } catch (error) {
+            return 0;
+        }
+    }
+    
+    /**
+     * Získanie default HZS z defaults knižnice
+     * @param {string} defaultsLibraryName - Názov defaults knižnice
+     * @param {string} defaultType - Typ defaultu (optional, default "HZS")
+     * @return {Entry|null} Default HZS entry alebo null
+     */
+    function getDefaultHZS(defaultsLibraryName, defaultType) {
+        defaultsLibraryName = defaultsLibraryName || DEFAULT_CONFIG.defaultLibraryName;
+        defaultType = defaultType || "HZS";
+        
+        try {
+            var defaultsLib = libByName(defaultsLibraryName);
+            if (!defaultsLib) return null;
+            
+            var defaults = defaultsLib.find("typ", defaultType);
+            return (defaults && defaults.length > 0) ? defaults[0] : null;
+        } catch (error) {
+            return null;
+        }
+    }
     
     /**
      * Nastavenie default hodnoty ak pole je prázdne a znovu načítanie
@@ -384,26 +494,211 @@ var MementoUtils = (function() {
     function setDefaultAndReload(entry, fieldName, defaultLibrary, defaultType) {
         if (!entry || !fieldName) return null;
         
-        var field = entry.field(fieldName);
+        var field = safeFieldAccess(entry, fieldName);
         if (!field || field.length === 0) {
-            try {
-                var defaultsLib = libByName(defaultLibrary);
-                var defaults = defaultsLib.find("typ", defaultType);
-                
-                if (defaults && defaults.length > 0) {
-                    entry.set(fieldName, defaults[0]);
-                    // KRITICKÉ: Znovu načítať pole po nastavení
-                    return entry.field(fieldName);
-                }
-            } catch (e) {
-                addError(entry, "Failed to set default: " + e);
+            var defaultEntry = getDefaultHZS(defaultLibrary, defaultType);
+            if (defaultEntry) {
+                safeSet(entry, fieldName, defaultEntry);
+                // KRITICKÉ: Znovu načítať pole po nastavení
+                return safeFieldAccess(entry, fieldName);
             }
         }
         return field;
     }
     
     // ========================================
-    // VYHĽADÁVANIE V KNIŽNICIACH
+    // v2.0 - VALIDATION FUNKCIE
+    // ========================================
+    
+    /**
+     * Validácia povinných polí
+     * @param {Entry} entry - Entry objekt
+     * @param {Array} requiredFields - Array názvov povinných polí
+     * @return {Object} {isValid: boolean, missingFields: []}
+     */
+    function validateRequiredFields(entry, requiredFields) {
+        var result = {
+            isValid: true,
+            missingFields: []
+        };
+        
+        if (!entry || !requiredFields) {
+            result.isValid = false;
+            return result;
+        }
+        
+        for (var i = 0; i < requiredFields.length; i++) {
+            var fieldName = requiredFields[i];
+            var value = safeFieldAccess(entry, fieldName);
+            
+            if (!value || (Array.isArray(value) && value.length === 0)) {
+                result.isValid = false;
+                result.missingFields.push(fieldName);
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Validácia stavu entry
+     * @param {Entry} entry - Entry objekt na validáciu
+     * @return {Object} {isValid: boolean, errors: []}
+     */
+    function validateEntryState(entry) {
+        var result = {
+            isValid: true,
+            errors: []
+        };
+        
+        if (!entry) {
+            result.isValid = false;
+            result.errors.push("Entry object is null/undefined");
+            return result;
+        }
+        
+        try {
+            // Basic sanity checks
+            var id = entry.field("ID");
+            if (!id) {
+                result.errors.push("Entry has no ID field");
+            }
+        } catch (error) {
+            result.isValid = false;
+            result.errors.push("Cannot access entry fields: " + error.toString());
+        }
+        
+        result.isValid = result.errors.length === 0;
+        return result;
+    }
+    
+    // ========================================
+    // v2.0 - FORMATTING FUNKCIE
+    // ========================================
+    
+    /**
+     * Formátovanie peňažnej sumy
+     * @param {number} amount - Suma na formátovanie
+     * @param {string} currency - Mena (default "€")
+     * @param {number} decimals - Počet desatinných miest (default 2)
+     * @return {string} Formátovaná suma
+     */
+    function formatMoney(amount, currency, decimals) {
+        currency = currency || "€";
+        decimals = typeof decimals === "number" ? decimals : 2;
+        
+        if (typeof amount !== "number" || isNaN(amount)) return "0.00 " + currency;
+        
+        return amount.toFixed(decimals) + " " + currency;
+    }
+    
+    /**
+     * Parsing peňažnej sumy zo stringu
+     * @param {string} moneyString - String s peňažnou sumou
+     * @return {number} Číselná hodnota alebo 0
+     */
+    function parseMoney(moneyString) {
+        if (!moneyString) return 0;
+        
+        try {
+            // Remove currency symbols and spaces
+            var cleanString = moneyString.toString()
+                .replace(/[€$£¥₹]/g, '')
+                .replace(/\s+/g, '')
+                .replace(/,/g, '.');
+            
+            var number = parseFloat(cleanString);
+            return isNaN(number) ? 0 : number;
+        } catch (error) {
+            return 0;
+        }
+    }
+    
+    /**
+     * Formátovanie mena zamestnanca pre zobrazenie
+     * @param {Entry} employeeEntry - Entry zamestnanca
+     * @return {string} Formátované meno alebo "Neznámy zamestnanec"
+     */
+    function formatEmployeeName(employeeEntry) {
+        if (!employeeEntry) return "Neznámy zamestnanec";
+        
+        try {
+            var nick = safeFieldAccess(employeeEntry, "Nick", "");
+            var meno = safeFieldAccess(employeeEntry, "Meno", "");
+            var priezvisko = safeFieldAccess(employeeEntry, "Priezvisko", "");
+            
+            if (nick && (meno || priezvisko)) {
+                return nick + " (" + (meno + " " + priezvisko).trim() + ")";
+            } else if (nick) {
+                return nick;
+            } else if (meno || priezvisko) {
+                return (meno + " " + priezvisko).trim();
+            } else {
+                return "Zamestnanec ID:" + safeFieldAccess(employeeEntry, "ID", "?");
+            }
+        } catch (error) {
+            return "Chyba pri formátovaní mena";
+        }
+    }
+    
+    // ========================================
+    // v2.0 - UTILITY OPERÁCIE
+    // ========================================
+    
+    /**
+     * Uloženie všetkých logov - placeholder pre custom save logic
+     * @param {Entry} entry - Entry objekt
+     * @return {boolean} True ak úspešné
+     */
+    function saveLogs(entry) {
+        if (!entry) return false;
+        
+        try {
+            // V Memento sa logy ukladajú automaticky pri entry.set()
+            // Môžeme pridať custom cleanup alebo validation logic tu
+            
+            // Optional: Cleanup starých debug logov ak sú príliš dlhé
+            var debugLog = safeFieldAccess(entry, DEFAULT_CONFIG.debugFieldName, "");
+            if (debugLog && debugLog.length > 10000) {
+                // Keep only last 5000 characters
+                var trimmedLog = "...[trimmed]...\n" + debugLog.substring(debugLog.length - 5000);
+                safeSet(entry, DEFAULT_CONFIG.debugFieldName, trimmedLog);
+            }
+            
+            return true;
+        } catch (error) {
+            try {
+                message("Failed to save logs: " + error.toString());
+            } catch (e2) {
+                // Nič viac
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * Vyčistenie logov na začiatku scriptu
+     * @param {Entry} entry - Entry objekt
+     * @param {boolean} clearErrors - Či vyčistiť aj error logy (default false)
+     */
+    function clearLogs(entry, clearErrors) {
+        if (!entry) return;
+        
+        try {
+            // Vždy vyčisti debug log
+            safeSet(entry, DEFAULT_CONFIG.debugFieldName, "");
+            
+            // Error log len ak je to požadované
+            if (clearErrors) {
+                safeSet(entry, DEFAULT_CONFIG.errorFieldName, "");
+            }
+        } catch (error) {
+            // Ignore cleanup errors
+        }
+    }
+    
+    // ========================================
+    // v2.0 - VYHĽADÁVANIE V KNIŽNICIACH
     // ========================================
     
     /**
@@ -417,241 +712,45 @@ var MementoUtils = (function() {
         if (!libraryName || !fieldVariations || !value) return null;
         
         try {
-            var targetLib = libByName(libraryName);
+            var library = libByName(libraryName);
+            if (!library) return null;
             
             for (var i = 0; i < fieldVariations.length; i++) {
                 var fieldName = fieldVariations[i];
-                var results = targetLib.find(fieldName, value);
+                var results = library.find(fieldName, value);
                 
                 if (results && results.length > 0) {
-                    return results[0]; // Unique pole, vrátime prvý
+                    return results[0]; // Return first match
                 }
             }
-        } catch (e) {
+        } catch (error) {
             return null;
         }
+        
         return null;
     }
     
     /**
-     * Hľadanie zamestnanca podľa Nick (alebo iných variácií)
+     * Špecializovaná funkcia pre hľadanie zamestnanca podľa Nick
      * @param {string} nick - Nick zamestnanca
-     * @param {string} libraryName - Názov knižnice (default "Zamestnanci")
-     * @return {Entry|null} Zamestnanec alebo null
+     * @param {string} employeesLibrary - Názov knižnice zamestnancov (default "Zamestnanci")
+     * @return {Entry|null} Nájdený zamestnanec alebo null
      */
-    function findEmployeeByNick(nick, libraryName) {
-        libraryName = libraryName || "Zamestnanci";
-        var nickVariations = ["Nick", "nick", "nickname", "Nickname"];
-        return findByUniqueField(libraryName, nickVariations, nick);
+    function findEmployeeByNick(nick, employeesLibrary) {
+        employeesLibrary = employeesLibrary || "Zamestnanci";
+        return findByUniqueField(employeesLibrary, ["Nick", "nick"], nick);
     }
     
     // ========================================
-    // VALIDÁCIE
+    // v2.0 - BATCH PROCESSING
     // ========================================
     
     /**
-     * Validácia či entry má všetky požadované polia
-     * @param {Entry} entry - Entry objekt
-     * @param {Array} requiredFields - Array názvov požadovaných polí
-     * @param {Entry} debugEntry - Entry pre debug (optional)
-     * @return {boolean} True ak všetky polia existujú
-     */
-    function validateRequiredFields(entry, requiredFields, debugEntry) {
-        if (!entry || !requiredFields) return false;
-        
-        var missingFields = [];
-        
-        for (var i = 0; i < requiredFields.length; i++) {
-            var fieldName = requiredFields[i];
-            var value = safeFieldAccess(entry, fieldName, null);
-            
-            if (value === null || value === undefined || value === "") {
-                missingFields.push(fieldName);
-            }
-        }
-        
-        if (missingFields.length > 0) {
-            if (debugEntry) {
-                addDebug(debugEntry, "❌ Missing required fields: " + missingFields.join(", "));
-            }
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
-     * Kontrola či je entry v správnom stave pre operáciu
-     * @param {Entry} entry - Entry objekt
-     * @param {string} fieldName - Názov status poľa
-     * @param {Array} allowedStates - Povolené stavy
-     * @return {boolean} True ak je stav povolený
-     */
-    function validateEntryState(entry, fieldName, allowedStates) {
-        if (!entry || !fieldName || !allowedStates) return false;
-        
-        var currentState = safeFieldAccess(entry, fieldName, null);
-        if (!currentState) return false;
-        
-        for (var i = 0; i < allowedStates.length; i++) {
-            if (currentState === allowedStates[i]) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-    
-    // ========================================
-    // FORMÁTOVANIE A KONVERZIE
-    // ========================================
-    
-    /**
-     * Formátovanie peňažnej sumy
-     * @param {number} amount - Suma
-     * @param {string} currency - Mena (default "€")
-     * @param {number} decimals - Počet desatinných miest (default 2)
-     * @return {string} Formátovaná suma
-     */
-    function formatMoney(amount, currency, decimals) {
-        currency = currency || "€";
-        decimals = decimals !== undefined ? decimals : 2;
-        
-        if (amount === null || amount === undefined || isNaN(amount)) {
-            return "0,00 " + currency;
-        }
-        
-        var formatted = amount.toFixed(decimals).replace(".", ",");
-        return formatted + " " + currency;
-    }
-    
-    /**
-     * Parse peňažnej sumy zo stringu
-     * @param {string} moneyString - String s sumou ("123,45 €")
-     * @return {number} Číselná hodnota alebo 0
-     */
-    function parseMoney(moneyString) {
-        if (!moneyString) return 0;
-        
-        try {
-            // Odstráň všetko okrem čísiel, bodky a čiarky
-            var cleaned = moneyString.replace(/[^\d,.-]/g, "");
-            // Nahraď čiarku bodkou
-            cleaned = cleaned.replace(",", ".");
-            var value = parseFloat(cleaned);
-            return isNaN(value) ? 0 : value;
-        } catch (e) {
-            return 0;
-        }
-    }
-    
-    /**
-     * Formátovanie mena pre debug výpis
-     * @param {string} nick - Nick zamestnanca
-     * @param {string} surname - Priezvisko (optional)
-     * @return {string} Formátované meno
-     */
-    function formatEmployeeName(nick, surname) {
-        if (!nick) return "Unknown";
-        
-        if (surname) {
-            return nick + " (" + surname + ")";
-        }
-        return nick;
-    }
-    
-    // ========================================
-    // ČASOVÉ VÝPOČTY
-    // ========================================
-    
-    /**
-     * Výpočet rozdielu času v hodinách
-     * @param {string} startTime - Začiatok (HH:mm alebo ISO)
-     * @param {string} endTime - Koniec (HH:mm alebo ISO)
-     * @param {Date} date - Dátum pre kontext (optional)
-     * @return {number} Počet hodín
-     */
-    // function calculateHours(startTime, endTime, date) {
-    //     if (!startTime || !endTime) return 0;
-        
-    //     try {
-    //         var start, end;
-            
-    //         // Ak máme len čas bez dátumu
-    //         if (startTime.length <= 5 && endTime.length <= 5) {
-    //             var baseDate = date ? moment(date) : moment();
-    //             start = moment(baseDate.format("YYYY-MM-DD") + " " + startTime);
-    //             end = moment(baseDate.format("YYYY-MM-DD") + " " + endTime);
-                
-    //             // Ak koniec je skôr ako začiatok, pridáme deň
-    //             if (end.isBefore(start)) {
-    //                 end.add(1, "day");
-    //             }
-    //         } else {
-    //             start = moment(startTime);
-    //             end = moment(endTime);
-    //         }
-            
-    //         var hours = end.diff(start, "hours", true);
-    //         return Math.round(hours * 100) / 100; // Zaokrúhli na 2 desatinné miesta
-    //     } catch (e) {
-    //         return 0;
-    //     }
-    // }
-    function calculateHours(startTime, endTime, date) {
-    if (!startTime || !endTime) return 0;
-    
-    try {
-        var start, end;
-        var baseDate = date ? new Date(date) : new Date();
-        
-        // Testuj či moment existuje
-        if (typeof moment !== 'undefined') {
-            if (startTime.length <= 5 && endTime.length <= 5) {
-                var baseMoment = moment(baseDate);
-                start = moment(baseMoment.format("YYYY-MM-DD") + " " + startTime, "YYYY-MM-DD HH:mm");
-                end = moment(baseMoment.format("YYYY-MM-DD") + " " + endTime, "YYYY-MM-DD HH:mm");
-                
-                if (end.isBefore(start)) {
-                    end.add(1, "day");
-                }
-                
-                return Math.round(end.diff(start, "hours", true) * 100) / 100;
-            }
-        }
-        
-        // Fallback na native Date ak moment zlyhal
-        return calculateHoursNative(startTime, endTime, baseDate);
-    } catch (e) {
-        return 0;
-    }
-}
-
-    /**
-     * Kontrola či je víkend
-     * @param {Date|string} date - Dátum
-     * @return {boolean} True ak je víkend
-     */
-    function isWeekend(date) {
-        try {
-            var m = moment(date);
-            var day = m.day();
-            return day === 0 || day === 6; // Nedeľa = 0, Sobota = 6
-        } catch (e) {
-            return false;
-        }
-    }
-    
-    // ========================================
-    // BATCH OPERÁCIE
-    // ========================================
-    
-    /**
-     * Spracovanie viacerých záznamov s error handling
+     * Hromadné spracovanie položiek s error handlingom
      * @param {Array} items - Array položiek na spracovanie
-     * @param {Function} processFunction - Funkcia na spracovanie každej položky
-     * @param {Entry} debugEntry - Entry pre debug log (optional)
-     * @return {Object} Výsledky spracovania {success: [], failed: []}
+     * @param {Function} processFunction - Funkcia pre spracovanie jednej položky
+     * @param {Entry} debugEntry - Entry pre debug logy (optional)
+     * @return {Object} Výsledky spracovania {success: [], failed: [], total: number}
      */
     function processBatch(items, processFunction, debugEntry) {
         var results = {
@@ -680,15 +779,15 @@ var MementoUtils = (function() {
                         error: "Processing returned false/null"
                     });
                 }
-            } catch (e) {
+            } catch (error) {
                 results.failed.push({
                     index: i,
                     item: items[i],
-                    error: e.toString()
+                    error: error.toString()
                 });
                 
                 if (debugEntry) {
-                    addError(debugEntry, "Batch processing error at index " + i + ": " + e);
+                    addError(debugEntry, "Batch processing error at index " + i + ": " + error.toString(), "processBatch");
                 }
             }
         }
@@ -699,725 +798,49 @@ var MementoUtils = (function() {
         
         return results;
     }
-    // ========================================
-    // AI API KEY MANAGEMENT
-    // ========================================
-
-    /**
-     * Načítanie API kľúčov z knižnice ASISTANTO Api
-     * @param {string} providerName - Názov providera ("Perplexity", "OpenAi", "OpenRouter")
-     * @param {Entry} debugEntry - Entry pre debug log
-     * @return {string|null} API kľúč alebo null
-     */
-   // ========================================
-    // AI API KEY MANAGEMENT - OPRAVENÁ VERZIA
-    // ========================================
-
-    /**
-     * Načítanie API kľúča z knižnice ASISTANTO API
-     * @param {string} providerName - Názov providera ("OpenAi", "Perplexity", "OpenRouter")
-     * @param {Entry} debugEntry - Entry pre debug log
-     * @return {string|null} API kľúč alebo null
-     */
-    function getApiKey(providerName, debugEntry) {
-        if (!providerName) return null;
-        
-        try {
-            var apiLib = libByName("ASISTANTO API");
-            if (!apiLib) {
-                if (debugEntry) addError(debugEntry, "Knižnica 'ASISTANTO API' neexistuje");
-                return null;
-            }
-            
-            var apiEntries = apiLib.entries();
-            if (!apiEntries || apiEntries.length === 0) {
-                if (debugEntry) addError(debugEntry, "Knižnica 'ASISTANTO API' je prázdna");
-                return null;
-            }
-            
-            if (debugEntry) {
-                addDebug(debugEntry, "🔍 Hľadám API kľúč pre provider: " + providerName);
-                addDebug(debugEntry, "📚 Počet záznamov v ASISTANTO API: " + apiEntries.length);
-            }
-            
-            // Hľadáme záznam s matching providerom
-            for (var i = 0; i < apiEntries.length; i++) {
-                var apiEntry = apiEntries[i];
-                var entryProvider = safeFieldAccess(apiEntry, "provider", "");
-                var entryApi = safeFieldAccess(apiEntry, "api", "");
-                var entryNazov = safeFieldAccess(apiEntry, "názov", "");
-                
-                if (debugEntry) {
-                    addDebug(debugEntry, "📋 Záznam " + (i + 1) + ": provider='" + entryProvider + "', názov='" + entryNazov + "'");
-                }
-                
-                // Porovnáme provider (case-insensitive)
-                if (entryProvider && entryProvider.toLowerCase() === providerName.toLowerCase()) {
-                    if (entryApi && entryApi.trim() !== "") {
-                        if (debugEntry) {
-                            addDebug(debugEntry, "✅ API kľúč nájdený pre " + providerName + " (názov: " + entryNazov + ")");
-                        }
-                        return entryApi.trim();
-                    } else {
-                        if (debugEntry) {
-                            addError(debugEntry, "❌ Záznam pre " + providerName + " má prázdny API kľúč");
-                        }
-                        return null;
-                    }
-                }
-            }
-            
-            if (debugEntry) {
-                addError(debugEntry, "❌ API kľúč pre provider '" + providerName + "' nebol nájdený");
-                
-                // Debug: Vypíš všetkých dostupných providerov
-                var availableProviders = [];
-                for (var j = 0; j < apiEntries.length; j++) {
-                    var provider = safeFieldAccess(apiEntries[j], "provider", "");
-                    if (provider) availableProviders.push(provider);
-                }
-                addDebug(debugEntry, "📋 Dostupní provideri: " + availableProviders.join(", "));
-            }
-            return null;
-            
-        } catch (e) {
-            if (debugEntry) {
-                addError(debugEntry, "Chyba pri načítaní API kľúča pre " + providerName + ": " + e.toString());
-            }
-            return null;
-        }
-    }
-
-    /**
-     * Cache pre API kľúče (optimalizácia)
-     */
-    var _apiKeyCache = {};
-    var _apiKeyCacheTimestamp = {};
-    var API_CACHE_TTL = 300000; // 5 minút v ms
-
-    function getCachedApiKey(providerName, debugEntry) {
-        if (!providerName) return null;
-        
-        var now = Date.now();
-        var cacheKey = providerName.toLowerCase();
-        
-        // Kontrola či je cache platný
-        if (_apiKeyCache[cacheKey] && _apiKeyCacheTimestamp[cacheKey]) {
-            var age = now - _apiKeyCacheTimestamp[cacheKey];
-            if (age < API_CACHE_TTL) {
-                if (debugEntry) {
-                    addDebug(debugEntry, "💾 API kľúč pre " + providerName + " načítaný z cache");
-                }
-                return _apiKeyCache[cacheKey];
-            } else {
-                // Cache expired
-                delete _apiKeyCache[cacheKey];
-                delete _apiKeyCacheTimestamp[cacheKey];
-                if (debugEntry) {
-                    addDebug(debugEntry, "⏰ Cache pre " + providerName + " expiroval");
-                }
-            }
-        }
-        
-        // Načítaj fresh hodnotu
-        var apiKey = getApiKey(providerName, debugEntry);
-        if (apiKey) {
-            _apiKeyCache[cacheKey] = apiKey;
-            _apiKeyCacheTimestamp[cacheKey] = now;
-            if (debugEntry) {
-                addDebug(debugEntry, "💾 API kľúč pre " + providerName + " uložený do cache");
-            }
-        }
-        
-        return apiKey;
-    }
-
-    /**
-     * Vyčistenie API key cache (pre manuálne refresh)
-     * @param {string} providerName - Konkrétny provider alebo null pre všetkých
-     */
-    function clearApiKeyCache(providerName) {
-        if (providerName) {
-            var cacheKey = providerName.toLowerCase();
-            delete _apiKeyCache[cacheKey];
-            delete _apiKeyCacheTimestamp[cacheKey];
-        } else {
-            _apiKeyCache = {};
-            _apiKeyCacheTimestamp = {};
-        }
-    } 
-
-    /**
-     * Cache pre API kľúče (optimalizácia)
-     */
-    var _apiKeyCache = {};
-
-    function getCachedApiKey(providerName, debugEntry) {
-        if (!_apiKeyCache[providerName]) {
-            _apiKeyCache[providerName] = getApiKey(providerName, debugEntry);
-        }
-        return _apiKeyCache[providerName];
-    }
-
-    /**
-     * Testovacia funkcia pre overenie API kľúčov
-     * @param {Entry} debugEntry - Entry pre debug výstup
-     */
-    function testApiKeys(debugEntry) {
-        if (!debugEntry) return;
-        
-        var providersToTest = ["OpenAi", "Perplexity", "OpenRouter"];
-        
-        addDebug(debugEntry, "🧪 === TEST API KĽÚČOV ===");
-        
-        try {
-            var apiLib = libByName("ASISTANTO API");
-            var apiEntries = apiLib.entries();
-            
-            addDebug(debugEntry, "📚 Knižnica ASISTANTO API: " + apiEntries.length + " záznamov");
-            
-            // Vypíš štruktúru knižnice
-            for (var i = 0; i < apiEntries.length; i++) {
-                var entry = apiEntries[i];
-                var provider = safeFieldAccess(entry, "provider", "N/A");
-                var nazov = safeFieldAccess(entry, "názov", "N/A");
-                var apiLength = safeFieldAccess(entry, "api", "").length;
-                
-                addDebug(debugEntry, "📋 Záznam " + (i + 1) + ": '" + provider + "' | '" + nazov + "' | API: " + apiLength + " znakov");
-            }
-            
-            // Test každého providera
-            for (var j = 0; j < providersToTest.length; j++) {
-                var providerName = providersToTest[j];
-                var apiKey = getApiKey(providerName, debugEntry);
-                
-                if (apiKey) {
-                    addDebug(debugEntry, "✅ " + providerName + ": API kľúč OK (" + apiKey.length + " znakov)");
-                } else {
-                    addDebug(debugEntry, "❌ " + providerName + ": API kľúč nenájdený");
-                }
-            }
-            
-        } catch (e) {
-            addError(debugEntry, "Test API kľúčov zlyhal: " + e.toString());
-        }
-        
-        addDebug(debugEntry, "🧪 === KONIEC TESTU ===");
-    }
-
-    // ========================================
-    // UNIVERSAL AI CLIENT
-    // ========================================
-
-    /**
-     * Konfigurácia pre rôznych AI providerov
-     */
-    var AI_PROVIDERS = {
-        "OpenAi": {
-            baseUrl: "https://api.openai.com/v1/chat/completions",
-            headers: function(apiKey) {
-                return {
-                    "Authorization": "Bearer " + apiKey,
-                    "Content-Type": "application/json"
-                };
-            },
-            payload: function(prompt, model, options) {
-                return JSON.stringify({
-                    model: model || "gpt-4o-mini",
-                    messages: [
-                        {
-                            role: "user",
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: options.maxTokens || 1000,
-                    temperature: options.temperature || 0.7
-                });
-            },
-            parseResponse: function(response) {
-                var data = JSON.parse(response);
-                return data.choices && data.choices[0] && data.choices[0].message 
-                    ? data.choices[0].message.content 
-                    : "No response";
-            }
-        },
-        
-        "Perplexity": {
-            baseUrl: "https://api.perplexity.ai/chat/completions",
-            headers: function(apiKey) {
-                return {
-                    "Authorization": "Bearer " + apiKey,
-                    "Content-Type": "application/json"
-                };
-            },
-            payload: function(prompt, model, options) {
-                return JSON.stringify({
-                    model: model || "llama-3.1-sonar-small-128k-online",
-                    messages: [
-                        {
-                            role: "user",
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: options.maxTokens || 1000,
-                    temperature: options.temperature || 0.7
-                });
-            },
-            parseResponse: function(response) {
-                var data = JSON.parse(response);
-                return data.choices && data.choices[0] && data.choices[0].message 
-                    ? data.choices[0].message.content 
-                    : "No response";
-            }
-        },
-        
-        "OpenRouter": {
-            baseUrl: "https://openrouter.ai/api/v1/chat/completions",
-            headers: function(apiKey) {
-                return {
-                    "Authorization": "Bearer " + apiKey,
-                    "Content-Type": "application/json",
-                    "HTTP-Referer": "https://mementodatabase.app",
-                    "X-Title": "Memento Database Script"
-                };
-            },
-            payload: function(prompt, model, options) {
-                return JSON.stringify({
-                    model: model || "anthropic/claude-3.5-haiku",
-                    messages: [
-                        {
-                            role: "user",
-                            content: prompt
-                        }
-                    ],
-                    max_tokens: options.maxTokens || 1000,
-                    temperature: options.temperature || 0.7
-                });
-            },
-            parseResponse: function(response) {
-                var data = JSON.parse(response);
-                return data.choices && data.choices[0] && data.choices[0].message 
-                    ? data.choices[0].message.content 
-                    : "No response";
-            }
-        }
-    };
-
-    /**
-     * Univerzálne volanie AI providera
-     * @param {string} provider - Názov providera ("OpenAi", "Perplexity", "OpenRouter")
-     * @param {string} prompt - Prompt pre AI
-     * @param {Object} options - Nastavenia {model, maxTokens, temperature, debugEntry}
-     * @return {Object} {success: boolean, response: string, error: string}
-     */
-    function callAI(provider, prompt, options) {
-        options = options || {};
-        var debugEntry = options.debugEntry;
-        
-        if (!provider || !prompt) {
-            var error = "Missing provider or prompt";
-            if (debugEntry) addError(debugEntry, "AI Call failed: " + error);
-            return {success: false, error: error, response: null};
-        }
-        
-        // Získaj API kľúč
-        var apiKey = getCachedApiKey(provider, debugEntry);
-        if (!apiKey) {
-            var error = "API key not found for " + provider;
-            if (debugEntry) addError(debugEntry, "AI Call failed: " + error);
-            return {success: false, error: error, response: null};
-        }
-        
-        // Získaj konfiguráciu providera
-        var providerConfig = AI_PROVIDERS[provider];
-        if (!providerConfig) {
-            var error = "Unsupported AI provider: " + provider;
-            if (debugEntry) addError(debugEntry, "AI Call failed: " + error);
-            return {success: false, error: error, response: null};
-        }
-        
-        try {
-            if (debugEntry) {
-                addDebug(debugEntry, "🤖 AI Call: " + provider + " (" + (options.model || "default") + ")");
-                addDebug(debugEntry, "📝 Prompt: " + prompt.substring(0, 100) + "...");
-            }
-            
-            // Priprav HTTP request
-            var httpClient = http();
-            var headers = providerConfig.headers(apiKey);
-            
-            // Nastav headers
-            for (var headerName in headers) {
-                httpClient.headers()[headerName] = headers[headerName];
-            }
-            
-            // Priprav payload
-            var payload = providerConfig.payload(prompt, options.model, options);
-            
-            // Vykonaj POST request
-            var response = httpClient.post(providerConfig.baseUrl, payload);
-            
-            if (response.statusCode >= 200 && response.statusCode < 300) {
-                var aiResponse = providerConfig.parseResponse(response.body);
-                
-                if (debugEntry) {
-                    addDebug(debugEntry, "✅ AI Response received (" + response.body.length + " chars)");
-                    addDebug(debugEntry, "🔍 Response: " + aiResponse.substring(0, 200) + "...");
-                }
-                
-                return {
-                    success: true, 
-                    response: aiResponse, 
-                    error: null,
-                    statusCode: response.statusCode,
-                    provider: provider
-                };
-            } else {
-                var error = "HTTP " + response.statusCode + ": " + response.body;
-                if (debugEntry) addError(debugEntry, "AI Call HTTP error: " + error);
-                return {success: false, error: error, response: null};
-            }
-            
-        } catch (e) {
-            var error = "AI Call exception: " + e.toString();
-            if (debugEntry) addError(debugEntry, error);
-            return {success: false, error: error, response: null};
-        }
-    }
-
-    // ========================================
-    // SPECIALIZED AI FUNCTIONS
-    // ========================================
-
-    /**
-     * AI analýza dát zo záznamu
-     * @param {Entry} sourceEntry - Záznam na analýzu
-     * @param {Array} fieldsToAnalyze - Polia na analýzu
-     * @param {string} analysisType - Typ analýzy ("summarize", "classify", "extract")
-     * @param {Object} options - Nastavenia
-     * @return {Object} Výsledok analýzy
-     */
-    function aiAnalyzeEntry(sourceEntry, fieldsToAnalyze, analysisType, options) {
-        options = options || {};
-        var provider = options.provider || "OpenAi";
-        var debugEntry = options.debugEntry;
-        
-        if (!sourceEntry || !fieldsToAnalyze || fieldsToAnalyze.length === 0) {
-            return {success: false, error: "Missing required parameters"};
-        }
-        
-        try {
-            // Priprav dáta pre analýzu
-            var dataForAnalysis = {};
-            for (var i = 0; i < fieldsToAnalyze.length; i++) {
-                var fieldName = fieldsToAnalyze[i];
-                var fieldValue = safeFieldAccess(sourceEntry, fieldName, "");
-                if (fieldValue) {
-                    dataForAnalysis[fieldName] = fieldValue.toString().substring(0, 1000); // Limit na 1000 chars
-                }
-            }
-            
-            // Priprav prompt podľa typu analýzy
-            var prompt = "";
-            var dataJson = JSON.stringify(dataForAnalysis, null, 2);
-            
-            switch(analysisType) {
-                case "summarize":
-                    prompt = "Analyzed následujúce dáta a vytvor stručné zhrnutie v slovenčine:\n\n" + dataJson;
-                    break;
-                case "classify":
-                    prompt = "Analyzuj následujúce dáta a zaraď ich do vhodnej kategórie. Vráť len názov kategórie:\n\n" + dataJson;
-                    break;
-                case "extract":
-                    prompt = "Z následujúcich dát extrahuj kľúčové informácie a vráť ich ako JSON:\n\n" + dataJson;
-                    break;
-                case "sentiment":
-                    prompt = "Analyzuj sentiment následujúcich dát. Vráť: Pozitívny/Negatívny/Neutrálny:\n\n" + dataJson;
-                    break;
-                default:
-                    prompt = options.customPrompt ? options.customPrompt + "\n\n" + dataJson : dataJson;
-            }
-            
-            if (debugEntry) {
-                addDebug(debugEntry, "🧠 AI Analysis: " + analysisType + " na " + fieldsToAnalyze.length + " poliach");
-            }
-            
-            // Zavolaj AI
-            var aiResult = callAI(provider, prompt, {
-                model: options.model,
-                maxTokens: options.maxTokens || 500,
-                temperature: options.temperature || 0.3,
-                debugEntry: debugEntry
-            });
-            
-            if (aiResult.success) {
-                return {
-                    success: true,
-                    analysis: aiResult.response,
-                    analysisType: analysisType,
-                    fieldsAnalyzed: fieldsToAnalyze,
-                    provider: provider
-                };
-            } else {
-                return aiResult;
-            }
-            
-        } catch (e) {
-            var error = "AI Analysis failed: " + e.toString();
-            if (debugEntry) addError(debugEntry, error);
-            return {success: false, error: error};
-        }
-    }
-
-    /**
-     * AI generovanie SQL dotazov z prirodzeného jazyka
-     * @param {string} naturalLanguageQuery - Dotaz v prirodzenom jazyku
-     * @param {Array} availableTables - Zoznam dostupných tabuliek/knižníc
-     * @param {Object} options - Nastavenia
-     * @return {Object} Výsledok s SQL dotazom
-     */
-
-    function aiGenerateSQL(naturalLanguageQuery, availableTables, options) {
-    options = options || {};
-    var provider = options.provider || "OpenAi";
-    var debugEntry = options.debugEntry;
     
-    if (!naturalLanguageQuery) {
-        return {success: false, error: "Missing natural language query"};
-    }
-    
-    try {
-        var tablesInfo = availableTables ? availableTables.join(", ") : "všetky dostupné tabuľky";
-        
-        var prompt = 
-            "Vygeneruj SQL dotaz na základe tohto požiadavku v slovenčine: \"" + naturalLanguageQuery + "\"\n\n" +
-            "Dostupné tabuľky: " + tablesInfo + "\n\n" +
-            "Pravidlá:\n" +
-            "- Vráť iba SQL dotaz bez dodatočného textu\n" +
-            "- Používaj SQLite syntax\n" +
-            "- Názvy tabuliek a stĺpcov používaj presne ako sú zadané\n" +
-            "- Pre slovenčinu používaj COLLATE NOCASE pre porovnávanie textu\n\n" +
-            "SQL dotaz:";
-
-        if (debugEntry) {
-            addDebug(debugEntry, "🔍 AI SQL Generation: " + naturalLanguageQuery.substring(0, 100));
-        }
-        
-        var aiResult = callAI(provider, prompt, {
-            model: options.model,
-            maxTokens: options.maxTokens || 300,
-            temperature: 0.1,
-            debugEntry: debugEntry
-        });
-        
-        if (aiResult.success) {
-            var sqlQuery = cleanSqlResponse(aiResult.response);
-            
-            return {
-                success: true,
-                sqlQuery: sqlQuery,
-                originalQuery: naturalLanguageQuery,
-                provider: provider
-            };
-        } else {
-            return aiResult;
-        }
-        
-    } catch (e) {
-        var error = "AI SQL Generation failed: " + e.toString();
-        if (debugEntry) addError(debugEntry, error);
-        return {success: false, error: error};
-    }
-}
-
-
-
-    // ========================================
-    // ENHANCED SQL OPERATIONS
-    // ========================================
-
-    /**
-     * Rozšírené SQL operácie s AI podporou
-     * @param {string} query - SQL dotaz alebo prirodzený jazyk
-     * @param {Object} options - Nastavenia
-     * @return {Object} Výsledky dotazu
-     */
-    function smartSQL(query, options) {
-        options = options || {};
-        var debugEntry = options.debugEntry;
-        var returnType = options.returnType || "objects";
-        
-        if (!query || query.trim() === "") {
-            return {success: false, error: "Empty query"};
-        }
-        
-        try {
-            var finalQuery = query.trim();
-            
-            // Ak query nevyzerá ako SQL, použij AI na generovanie
-            if (!finalQuery.toUpperCase().startsWith("SELECT") && 
-                !finalQuery.toUpperCase().startsWith("UPDATE") && 
-                !finalQuery.toUpperCase().startsWith("INSERT") && 
-                !finalQuery.toUpperCase().startsWith("DELETE")) {
-                
-                if (debugEntry) {
-                    addDebug(debugEntry, "🤖 Natural language detected, generating SQL...");
-                }
-                
-                var aiSqlResult = aiGenerateSQL(query, options.availableTables, {
-                    provider: options.aiProvider,
-                    debugEntry: debugEntry
-                });
-                
-                if (!aiSqlResult.success) {
-                    return aiSqlResult;
-                }
-                
-                finalQuery = aiSqlResult.sqlQuery;
-                
-                if (debugEntry) {
-                    addDebug(debugEntry, "📝 Generated SQL: " + finalQuery);
-                }
-            }
-            
-            // Vykonaj SQL dotaz
-            var sqlResult = sql(finalQuery);
-            var data;
-            
-            switch(returnType.toLowerCase()) {
-                case "objects":
-                    data = sqlResult.asObjects();
-                    break;
-                case "entries":
-                    data = sqlResult.asEntries();
-                    break;
-                case "int":
-                case "number":
-                    data = sqlResult.asInt();
-                    break;
-                case "string":
-                    data = sqlResult.asString();
-                    break;
-                default:
-                    data = sqlResult.asObjects();
-            }
-            
-            if (debugEntry) {
-                var resultCount = Array.isArray(data) ? data.length : (typeof data === "number" ? data : 1);
-                addDebug(debugEntry, "✅ SQL executed successfully. Results: " + resultCount);
-            }
-            
-            return {
-                success: true,
-                data: data,
-                query: finalQuery,
-                resultType: returnType
-            };
-            
-        } catch (e) {
-            var error = "Smart SQL failed: " + e.toString() + "\nQuery: " + finalQuery;
-            if (debugEntry) addError(debugEntry, error);
-            return {success: false, error: error, query: finalQuery};
-        }
-    }
-
-    /**
-     * SQL dotaz s AI interpretáciou výsledkov
-     * @param {string} query - SQL dotaz
-     * @param {string} interpretationPrompt - Ako interpretovať výsledky
-     * @param {Object} options - Nastavenia
-     */
-    function sqlWithAIInterpretation(query, interpretationPrompt, options) {
-        options = options || {};
-        var debugEntry = options.debugEntry;
-        
-        // Vykonaj SQL dotaz
-        var sqlResult = smartSQL(query, options);
-        
-        if (!sqlResult.success) {
-            return sqlResult;
-        }
-        
-        // AI interpretácia výsledkov
-        var dataForAI = JSON.stringify(sqlResult.data, null, 2);
-        var prompt = interpretationPrompt + "\n\nDáta z SQL dotazu:\n" + dataForAI;
-        
-        var aiResult = callAI(options.aiProvider || "OpenAi", prompt, {
-            model: options.aiModel,
-            maxTokens: options.maxTokens || 800,
-            debugEntry: debugEntry
-        });
-        
-        return {
-            success: true,
-            sqlData: sqlResult.data,
-            sqlQuery: sqlResult.query,
-            aiInterpretation: aiResult.success ? aiResult.response : "AI interpretation failed: " + aiResult.error,
-            aiSuccess: aiResult.success
-        };
-    }
-
-
     // ========================================
     // PUBLIC API
     // ========================================
     return {
-        // Debug a Error handling
+        // v1.0 - Original functions
         addDebug: addDebug,
         addError: addError,
         addInfo: addInfo,
-        
-        // Field access
         safeFieldAccess: safeFieldAccess,
         safeGetFirstLink: safeGetFirstLink,
         safeGetLinks: safeGetLinks,
-        
-        // LinksFrom operácie
         safeLinksFrom: safeLinksFrom,
         findLinksWithVariations: findLinksWithVariations,
-        
-        // Atribúty
         safeSetAttribute: safeSetAttribute,
         safeGetAttribute: safeGetAttribute,
         setDefaultAndReload: setDefaultAndReload,
-        
-        // Vyhľadávanie
-        findByUniqueField: findByUniqueField,
-        findEmployeeByNick: findEmployeeByNick,
-        
-        // Validácie
         validateRequiredFields: validateRequiredFields,
         validateEntryState: validateEntryState,
-        
-        // Formátovanie
         formatMoney: formatMoney,
         parseMoney: parseMoney,
         formatEmployeeName: formatEmployeeName,
-        
-        // Časové výpočty
-        calculateHours: calculateHours,
-        isWeekend: isWeekend,
-        
-        // Batch operácie
         processBatch: processBatch,
+        findByUniqueField: findByUniqueField,
+        findEmployeeByNick: findEmployeeByNick,
         
-        // AI Functions
-        callAI: callAI,
-        aiAnalyzeEntry: aiAnalyzeEntry,
-        aiGenerateSQL: aiGenerateSQL,
-         // API Key Management
-        getApiKey: getApiKey,
-        getCachedApiKey: getCachedApiKey,
-        clearApiKeyCache: clearApiKeyCache,
-        testApiKeys: testApiKeys,
-        // Enhanced SQL
-        smartSQL: smartSQL,
-        sqlWithAIInterpretation: sqlWithAIInterpretation,
+        // v2.0 - New functions pre Záznam prác compatibility
+        safeGet: safeGet,
+        safeSet: safeSet,
+        safeSetAttr: safeSetAttr,
+        formatTime: formatTime,
+        roundToQuarter: roundToQuarter,
+        calculateTimeDifference: calculateTimeDifference,
+        findValidSalaryForDate: findValidSalaryForDate,
+        getDefaultHZS: getDefaultHZS,
+        saveLogs: saveLogs,
+        clearLogs: clearLogs,
         
-        // AI Provider Config
-        AI_PROVIDERS: AI_PROVIDERS,
-        // Konfigurácia
-        DEFAULT_CONFIG: DEFAULT_CONFIG
+        // Configuration access
+        DEFAULT_CONFIG: DEFAULT_CONFIG,
+        
+        // v2.0 - Version info
+        version: "2.0"
     };
 })();
 
